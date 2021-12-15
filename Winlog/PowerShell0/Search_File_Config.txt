@@ -1,0 +1,3 @@
+C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Files\DATAMODELFiles\Rapport\Reporting.csv
+C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Files\DATAMODELFiles\Rapport\RESULT_SearchFile.txt
+;14_Temperature_-_J_CTC53;

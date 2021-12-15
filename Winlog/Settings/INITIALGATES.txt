@@ -1,0 +1,205 @@
+type;GATES;0;VALUES
+Num;ProductionSleepTime;0;60000
+/****Num;Max_Article;0;9
+/****** Start Time UpdateHistory HH:mm:ss ****/;;;
+/***Num;Update_Chrono;1;10
+/***Num;Update_Chrono;2;35
+/***Num;Update_Chrono;3;0
+/****** End Time UpdateHistory HH:mm:ss ****/;;;
+/**Num;Update_Chrono;4;10
+/**Num;Update_Chrono;5;59
+/**Num;Update_Chrono;6;0
+/****** Start date UpdateHistoryYearly  PERIOD/YYYY/MM/DD ****/;;;
+Num;EYear_H_Update;0;4
+/***Num;EYear_H_Update;1;2019
+/***Num;EYear_H_Update;2;6
+/***Num;EYear_H_Update;3;28
+/****** Start date UpdateHistoryMonthly  PERIOD/YYYY/MM/DD ****/;;;
+Num;EMonth_H_Update;0;3
+/***Num;EMonth_H_Update;1;2019
+/***Num;EMonth_H_Update;2;6
+/***Num;EMonth_H_Update;3;28
+/****** Start date UpdateHistoryWeekly  PERIOD/YYYY/MM/DD ****/;;;
+Num;EWeek_H_Update;0;2
+/***Num;EWeek_H_Update;1;2019
+/***Num;EWeek_H_Update;2;6
+/***Num;EWeek_H_Update;3;28
+/****** Start date UpdateHistoryDaily  PERIOD/YYYY/MM/DD ****/;;;
+Num;EDaily_H_Update;0;1
+/***Num;EDaily_H_Update;1;2020
+/***Num;EDaily_H_Update;2;7
+/***Num;EDaily_H_Update;3;22
+/****** Energy definition ****/;;;
+Num;EnergyMax;0;2
+Num;EnergyMax;1;48
+Num;EnergyMax;2;24
+Num;EnergyMax;3;24
+Num;EnergyMax;4;25
+Num;EnergyMax;5;8
+Num;EnergyMax;6;8
+/****** Nombre des carractere a eliminer pour avoir le CompteurTrueNumber  ****/;;;
+/**Num;NBR_PRFIX;1;2
+/**Num;NBR_PRFIX;2;2
+/**Num;NBR_PRFIX;3;2
+/**Num;NBR_PRFIX;4;2
+/**Num;NBR_PRFIX;5;3
+/**Num;NBR_PRFIX;6;3
+/**Num;NBR_PRFIX;7;3
+/**Num;NBR_PRFIX;8;2
+/**Num;NBR_PRFIX;9;3
+/**Num;NBR_PRFIX;10;3
+/**Num;NBR_PRFIX;11;3
+/**Num;NBR_PRFIX;12;3
+/**Num;NBR_PRFIX;13;3
+/**Num;NBR_PRFIX;14;3
+/****** Nombre de compteur Maximal ****/;;;
+/**********Num;MaxCompteur;0;1000
+Num;SystemMaxCompteur;0;1000
+/****** Frequency de reporting ****/;;;
+Num;ReportingListenF;0;900
+/****** 1 : time 24 rolling / 2 : time 00:00:00 to 23:59:59 ****/;;;
+Num;chart_time_span;0;1
+/****** Nombre de view ou periodicity ****/;;;
+Num;MaxView;1;5
+Num;SelectView;0;1
+/***Bu selector max ligne
+Num;BU_MAX_LIGNE;0;15
+/****** PATHS ****************************************/;;;
+Str;PopUpList_Root;0;\Data\Compteur\Co-Produit\
+Str;TVE_Path;0;\Files\Display_Templates\TableauViewEnergy.csv
+Str;PBI_TVE_Path;0;\Files\DATAMODELFiles\Power BI\PBI.csv
+Str;PBI_CL_TVE_Path;0;\Files\DATAMODELFiles\CompteurList\
+Str;PBI_ML_TVE_Path;0;\Files\DATAMODELFiles\MesureList\
+Str;AllCompteurs_Path;0;\Files\AllCompteur\AllCompteur.csv
+Str;ProductionFilePath;0;C:\Users\ASUS\Desktop\production-
+/****** STR GATES ****************/;;;
+/****** Definition de type d'energie **************/;;;
+/**Str;Energy;0;*
+/**Str;Energy;1;Electrique
+/**Str;Energy;2;Vapeur
+/**Str;Energy;3;Gaz
+/**Str;Energy;4;Froid
+/**Str;Energy;5;Froid (+)  Eau Glycolee
+/**Str;Energy;6;Froid (-)  Ammoniac
+/**Str;Energy;7;Air Comprime
+/**Str;Energy;8;Eau
+/**Str;Energy;9;Eau Brute
+/**Str;Energy;10;Eau Forage
+/**Str;Energy;11;Eau Sonede
+/**Str;Energy;12;Eau Traite
+/**Str;Energy;13;Eau Rejet
+/**Str;Energy;14;Tonnage
+/****** Prefix des types d'energies = lettre initial des GATES registre d'energies **/
+/**Str;Energy_Initial;1;E
+/**Str;Energy_Initial;2;V
+/**Str;Energy_Initial;3;G
+/**Str;Energy_Initial;4;F
+/**Str;Energy_Initial;5;EG
+/**Str;Energy_Initial;6;AM
+/**Str;Energy_Initial;7;AC
+/**Str;Energy_Initial;8;H
+/**Str;Energy_Initial;9;HB
+/**Str;Energy_Initial;10;HF
+/**Str;Energy_Initial;11;HS
+/**Str;Energy_Initial;12;HT
+/**Str;Energy_Initial;13;HR
+/**Str;Energy_Initial;14;T
+/****** Prefix des types d'energies = lettres initials des GATES OutPut **/
+/**Str;PreFix_OutPut;1;CC
+/**Str;PreFix_OutPut;2;CV
+/**Str;PreFix_OutPut;3;CG
+/**Str;PreFix_OutPut;4;CF
+/**Str;PreFix_OutPut;5;CEG
+/**Str;PreFix_OutPut;6;CAM
+/**Str;PreFix_OutPut;7;CAC
+/**Str;PreFix_OutPut;8;CE
+/**Str;PreFix_OutPut;9;CEB
+/**Str;PreFix_OutPut;10;CEF
+/**Str;PreFix_OutPut;11;CES
+/**Str;PreFix_OutPut;12;CET
+/**Str;PreFix_OutPut;13;CER
+/**Str;PreFix_OutPut;14;CPT
+/****** Energy_LIVEInc_List **/
+/**Str;Energy_LIVEInc_List;1;28
+/**Str;Energy_LIVEInc_List;2;27
+/**Str;Energy_LIVEInc_List;3;25
+/**Str;Energy_LIVEInc_List;4;27
+/**Str;Energy_LIVEInc_List;5;27
+/**Str;Energy_LIVEInc_List;7;26
+/**Str;Energy_LIVEInc_List;8;25
+/**Str;Energy_LIVEInc_List;9;25
+/**Str;Energy_LIVEInc_List;10;25
+/**Str;Energy_LIVEInc_List;11;25
+/**Str;Energy_LIVEInc_List;12;25
+/**Str;Energy_LIVEInc_List;13;25
+/**Str;Energy_LIVEInc_List;14;9
+/****** Definition Point de vue drill down **/
+Str;PDV;1;C
+Str;PDV;2;D
+Str;PDV;3;P
+Str;PDV;4;R
+Str;PDV_Name;1;Consommation
+Str;PDV_Name;2;Distribution
+Str;PDV_Name;3;Production
+Str;PDV_Name;4;Reseaux Compteurs
+/****** Definition de GATES de production ****************/;;;
+/****** Code Article ****************/;s;;
+Str;ArticleCode;0;96001
+Str;ArticleCode;1;96002
+Str;ArticleCode;2;96003
+/****** GATES registre correspondant au Code Article ****************/;;;
+Str;LiveGate;0;T7
+Str;LiveGate;1;T8
+Str;LiveGate;2;T9
+/****** Nom des Views utilisateures ****************/;;;
+/**Str;ViewNames;0;Jour-1
+/**Str;ViewNames;0;Temps réel
+/**Str;ViewNames;1;Journalier
+/**Str;ViewNames;2;Hebdomadaire
+/**Str;ViewNames;3;Mensuel
+/**Str;ViewNames;4;Annuel
+/****** Nom des Views Internes ****************/;;;
+/****Str;ReportViewNames;0;J-1
+/**Str;ReportViewNames;0;LIVE
+/**Str;ReportViewNames;1;J
+/**Str;ReportViewNames;2;S
+/**Str;ReportViewNames;3;M
+/**Str;ReportViewNames;4;A
+/****** View periodicity Internal ****************/;;;
+/**Str;ViewPeriodicity;0;Min_60
+/**Str;ViewPeriodicity;1;Heure_24
+/**Str;ViewPeriodicity;2;Jour_7
+/**Str;ViewPeriodicity;3;Jour_30
+/**Str;ViewPeriodicity;4;Mois_12
+/****** Liste des Tableaux ****************/;;;
+Num;MaxTableau;0;9
+/**Str;TableauNames;10;Bilan Énergetique
+/**Str;TableauNames;11;Synoptique Par Energie
+/**Str;TableauNames;12;Synoptique Par Unité
+/**Str;TableauNames;13;Bilan Matiere
+/**Str;TableauNames;14;Partage d'une energies
+/**Str;TableauNames;15;Compteur Mosaique
+/**Str;TableauNames;16;Releve Compteur
+/**Str;TableauNames;17;Analyse technique du compteur
+/**Str;TableauNames;18;Tableau des compteurs
+/**Str;TVETemplate;1;Dashboard
+/**Str;TVETemplate;2;Synoptique
+/**Str;TVETemplate;3;Compteur_Info
+/**Str;TVETemplate;4;AllCompteur
+/**Str;TVETemplate;5;Mosaique
+/**Str;TVETemplate;6;Compteur_OverView
+/**Str;Tableau_VEPC;10;10
+/**Str;Tableau_VEPC;11;11
+/**Str;Tableau_VEPC;12;12
+/**Str;Tableau_VEPC;13;13
+/**Str;Tableau_VEPC;14;14
+/**Str;Tableau_VEPC;15;15
+/**Str;Tableau_VEPC;16;16
+/**Str;Tableau_VEPC;17;17
+/**Str;Tableau_VEPC;18;18
+/**Str;Tableau_VEPC;19;19
+/**Str;Tableau_VEPC;20;20
+/**Str;Tableau_VEPC;20;20
+Str;Business_unit;0;Centrale Laitiere Du Cap Bon CLC
+/****** Dig GATES************************************/;;;
+Dig;LiveReporting;0;1

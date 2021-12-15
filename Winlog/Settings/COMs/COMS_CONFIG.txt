@@ -1,0 +1,2 @@
+C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\Config Compteur\Gateways.csv
+C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Settings\COMs\COMS_STATUS.csv

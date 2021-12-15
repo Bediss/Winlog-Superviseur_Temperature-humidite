@@ -1,0 +1,3 @@
+C:\Winlog\Files\DATAMODELFiles\Rapport\Reporting.csv
+C:\Winlog\Files\DATAMODELFiles\Rapport\RESULT-SEARCH.csv
+HEADER
