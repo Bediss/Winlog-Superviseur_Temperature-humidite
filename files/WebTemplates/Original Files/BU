@@ -1,0 +1,245 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,719
+#BkColor: 0,28,0
+#Gates: 1
+  #STR: Business_unit,0
+#Object: Frame
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1350,100
+  #BkColor: clWhite
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 45,14
+    #Size: 141,41
+    #Cursor: 0
+    #PBmpFile: 0,logo_typo.jpg
+    #TabOrder: 0
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 1145,0
+    #Size: 124,68
+    #Cursor: 0
+    #PBmpFile: 0,logo.png
+    #TabOrder: 1
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 252,14
+    #Size: 460,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,22,0001
+    #Label: ENERGY MANAGEMENT SYSTEM  :
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 712,14
+    #Size: 385,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,24,0101
+    #Gate: 0
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,110
+  #Size: 350,35
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,20,0101
+  #Label: Unité :
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,194
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Abattoire
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,314
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: PetFood
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,274
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Conserve
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,154
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: ElMazeraa
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,234
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Charcuterie
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,354
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Surgulé
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,394
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: UCPC
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,514
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Froid
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,554
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Chaufferie
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,594
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Post Transformateur
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,634
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Eau
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,474
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Co-Produit
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,434
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Calibri,16,0001
+  #Label: Dick
+  #Align: 33
+  #Frame: 4
+  #Access: 0
+#EndObj

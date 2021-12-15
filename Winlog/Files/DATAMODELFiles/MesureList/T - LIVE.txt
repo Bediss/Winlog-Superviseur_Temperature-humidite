@@ -1,0 +1,2 @@
+16,T°c ^LIVE,Temperature,0
+17,Inc LIVE,Temperature,0

@@ -1,0 +1,2 @@
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGB3;Detendeur 20-2B;Gaz;CGB;Utilitaire Gaz;3;S200;M260;M260;STEG;UCPC;UCPC;Reel;Usine;*;*;ElMazeraa;!~;!~;;;;;2;Detendeur 20bars vers 2bars;*
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGB4;Detend 4B-300MB;Gaz;CGB;Utilitaire Gaz;3;S200;*;*;STEG;*;*;F(CGB4);Usine;*;*;ElMazeraa;;;F~(~CGB4~)~;F~(~Detend 4B-300MB~)~;;;0;Detendeur 4bars vers 300mbars;*

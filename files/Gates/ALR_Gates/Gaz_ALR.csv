@@ -1,0 +1,14 @@
+Name;ID;Message;Type;Gate ID;N ID;Operator;Fixed value;Filter time (s);Class 1;Class 2;Is Alarm;Need Acknoledge;Record on historical file;Access groups;M1 Type;M1 Gate ID;M1 N ID;M2 Type;M2 Gate ID;M2 N ID;M3 Type;M3 Gate ID;M3 N ID;M4 Type;M4 Gate ID;M4 N ID;M5 Type;M5 Gate ID;M5 N ID;M6 Type;M6 Gate ID;M6 N ID;M7 Type;M7 Gate ID;M7 N ID;M8 Type;M8 Gate ID;M8 N ID;C3 Type;C3 Gate ID;C3 N ID;C4 Type;C4 Gate ID;C4 N ID;C5 Type;C5 Gate ID;C5 N ID;C6 Type;C6 Gate ID;C6 N ID;C7 Type;C7 Gate ID;C7 N ID;Condition gate;Condition Gate Type;Condition Gate ID;Condition N Id
+ANUMGate;0;Name_SurConsommation_J;CMP;CMPGate;0;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;0
+ANUMGate;1;Name_SurConsommation_S;CMP;CMPGate;1;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;1
+ANUMGate;2;Name_SurConsommation_M;CMP;CMPGate;2;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;2
+ANUMGate;3;Name_SurConsommation_A;CMP;CMPGate;3;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;3
+ANUMGate;4;Name_Ratio_J;CMP;CMPGate;4;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;4
+ANUMGate;5;Name_Ratio_S;CMP;CMPGate;5;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;5
+ANUMGate;6;Name_Ratio_M;CMP;CMPGate;6;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;6
+ANUMGate;7;Name_Ratio_A;CMP;CMPGate;7;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;7
+ANUMGate;8;Name_Inc_J;CMP;CMPGate;8;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;8
+ANUMGate;9;Name_Inc_S;CMP;CMPGate;9;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;9
+ANUMGate;10;Name_Inc_M;CMP;CMPGate;10;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;10
+ANUMGate;11;Name_Inc_A;CMP;CMPGate;11;3;;900;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;T;NUM;ONUMGate;11
+ANUMGate;49;Name_ALR Live;CMP;CMPGate;49;3;0;0;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;F;;;

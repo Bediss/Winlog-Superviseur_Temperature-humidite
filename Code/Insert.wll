@@ -1,0 +1,54 @@
+function void insertPage1()
+SetNumGateValue("PageInsert",0,1);
+end
+function void insertPage2()
+SetNumGateValue("PageInsert",0,2);
+end
+function void insertPage3()
+SetNumGateValue("PageInsert",0,3);
+end
+/*******************************************************************/
+function void UpdateInsert()
+int A; int B; int i; string test; int list; int C; int D;
+string Variable; string compt;
+A=0; C=10; D=20;
+
+        if (GetNumGateValue("PageInsert",0)== 1) then
+
+            for i = 1 to 10 do
+            A = i-1;
+            compt="CC"+i;
+            Variable="X"+A;
+            for list = 0 to 19 do
+            SetNumGateValue(compt,list,GetNumGateValue(Variable,list));
+            end
+            end
+        end
+
+        if (GetNumGateValue("PageInsert",0)== 2) then
+
+            for i = 1 to 10 do
+            C = C+1;
+            A = i-1;
+            compt="CC"+C;
+            Variable="X"+A;
+            for list = 0 to 19 do
+            SetNumGateValue(compt,list,GetNumGateValue(Variable,list));
+            end
+            end
+        end
+
+        if (GetNumGateValue("PageInsert",0)== 3) then
+
+            for i = 1 to 10 do
+            D = D+1;
+            A = i-1;
+            compt="CC"+D;
+            Variable="X"+A;
+            for list = 0 to 19 do
+            SetNumGateValue(compt,list,GetNumGateValue(Variable,list));
+            end
+            end
+            end
+end
+/*******************************************************************/

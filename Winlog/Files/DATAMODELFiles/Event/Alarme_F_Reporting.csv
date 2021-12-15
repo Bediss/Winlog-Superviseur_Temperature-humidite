@@ -1,0 +1,2 @@
+Alarme_Code;Compteur Incident;Formule;Parsed_Formule;Operateur;Objectif;Frequence;Next Check;U_Alarme_Name;Description;U_Compteur;U_Formule;Nbr Error;Tag
+A9;CTCA$17;CTCA$16;TCA$17=CTCA$16~;==;O:CTCA$16:CLC_T°c ^LIVE;1_Min;01/03/2021_10:22;CLC LIVE T;CLC$Inc LIVE==O:CTCA$16:CLC_T°c ^LIVE;CLC$Inc LIVE;CLC$Inc LIVE=CLC$T°c ^LIVE~;0;;;;;;;

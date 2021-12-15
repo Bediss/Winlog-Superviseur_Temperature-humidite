@@ -1,0 +1,2697 @@
+
+function void Create_Desk_Templates()
+
+     String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 10 : Please wait ...");
+
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\10\10_FILES_LIST.txt");
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\14\14_FILES_LIST.txt");
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\15\15_FILES_LIST.txt");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\10\Files";
+     Create_PS_DeleteFiles( Destination );
+     //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     ///PS_XCopy_Wait( Destination );
+
+    SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 14 : Please wait ...");
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\14\Files";
+     Create_PS_DeleteFiles( Destination );
+     //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     //PS_XCopy_Wait( Destination );
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 15: Please wait ...");
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\15\Files";
+     Create_PS_DeleteFiles( Destination );
+     //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     //PS_XCopy_Wait( Destination );
+
+     //LastReportCode = Get_LastReport_Code();
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+
+          //Create_10_Files( ALLCOMPTEUR_LIGNE );
+
+          //Create_14_Files( ALLCOMPTEUR_LIGNE );
+
+          //Create_15_Files( ALLCOMPTEUR_LIGNE );
+          //Create_Templates16_17( ALLCOMPTEUR_LIGNE , "16");
+          Create_Templates16_17( ALLCOMPTEUR_LIGNE , "17");
+        End
+     End
+
+     FileClose(FileHandle);
+
+    //Add_Parent_14();
+
+     //Add_Parent_15();
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 10 : Please wait ...");
+
+     //Create_Templates_10();
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 10 : Created " + Eol() + " Generate templates 14 : Please wait ...");
+     //Create_Templates_14();
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 10 and 14 : Created " + Eol() + " Generate templates 15 : Please wait ...");
+     //Create_Templates_15();
+    MessageBox("End","");
+end
+
+/*****************************************************************************/
+//                        Check & Validation
+/*****************************************************************************/
+function Int Check_Validation_List( String Path, String FileName)
+
+    String Ligne;
+    String MASETR;
+    String LIST;
+    String FileToSearch;
+    Int NOTEXIST = 0;
+
+
+     String LOGFullPathFileName = ENV_PATH +  "\BuildLOG.txt";
+     Int LOGFileHandle = FileOpen(LOGFullPathFileName , "at");
+
+     String LIST_FullPathFileName = Path +"DataModel\"+ FileName;
+     int LIST_FileHandle = FileOpen( LIST_FullPathFileName , "rt" );
+     FileWriteLn(LOGFileHandle,"********** Start Check : " + FileName + " " + GetDateString("/",True) + " " + GetTimeString(":") +" **********");
+
+     Ligne = FileReadLn( LIST_FileHandle ); // Header File
+     NOTEXIST = 0;
+     While( FileEof( LIST_FileHandle )==0 )
+      Ligne = FileReadLn( LIST_FileHandle );
+       If ( Ligne != "" ) Then
+
+        MASETR = Fetch_TEMP_GENERATOR(Ligne,1,";");
+        LIST =Fetch_TEMP_GENERATOR(Ligne,2,";");
+          FileToSearch = Path + MASETR +"\Source\"+ LIST;
+
+          If ( FileExist( FileToSearch ) == False ) Then
+            FileWriteLn(LOGFileHandle," File Not Found :" + FileToSearch);
+            NOTEXIST = NOTEXIST + 1 ;
+          End
+
+       End
+     End
+     FileClose(LIST_FileHandle);
+
+     FileWriteLn(LOGFileHandle,"********** End Check : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+     FileClose(LOGFileHandle);
+
+     Return NOTEXIST;
+
+End
+/*****************************************************************************/
+/*****************************************************************************/
+function void Create_10_Files( String ALLCOMPTEUR_LIGNE )
+ string Ligne="";
+ string CodeCompteur;
+ int P;
+ int i;
+ int ReadLevel;
+ String Energie;
+ string ViewLigne;
+ String WriteLigne;
+ //Bool Found = false;
+ String VIEW;
+ String ENERGY;
+ String POSTCODE;
+ String CompteurCode;
+ Int CHECK;
+
+ String  WEFullPathFileName ;
+ int WEFileHandle;
+ String FILENAME;
+
+ String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\10\10_FILES_LIST.txt";
+ int LISTFileHandle = FileOpen(LISTFullPathFileName,"at");
+ //FileWriteLn(HAN_FileHandle, "Open :"+LISTFullPathFileName + ":" + LISTFileHandle);
+
+
+    if( ALLCOMPTEUR_LIGNE != "") then
+
+       CHECK = ANALYSE_Query( GetStrGateValue("Tableau_Query" ,10) , ALLCOMPTEUR_LIGNE );
+
+             If ( CHECK == 1 ) then
+
+                 CompteurCode = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,4,";");
+                 ENERGY = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+                 POSTCODE = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,7,";")+"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,8,";") +"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,9,";");
+
+                For i = 1 to 4 do
+                 VIEW = GetStrGateValue("ReportViewNames",i);
+
+                 FILENAME = TemplateNameBuilder( "10" , VIEW , ENERGY ,POSTCODE,  CompteurCode) + ".txt";
+
+                   WEFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\10\Files\"+FILENAME;
+
+                    If ( FileExist(WEFullPathFileName) == False ) Then  FileWriteLn(LISTFileHandle, FILENAME);      End
+
+                   WEFileHandle=FileOpen(WEFullPathFileName,"at");
+
+                   //ViewLigne = Create_LIGNE_View_10( ENERGY ,VIEW);
+                   ViewLigne = Create_LIGNE_View(ENERGY, "10", ENERGY+"_"+VIEW+".txt"  );
+
+                   WriteLigne = ViewLigne+"§"+ALLCOMPTEUR_LIGNE;
+
+                   FileWriteLn(WEFileHandle,WriteLigne);
+
+                   FileClose(WEFileHandle);
+
+                End
+             End
+     end
+  FileClose(LISTFileHandle);
+
+end
+
+/*****************************************************************************/
+/*              Create_14_Files                                */
+/*****************************************************************************/
+function void Create_14_Files( String ALLCOMPTEUR_LIGNE )
+ string Ligne="";
+ string CodeCompteur;
+ int P;
+ int i;
+ int ReadLevel;
+ String Energie;
+ string ViewLigne;
+ String WriteLigne;
+ String VIEW;
+ Bool Found = false;
+ String code;
+String Lignecode;
+ String  WEFullPathFileName ;
+ int WEFileHandle;
+ String FILENAME ;
+ Int CHECK;
+ String CompteurCode;
+ String ENERGY;
+ String POSTCODE;
+
+
+ String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\14\14_FILES_LIST.txt";
+ int LISTFileHandle = FileOpen(LISTFullPathFileName,"at");
+//FileWriteLn(HAN_FileHandle, "Open :"+LISTFullPathFileName + ":" + LISTFileHandle);
+    if( ALLCOMPTEUR_LIGNE != "") then
+
+        //ReadLevel = StrToInt(Fetch(Ligne,6));
+
+             CHECK = ANALYSE_Query( GetStrGateValue("Tableau_Query" ,14) , ALLCOMPTEUR_LIGNE );
+
+             If ( CHECK == 1 ) then
+
+                  CompteurCode = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,4,";");
+                  ENERGY = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+                  POSTCODE = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,7,";")+"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,8,";") +"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,9,";");
+
+                For i = 1 to 4 do
+                  VIEW = GetStrGateValue("ReportViewNames",i);
+
+                  FILENAME = TemplateNameBuilder( "14" , VIEW , ENERGY ,POSTCODE,  CompteurCode)+ ".txt";
+
+                   WEFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\14\Files\"+FILENAME;
+
+                   If ( FileExist(WEFullPathFileName) == False ) Then   FileWriteLn(LISTFileHandle,FILENAME);   End
+
+                   WEFileHandle=FileOpen(WEFullPathFileName,"at");
+                   //FileWriteLn(HAN_FileHandle, "Open :"+WEFullPathFileName + ":" + WEFileHandle);
+
+                   /////////////////////////////////////////ViewLigne = Create_LIGNE_View_14( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";"),VIEW);
+                   ViewLigne = Create_LIGNE_View(ENERGY, "14", ENERGY+"_"+VIEW+".txt"  );
+
+                    if ( ViewLigne != "-1" ) Then
+                        //WriteLigne ="F;"+Fetch(Ligne,1)+";"+Fetch(Ligne,2)+";"+ Fetch(Ligne,3)+";"+ Fetch(Ligne,4) +";"+ Fetch(Ligne,7) +";"+ Fetch(Ligne,8) +";"+ Fetch(Ligne,9) +";"+ ViewLigne + Fetch(Ligne,5)+";";
+                        WriteLigne = "F:"+ViewLigne+"§"+ALLCOMPTEUR_LIGNE;
+
+                        //////////////////////////////////////////
+                        IF ( WEFileHandle == 0 ) Then
+                         MessageBox( WEFullPathFileName ,"1");
+                        End
+                        //////////////////////////////////////////
+
+                        FileWriteLn(WEFileHandle,WriteLigne);
+                    End
+
+                   FileClose(WEFileHandle);
+                   //FileWriteLn(HAN_FileHandle, "Close :"+WEFullPathFileName + ":" + WEFileHandle);
+                End // FOR
+
+           End // Found == true
+
+     end
+
+
+  FileClose(LISTFileHandle);
+  //FileWriteLn(HAN_FileHandle, "Close :"+LISTFullPathFileName + ":" + LISTFileHandle);
+end
+/*****************************************************************************/
+function void Add_Parent_14()
+       String CurrPath;
+       String FullPathFileName;
+       int FileHandle;
+       String Ligne;
+       String WriteLigne;
+       String View;
+       String Compteur_Parent;
+       Bool Exsit = False;
+       Bool Found = False;
+
+ String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\14\14_FILES_LIST.txt";
+ int LISTFileHandle = FileOpen(LISTFullPathFileName,"rt");
+
+
+       CurrPath = GetProjectPath()+"\TEMPLATES_GENERATED\14\Files\";
+
+       while ( FileEof(LISTFileHandle)==0 )
+
+       Ligne = FileReadLn(LISTFileHandle);
+         If (Ligne != "") Then
+
+             Compteur_Parent = Fetch_TEMP_GENERATOR(Ligne, 4 ,"_");
+
+             View = Fetch_TEMP_GENERATOR(Ligne,3,"_");
+
+                 FullPathFileName = CurrPath + Ligne;
+                 FileHandle=FileOpen(FullPathFileName,"at");
+
+                 If ( FileHandle != 0 ) then
+
+                  WriteLigne = Recherche_PARENT_14( Compteur_Parent , View);
+
+                        //////////////////////////////////////////
+                        IF ( FileHandle == 0 ) Then
+                         MessageBox( FullPathFileName ,"2");
+                        End
+                        //////////////////////////////////////////
+
+
+                  FileWriteLn(FileHandle,WriteLigne);
+                 Else
+                 MessageBox(FullPathFileName,"Not Found **");
+                 End
+
+                 FileClose(FileHandle);
+        End
+      end
+
+      FileClose(LISTFileHandle);
+
+End
+/*****************************************************************************/
+function String Recherche_PARENT_14(String Compteur_Parent , string View )
+
+  int i;
+  String ViewLigne ="*";
+   Bool Exsit = False;
+   Bool Found = False;
+   String ReturnLine = "";
+
+   i = 0;
+   While( Exsit == False )
+     i =i+1;
+
+     If ( GetStrGateValue("Compteur_Code",i) == Compteur_Parent ) Then
+        If  (View != "") then
+         ViewLigne = Create_LIGNE_View( GetStrGateValue("Compteur_Energy",i) , "14" , GetStrGateValue("Compteur_Energy",i)+"_"+View+".txt" );
+        Else
+         ViewLigne = Create_LIGNE_View( GetStrGateValue("Compteur_Energy",i) , "14" , GetStrGateValue("Compteur_Energy",i)+".txt" );
+        End
+        Found = True;
+     end
+
+     IF ( Found == True || i > GetNumGateValue("MaxCompteur",0) ) Then  Exsit = True; End
+   End
+
+   if ( Found == True ) then
+    ReturnLine = "P:"+ViewLigne + "§"+ GetStrGateValue("Compteur_Code",i) +";"+ GetStrGateValue("Compteur_Name",i) +";"+ GetStrGateValue("Compteur_Energy",i)
+                                     +";"+ GetStrGateValue("compteur_Parent",i) +";"+ GetStrGateValue("compteur_Level",i)
+                                     +";"+ GetStrGateValue("compteur_PCP",i)+";"+ GetStrGateValue("compteur_PCD",i)+";"+ GetStrGateValue("compteur_PCC",i)
+                                     +";"+ GetStrGateValue("compteur_NameP",i)+";"+ GetStrGateValue("compteur_NameD",i)+";"+ GetStrGateValue("compteur_NameC",i);
+
+    Return ReturnLine;
+   Else
+    Return "-1";
+   End
+
+end
+
+/*****************************************************************************/
+/*                     Create_15_Files                                */
+/*****************************************************************************/
+function Void Create_15_Files( String ALLCOMPTEUR_LIGNE  )
+
+int NBR_Compteur;
+String Energy;
+String FullPathFileName;
+String Ligne;
+String ViewLigne;
+String WriteLigne;
+int ReadLevel;
+
+int i;
+int WEFileHandle;
+bool Found;
+String WEFullPathFileName;
+String FILENAME;
+int CHECK;
+String CompteurCode;
+String ENERGY;
+String POSTCODE;
+
+ String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\15\15_FILES_LIST.txt";
+ int LISTFileHandle = FileOpen(LISTFullPathFileName,"at");
+
+
+    Energy = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+
+
+        if( ALLCOMPTEUR_LIGNE != "") then
+
+                 CHECK = ANALYSE_Query( GetStrGateValue("Tableau_Query" ,15) , ALLCOMPTEUR_LIGNE );
+
+               If ( CHECK == 1 ) then
+                  CompteurCode = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,4,";");
+                  ENERGY = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+                  POSTCODE = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,7,";")+"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,8,";") +"/"+ Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,9,";");
+                  FILENAME = TemplateNameBuilder( "15" , "" , ENERGY ,POSTCODE,  CompteurCode)+ ".txt";
+
+                    WEFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\15\Files\"+FILENAME;
+
+                      If ( FileExist(WEFullPathFileName) == False ) Then
+                        //////////////////////////////////////////
+                        IF ( LISTFileHandle == 0 ) Then
+                         MessageBox( LISTFullPathFileName ,"3");
+                        End
+                        //////////////////////////////////////////
+                      FileWriteLn(LISTFileHandle,FILENAME);
+
+                      End
+
+                    WEFileHandle=FileOpen(WEFullPathFileName,"at");
+
+                   ViewLigne = Create_LIGNE_View( Energy , "15" , Energy+".txt" );
+
+                    WriteLigne = "F:"+ViewLigne+"§"+ALLCOMPTEUR_LIGNE;
+                        //////////////////////////////////////////
+                        IF ( WEFileHandle == 0 ) Then
+                         MessageBox( WEFullPathFileName ,"4");
+                        End
+                        //////////////////////////////////////////
+                    FileWriteLn(WEFileHandle,WriteLigne);
+
+                    FileClose(WEFileHandle);
+
+
+
+                End
+
+         end
+
+  FileClose(LISTFileHandle);
+
+end
+/*****************************************************************************/
+function String Create_LIGNE_View(String Energy, String Master, String ListFile )
+
+ String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\EnergyMeasureView.csv";
+ int FileHandle;
+ int POS;
+ String Ligne;
+ String WriteLigne = "*";
+ String EMVLigne;
+ String ViewLigne;
+ String Labal;
+ String PathFile = GetProjectPath()+"\TEMPLATES_GENERATED\"+ Master +"\Source\";
+ String VFullPathFileName;
+ int VFileHandle;
+ bool Exit = False;
+ Bool Found = False;
+ String OBJECTIF = "OB:";//OB:OE/0
+ int i = 0;
+
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if ( FileHandle == 0 ) then MessageBox("EnergyMeasureView","file not found");    return WriteLigne; end
+
+    Ligne = FileReadLn(FileHandle);
+
+    while (Exit == False)
+    Ligne = FileReadLn(FileHandle);
+
+      If (Ligne != "") then
+        IF (Fetch_TEMP_GENERATOR(Ligne,1,";") == Energy) then
+            EMVLigne = Ligne;
+            Found = true;
+        End
+      end
+
+      If (FileEof(FileHandle)!=0 || Found == true ) Then Exit = True;
+       Else Exit = False;
+      End
+
+    end
+
+  FileClose(FileHandle);
+
+
+   If ( Found == true ) Then
+     WriteLigne = "";
+       VFullPathFileName = PathFile + ListFile;
+
+       VFileHandle = FileOpen(VFullPathFileName,"rt");
+       if ( VFileHandle == 0 ) then    return WriteLigne; end
+
+        while ( FileEof(VFileHandle)==0 )
+
+         ViewLigne = FileReadLn(VFileHandle);
+            IF ( StrPos(ViewLigne,OBJECTIF) > 0 ) Then ViewLigne = Fetch_TEMP_GENERATOR(ViewLigne,2,"/"); End
+            ///MessageBox(ViewLigne,StrToInt(ViewLigne));
+              Labal =   Fetch_TEMP_GENERATOR(EMVLigne,StrToInt(ViewLigne)+2,";");
+              WriteLigne = WriteLigne + Labal + "#" + ViewLigne+";";
+
+        end
+
+     FileClose(VFileHandle);
+    Else
+    WriteLigne = "*";
+   End
+
+
+   return WriteLigne;
+end
+/*****************************************************************************/
+function void Add_Parent_15()
+       String CurrPath;
+       String FullPathFileName;
+       int FileHandle;
+       String Ligne;
+       String WriteLigne;
+       String View;
+       String Compteur_Parent;
+       Bool Exsit = False;
+       Bool Found = False;
+
+ String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\15\15_FILES_LIST.txt";
+ int LISTFileHandle = FileOpen(LISTFullPathFileName,"rt");
+
+
+       CurrPath = GetProjectPath()+"\TEMPLATES_GENERATED\15\Files\";
+
+       while ( FileEof(LISTFileHandle)==0 )
+
+       Ligne = FileReadLn(LISTFileHandle);
+         If (Ligne != "") Then
+
+             Compteur_Parent = Fetch_TEMP_GENERATOR(Ligne, 3 ,"_");
+
+             //View = Fetch_TEMP_GENERATOR(Ligne,3,"_");
+
+                 FullPathFileName = CurrPath + Ligne;
+                 FileHandle=FileOpen(FullPathFileName,"at");
+
+                 If ( FileHandle != 0 ) then
+
+                  WriteLigne = Recherche_PARENT_15( Compteur_Parent);
+
+                        //////////////////////////////////////////
+                        IF ( FileHandle == 0 ) Then
+                         MessageBox( FullPathFileName ,"5");
+                        End
+                        //////////////////////////////////////////
+
+                  FileWriteLn(FileHandle,WriteLigne);
+
+                 End
+
+                 FileClose(FileHandle);
+        End
+      end
+
+      FileClose(LISTFileHandle);
+
+End
+//////////***********************************************************//////////
+function String Recherche_PARENT_15(String Compteur_Parent)
+
+  int i;
+  String ViewLigne ="*";
+   Bool Exsit = False;
+   Bool Found = False;
+   String ReturnLine;
+
+   i = 0;
+   While( Exsit == False )
+     i =i+1;
+
+     If ( GetStrGateValue("Compteur_Code",i) == Compteur_Parent ) Then
+
+         ViewLigne = Create_LIGNE_View( GetStrGateValue("Compteur_Energy",i) , "15" , GetStrGateValue("Compteur_Energy",i)+".txt" );
+
+        Found = True;
+     end
+
+     IF ( Found == True || i > GetNumGateValue("MaxCompteur",0) ) Then  Exsit = True; End
+   End
+
+   if ( Found == True ) then
+        ReturnLine = "P:"+ViewLigne + "§"+ GetStrGateValue("Compteur_Code",i) +";"+ GetStrGateValue("Compteur_Name",i) +";"+ GetStrGateValue("Compteur_Energy",i)
+                                     +";"+ GetStrGateValue("compteur_Parent",i) +";"+ GetStrGateValue("compteur_Level",i)
+                                     +";"+ GetStrGateValue("compteur_PCP",i)+";"+ GetStrGateValue("compteur_PCD",i)+";"+ GetStrGateValue("compteur_PCC",i)
+                                     +";"+ GetStrGateValue("compteur_NameP",i)+";"+ GetStrGateValue("compteur_NameD",i)+";"+ GetStrGateValue("compteur_NameC",i);
+       Return ReturnLine;
+   Else
+    Return "-1";
+   End
+
+end
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+/*                     Create_Templates_10                                   */
+/*****************************************************************************/
+function void Create_Templates_10()
+
+       String CurrPath;
+       String FullPath;
+       String CurrFile;
+       int Handle;
+       String Template_generated_D;
+       String Template_generated_W;
+       String Template_generated_R;
+
+       String OriginalTemplate;
+       String WebOriginalTemplate;
+       String RapportOriginalTemplate;
+       String LIST_Ligne;
+       String CurrReportCode;
+
+
+       int j = 0;
+       int P;
+       String CMP_NBR_TONNAGE;
+       int NBR_Compteur = 0;
+       String FullPathFileName;
+       String Txt;
+       String View;
+       Bool TonnageFound = False;
+       String COMPTEUR_LIGNE;
+       String LABAL_LIGNE;
+
+       int FileHandle;
+       string Ligne;
+
+
+    String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\10\10_FILES_LIST.txt";
+    int LISTFileHandle = FileOpen(LISTFullPathFileName,"rt");
+
+    String GT_FullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_V"+ GetStrGateValue("version",0)+".csv";
+    int GT_FileHandle = FileOpen(GT_FullPathFileName,"at");
+
+       CurrPath=GetProjectPath()+"\TEMPLATES_GENERATED\10\Files\";
+
+
+       While ( FileEof(LISTFileHandle) == 0 )
+
+        LIST_Ligne = FileReadLn(LISTFileHandle);
+
+            If ( LIST_Ligne != "" ) then
+                           ////////// Select Source File
+
+                           //View = Fetch_TEMP_GENERATOR(LIST_Ligne,2,";");
+
+                           CMP_NBR_TONNAGE = NBR_CMP_10( CurrPath+LIST_Ligne );
+
+
+                           NBR_Compteur = StrToInt( Fetch_TEMP_GENERATOR(CMP_NBR_TONNAGE,2,";" ) );
+
+
+                           If ( Fetch_TEMP_GENERATOR(CMP_NBR_TONNAGE,1,";") == "TRUE" ) Then TonnageFound = True;   End
+                           If ( Fetch_TEMP_GENERATOR(CMP_NBR_TONNAGE,1,";") == "FALSE" ) Then TonnageFound = False;   End
+
+
+                           If ( TonnageFound == true ) Then
+
+                               Template_generated_D = "10;D;10_"+NBR_Compteur+"_T;"+LIST_Ligne+";";
+                               Template_generated_W = "10;W;WEB_10_"+NBR_Compteur+"_T;"+LIST_Ligne+";";
+                               Template_generated_R = "10;R;Rapport_10_"+NBR_Compteur+"_T;"+LIST_Ligne+";";
+
+                            OriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\10_"+NBR_Compteur+"_T";
+                            WebOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\WEB_10_"+NBR_Compteur+"_T";
+                            RapportOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\Rapport_10_"+NBR_Compteur+"_T";
+                           Else
+
+                               Template_generated_D = "10;D;10_"+ NBR_Compteur +";"+LIST_Ligne+";";
+                               Template_generated_W = "10;W;WEB_10_" + NBR_Compteur + ";"+LIST_Ligne+";";
+                               Template_generated_R = "10;R;Rapport_10_" +NBR_Compteur+";"+LIST_Ligne+";";
+
+                            OriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\10_"+NBR_Compteur;
+                            WebOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\WEB_10_"+NBR_Compteur;
+                            RapportOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\10\Source\Rapport_10_"+NBR_Compteur;
+                           End
+
+                           //////////////////////
+
+                         If ( FileExist( OriginalTemplate) == True ) Then
+                           FileHandle=FileOpen(CurrPath+LIST_Ligne,"rt");
+                           If ( FileHandle != 0 ) then
+
+                            While(FileEof(FileHandle)==0)
+                            Ligne = FileReadLn(FileHandle);
+                             IF (Ligne != "") Then
+
+                             CurrReportCode = Get_LastReport_Code();
+
+
+                               COMPTEUR_LIGNE = Fetch_TEMP_GENERATOR(Ligne,2,"§");
+                               LABAL_LIGNE = Fetch_TEMP_GENERATOR(Ligne,1,"§");
+                               View = Fetch_TEMP_GENERATOR(LIST_Ligne,3,"_");
+                               View = Fetch_TEMP_GENERATOR(View,1,".txt");
+
+                               j=j+1;
+
+
+
+                                      IF ( Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,3,";") == "Tonnage") Then    j = 0; End
+
+                                      //OriginalTemplate = Build_Template_10( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,OriginalTemplate, "Desk",CurrReportCode);
+
+                                      //WebOriginalTemplate = Build_Template_10( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,WebOriginalTemplate, "WEB",CurrReportCode);
+
+                                      RapportOriginalTemplate = Build_Template_10( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,RapportOriginalTemplate, "RAPPORT",CurrReportCode);
+
+                             End // Ligne != ""
+
+                            End//While
+
+                           Template_generated_D = Template_generated_D + OriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           Template_generated_W = Template_generated_W + WebOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           Template_generated_R = Template_generated_R + RapportOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+
+                           FileWriteLn(GT_FileHandle,Template_generated_D);
+                           FileWriteLn(GT_FileHandle,Template_generated_W);
+                           FileWriteLn(GT_FileHandle,Template_generated_R);
+                           End//FileHandle != 0
+
+                           FileClose(FileHandle);
+
+                           j = 0;
+
+                           //////////////////////
+
+
+                          End
+
+
+            End // LIST_Ligne != ""
+       End // While
+
+       FileClose(LISTFileHandle);
+        FileClose(GT_FileHandle);
+ End
+/*****************************************************************************/
+/*                                 Build_Template_10                         */
+/*****************************************************************************/
+function String Build_Template_10( String COMPTEUR_LIGNE , String LABAL_LIGNE, int NBR_Compteur ,string View, String NumCompteur, string TemplateName, String Type, String CurrReportCode)
+ String FullPathFileName;
+ int FileHandle;
+ String WFullPathFileName;
+ int WFileHandle;
+ string CurrPath;
+ String Ligne;
+ String Name;
+ int i = 0;
+ String FindEnergy;
+ String FindCompteur;
+ String FindLabel;
+ String FindList;
+ String CWrite;
+ String EWrite;
+ String LWrite;
+ String LABWrite;
+ String Partie;
+ String Label;
+ String List;
+ String w;
+ String FindCompteurobj;
+ String Energy;
+ String P_FixEnergy;
+ String CompteurTrueNumber;
+ String INPUCODE;
+ String ReportFolder;
+ String ReportPath;
+ int POS;
+ int j=0;
+ String path;
+ String ENERGY;
+ String CompteurCode;
+
+ String Report_PATH;
+ String Report_NAME;
+ String Report_Tableau = "10";
+ String Report_View;
+ String Report_Energy = "-";
+ String Report_PostCode;
+ String Report_Compteur= "-";
+
+ String Write;
+ int L;
+ String replace;
+ Bool Found = False;
+ String NameFile;
+ Bool Exit = false;
+ String FolderCreate;
+ String P_CONS;
+ String ReportLine;
+ String Report_navigator_Line;
+ String CodeUnique;
+ String Compteur_ShortName;
+ String Compteur_LongName;
+ String Report_Tableau_Short;
+ String Report_Description;
+
+
+  P_CONS = Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,9, ";" );
+    ENERGY = Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,3, ";" );
+      CompteurCode = Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,1, ";" );
+
+ FullPathFileName = TemplateName;
+
+ FileHandle = FileOpen(FullPathFileName,"rt");
+ if ( FileHandle == 0 ) then    return "";  end
+
+    Name = TemplateNameBuilder( "10" , View , ENERGY ,"*/*/"+P_CONS,  CompteurCode);
+
+   IF ( Type == "Desk" ) Then
+    CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\10\T_DESKTOP\";
+   End
+
+
+   IF ( Type == "WEB" ) Then
+       CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\10\T_WEB\";
+   End
+
+
+   IF ( Type == "RAPPORT" ) Then
+       Name = TemplateNameBuilder( "10" , View , ENERGY ,"*/*/"+P_CONS, CompteurCode);
+       CurrPath = GetProjectPath() +  "\TEMPLATES_GENERATED\10\T_REPORT\";
+       Report_View      = GetViewName( View );
+       Report_PostCode  = "#&#&"+  Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,12, ";" );
+       Report_Energy    = "-";
+       Report_Compteur  = "-";
+       Compteur_ShortName = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+       Compteur_LongName  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,22,";");
+       Report_Tableau   = GetStrGateValue("TableauNames",10);
+       Report_Tableau_Short = GetStrGateValue("Tableau_ShortName",10);
+
+       CodeUnique = GET_UNIQUE_CODE("10" , View , Report_Energy , "*/*/"+P_CONS , Report_Compteur);
+
+       //CodeUnique = "10_"+Report_Energy+"_"+ "#&#&"+P_CONS +"_"+View+"_"+Report_Compteur;
+
+        //Report_NAME =  Report_Tableau_Short;
+        Report_Description =  Report_Tableau ;
+        Name = "Chart_" + Name;
+
+       IF (Report_PostCode != "-" || Report_PostCode != "*" )   Then
+        //Report_NAME = Report_NAME +"_#&#&"+P_CONS;
+        Report_Description = Report_Description +"_"+ Report_PostCode ;
+        //Name = Name + "_#&#&"+P_CONS ;
+       End
+
+       IF (Report_Energy != "-" || Report_Energy != "*" )       Then
+        //Report_NAME = Report_NAME +"_"+ Report_Energy;
+        Report_Description = Report_Description +"_"+ Report_Energy ;
+        //Name = Name +"_"+ Report_Energy ;
+       End
+
+       IF (Report_View != "-" || Report_View != "*" )           Then
+        //Report_NAME = Report_NAME +"_"+ View;
+        Report_Description = Report_Description +"_"+ Report_View ;
+        //Name = Name +"_"+ View ;
+       End
+
+       IF (Report_Compteur != "-" || Report_Compteur != "*" )   Then
+        //Report_NAME = Report_NAME +"_"+ Compteur_ShortName;
+        Report_Description = Report_Description +"_"+ Compteur_LongName ;
+       //Name = Name +"_"+ Report_Compteur ;
+       End
+
+                //Name = Name + "_V"+ GetStrGateValue("version",0);
+       Report_NAME = BuildReportNAME( "10" , Report_View , ENERGY ,"*/*/"+Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,12, ";" ), CompteurCode);
+       Report_navigator_Line = "10;"+Report_Tableau + ";" + Report_Energy +";" + Report_Energy +";" + View + ";"+ Report_View + ";" + "#&#&"+P_CONS +";"+ Report_PostCode +";"+Report_Compteur + ";" + Compteur_LongName;
+
+       ReportLine = NextReport_Code( CurrReportCode ) + ";" + Report_NAME +";" + Report_navigator_Line;
+
+       ///Report_NAME = Report_Tableau +"_"+ Report_Energy +"_"+ Report_PostCode +"_"+ Report_View +"_"+ Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+
+       BuildNewReport(  ReportLine ,Name, CodeUnique, Report_Description);
+
+
+  End
+
+
+ WFullPathFileName = CurrPath+"W"+Name;
+ WFileHandle = FileOpen(WFullPathFileName,"wt");
+
+
+     FindEnergy    = "NEnergy_"+NumCompteur;
+     FindCompteur  = "Compteur_"+NumCompteur;
+     FindCompteurobj="CompteurOb"+NumCompteur;
+
+     For i = 1 to 14 do
+        IF ( Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,3, ";" ) == GetStrGateValue("Energy_Name",i)) then
+           P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+           CompteurTrueNumber = StrDelete( Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,1, ";" ),1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+        End
+     End
+
+    INPUCODE = "O"+P_FixEnergy+CompteurTrueNumber;
+
+  While(FileEof(FileHandle)==0)
+  Ligne = FileReadLn(FileHandle);
+    Found = False;
+    Exit = false;
+    If (Ligne != "") then
+
+
+     CWrite = FINDAndREPLACE_TEMP_GENERATOR(Ligne,FindCompteur,Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,1, ";" ) );
+     CWrite = FINDAndREPLACE_TEMP_GENERATOR(CWrite,FindCompteurobj,INPUCODE);
+
+        Exit = False;
+        Found = False;
+        i=0;
+
+        While ( Exit == False )
+          i = i+1;
+          FindList="List_"+NumCompteur+i;
+          FindLabel="Label"+NumCompteur+"."+i;
+
+          Partie = Fetch_TEMP_GENERATOR( LABAL_LIGNE ,i, ";" ) ;
+          Label = Fetch_TEMP_GENERATOR( Partie ,1, "#" );
+          List  = Fetch_TEMP_GENERATOR( Partie ,2, "#" );
+
+
+          If (StrPos(List,"OB:") != 0 )Then
+            List  = Fetch_TEMP_GENERATOR( List ,2, "/" );
+            Label = "OB:" + Label;
+          End
+
+          LWrite = FR_TEMP_GENERATOR(CWrite,FindList,List);
+
+            IF (LWrite != "*") then
+               w=LWrite;
+               Exit = True;
+               Found = True;
+             Else
+                LABWrite = FR_TEMP_GENERATOR(CWrite,FindLabel,Label);
+                IF (LABWrite != "*") then
+                   Exit = True;
+                   Found = True;
+                   w=LABWrite;
+                 else
+                   w=CWrite;
+                end
+           End
+
+            IF ( i >= 9) then Exit = True;    End
+        END
+
+        path= GetStrGateValue("TableauNames",10) +" | "+ View +" | "+ ENERGY +" | "+ Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE , 12, ";" );
+        Write = FINDAndREPLACE_TEMP_GENERATOR( w,"Path",path );
+        EWrite = FINDAndREPLACE_TEMP_GENERATOR(Write,FindEnergy,  Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,3, ";" ) );
+
+
+        FileWriteLn(WFileHandle,EWrite);
+    End
+  End
+
+
+  FileClose(FileHandle);
+  FileClose(WFileHandle);
+
+    FileCopy(CurrPath+"W"+Name,CurrPath+Name,False);
+    FileDelete(CurrPath+"W"+Name);
+
+  return CurrPath+Name;
+end
+/*****************************************************************************/
+/*                     Create_Templates_14                                   */
+/*****************************************************************************/
+function void Create_Templates_14()
+
+       String CurrPath;
+       String FullPath;
+       String CurrFile;
+       int Handle;
+       String Template_generated_D;
+       String Template_generated_W;
+       String Template_generated_R;
+
+       String OriginalTemplate;
+       String WebOriginalTemplate;
+       String RapportOriginalTemplate;
+       String LIST_Ligne;
+       Int ListNBR = 0;
+
+       int j = 0;
+       int P;
+       String CMP_NBR_TONNAGE;
+       int NBR_Compteur = 0;
+       String FullPathFileName;
+       String Txt;
+       String View;
+       Bool TonnageFound = False;
+       String COMPTEUR_LIGNE;
+       String LABAL_LIGNE;
+        String CurrReportCode;
+       int FileHandle;
+       string Ligne;
+
+    String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\14\14_FILES_LIST.txt";
+    int LISTFileHandle = FileOpen(LISTFullPathFileName,"rt");
+
+    String GT_FullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_V"+ GetStrGateValue("version",0)+".csv";
+    int GT_FileHandle = FileOpen(GT_FullPathFileName,"at");
+
+     String TEMP_FullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\14\TEMPLATES.txt";
+    int TEMP_FileHandle = FileOpen(TEMP_FullPathFileName,"wt");
+
+       CurrPath=GetProjectPath()+"\TEMPLATES_GENERATED\14\Files\";
+
+       While ( FileEof(LISTFileHandle) == 0 )
+
+        LIST_Ligne = FileReadLn(LISTFileHandle);
+        ListNBR = ListNBR+1;
+
+        //If ( ListNBR > 256 ) then
+        //MessageBox(ListNBR,"ListNBR");
+            If ( LIST_Ligne != ""  ) then
+                           ////////// Select Source File
+
+                           NBR_Compteur = NBR_CMP_14( CurrPath+LIST_Ligne );
+
+                               Template_generated_D = "14;D;14_"+NBR_Compteur+";"+LIST_Ligne+";";
+                               Template_generated_W = "14;W;WEB_14_"+NBR_Compteur+";"+LIST_Ligne+";";
+                               Template_generated_R = "14;R;Rapport_14_"+NBR_Compteur+";"+LIST_Ligne+";";
+
+                            OriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\14\Source\14_"+NBR_Compteur;
+                            WebOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\14\Source\WEB_14_"+NBR_Compteur;
+                            RapportOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\14\Source\Rapport_14_"+NBR_Compteur;
+
+                           //////////////////////
+                         If ( FileExist(OriginalTemplate) == True ) Then
+                           ////////// Read File
+                         FileHandle=FileOpen(CurrPath+LIST_Ligne,"rt");
+
+                          If ( FileHandle != 0 ) then
+
+                           FileWriteLn(TEMP_FileHandle,LIST_Ligne + " " + ListNBR + " " +  OriginalTemplate );
+
+                            While(FileEof(FileHandle)==0)
+                              Ligne = FileReadLn(FileHandle);
+                               IF (Ligne != "") Then
+                               CurrReportCode = Get_LastReport_Code();
+
+                                 COMPTEUR_LIGNE = Fetch_TEMP_GENERATOR(Ligne,2,"§");
+                                 LABAL_LIGNE = Fetch_TEMP_GENERATOR(Ligne,1,"§");
+                                 LABAL_LIGNE = StrDelete(LABAL_LIGNE,1,2);
+                                 View = Fetch_TEMP_GENERATOR(LIST_Ligne,3,"_");
+
+                                  j=j+1;
+
+
+                                    //IF ( j <= NBR_Compteur+1 ) then
+
+
+                                     OriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,OriginalTemplate,Fetch_TEMP_GENERATOR(Ligne,1,":"), "Desk" , "14",CurrReportCode);
+
+                                     WebOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,WebOriginalTemplate,Fetch_TEMP_GENERATOR(Ligne,1,":"), "WEB" , "14",CurrReportCode);
+
+                                     RapportOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,RapportOriginalTemplate,Fetch_TEMP_GENERATOR(Ligne,1,":"), "RAPPORT" , "14",CurrReportCode);
+//
+                                     //RapportOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,RapportOriginalTemplate, "RAPPORT" , "14");
+
+                                    //End
+                                End
+
+                            End
+                           Template_generated_D = Template_generated_D + OriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           Template_generated_W = Template_generated_W + WebOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           Template_generated_R = Template_generated_R + RapportOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                        //////////////////////////////////////////
+                        IF ( GT_FileHandle == 0 ) Then
+                         MessageBox( GT_FullPathFileName ,"6");
+                        End
+                        //////////////////////////////////////////
+                           FileWriteLn(GT_FileHandle,Template_generated_D);
+                           FileWriteLn(GT_FileHandle,Template_generated_W);
+                           FileWriteLn(GT_FileHandle,Template_generated_R);
+                          End
+
+                           FileClose(FileHandle);
+                           j = 0;
+                           //////////////////////
+                           Else
+
+                            FileWriteLn(TEMP_FileHandle, "NOT FOUND " +LIST_Ligne + " " + ListNBR + " " +  OriginalTemplate );
+                         End
+
+            End // LIST_Ligne != ""
+         // End
+       End // While
+
+       FileClose(LISTFileHandle);
+       FileClose(GT_FileHandle);
+       FileClose(TEMP_FileHandle);
+ End
+/*****************************************************************************/
+/*                                 Build_Template_14                         */
+/*****************************************************************************/
+function String Build_Template_14( String COMPTEUR_LIGNE , String LABAL_LIGNE , int NBR_Compteur ,String View, int NumCompteur, string TemplateName , string TYPE,  string WEB_DESK,  String MASTER , String CurrReportCode)
+ String FullPathFileName;
+ int FileHandle;
+ String WFullPathFileName;
+ int WFileHandle;
+ string CurrPath;
+ String Ligne;
+ String Name;
+ int i = 0;
+ //String FindEnergy;
+ String FindCompteur;
+ String FindLabel;
+ String FindList;
+ String CWrite;
+ String NWrite;
+ String LWrite;
+ String LABWrite;
+ String Partie;
+ String Label;
+ String CName;
+ String List;
+ String path;
+ String Write;
+
+ String Report_PATH ="";
+ String Report_NAME="";
+ String Report_Tableau = MASTER;
+ String Report_View="";
+ String Report_Energy ="";
+ String Report_PostCode= "-";
+ String Report_Compteur="";
+ String Report_Tableau_Short="" ;
+ String Report_Description ="" ;
+ String Compteur_ShortName="";
+ String Compteur_LongName="";
+ String Report_Pc_Code;
+
+  String ReportLine;
+ String Report_navigator_Line;
+ String CodeUnique;
+
+ String ENERGY;
+ String CompteurCode;
+ String w;
+ int POS;
+ Bool Found = False;
+ Bool Exit = false;
+     String LOGFullPathFileName ;
+     int LOGFileHandle;
+
+    //LOGFullPathFileName =GetProjectPath()+"\14_ShareTEnergy\LOG.txt";
+    //LOGFileHandle = FileOpen(LOGFullPathFileName,"at");
+
+    //MessageBox(TYPE,MASTER);
+
+    ENERGY = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,3,";");
+
+
+        FullPathFileName = TemplateName;
+        FileHandle = FileOpen(FullPathFileName,"rt");
+        if ( FileHandle == 0 ) then
+
+            //////////////////////////Log File ////////////////////////////
+            ///FileWriteLn(LOGFileHandle,">>NOT FOUND "+TemplateName+"_"+FileHandle);
+            ///////////////////////////////////////////////////////////////
+        //FileClose(LOGFileHandle);
+        return "";
+        end
+
+        //CurrPath = GetProjectPath() + "\14_ShareTEnergy\Templates\";
+
+    IF ( WEB_DESK == "Desk" )       Then   CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_DESKTOP\";  End
+    IF ( WEB_DESK == "WEB" )        Then   CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_WEB\";      End
+    IF ( WEB_DESK == "RAPPORT" )    Then   CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_REPORT\";   End
+
+    //////////////////////////Log File ////////////////////////////
+    //FileWriteLn(LOGFileHandle,"Open Reading "+TemplateName+"_"+FileHandle);
+    ///////////////////////////////////////////////////////////////
+
+
+   IF ( TYPE ==  "F") then
+
+        CompteurCode = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,4,";"); // Parent
+        Name = TemplateNameBuilder( MASTER , View , ENERGY ,"", CompteurCode);
+
+        IF ( WEB_DESK == "RAPPORT" ) Then
+         Report_View      = GetViewName( View );
+         Report_PostCode  = "-";
+         Report_Energy    = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,3,";");
+         Report_Compteur  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,4,";");
+         Report_Tableau   = GetStrGateValue("TableauNames",StrToInt(MASTER));
+         IF ( MASTER =="15") Then Report_View = "-"; View = "-"; End
+
+         //Name = "Chart_" + MASTER +"_"+ Report_Energy +"_"+ Report_PostCode +"_"+ Report_View +"_"+ Report_Compteur;
+                 Name = "Chart_" + Name ;
+
+            /*IF (Report_PostCode != "-" || Report_PostCode != "*" )   Then
+                Name = Name +"_"+ Report_PostCode ;
+            End
+
+            IF (Report_Energy != "-" || Report_Energy != "*" )       Then
+                Name = Name +"_"+ Report_Energy ;
+            End
+
+            IF (Report_View != "-" || Report_View != "*" )           Then
+                Name = Name +"_"+ View ;
+            End
+
+            IF (Report_Compteur != "-" || Report_Compteur != "*" )   Then
+                Name = Name +"_"+ Report_Compteur ;
+            End*/
+
+            //Name = Name + "_V"+ GetStrGateValue("version",0);
+        End
+
+
+
+        WFullPathFileName = CurrPath+"W"+Name;
+        WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+        While(FileEof(FileHandle)==0)
+            Ligne = FileReadLn(FileHandle);
+            Found = False;
+            Exit = false;
+            If (Ligne != "") then
+
+
+                FindCompteur  = "Compteur_" + NumCompteur + "*" ;
+                //CName         = "unit_"+NumCompteur;
+                CName         = "Cmp_Name_" + NumCompteur + "*" ;
+
+                CWrite = FINDAndREPLACE_TEMP_GENERATOR( Ligne, FindCompteur , Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,1,";"));
+                NWrite = FINDAndREPLACE_TEMP_GENERATOR( CWrite, CName , Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";"));
+                FileWriteLn(WFileHandle,NWrite);
+
+            End
+        End
+
+      FileClose(FileHandle);
+      FileClose(WFileHandle);
+
+         FileCopy(WFullPathFileName,CurrPath+Name,False);
+         FileDelete(WFullPathFileName);
+    //MessageBox(CurrPath+Name,"");
+         Return CurrPath+Name;
+
+   Else
+
+       Report_View      = GetViewName( View );
+       Report_PostCode  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,9,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,10,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,11,";");
+       Report_Pc_Code   = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,6,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,7,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,8,";");
+       Report_Energy    = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,3,";");
+       Report_Compteur  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,1,";");
+       Compteur_ShortName = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+       Compteur_LongName  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+       Report_Tableau   = GetStrGateValue("TableauNames",StrToInt(MASTER));
+       Report_Tableau_Short = GetStrGateValue("Tableau_ShortName",StrToInt(MASTER));
+
+      IF ( TYPE ==  "P") then
+
+        CompteurCode = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,1,";");
+        Name = TemplateNameBuilder( MASTER , View , ENERGY ,"",  CompteurCode);
+
+        CreateGroupeChart( COMPTEUR_LIGNE , "INC" );
+
+      IF ( WEB_DESK == "RAPPORT" ) Then
+
+       //CurrPath = GetProjectPath() +  "\TEMPLATES_GENERATED\"+ MASTER +"\T_REPORT\";
+
+
+
+       //MessageBox(COMPTEUR_LIGNE,Compteur_LongName);
+
+       IF ( MASTER =="15") Then Report_View = "-"; View = "-"; End
+
+       //CodeUnique = MASTER +"_"+Report_Energy+"_"+ Report_Pc_Code +"_"+View+"_"+Report_Compteur;
+       CodeUnique = GET_UNIQUE_CODE( MASTER , View , Report_Energy , Report_Pc_Code , Report_Compteur);
+
+       //Name = "Chart_" + MASTER +"_"+ Report_Energy +"_"+ Report_PostCode +"_"+ Report_View +"_"+ Report_Compteur;
+
+        //Report_NAME =  Report_Tableau_Short;
+        Report_Description =  Report_Tableau ;
+        Name = "Chart_" + Name ;
+
+       IF (Report_PostCode != "-" || Report_PostCode != "*" )   Then
+        //Report_NAME = Report_NAME +"_"+ Report_PostCode;
+        Report_Description = Report_Description +"_"+ Report_PostCode ;
+        ///Name = Name +"_-";
+       End
+
+       IF (Report_Energy != "-" || Report_Energy != "*" )       Then
+        //Report_NAME = Report_NAME +"_"+ Report_Energy;
+        Report_Description = Report_Description +"_"+ Report_Energy ;
+        //Name = Name +"_"+ Report_Energy ;
+       End
+
+       IF (Report_View != "-" || Report_View != "*" )           Then
+        //Report_NAME = Report_NAME +"_"+ View;
+        Report_Description = Report_Description +"_"+ Report_View ;
+        //Name = Name +"_"+ View ;
+       End
+
+       IF (Report_Compteur != "-" || Report_Compteur != "*" )   Then
+        //Report_NAME = Report_NAME +"_"+ Compteur_ShortName;
+        Report_Description = Report_Description +"_"+ Compteur_LongName ;
+        ///Name = Name +"_"+ Report_Compteur ;
+       End
+
+       //MessageBox(Report_Description,Compteur_LongName);
+
+        //Name =  Name + "_V"+ GetStrGateValue("version",0);
+
+        Report_NAME = BuildReportNAME( MASTER , Report_View , ENERGY ,"*/*/"+Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE ,12, ";" ), Compteur_LongName);
+
+       Report_navigator_Line = MASTER +";"+Report_Tableau + ";" + Report_Energy +";" + Report_Energy +";" + View + ";"+ Report_View + ";" + Report_Pc_Code+";"+ Report_PostCode + ";"+Report_Compteur + ";" + Compteur_LongName;
+
+       ReportLine = NextReport_Code( CurrReportCode ) + ";" + Report_NAME +";" + Report_navigator_Line;
+
+       ///Report_NAME = Report_Tableau +"_"+ Report_Energy +"_"+ Report_PostCode +"_"+ Report_View +"_"+ Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+
+       BuildNewReport(  ReportLine ,Name, CodeUnique, Report_Description);
+
+
+      End
+
+
+        WFullPathFileName = CurrPath+"W"+Name;
+        WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+        //MessageBox(WFullPathFileName,WFileHandle);
+
+          While(FileEof(FileHandle)==0)
+           Ligne = FileReadLn(FileHandle);
+           Found = False;
+           Exit = false;
+           If (Ligne != "") then
+
+           FindCompteur  = "Compteur_P";
+           CName         = "Cmp_Name_P";
+
+              Exit = False;
+              i=0;
+              While ( Exit == False )
+                i = i+1;
+                FindList="List_"+i;
+                FindLabel="Label_"+i;
+
+                Partie = Fetch_TEMP_GENERATOR(LABAL_LIGNE,i,";");
+                POS = StrPos(Partie,"#");
+                Label = StrSubString(Partie,1,POS-1);
+                List = StrDelete(Partie,1,POS);
+
+                LWrite = FR_TEMP_GENERATOR(Ligne,FindList,List);
+
+
+                IF (LWrite != "*") then
+
+                w=LWrite;
+                Exit = True;
+                //Found = True;
+
+                Else
+
+                    LABWrite = FR_TEMP_GENERATOR(Ligne,FindLabel,Label);
+
+                    IF (LABWrite != "*") then
+                        Exit = True;
+                        //Found = True;
+                        w=LABWrite;
+                        else
+                        w=Ligne;
+                    end
+                End
+
+                IF ( i >= 15) then Exit = True;    End
+              End
+              IF ( MASTER == "14" ) Then
+                path = GetStrGateValue("TableauNames",StrToInt(MASTER)) +" | "+ Report_View +" | "+ ENERGY +" | "+ Compteur_ShortName;
+               Else
+                IF (MASTER == "15") Then
+                path = GetStrGateValue("TableauNames",StrToInt(MASTER)) +" | "+ Compteur_ShortName +" | "+ ENERGY +" | "+ Fetch_TEMP_GENERATOR( COMPTEUR_LIGNE , 12, ";" );
+                End
+              End
+
+              Write = FINDAndREPLACE_TEMP_GENERATOR( w,"Path",path );
+              NWrite = FINDAndREPLACE_TEMP_GENERATOR(Write,CName,Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";"));
+              CWrite = FINDAndREPLACE_TEMP_GENERATOR(NWrite,FindCompteur,CompteurCode);
+
+                        //////////////////////////////////////////
+                        IF ( WFileHandle == 0 ) Then
+                         MessageBox( WFullPathFileName ,"7");
+                        End
+                        //////////////////////////////////////////
+              FileWriteLn(WFileHandle,CWrite);
+           End
+          End
+         FileClose(FileHandle);
+         FileClose(WFileHandle);
+
+         FileCopy(WFullPathFileName,CurrPath+Name,False);
+         FileDelete(WFullPathFileName);
+
+         Return CurrPath+Name;
+
+        End
+   End
+end
+/*****************************************************************************/
+/*                     Create_Templates_15                                   */
+/*****************************************************************************/
+function void Create_Templates_15()
+
+
+       String CurrPath;
+       String FullPath;
+       String CurrFile;
+       int Handle;
+       String Template_generated_D;
+       String Template_generated_W;
+       String Template_generated_R;
+
+       String OriginalTemplate;
+       String WebOriginalTemplate;
+       String RapportOriginalTemplate;
+       String LIST_Ligne;
+       Int ListNBR = 0;
+
+       int j = 0;
+       int P;
+       String CMP_NBR_TONNAGE;
+       int NBR_Compteur = 0;
+       String FullPathFileName;
+       String Txt;
+       String View;
+       Bool TonnageFound = False;
+       String COMPTEUR_LIGNE;
+       String LABAL_LIGNE;
+       String CurrReportCode;
+
+       int FileHandle;
+       string Ligne;
+
+    String LISTFullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\15\15_FILES_LIST.txt";
+    int LISTFileHandle = FileOpen(LISTFullPathFileName,"rt");
+
+    String GT_FullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_V"+ GetStrGateValue("version",0)+".csv";
+    int GT_FileHandle = FileOpen(GT_FullPathFileName,"at");
+
+     String TEMP_FullPathFileName =GetProjectPath()+"\TEMPLATES_GENERATED\15\TEMPLATES.txt";
+    int TEMP_FileHandle = FileOpen(TEMP_FullPathFileName,"wt");
+
+       CurrPath=GetProjectPath()+"\TEMPLATES_GENERATED\15\Files\";
+
+       While ( FileEof(LISTFileHandle) == 0 )
+
+        LIST_Ligne = FileReadLn(LISTFileHandle);
+        ListNBR = ListNBR+1;
+
+        //If ( ListNBR > 256 ) then
+        //MessageBox(ListNBR,"ListNBR");
+            If ( LIST_Ligne != ""  ) then
+                           ////////// Select Source File
+
+                           NBR_Compteur = NBR_CMP_14( CurrPath+LIST_Ligne );
+
+                               Template_generated_D = "15;D;15_"+NBR_Compteur+";"+LIST_Ligne+";";
+                               Template_generated_W = "15;W;WEB_15_"+NBR_Compteur+";"+LIST_Ligne+";";
+                               Template_generated_R = "15;R;Rapport_15_"+NBR_Compteur+";"+LIST_Ligne+";";
+
+                            OriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\15\Source\15_"+NBR_Compteur;
+                            WebOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\15\Source\WEB_15_"+NBR_Compteur;
+                            RapportOriginalTemplate = GetProjectPath()+"\TEMPLATES_GENERATED\15\Source\Rapport_15_"+NBR_Compteur;
+
+                           //////////////////////
+                         If ( FileExist(OriginalTemplate) == True ) Then
+                           ////////// Read File
+                         FileHandle=FileOpen(CurrPath+LIST_Ligne,"rt");
+
+                          If ( FileHandle != 0 ) then
+
+                           FileWriteLn(TEMP_FileHandle,LIST_Ligne + " " + ListNBR + " " +  OriginalTemplate );
+
+                            While(FileEof(FileHandle)==0)
+                              Ligne = FileReadLn(FileHandle);
+                               IF (Ligne != "") Then
+
+                               CurrReportCode = Get_LastReport_Code();
+
+                                 COMPTEUR_LIGNE = Fetch_TEMP_GENERATOR(Ligne,2,"§");
+                                 LABAL_LIGNE = Fetch_TEMP_GENERATOR(Ligne,1,"§");
+                                 LABAL_LIGNE = StrDelete(LABAL_LIGNE,1,2);
+                                 View = Fetch_TEMP_GENERATOR(LIST_Ligne,3,"_");
+
+
+                                  j=j+1;
+
+                                    //IF ( j <= NBR_Compteur+1 ) then
+                                    //MessageBox(Fetch_TEMP_GENERATOR(Ligne,1,":"),LIST_Ligne);
+
+                                     //OriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,OriginalTemplate, Fetch_TEMP_GENERATOR(Ligne,1,":") , "Desk" , "15",CurrReportCode);
+
+                                     //WebOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,WebOriginalTemplate,Fetch_TEMP_GENERATOR(Ligne,1,":"), "WEB", "15",CurrReportCode);
+
+                                     RapportOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,RapportOriginalTemplate,Fetch_TEMP_GENERATOR(Ligne,1,":"), "RAPPORT", "15",CurrReportCode);
+
+                                     //RapportOriginalTemplate = Build_Template_14( COMPTEUR_LIGNE,LABAL_LIGNE , NBR_Compteur ,View,j,RapportOriginalTemplate, "RAPPORT", "15");
+
+                                    //End
+                                End
+
+                            End
+                           Template_generated_D = Template_generated_D + OriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           Template_generated_W = Template_generated_W + WebOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                           //Template_generated_R = Template_generated_R + RapportOriginalTemplate + ";" + GetDateString("/",true) + ";" + GetStrGateValue("version",0);
+                        //////////////////////////////////////////
+                        IF ( GT_FileHandle == 0 ) Then
+                         MessageBox( GT_FullPathFileName ,"8");
+                        End
+                        //////////////////////////////////////////
+                           FileWriteLn(GT_FileHandle,Template_generated_D);
+                           FileWriteLn(GT_FileHandle,Template_generated_W);
+                           //FileWriteLn(GT_FileHandle,Template_generated_R);
+                          End
+
+                           FileClose(FileHandle);
+                           j = 0;
+                           //////////////////////
+                           Else
+
+                            FileWriteLn(TEMP_FileHandle, "NOT FOUND " +LIST_Ligne + " " + ListNBR + " " +  OriginalTemplate );
+                         End
+
+            End // LIST_Ligne != ""
+         // End
+       End // While
+
+       FileClose(LISTFileHandle);
+       FileClose(GT_FileHandle);
+       FileClose(TEMP_FileHandle);
+ End
+ //////////////////////////////////////////////////////////////////////////////
+ //
+ //////////////////////////////////////////////////////////////////////////////
+function void Create_Templates16_17( String ALLCOMPTEUR_LIGNE , String Template)
+string Ligne="";
+ string Code;
+ int P;
+ int i;
+ String CurrPath;
+ String FullPath;
+ String CurrFile;
+ int handle;
+ String OriginalTemplate;
+ string TemplateName;
+ String CurrReportCode;
+ String Energy;
+ String REEL_GATE;
+ Energy = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+ REEL_GATE = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,13,";");
+
+   IF ( Energy == "Tonnage" || Energy == "*" ) Then Return; End
+
+   If (REEL_GATE != "Reel" ) Then Return; End
+    CurrReportCode = Get_LastReport_Code();
+
+    Build_Template_16_17( ALLCOMPTEUR_LIGNE  ,  "DESK",  Template,CurrReportCode);
+    Build_Template_16_17( ALLCOMPTEUR_LIGNE  ,  "WEB",  Template,CurrReportCode);
+
+    Build_Template_16_17( ALLCOMPTEUR_LIGNE  ,  "RAPPORT",  Template,CurrReportCode);
+
+end
+/*****************************************************************************/
+/*                      Creation_Charts_Compteur                             */
+/*****************************************************************************/
+function void Build_Template_16_17( String COMPTEUR_LIGNE  ,  string WEB_DESK,  String MASTER, String CurrReportCode)
+ string Ligne="";
+ string ListLigne="";
+ string Write = "";
+ string path="";
+
+ String FullPathFileName;
+ int FileHandle;
+int handle;
+ String WFullPathFileName;
+ int WFileHandle;
+ String ENERGY;
+ String CompteurName;
+ String CompteurCode;
+ String CurrPath;
+ String TemplateName;
+
+  String Report_PATH ="";
+ String Report_NAME="";
+ String Report_Tableau = MASTER;
+ String Report_View="";
+ String Report_Energy ="";
+ String Report_PostCode= "-";
+ String Report_Compteur="";
+ String Report_Tableau_Short="" ;
+ String Report_Description ="" ;
+ String Compteur_ShortName="";
+ String Compteur_LongName="";
+ String Report_Pc_Code;
+ string Name;
+ String LABEL = "Retour";
+ String CLICK = "#OnClick:";
+ String DESK_CLICK = "  #OnClick: StartF,";
+ String WEB_CLICK  = "  #OnClick: Template,";
+ Bool   BACK = False;
+
+  String ReportLine;
+ String Report_navigator_Line;
+ String CodeUnique;
+
+
+    ENERGY = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,3,";");
+    CompteurCode = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,1,";");
+    CompteurName = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,2,";");
+
+    CreateGroupeChart( COMPTEUR_LIGNE, "" );
+
+    IF ( WEB_DESK == "DESK" )       Then
+        CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_DESKTOP\";
+        FullPathFileName = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\Source\" + MASTER + "_" + ENERGY ;
+    End
+    IF ( WEB_DESK == "WEB" )        Then
+        CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_WEB\";
+        FullPathFileName = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\Source\WEB_" + MASTER + "_" + ENERGY ;
+    End
+
+    TemplateName = TemplateNameBuilder( MASTER , "" , ENERGY ,"", CompteurCode);
+
+    //IF ( MASTER == "16" ) Then
+        Name = TemplateNameBuilder( MASTER , "" , "" ,"",  CompteurCode);
+
+        IF ( WEB_DESK == "RAPPORT"  )    Then
+        FullPathFileName = GetProjectPath() + "\TEMPLATES_GENERATED\"+MASTER+"\Source\Rapport_"+MASTER+"_"+ENERGY;
+        CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\" + MASTER + "\T_REPORT\";
+        CreateGroupeChart( COMPTEUR_LIGNE , "" );
+        ///////////////////////////////////////////////////////////////////////
+
+       Report_View      = "-";
+       Report_PostCode  = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,9,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,10,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,11,";");
+       Report_Pc_Code   = Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,6,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,7,";")+"&"+Fetch_TEMP_GENERATOR(COMPTEUR_LIGNE,8,";");
+       Report_Energy    = ENERGY;
+       Report_Compteur  = CompteurCode;
+       Compteur_ShortName = CompteurName;
+       Compteur_LongName  = CompteurName;
+       Report_Tableau   = GetStrGateValue("TableauNames",StrToInt(MASTER));
+       Report_Tableau_Short = GetStrGateValue("Tableau_ShortName",StrToInt(MASTER));
+
+       CodeUnique = GET_UNIQUE_CODE( MASTER , Report_View , Report_Energy , Report_Pc_Code , Report_Compteur);
+
+
+        //Report_NAME =  Report_Tableau_Short;
+        Report_NAME = Report_Tableau;
+        Report_Description =  Report_Tableau ;
+        Name = "Chart_" + Name ;
+
+       IF (Report_PostCode != "-" || Report_PostCode != "*" )   Then
+        //Report_NAME = Report_NAME +"_"+ Report_PostCode;
+        Report_Description = Report_Description +"_"+ Report_PostCode ;
+        //Name = Name +"_-";
+       End
+
+       IF (Report_Energy != "-" || Report_Energy != "*" )       Then
+        Report_NAME = Report_NAME +"_"+ Report_Energy;
+        Report_Description = Report_Description +"_"+ Report_Energy ;
+        //Name = Name +"_-";
+       End
+
+       IF (Report_View != "-" || Report_View != "*" )           Then
+        Report_NAME = Report_NAME +"_"+ Report_View;
+        Report_Description = Report_Description +"_"+ Report_View ;
+        //Name = Name +"_-";
+       End
+
+       IF (Report_Compteur != "-" || Report_Compteur != "*" )   Then
+        Report_NAME = Report_NAME +"_"+ Compteur_ShortName;
+        Report_Description = Report_Description +"_"+ Compteur_LongName ;
+        //Name = Name +"_"+ Report_Compteur ;
+       End
+
+       //MessageBox(Report_Description,Compteur_LongName);
+
+        //Name = Name + "_V"+ GetStrGateValue("version",0);
+
+       Report_navigator_Line = MASTER +";"+Report_Tableau + ";" + Report_Energy +";" + Report_Energy +";" + Report_View + ";"+ Report_View + ";" + Report_Pc_Code+";"+ Report_PostCode + ";"+Report_Compteur + ";" + Compteur_LongName;
+
+       ReportLine = NextReport_Code( CurrReportCode ) + ";" + Report_NAME +";" + Report_navigator_Line;
+
+       BuildNewReport(  ReportLine ,Name, CodeUnique, Report_Description);
+
+        TemplateName = Name;
+        ///////////////////////////////////////////////////////////////////////
+        End
+
+    //End
+
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+
+        if ( FileHandle == 0 ) then
+         Return;
+        end
+
+     WFullPathFileName = CurrPath + TemplateName ;
+
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      while(FileEof(FileHandle)==0)
+
+            Ligne = FileReadLn(FileHandle);
+            //path  = "Analyse technique | "+CompteurName+"_"+CompteurCode;
+            path = GetStrGateValue("TableauNames",17) +" | "+ ENERGY +" | "+ CompteurName;
+            //Write = FINDAndREPLACE_TEMP_GENERATOR(Ligne,"Path",path );
+
+            //Write = FINDAndREPLACE_TEMP_GENERATOR( Write,"PATH",path );
+            Write = FINDAndREPLACE_TEMP_GENERATOR( Ligne,"PATH",path );
+            Write = FINDAndREPLACE_TEMP_GENERATOR( Write,"Cmp_Name",CompteurName );
+            Write = FINDAndREPLACE_TEMP_GENERATOR( Write,"CompteurCode", CompteurCode);
+            Write = FINDAndREPLACE_TEMP_GENERATOR( Write,"ElectCompteur_charts", CompteurCode);
+
+            IF ( StrPos(Write,LABEL) > 0 ) Then BACK = True ; End
+
+            If (BACK == True) Then
+                //MessageBox(StrPos(Write,CLICK),WEB_DESK);
+               IF ( StrPos(Write,CLICK) > 0 )Then
+                BACK = False;
+                    //MessageBox(BackTemplate_DESK,"BackTemplate_DESK");
+                    If (WEB_DESK == "DESK") Then    Write = DESK_CLICK + BackTemplate_DESK;    End
+                    If (WEB_DESK == "WEB") Then     Write = WEB_CLICK + BackTemplate_WEB;    End
+                    //MessageBox(Write,BackTemplate_DESK);
+               End
+
+            End
+
+            FileWriteLn(WFileHandle,Write);
+
+      end
+        FileClose(WFileHandle);
+       FileClose(FileHandle);
+
+end
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+/*                     Fetch_TEMP_GENERATOR                                  */
+/*****************************************************************************/
+function string Fetch_TEMP_GENERATOR(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col-1 do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    //txt=StrDelete(txt,1,P);
+
+
+                If (CODE == "*") then CODE="#"; end
+
+                Return CODE;
+end
+/*****************************************************************************/
+/*                     FINDAndREPLACE                                        */
+/*****************************************************************************/
+function string FINDAndREPLACE_TEMP_GENERATOR(string Ligne,string search, string replace)
+    int P = 0;
+    string Txt = Ligne;
+    string V = Ligne;
+    String Partie1;
+    String Partie2;
+
+
+    P = StrPos(Txt,search);
+    if ( P == 0 ) then return V;
+      else
+
+       Partie1 = StrSubString(Txt,1,P-1);
+       Txt = StrDelete(Txt,1,P-1);
+       P = StrPos(Txt,",");
+
+        IF (P == 0) then Partie2 = "";
+        Else   Partie2 = StrDelete(Txt,1,P-1); End
+
+       V = Partie1 + replace + Partie2;
+
+    end
+
+    return V;
+end
+/*****************************************************************************/
+/*                         NBR_CMP_10                                        */
+/*****************************************************************************/
+function String NBR_CMP_10( string FullPathFileName )
+
+    int FileHandle;
+    string Ligne;
+    Bool Found = False;
+    int NBR_Compteur = 0;
+    String ALLCOMPTEUR_LIGNE;
+    String Out = "FALSE;0";
+
+    Bool TonnageFound = False;
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if ( FileHandle == 0 ) then MessageBox(FullPathFileName,"");    return Out;  end
+
+
+    While( FileEof(FileHandle)==0  )
+        Ligne = FileReadLn(FileHandle);
+        ALLCOMPTEUR_LIGNE = Fetch_TEMP_GENERATOR(Ligne,2,"§");
+
+             IF (  Ligne != "" ) then
+                If (Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";") == "Tonnage") Then
+                TonnageFound = True;
+                end
+                NBR_Compteur=NBR_Compteur+1;
+             End
+
+    End
+
+    FileClose(FileHandle);
+
+
+    If ( TonnageFound == True) Then
+      NBR_Compteur = NBR_Compteur -1;
+      Out = "TRUE;" + IntToStr( NBR_Compteur );
+      Return Out;
+     Else
+       Out = "FALSE;" + IntToStr( NBR_Compteur );
+       Return Out;
+    End
+
+End
+/*****************************************************************************/
+/*                         NBR_CMP_10                                        */
+/*****************************************************************************/
+function int NBR_CMP_14( string FullPathFileName )
+
+    int FileHandle;
+    string Ligne;
+    //Bool Found = False;
+    int NBR_Compteur = 0;
+    Bool Found = False;
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if ( FileHandle == 0 ) then MessageBox(FullPathFileName,"");    return 0 ; end
+
+    While(FileEof(FileHandle)==0)
+        Ligne = FileReadLn(FileHandle);
+             IF (  Ligne != ""  ) then
+               If ( StrSubString(Ligne,1,1) == "P") Then
+                Found = True;
+               End
+
+               If ( StrSubString(Ligne,1,1) == "F") Then
+                NBR_Compteur=NBR_Compteur+1;
+               End
+
+             End
+    End
+
+    FileClose(FileHandle);
+
+    If ( Found == true ) then
+      //NBR_Compteur = NBR_Compteur-1;
+      Return NBR_Compteur;
+    Else
+      Return 0;
+    End
+
+End
+/*****************************************************************************/
+/*                         NFR_TGENERATOR                                    */
+/*****************************************************************************/
+function string FR_TEMP_GENERATOR(string Ligne,string search, string replace)
+    int P = 0;
+    string Txt = Ligne;
+    string V = "*";
+    String Partie1;
+    String Partie2;
+    P = StrPos(Txt,search);
+
+    if ( P == 0 ) then return V;
+      else
+
+       Partie1 = StrSubString(Txt,1,P-1);
+       Txt = StrDelete(Txt,1,P-1);
+       P = StrPos(Txt,",");
+
+        IF (P == 0) then Partie2 = "";
+        Else   Partie2 = StrDelete(Txt,1,P-1); End
+
+       V = Partie1 + replace + Partie2;
+    end
+
+    return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int ANALYSE_Query( String Query, String DATA_Ligne )
+
+    String Energy;
+    String CParent;
+    String CLevel;
+    String PostCode;
+    String PCP;
+    String PCD;
+    String PCC;
+    String EnergyParent;
+
+    String DATA_Energy;
+    String DATA_CParent;
+    String DATA_CLevel;
+    String DATA_PCP;
+    String DATA_PCD;
+    String DATA_PCC;
+    String DATA_EnergyParent;
+    String Operator;
+
+    Int FinalResult=1;
+
+    Int R1 = 0;
+    Int R2 = 0;
+    Int R3 = 0;
+    Int R4 = 0;
+    Int R5 = 0;
+    Int R6 = 0;
+    Int R7 = 0;
+
+    Int Energy_Falg = 0;
+    Int CParent_Falg = 0;
+    Int CLevel_Falg = 0;
+    Int PCP_Falg = 0;
+    Int PCD_Falg = 0;
+    Int PCC_Falg = 0;
+    Int EnergyParent_Falg = 0;
+
+    Int Energy_CHECK= 0;
+    Int CParent_CHECK = 0;
+    Int CLevel_CHECK = 0;
+    Int PCP_CHECK = 0;
+    Int PCD_CHECK = 0;
+    Int PCC_CHECK = 0;
+    Int EnergyParen_CHECK = 0;
+
+    Query =  StrDelete(Query,1,2);
+
+    Energy       = Fetch_TEMP_GENERATOR(Query,1,",");
+    CParent      = Fetch_TEMP_GENERATOR(Query,2,",");
+    CLevel       = Fetch_TEMP_GENERATOR(Query,3,",");
+    PCP          = Fetch_TEMP_GENERATOR(Query,4,",");
+    PCD          = Fetch_TEMP_GENERATOR(Query,5,",");
+    PCC          = Fetch_TEMP_GENERATOR(Query,6,",");
+    EnergyParent = Fetch_TEMP_GENERATOR(Query,7,",");
+
+     DATA_Energy    = Fetch_TEMP_GENERATOR(DATA_Ligne,3,";");
+     DATA_CParent   = Fetch_TEMP_GENERATOR(DATA_Ligne,4,";");
+     DATA_CLevel    = Fetch_TEMP_GENERATOR(DATA_Ligne,6,";");
+     DATA_PCP       = Fetch_TEMP_GENERATOR(DATA_Ligne,7,";") ;
+     DATA_PCD       = Fetch_TEMP_GENERATOR(DATA_Ligne,8,";") ;
+     DATA_PCC       = Fetch_TEMP_GENERATOR(DATA_Ligne,9,";") ;
+     DATA_EnergyParent = Fetch_TEMP_GENERATOR(DATA_Ligne,15,";");
+
+    If ( Energy != "#" ) Then  Energy_CHECK = 1; end
+    If ( CParent != "#" ) Then  CParent_CHECK = 1; end
+    If ( CLevel != "#" ) Then  CLevel_CHECK = 1; end
+    If ( PCP != "#" ) Then  PCP_CHECK = 1; end
+    If ( PCD != "#" ) Then  PCD_CHECK = 1; end
+    If ( PCC != "#" ) Then  PCC_CHECK = 1; end
+    If ( EnergyParent != "#" ) Then  EnergyParen_CHECK = 1; end
+
+///////////////////////////////////////////////////////////////////////////////
+    If (Energy_CHECK == 1) Then
+        Operator = StrSubString(Energy,1,2);
+        Energy = StrDelete(Energy,1,2);
+        Energy_Falg = Query_Condition( DATA_Energy, Energy , Operator );
+            //MessageBox("Energy = " + Energy +" / DATA_Energy = " + DATA_Energy,Energy_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+    If (CParent_CHECK == 1) Then
+         Operator = StrSubString(CParent,1,2);
+         CParent = StrDelete(CParent,1,2);
+         CParent_Falg = Query_Condition( DATA_CParent, CParent , Operator );
+             // MessageBox("CParent = " + CParent +" / DATA_CParent = " + DATA_CParent,CParent_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+    If (CLevel_CHECK == 1) Then
+         Operator = StrSubString(CLevel,1,2);
+         CLevel = StrDelete(CLevel,1,2) ;
+         CLevel_Falg = Query_Condition( DATA_CLevel, CLevel , Operator );
+          // MessageBox("CLevel = " + CLevel +" / DATA_CLevel = " + DATA_CLevel,CLevel_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+    If (PCP_CHECK == 1) Then
+
+       Operator = StrSubString(PCP,1,2);
+       PCP = StrDelete(PCP,1,2);
+       PCP_Falg = Query_Condition( DATA_PCP, PCP , Operator );
+            //MessageBox("PCP = " + PCP +" / DATA_PCP = " + DATA_PCP,PCP_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+    If (PCD_CHECK == 1) Then
+       Operator = StrSubString(PCD,1,2);
+       PCD = StrDelete(PCD,1,2);
+       PCD_Falg = Query_Condition( DATA_PCD, PCD , Operator );
+            //MessageBox("PCD = " + PCD +" / DATA_PCD = " + DATA_PCD,PCD_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+     If (PCC_CHECK == 1) Then
+       Operator = StrSubString(PCC,1,2);
+       PCC = StrDelete(PCC,1,2);
+       PCC_Falg = Query_Condition( DATA_PCC, PCC , Operator );
+            //MessageBox("PCC = " + PCC +" / DATA_PCC = " + DATA_PCC +" / Operator = "+Operator,PCC_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+    If (EnergyParen_CHECK == 1) Then
+        Operator = StrSubString(EnergyParent,1,2);
+        EnergyParent = StrDelete(EnergyParent,1,2);
+        EnergyParent_Falg = Query_Condition( EnergyParent, DATA_EnergyParent , Operator );
+             //MessageBox("EnergyParent = " + EnergyParent +" / DATA_EnergyParent = " + DATA_EnergyParent,EnergyParent_Falg);
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+    If ( Energy_CHECK == Energy_Falg) Then              R1 = 1; End
+    If ( CParent_CHECK == CParent_Falg) Then            R2 = 1; End
+    If ( CLevel_CHECK == CLevel_Falg) Then              R3 = 1; End
+    If ( PCP_CHECK == PCP_Falg) Then                    R4 = 1; End
+    If ( PCD_CHECK == PCD_Falg) Then                    R5 = 1; End
+    If ( PCC_CHECK == PCC_Falg) Then                    R6 = 1; End
+    If ( EnergyParen_CHECK == EnergyParent_Falg) Then   R7 = 1; End
+
+    FinalResult = R1*R2*R3*R4*R5*R6*R7;
+
+    Return FinalResult;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Query_Condition( String Var1, String Var2 , String Operateur )
+
+    String Equality = "==";
+    String Inequality = "!=";
+    String MagorityOrEq = ">=";
+    String MinorityOrEq = "<=";
+    int Flag;
+
+        If ( Operateur == Equality) Then
+
+
+         IF ( Var1 ==  Var2 ) Then
+            Flag = 1;
+         Else
+            Flag = 0;
+         End
+
+
+        Else
+            If ( Operateur == Inequality) Then
+
+
+              IF ( Var1 != Var2 ) Then
+                Flag = 1;
+              Else
+                Flag = 0;
+              End
+
+
+            Else
+                If ( Operateur == MagorityOrEq) Then
+
+                  IF ( StrToInt(Var1) >=  StrToInt(Var2) ) Then
+                    Flag = 1;
+                  Else
+                    Flag = 0;
+                  End
+
+                Else
+                    If ( Operateur == MinorityOrEq) Then
+
+                      IF ( StrToInt(Var1) <=  StrToInt(Var2) ) Then
+                        Flag = 1;
+                      Else
+                        Flag = 0;
+                      End
+
+                    Else Flag = 0;
+
+                    End
+                End
+            End
+        End
+        Return Flag;
+end
+///////////////////////////////////////////////////////////////////////////////
+Function String Create_PS_DeleteFiles( string Path )
+
+    String L1 = "$Location = " + CharToStr(34) + Path + CharToStr(34);
+    String L2 = "$OutFilePath = " + CharToStr(34) + GetProjectPath() + "\PSDelete.txt" + CharToStr(34);
+    String L3 = "Set-Location -Path $Location";
+    String L4 = "Remove-Item * | Out-File -FilePath $OutFilePath";
+
+    String PS_Delete_FullPathFileName = GetProjectPath() + "\PSDelete.txt" ;
+    String W_FullPathFileName = ENV_PATH + "\PowerShell\Delete.ps1";
+    int W_FileHandle = FileOpen(W_FullPathFileName,"wt");
+
+    IF ( FileExist(PS_Delete_FullPathFileName) == True ) Then FileDelete( PS_Delete_FullPathFileName ); End
+
+    FileWriteLn(W_FileHandle,L1);
+    FileWriteLn(W_FileHandle,L2);
+    FileWriteLn(W_FileHandle,L3);
+    FileWriteLn(W_FileHandle,L4);
+
+    FileClose(W_FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CreateGroupeChart( String ALLCOMPTEUR_LIGNE , String PrefixName)
+
+    String FullPathFileName;
+    String WFullPathFileName;
+    Int FileHandle;
+    Int WFileHandle;
+    String Ligne;
+    String Write;
+
+    String Energy = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,3,";");
+    String Ratio = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,16,";");
+    String CompteurCode = Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";");
+
+
+       IF (PrefixName != "") Then
+        FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\16\Source\"+PrefixName+"_" +Energy+".CRT";
+        WFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\16\Charts\"+PrefixName+"_" + CompteurCode+".CRT";
+       Else
+        FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\16\Source\"+Energy+".CRT";
+        WFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\16\Charts\"+CompteurCode+".CRT";
+       End
+//MessageBox(,);
+     FileHandle=FileOpen(FullPathFileName,"rt");
+     if (FileHandle == 0) then  return; end
+
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+     While (FileEof(FileHandle)==0)
+      Ligne = FileReadLn(FileHandle);
+
+        IF (Ligne != "") Then
+
+            IF ( Ratio != "#") Then
+                Write = FINDAndREPLACE_TEMP_GENERATOR(Ligne,"TonnageCompt",Ratio );
+            End
+            IF ( StrPos(Ligne,"Compteur") != 0 ) Then
+                Write = FINDAndREPLACE_TEMP_GENERATOR( Ligne,"Compteur", CompteurCode);
+            End
+
+
+           FileWriteLn(WFileHandle,Write);
+        End
+
+     End
+
+
+       FileClose(WFileHandle);
+       FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////// 1 Create Report Files ////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void BuildNewReport(   String ReportNavigator, String Chart , String CodeUNIQUE, String Descrption)
+
+    String NewLine;
+    String ReadLine;
+    String UniqueCode;
+    Int FoundCode;
+    String MasterReport = "Report_1";
+    String Layout = "Layout_1";
+    String CL = "*";    String ML = "*";
+    String ReportPATH = ENV_PATH +  "\Rapport" ;
+    Int i = 0;
+    Int Pos = 0;
+    String LastCode;
+    //String Header = "Report_Code;Report_Name;Report_TableauCode;Report_TableauName;Report_EnergyCode;Report_EnergyName;Report_ViewCode;Report_ViewName;Report_PostC_Code;Report_PostC_Name;Report_CompteurCode;Report_CompteurName;Report_Master;Report_MasterLAYOUT;Report_Chart;Report_CL;Report_ML;Report_Path;Report_Description;UNIQUE Code";
+    String FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    Int FileHandle;
+    String WFullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\WReporting.csv";
+    Int WFileHandle;
+    String BackFullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Back_Reporting.csv";
+    //UniqueCode = Tableau +"_"+ Energy +"_"+ View +"_"+ BU +"_"+ CompteurCode;
+
+    NewLine =  ReportNavigator +";"+ MasterReport +";"+ Layout +";"+ Chart +";"+ CL +";"+ ML +";"+ReportPATH +";"+ CodeUNIQUE +";"+ Descrption;
+
+    FoundCode = Found_UNIQUE_CODE( CodeUNIQUE );
+
+    If ( FoundCode <= 0 ) Then
+
+        FileHandle = FileOpen(FullPathFileName,"at");
+        If ( NewLine != "") Then
+            FileWriteLn(FileHandle,NewLine);
+        End
+        FileClose(FileHandle);
+
+    Else
+      //If ( FoundCode > 0 ) Then
+
+        FileHandle = FileOpen(FullPathFileName,"rt");
+        WFileHandle = FileOpen(WFullPathFileName,"wt");
+
+        While ( FileEof( FileHandle ) == 0  )
+
+         ReadLine = FileReadLn( FileHandle );
+          If (ReadLine != "") Then
+
+            i = i +1;
+            If ( i == FoundCode ) Then
+
+                Pos = StrPos(ReadLine,";");
+                LastCode = StrSubString(ReadLine,1,Pos);
+
+                Pos = StrPos(NewLine,";");
+                NewLine = StrDelete(NewLine,1,Pos);
+
+                NewLine = LastCode + NewLine;
+                If ( NewLine != "") Then
+                  FileWriteLn(WFileHandle,NewLine);
+                End
+
+            Else
+                If ( NewLine != "") Then
+                FileWriteLn(WFileHandle,ReadLine);
+                End
+            End
+
+          End
+        End
+
+        FileClose( FileHandle );
+        FileClose( WFileHandle );
+
+        If (FileExist(BackFullPathFileName)) then   FileDelete(BackFullPathFileName);   End
+
+        Filecopy(FullPathFileName,BackFullPathFileName,False);
+        Filecopy(WFullPathFileName,FullPathFileName,False);
+        FileDelete(WFullPathFileName);
+
+     //End
+    End
+
+
+
+ /*string Ligne = "";
+ string Write = "";
+ string Code;
+ String R_Path;
+ string FullPathFileName;
+ int FileHandle;
+ String OUTPUTFILE = "#OutputFile: ";
+
+ String WFullPathFileName;
+ int WFileHandle;
+
+ String LogFullPathFileName;
+ int LogFileHandle;
+
+
+     R_Path = GetProjectPath()+"\TEMPLATES_GENERATED\Report\Report\"+ReportName+"\";
+     DirectoryCreate(R_Path);
+
+
+     FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Report\Source\ReportSetting.CFG";
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox(FullPathFileName,"File not Found");  return; end
+
+     WFullPathFileName = R_Path + ReportName +".CFG";
+     WFileHandle = FileOpen(WFullPathFileName,"wt");
+
+
+     //MessageBox(WFullPathFileName,WFileHandle);
+
+     while (FileEof(FileHandle)==0)
+
+        Ligne = FileReadLn(FileHandle);
+          If (Ligne != "") Then
+            IF ( Ligne == OUTPUTFILE) Then
+
+              FileWriteLn(WFileHandle,OUTPUTFILE + Path+ReportName+"_<DD><MM><YY>_<hh><mm>.PDF" );
+
+            Else
+
+              FileWriteLn(WFileHandle,Ligne);
+
+            End
+          End
+
+     end
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\Report\Source\ReportTemplate.RTF",R_Path+ReportName+".RTF",False);
+
+     FileClose(WFileHandle);
+     FileClose(FileHandle);
+
+        FileHandle = FileOpen(Path+ReportName+".txt","wt");
+        FileWriteLn(FileHandle,Path+ReportName+".txt");
+        FileClose(FileHandle);*/
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+/*function string Find_And_Replace_Report(string Ligne,string search, string ReportName ,String Path)
+    int P = 0;
+    string Txt = Ligne;
+    string V = Ligne;
+    String Partie1;
+    String Partie2;
+    //String Path;
+
+    //Path =  ENV_PATH +  "\Rapport\"+ReportFolder+"\";
+    //string ReportName = NameCompteur+GetStrGateValue("View",i)+"_"+CodeTVE+"_"+CodeCompteur;
+    P = StrPos(Txt,search);
+    if ( P == 0 ) then return V;
+      else
+
+       P = StrPos(Txt,":");
+       Partie1 = StrSubString(Txt,1,P+1);
+       V = Partie1+Path+ReportName+"_<DD><MM><YY>_<hh><mm>.PDF" ;
+    end
+
+    return V;
+end*/
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////// 2 Create Report Directery ////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String Create_R_Directory( String Tableau ,  string Energy ,  String View ,  String CompteurCode , string PostCode )
+
+   String VEPCT;
+   String PC_Original = PostCode;
+   Int CurrTABLEAU;
+   int POS;
+    Int FileHandle;
+   string V;
+   string E;
+   string P;
+   string C;
+   string T;
+
+   string Name;
+   string PCP;
+   string PCD;
+   string PCC;
+   String Path = ENV_PATH +  "\Rapport\Rapport\";
+
+
+     CurrTABLEAU = StrToInt(Tableau);
+     VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+     IF ( StrPos(VEPCT,"/") == 0 ) Then
+      Read_Tableau();
+      VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+     End
+
+
+     Name = Path+GetStrGateValue("TableauNames",CurrTABLEAU) + "\" ;
+
+     DirectoryCreate(Name);
+     /////////////////////////////////////////////////
+     E   =StrSubString(VEPCT,1,1);
+     If ( E == "1" ) then
+        Name = Name  + Energy+"\";
+        DirectoryCreate(Name);
+     end
+     //IF ( DirectoryCreate(Name) == True) Then MessageBox(Name,"OK");  End
+     /////////////////////////////////////////////////
+     P   =StrSubString(VEPCT,3,1);
+
+     if ( P != "0" ) then
+        //Messagebox(PostCode,"");
+        /*POS = StrPos(PostCode,"/");
+        PCP = StrSubString(PostCode,1,POS-1);
+
+        If ( PCP == "*" ) Then PCP = "#"; End
+        PostCode = StrDelete(PostCode,1,POS);
+        POS = StrPos(PostCode,"/");
+        PCD = StrSubString(PostCode,1,POS-1);
+
+        If ( PCD == "*" ) Then PCD = "#"; End
+        PCC = StrDelete(PostCode,1,POS);
+
+        If ( PCC == "*" || PCC == "#" ) Then PCC = "All";   End
+
+        If ( P == "C"  ) Then
+
+          If ( PCC != "" ) Then
+            Name = Name +PCP+"&"+ PCD +"&"+ PCC +"\";
+            DirectoryCreate(Name);
+          Else
+            //Messagebox(Name,PCC+"Vide");
+          End*/
+
+            Name = Name + PostCode +"\";
+            DirectoryCreate(Name);
+
+        //end
+
+
+        //DirectoryCreate(Name);
+     End
+        //IF ( DirectoryCreate(Name) == True) Then MessageBox(Name,"OK");  End
+        /////////////////////////////////////////////////
+         V   =StrSubString(VEPCT,5,1);
+
+         if ( V == "1" ) then
+            Name = Name + View+"\";
+            DirectoryCreate(Name);
+            //IF (DirectoryCreate(Name) == False ) Then MessageBox(Name,"Can Not created");    End
+         end
+
+         //IF ( DirectoryCreate(Name) == True) Then MessageBox(Name,"OK");  End
+        /////////////////////////////////////////////////
+        C   =StrSubString(VEPCT,7,1);
+        if ( C == "1" ) then
+           Name = Name+ CompteurCode+"\";
+           DirectoryCreate(Name);
+        end
+        /////////////////////////////////////////////////
+        //MessageBox(Name,"Name");
+
+        Return Name;
+
+///////////////////////////////////////////////////////////////////////////////
+end
+///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// 2 Get Rapport Path ////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String GetReportPATH_TEMP_GENERATOR( String ReportName)
+
+    Int POS;
+    String Name = ReportName;
+    String DirBit = "";
+    String Path = ENV_PATH +  "\Rapport\";
+
+    POS = StrPos(Name,"_");
+    Name = StrDelete(Name,1,POS); // Delete R
+    POS = StrPos(Name,"_");
+
+
+    While (POS > 0)
+      POS = StrPos(Name,"_");
+      ////////////////////////////////////
+      If (POS == 0) Then
+        DirBit = Name;
+       Else
+        DirBit = StrSubString(Name,1,POS-1);
+      End
+      ////////////////////////////////////
+      If (DirBit != "-")Then
+        Path = Path + DirBit + "\" ;
+      End
+      ////////////////////////////////////
+      Name = StrDelete(Name,1,POS);
+    END
+
+    Return Path;
+End
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String Get_LastReport_Code()
+
+    string  FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    int     FileHandle;
+    String  Line ;
+    String  Code ;
+    String  LastCode;
+    String Header = "Report_Code;Report_Name;Report_TableauCode;Report_TableauName;Report_EnergyCode;Report_EnergyName;Report_ViewCode;Report_ViewName;Report_PostC_Code;Report_PostC_Name;Report_CompteurCode;Report_CompteurName;Report_Master;Report_MasterLAYOUT;Report_Chart;Report_CL;Report_ML;Report_Path;UNIQUE_Code;Report_Description";
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    IF ( FileHandle == 0 ) Then
+     FileHandle=FileOpen(FullPathFileName,"wt");
+     FileWriteLn(FileHandle,Header);
+     FileClose(FileHandle);
+     Return "R0" ;
+    End
+
+    While ( FileEof( FileHandle ) == 0 )
+
+      Line = FileReadLn( FileHandle );
+      Code = Fetch_TEMP_GENERATOR(Line,1,";");
+      IF ( Code != "" && Code != "*" ) Then
+        LastCode = Code;
+      End
+
+    End
+
+    FileClose( FileHandle );
+
+    Return LastCode;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String NextReport_Code( String ReportCode )
+
+    String Prefix;
+    String Code;
+    Int NextCode;
+    String Next_ReportCode;
+
+    Prefix = StrSubString(ReportCode,1,1);
+    Code = StrSubString(ReportCode,2,StrLen(ReportCode)-1);
+
+    NextCode = StrToInt(Code) + 1 ;
+
+    Next_ReportCode = Prefix + NextCode;
+
+    Return Next_ReportCode;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Found_UNIQUE_CODE( String UniqueCode)
+
+    string  FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    int     FileHandle;
+    String  Line ;
+    String  Code ;
+    Int FoundPos = 0;
+    Int i;
+    Bool Found = False;
+    Bool Exit = False;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    IF ( FileHandle == 0 ) Then Return FoundPos ;  End
+    While ( Exit == False )
+
+      Line = FileReadLn( FileHandle );
+      i = i +1;
+      Code = Fetch_TEMP_GENERATOR(Line,19,";");
+
+      IF ( Code == UniqueCode ) Then
+      Found = True;  FoundPos = i;
+      Else Found = False;   End
+
+      IF ( FileEof( FileHandle ) != 0 || Found == True ) Then  Exit = True; End
+
+    End
+
+    FileClose( FileHandle );
+
+    Return FoundPos ;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function int Delete_Report( String Path, String File, String Code, Int Pos)
+
+    string  FullPathFileName = ENV_PATH + Path + File;
+    int     FileHandle;
+    string  WFullPathFileName = ENV_PATH + Path + "W" + File;
+    int     WFileHandle;
+    String  BackFullPathFileName = ENV_PATH + Path + "Back_" + File;
+    String  Line ;
+    //String  Code ;
+    String SearchCode;
+    int WCount = 0;
+    Int TotReport = 0;
+    Int DELETED_Count = 0;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    While ( FileEof( FileHandle ) == 0  )
+
+      Line = FileReadLn( FileHandle );
+      TotReport = TotReport+1;
+      SearchCode = Fetch_TEMP_GENERATOR(Line,Pos,";");
+
+      IF ( Code != SearchCode ) Then
+        FileWriteLn(WFileHandle,Line);
+        WCount = WCount+1;
+      End
+
+    End
+
+    FileClose( FileHandle );
+    FileClose( WFileHandle );
+
+    If (FileExist(BackFullPathFileName)) then   FileDelete(BackFullPathFileName);   End
+
+    Filecopy(FullPathFileName,BackFullPathFileName,False);
+    Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+
+    DELETED_Count = TotReport - WCount;
+    Return DELETED_Count ;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GetViewName( String View)
+
+    Int i;
+    Int MaxView;
+    String LongVIEW = "-";
+    MaxView = GetNumGateValue("MaxView",1) - 1;
+
+    for i = 0 to MaxView do
+
+        If ( GetStrGateValue("ReportViewNames",i) == View ) Then
+            LongVIEW = GetStrGateValue("ViewNames",i);
+            i = MaxView+1;
+        End
+
+    end
+
+    Return LongVIEW;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String BuildReportNAME(string Tableau, String View, string Energy, string PostCode, string CCode)
+
+    string VEPCT ;
+    //String VEPCT_Code;
+    string V;
+    string E;
+    string P;
+    string C;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    string PCP;     string PCD;     string PCC;
+
+    If (Tableau == "18") Then Return "AllCompteur";  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+    //MessageBox(VEPCT,CurrTABLEAU);
+
+    Name = GetStrGateValue("Tableau_ShortName",CurrTABLEAU);
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then    Name = Name + "_" + Energy;                     end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+
+        POS = StrPos(PostCode,"/");
+        PCP = StrSubString(PostCode,1,POS-1);
+        If ( PCP == "*" ) Then PCP = "#"; End
+        PostCode = StrDelete(PostCode,1,POS);
+        POS = StrPos(PostCode,"/");
+        PCD = StrSubString(PostCode,1,POS-1);
+        If ( PCD == "*" ) Then PCD = "#"; End
+        PCC = StrDelete(PostCode,1,POS);
+
+        If ( PCC == "*" ) Then PCC = "#"; End
+
+        If ( P == "C" && PCC != "#" ) Then
+        Cpc = "*/*/" +PCC;
+        Name = Name + "_" +PCC;      end
+
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then    Name = Name+"_"+ View;                        end
+///////////////////////////////////////////////////////////////////////////////
+    C   =StrSubString(VEPCT,7,1);
+    if ( C == "1" ) then
+    Cn = CCode;
+    Name = Name+"_"+ CCode;                     end
+///////////////////////////////////////////////////////////////////////////////
+  /* T   =StrSubString(VEPCT,9,1);
+    If ( T == "1" ) then GOTO_TVE = True;
+    Else GOTO_TVE = False;
+    end*/
+///////////////////////////////////////////////////////////////////////////////
+    //MessageBox(V+"/"+E+"/"+P+"/"+C,T);
+
+    Name = Name+"_V"+GetStrGateValue("Version",0);
+    Return Name ;
+end

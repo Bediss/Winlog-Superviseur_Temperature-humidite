@@ -1,0 +1,993 @@
+Global String Action_PBI_FB;
+Global int TotEm;
+/*****************************************************************************/
+function void Bouton_Email()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+MaxRow = 10 ;
+MaxCol = 6;
+LenPrefix=1;
+Confirme_Save();
+PageOpen="Email";
+       SetNumGateValue("Template_Control",0,0);
+       SetNumGateValue("E15min",0,0);
+    SetNumGateValue("Show_Temp_Pointer",0,1073741828);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+
+        Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\EMail\Temp_Email.txt";
+        Admin_View_Original_File=ENV_PATH+"\Files\DATAMODELFiles\EMail\Email.CSV";
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\EMail\Recycler_Email_Code.txt";
+          Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+            FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+        Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+
+        //Highest_Code_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+        Admin_View_Display(1 , "Email" );
+        TotEm=GetNumGateValue("AdminTotalItems",0);
+                ShowPage("Email");
+                FlagUses=False;
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void NameEmailBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("Email_Name");
+End
+
+function void FillNameEmail()
+bool Exist=False;
+String V = GetStrGateValue("AlarmeEventModifer",19);
+V=FR_Speciale_CHar(V);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+
+    if Exist== true then return; end
+
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+                //MessageBox(Fetch_Alarm_search(Admin_View_CurrentLine,1,";"),"");
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+
+    ShowPoPUPs("");
+       NameUses=UniqueName(ENV_PATH+"\Files\DATAMODELFiles\EMail\","Temp_EMail.txt",V ,2);
+    SetStrGateValue("AlarmeEventModifer",19,"");
+end
+
+
+
+
+
+
+function void DescriptionEmailBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",6));
+    ShowPoPUPs("Email_Description");
+End
+
+function void FillDescriptionEmail()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+    // if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",6,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,8);
+                if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+   // end
+end
+
+/*****************************************************************************/
+Function Void Action_Type()
+
+SetStrGateValue("EmailView1",0,"Rapport");
+SetStrGateValue("EmailView2",0,"Power Bi");
+SetStrGateValue("EmailView3",0,"FactBook");
+SetStrGateValue("EmailView4",0,"Vide");
+ShowPoPUPs("Type_Action");
+
+
+End
+///////////////////////////////////////////////////////////////////////////////
+
+function void Action_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",0);
+
+    IF ( S != "" ) Then
+
+         Filtre_Select_Report_Attachement();
+
+ShowPoPUPs("Report_Filtre_Attachement");
+
+    End
+end
+function void Action_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+    Action_PBI_FB="PBI";
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"",11);
+       Bouton_PBI_Attachement();
+
+    End
+end
+function void Action_SelectRow_4()
+
+
+      SetStrGateValue("AlarmeEventModifer",5,"");
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"",7);
+          Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"",11);
+                 if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+end
+function void Action_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+     Action_PBI_FB="FB";
+        Bouton_FB_Attachement();
+    End
+end
+///////////////////////////
+Function void Bouton_PBI_Attachement()
+
+    String FullPathFileName;
+    int TotalItem;
+
+    FullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\PBI.CSV";
+    EVM_Max_Items=scanfile(FullPathFileName);
+    EVM_LIST_FILE = FullPathFileName;
+ Action_PBI_FB="PBI";
+    PBI_D_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs("Select_PBI");
+
+
+
+
+End
+/////////////////////
+Function void Bouton_FB_Attachement()
+
+    String FullPathFileName;
+    int TotalItem;
+
+    FullPathFileName = REPORT_PATH_FB+"Lists\FactBook.CSV";
+    EVM_Max_Items=scanfile(FullPathFileName);
+    EVM_LIST_FILE = FullPathFileName;
+    Action_PBI_FB="FB";
+    PBI_D_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs("Select_PBI");
+
+
+End
+///////////////////////////////////////////////////////////////////////////////////////////////////
+function void PBI_D_Display( Int Page )
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String ENERGYLIST;
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+        SetStrGateValue("EmailView6",1,"");
+        SetStrGateValue("EmailView7",1,"");
+        SetStrGateValue("EmailView8",1,"");
+        SetStrGateValue("EmailView9",1,"");
+        SetStrGateValue("EmailView10",1,"");
+                SetStrGateValue("EmailView1",3,"");
+        SetStrGateValue("EmailView2",3,"");
+        SetStrGateValue("EmailView3",3,"");
+        SetStrGateValue("EmailView4",3,"");
+        SetStrGateValue("EmailView5",3,"");
+        SetStrGateValue("EmailView6",3,"");
+        SetStrGateValue("EmailView7",3,"");
+        SetStrGateValue("EmailView8",3,"");
+        SetStrGateValue("EmailView9",3,"");
+        SetStrGateValue("EmailView10",3,"");
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    TextRow = FileReadLn(FileHandle);//header
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+                ENERGYLIST = FetchBU(TextRow,2,";");
+                SetStrGateValue(EVM,0,ENERGYLIST);
+                ENERGYLIST = FetchBU(TextRow,1,";");
+                SetStrGateValue(EVM,1,ENERGYLIST);
+                ENERGYLIST = FetchBU(TextRow,5,";");
+                SetStrGateValue(EVM,3,ENERGYLIST);
+
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function void PBI_Select_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     Energy_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void PBI_Select_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    Energy_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void PBI_Select_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    Energy_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void PBI_Select_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     Energy_Display(MaxPage);
+end
+
+
+function void PBI_Select_1()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView1",3);
+    S = GetStrGateValue("EmailView1",1);
+     C = GetStrGateValue("EmailView1",0);
+
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+             if N!=0 then
+             F=contruct_line(Path+C+".txt",":");
+            //MessageBox(F,Path+C+".txt");
+            //  UpdateInFileWithPS( "C:\Winlog\PowerShell\" ,"Email.CSV",C,F,3,9,4,10 );
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+
+                             if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+        TPageCloseByName("Select_PBI");
+            SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_2()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView2",3);
+    S = GetStrGateValue("EmailView2",1);
+    C = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                         if N!=0 then
+             F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+            SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_3()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView3",3);
+
+    S = GetStrGateValue("EmailView3",1);
+    C = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+             F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                            if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+            SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_4()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView4",3);
+
+    S = GetStrGateValue("EmailView4",1);
+    C = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_5()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView5",3);
+
+    S = GetStrGateValue("EmailView5",1);
+    C = GetStrGateValue("EmailView5",0);
+
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                            if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_6()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView6",3);
+    S = GetStrGateValue("EmailView6",1);
+    C = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                                if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_7()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView7",3);
+
+    S = GetStrGateValue("EmailView7",1);
+    C = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+        SetStrGateValue("AlarmeEventModifer",5,C);
+         if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                         if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_8()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView8",3);
+
+    S = GetStrGateValue("EmailView8",1);
+    C = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+        SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+             F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+
+    End
+end
+function void PBI_Select_9()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView9",3);
+
+    S = GetStrGateValue("EmailView9",1);
+    C = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+
+        SetStrGateValue("AlarmeEventModifer",5,C);
+
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+                               if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+             end
+             end
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+function void PBI_Select_10()
+String S;
+String C;
+String N;
+String F;
+String Path=REPORT_PATH_FB;
+    N=GetStrGateValue("EmailView10",3);
+
+    S = GetStrGateValue("EmailView10",1);
+    C = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+          SetStrGateValue("AlarmeEventModifer",5,C);
+        if Action_PBI_FB=="PBI" then
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"PBI:"+S+":"+C+":1",7);
+          else
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"FB:"+S+":"+C+":"+N,7);
+                                      if N!=0 then
+              F=contruct_line(Path+C+".txt",":");
+
+             Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,F,11);
+             end
+             end
+                           if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+        TPageCloseByName("Select_PBI");
+           SetNumGateValue("AdminTotalItems",0,TotEm);
+
+    End
+end
+
+///////////////////////////////////////////////////////////////////////////////
+
+Function Void CopyMail()
+
+String PathC=ENV_PATH+"\Files\DATAMODELFiles\EMail";
+String Prefix="M";
+String CodeNewAlarme;
+    CodeNewAlarme=FetchCodeAdd(PathC,Prefix);
+
+    Admin_Copy("Email",CodeNewAlarme);
+        Confirme_Save=True;
+
+End
+
+//////////////////////
+Function Void DeleteEmailBouton()
+
+String PathC=ENV_PATH+"\Files\DATAMODELFiles\EMail";
+String WPath=ENV_PATH+"\Files\DATAMODELFiles\EMail\WTemp_Mail.csv";
+String BackPath=ENV_PATH+"\Files\DATAMODELFiles\EMail\BACK_Temp_Mail.csv";
+  String Name=Fetch_Alarm_search(Admin_View_CurrentLine,2,";");
+    String Code=Fetch_Alarm_search(Admin_View_CurrentLine,1,";");
+  bool Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","EventEMail.csv",ENV_PATH + "\Files\DATAMODELFiles\EventEMail\",Code,8,0);
+     if Exist == False then
+
+    //  MessageBox(Admin_View_CurrentLine,"");
+ //DBFileQuerry(3);
+    Admin_Delete("Email",WPath,BackPath);
+        Confirme_Save=True;
+SetStrGateValue("AlarmeEventModifer",17,"L'email "+Name+" a ete suprimer aver succeeé");
+       else
+
+         SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer L'email "+Name+" Il est Attaché Dans Cas-Email");
+           Clean_Formulaire();
+      end
+End
+
+
+
+/*****************************************************************************/
+Function Void Add_New_Mail()
+String CodeNewAlarme ;
+
+             if NameUses== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");  return; end
+ if NameUses == False then
+    SetStrGateValue("AlarmeEventModifer",17,"");
+   end
+    CodeNewAlarme=FetchCodeAdd(ENV_PATH+"\Files\DATAMODELFiles\EMail","M");
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",6),8);
+    if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le ' NOM DE L'EMAIL ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,3,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' L'EMAIL_TO ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,5,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' L'OBJET DE L'EMAIL ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+
+      //MessageBox(Admin_View_CurrentLine,"");
+
+    Admin_New_Ligne("Email",CodeNewAlarme);
+        Confirme_Save=True;
+
+end
+//////////////////////////////////////////////////////////////////
+function void SaveEmailBouton()
+
+
+        if NameUses== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");  return; end
+        if NameUses == False then
+            SetStrGateValue("AlarmeEventModifer",17,"");
+         end
+        if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le ' NOM DE L'EMAIL ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,3,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' L'EMAIL_TO ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,5,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' L'OBJET DE L'EMAIL ' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+
+    Admin_modifier(ENV_PATH+"\Files\DATAMODELFiles\EMail\","Temp_Email.txt" );
+
+End
+
+/*****************************************************************************/
+/*****************************************************************************/
+/*****************************************************************************/
+    //          Email View
+/*****************************************************************************/
+/*****************************************************************************/
+function void ViewEmailAdd()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+MaxPage= ReguliersTotalItems/MaxRow;
+       If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage , "Email" );
+	 FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewEmailSub()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage , "Email" );
+FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewEmailFirst()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1 , "Email" );
+	FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+function string contruct_line( string FullPathFilename, String operateur)
+string readRow = "";
+int i = 0;
+string WriteRow="";
+
+int FileHandle = FileOpen(FullPathFilename,"r");
+
+    if (FileHandle == 0) then
+      MessageBox(FullPathFilename+" est introuvable!","Error");
+      return(WriteRow) ;
+    end
+
+    if ( FileEOF(FileHandle) != 0 ) then    return(WriteRow); end
+
+    While (FileEOF(FileHandle) == 0 )
+
+        readRow = FileReadLn(FileHandle);
+       // MessageBox(readRow,"");
+        i=i+1;
+
+        if ( readRow != "") then
+           if (i == 1) then WriteRow = FetchBU(readRow,1,";");
+           else  WriteRow = WriteRow   + operateur +  FetchBU(readRow,1,";");  end
+
+        end
+    end
+    FileClose(FileHandle);
+    return (WriteRow);
+end
+///////////////////////////////////////////
+function void ViewEmailEnd()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage;
+
+MaxPage=  ReguliersTotalItems/MaxRow;
+       If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display( MaxPage , "Email" );
+end
+/*****************************************************************************/
+function void EmailToBouton()
+//ShowPoPUPs("POPUPMailTO");
+POPUPList_Extension = ".txt";
+    SetStrGateValue("PopUpList_Path",0,"");
+   // SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\MailingList");
+   Path_Display_Popup=REPORT_PATH_MailingList;
+    PopupList_MaxPAGES();
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Email TO");
+    ShowPoPUPs("PopUp_List");
+End
+function void EmailCCBouton()
+POPUPList_Extension = ".txt";
+    SetStrGateValue("PopUpList_Path",0,"");
+    //SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\MailingList");
+    Path_Display_Popup=REPORT_PATH_MailingList;
+    PopupList_MaxPAGES();
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Email CC");
+    ShowPoPUPs("PopUp_List");
+
+End
+function void EmailSubjectBouton()
+ SetStrGateValue("SelectMailingList",0,GetStrGateValue("AlarmeEventModifer",3));
+ShowPoPUPs("POPUPMAilSub");
+End
+function void EmailBodyBouton()
+ SetStrGateValue("SelectMailingList",0,GetStrGateValue("AlarmeEventModifer",4));
+ShowPoPUPs("POPUPMailBody");
+End
+function void EmailReportBouton()
+ //SetStrGateValue("SelectMailingList",0,GetStrGateValue("AlarmeEventModifer",3));
+ShowPoPUPs("POPUPReport");
+End
+
+
+/*****************************************************************************/
+
+function void FillEmailTO()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),3);
+
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_Display_Popup +NEWTO+".txt";
+     TO_INTERNAL =contruct_line(pathNEWTO,",");
+
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,TO_INTERNAL,9);
+                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+/*****************************************************************************/
+function void FillEmailCC()
+string NEWCC ;
+string pathNEWCC;
+String CC_INTERNAL;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),4);
+
+        NEWCC =GetStrGateValue("AlarmeEventModifer",2);
+        pathNEWCC = Path_Display_Popup+ NEWCC+".txt";
+        CC_INTERNAL =contruct_line(pathNEWCC,",");
+
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,CC_INTERNAL,10);
+                                 if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+/*****************************************************************************/
+function void FillEmailSubject()
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",3,GetStrGateValue("SelectMailingList",0));
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),5);
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+    end
+end
+/*****************************************************************************/
+function void FillEmailBody()
+     if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",4,GetStrGateValue("SelectMailingList",0));
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),6);
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+/*****************************************************************************/
+function void FillEmailAttach()
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",5,GetStrGateValue("SelectMailingList",0));
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),7);
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+
+    end
+end
+
+//****************************************************************************/
+Function Void Email_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\EMail\BackEmail.CSV";
+Admin_Commit(BackFullPathFileName);
+
+End
+

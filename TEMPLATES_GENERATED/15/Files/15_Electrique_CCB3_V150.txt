@@ -1,0 +1,7 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1H;PosteTR1;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1H);Process;*;*;PosteTR1;*;*;F~(~CC1H~)~;F~(~PosteTR1~)~;;;0;PosteTR1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I;PosteTR2;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1I);Process;*;*;PosteTR2;*;*;F~(~CC1I~)~;F~(~PosteTR2~)~;;;0;PosteTR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1J;PosteTR3;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1J);Process;*;*;PosteTR3;*;*;F~(~CC1J~)~;F~(~PosteTR3~)~;;;0;PosteTR3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K;PosteTR4;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1K);Process;*;*;PosteTR4;*;*;F~(~CC1K~)~;F~(~PosteTR4~)~;;;0;PosteTR4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1L;PosteTR5;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1L);Process;*;*;PosteTR5;*;*;F~(~CC1L~)~;F~(~PosteTR5~)~;;;0;PosteTR5;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M;PosteTR6;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1M);Process;*;*;PosteTR6;*;*;F~(~CC1M~)~;F~(~PosteTR6~)~;;;0;PosteTR6;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O;Poste TRX;Electrique;CCB3;Post Transfo;4;S200;MELEC;*;STEG;Post Transfo;*;F(CC1O);Process;*;*;Poste TRX;*;*;F~(~CC1O~)~;F~(~Poste TRX~)~;;;0;Poste TRX;*

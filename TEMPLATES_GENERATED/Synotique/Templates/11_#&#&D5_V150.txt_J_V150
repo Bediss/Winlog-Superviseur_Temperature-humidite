@@ -1,0 +1,313 @@
+#Version: 0x030213
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clBtnFace
+#Version: 0x030217
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clWhite
+#Gates: 18
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #CMP: CTC5A,A
+  #EVN: AA_CTC5A,0
+  #EVN: AA_CTC5B,0
+  #EVN: AA_CTC5C,0
+  #EVN: AA_CTC5D,0
+  #EVN: AA_CTC5E,0
+  #EVN: AA_CTC5F,0
+  #EVN: AA_CTC5I,0
+  #EVN: AA_CTC5H,0
+  #EVN: AA_CTC5G,0
+#PBkBmp: 27,7,1296,515,SALLE DE FERMENTATION.png
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Led
+  #ID: 0
+  #Pos: 182,77
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 9,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5A_J()
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 182,224
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 10,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5B_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 182,359
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 11,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5C_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 586,77
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 12,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5D_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 586,224
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 13,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5E_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 586,359
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 14,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5F_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 974,359
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 15,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5I_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 974,224
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 16,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5G_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 974,77
+  #Size: 120,25
+  #Cursor: 0
+  #OffPBmpFile: T-.png
+  #OnPBmpFile: TRED.png
+  #BmpBkC: 0,128,128
+  #On: 17,6,1
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5G_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 1277,9
+  #Size: 22,18
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_11_Temperature_35383538D1_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 213,77
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5A_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 213,224
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5B_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 213,359
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 3
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5C_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 613,77
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5D_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 613,224
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 4
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5E_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 613,359
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 5
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5F_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1003,77
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 6
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5G_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1003,224
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 7
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5H_J()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1003,359
+  #Size: 70,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 8
+  #Label: %.*f°C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,SY_FC_17_CTC5I_J()
+  #NewOnClick: Close
+#EndObj
+

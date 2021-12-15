@@ -1,0 +1,123 @@
+MASTER;LIST_NAME
+10;Air Comprime_A.txt
+10;Air Comprime_M.txt
+10;Air Comprime_S.txt
+10;Air Comprime_J.txt
+10;Eau Brute_A.txt
+10;Eau Brute_M.txt
+10;Eau Brute_S.txt
+10;Eau Brute_J.txt
+10;Eau Forage_A.txt
+10;Eau Forage_M.txt
+10;Eau Forage_S.txt
+10;Eau Forage_J.txt
+10;Eau Rejet_A.txt
+10;Eau Rejet_M.txt
+10;Eau Rejet_S.txt
+10;Eau Rejet_J.txt
+10;Eau Sonede_A.txt
+10;Eau Sonede_M.txt
+10;Eau Sonede_S.txt
+10;Eau Sonede_J.txt
+10;Eau Traite_A.txt
+10;Eau Traite_M.txt
+10;Eau Traite_S.txt
+10;Eau Traite_J.txt
+10;Eau_A.txt
+10;Eau_M.txt
+10;Eau_S.txt
+10;Eau_J.txt
+10;Electrique_A.txt
+10;Electrique_M.txt
+10;Electrique_S.txt
+10;Electrique_J.txt
+10;Froid (-)  Ammoniac_A.txt
+10;Froid (-)  Ammoniac_M.txt
+10;Froid (-)  Ammoniac_S.txt
+10;Froid (-)  Ammoniac_J.txt
+10;Froid (+)  Eau Glycolee_A.txt
+10;Froid (+)  Eau Glycolee_M.txt
+10;Froid (+)  Eau Glycolee_S.txt
+10;Froid (+)  Eau Glycolee_J.txt
+10;Froid_A.txt
+10;Froid_M.txt
+10;Froid_S.txt
+10;Froid_J.txt
+10;Gaz_A.txt
+10;Gaz_M.txt
+10;Gaz_S.txt
+10;Gaz_J.txt
+10;Vapeur_A.txt
+10;Vapeur_M.txt
+10;Vapeur_S.txt
+10;Vapeur_J.txt
+10;Tonnage_A.txt
+10;Tonnage_M.txt
+10;Tonnage_S.txt
+10;Tonnage_J.txt
+14;Air Comprime_A.txt
+14;Air Comprime_M.txt
+14;Air Comprime_S.txt
+14;Air Comprime_J.txt
+14;Eau Brute_A.txt
+14;Eau Brute_M.txt
+14;Eau Brute_S.txt
+14;Eau Brute_J.txt
+14;Eau Forage_A.txt
+14;Eau Forage_M.txt
+14;Eau Forage_S.txt
+14;Eau Forage_J.txt
+14;Eau Rejet_A.txt
+14;Eau Rejet_M.txt
+14;Eau Rejet_S.txt
+14;Eau Rejet_J.txt
+14;Eau Sonede_A.txt
+14;Eau Sonede_M.txt
+14;Eau Sonede_S.txt
+14;Eau Sonede_J.txt
+14;Eau Traite_A.txt
+14;Eau Traite_M.txt
+14;Eau Traite_S.txt
+14;Eau Traite_J.txt
+14;Eau_A.txt
+14;Eau_M.txt
+14;Eau_S.txt
+14;Eau_J.txt
+14;Electrique_A.txt
+14;Electrique_M.txt
+14;Electrique_S.txt
+14;Electrique_J.txt
+14;Froid (-)  Ammoniac_A.txt
+14;Froid (-)  Ammoniac_M.txt
+14;Froid (-)  Ammoniac_S.txt
+14;Froid (-)  Ammoniac_J.txt
+14;Froid (+)  Eau Glycolee_A.txt
+14;Froid (+)  Eau Glycolee_M.txt
+14;Froid (+)  Eau Glycolee_S.txt
+14;Froid (+)  Eau Glycolee_J.txt
+14;Froid_A.txt
+14;Froid_M.txt
+14;Froid_S.txt
+14;Froid_J.txt
+14;Gaz_A.txt
+14;Gaz_M.txt
+14;Gaz_S.txt
+14;Gaz_J.txt
+14;Vapeur_A.txt
+14;Vapeur_M.txt
+14;Vapeur_S.txt
+14;Vapeur_J.txt
+15;Air Comprime.txt
+15;Eau Brute.txt
+15;Eau Forage.txt
+15;Eau Rejet.txt
+15;Eau Sonede.txt
+15;Eau Traite.txt
+15;Eau.txt
+15;Electrique.txt
+15;Froid (-)  Ammoniac.txt
+15;Froid (+)  Eau Glycolee.txt
+15;Froid.txt
+15;Gaz.txt
+15;Vapeur.txt
+15;Tonnage.txt

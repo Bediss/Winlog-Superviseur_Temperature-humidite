@@ -1,0 +1,17 @@
+Code_Energy;Name_Energy;Parent_Energy;OUTP_Prefix_Energy;INP_Prefix_Energy;NBR_PREFIX;NB_C_INP;NBR_List_Energy;Last_Code_Energy;Acces_Energy;Energy_LIVEInc_List
+1;Electrique;*;CC;E;2;1;48;0;28674;28
+2;Eau;*;CE;H;2;1;25;0;;27
+3;Vapeur;*;CV;V;2;1;27;0;28672;25
+4;Froid;*;CF;F;2;1;27;0;;27
+5;Gaz;*;CG;G;2;1;25;0;;27
+6;Air Comprime;*;CAC;AC;3;2;26;0;;26
+7;Froid (-) Ammoniac;Froid;CAM;AM;3;2;27;0;;25
+8;Froid (+) Eau Glycolee;Froid;CEG;EG;3;2;27;0;;25
+9;Eau Traite;Eau;CET;HT;3;2;25;0;;25
+10;Eau Forage;Eau;CEF;HF;3;2;25;0;;25
+11;Eau Brute;Eau;CEB;HB;3;2;25;0;;25
+12;Eau Sonede;Eau;CES;HS;3;2;25;0;;25
+13;Eau Rejet;Eau;CER;HR;3;2;25;0;;9
+14;Tonnage;*;CPT;T;3;1;25;0;;*
+
+

@@ -1,0 +1,635 @@
+function void Bouton_Energy_UI()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+Confirme_Save();
+PageOpen="Energy";
+LenPrefix=0;
+        SetNumGateValue("Show_Temp_Pointer",0,536870976);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+        SetNumGateValue("LastCodeAdd",0,0);
+          SetNumGateValue("Template_Control",0,0);
+  Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+
+        Admin_View_Temp_File=ENV_PATH+"\Files\AllCompteur\Temp_Energy.CSV";
+        Admin_View_Original_File=ENV_PATH+"\Files\AllCompteur\Energy.CSV";
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\AllCompteur\Recycler_Energy_Code.txt";
+          FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+         Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+        //Highest_Code2_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+        ShowPage("Energy_Display");
+
+
+        Admin_View_Display(1 , "Energy");
+        FlagUses=False;
+end
+
+/////////////////////////////////////////////////////////////////////////////////////
+function void SetDisplay_Energy_Table( String Line , String GateName)
+
+       //essageBox(Line,"_");
+                SetStrGateValue(GateName,0,Fetch_Unit(Line, 2, ";"));
+                SetStrGateValue(GateName,1,Fetch_Unit(Line, 3, ";"));
+                SetStrGateValue(GateName,2,Fetch_Unit(Line, 4, ";"));
+                SetStrGateValue(GateName,3,Fetch_Unit(Line, 5, ";"));
+                SetStrGateValue(GateName,4,Fetch_Unit(Line,10, ";"));
+
+end
+////////////////////////////////////////////////////////////////////////////
+
+function Void EnergyP_Selector_POPUP()
+    // Display
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+
+    ShowPoPUPsNoClose("Energy_Selector_Parent_POPUP");
+
+End
+//////////////////////////////////////////////////////////////
+Function Void Bouton_Prefix_OUTP()
+    SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    ShowPoPUPs("POPUP_OUTP");
+End
+//////////////////////////////////////////////////////////////
+Function Void Bouton_Prefix_INP()
+    SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    ShowPoPUPs("POPUP_INP");
+End
+////////////////////////////////////////////
+function void Load_Groups_Set_AP_Energy()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPs("SET_Access_Privilege_Energy");
+end
+function void AP_Set_Groupes_Energy()
+int Access;
+
+
+    Access=GetNumGateValue("AP_Value",0);
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Access,10);
+
+    SetStrGateValue("AlarmeEventModifer",4,Access);
+                          if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("SET_Access_Privilege_Energy");
+
+
+end
+//////////////////////////////////////////////////////////////
+Function Void Bouton_OK_Prefix_INP()
+String PrefixINP;
+int LP;
+int FileHandle;
+String CO;
+String TextRow;
+
+FileHandle=FileOpen(Admin_View_Temp_File,"rt");
+
+TextRow = FileReadLn(FileHandle);
+  PrefixINP = GetStrGateValue("AlarmeEventModifer",20);
+     while(FileEof(FileHandle)==0)
+        TextRow = FileReadLn(FileHandle);
+        CO=Fetch_Energy(TextRow,5,";");
+          if PrefixINP==CO then
+           SetStrGateValue("AlarmeEventModifer",17,"Prefix utiliser deja; choisie autre"); return ; end
+     end
+     FileClose(FileHandle);
+
+
+    LP=StrLen(PrefixINP);
+
+    if LP > 3 || LP==0 then
+        SetStrGateValue("AlarmeEventModifer",17,"il faut que taille du Prefix entre ]1,3[");
+    else
+
+    SetStrGateValue("AlarmeEventModifer",3,PrefixINP);
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,PrefixINP,5);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,LP,7);
+             SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+        TPageCloseByName("POPUP_INP");
+        end
+
+
+End
+//////////////////////////////////////////////////////////////
+Function Void Bouton_OK_Prefix_OutP()
+String PrefixINP;
+int LP;
+int FileHandle;
+String CO;
+String TextRow;
+
+FileHandle=FileOpen(Admin_View_Temp_File,"rt");
+
+TextRow = FileReadLn(FileHandle);
+  PrefixINP = GetStrGateValue("AlarmeEventModifer",20);
+     while(FileEof(FileHandle)==0)
+        TextRow = FileReadLn(FileHandle);
+        CO=Fetch_Energy(TextRow,4,";");
+          if PrefixINP==CO then
+           SetStrGateValue("AlarmeEventModifer",17,"Prefix utiliser deja; choisie autre"); return ; end
+     end
+     FileClose(FileHandle);
+    LP=StrLen(PrefixINP);
+    if LP > 3 || LP==0 then
+        SetStrGateValue("AlarmeEventModifer",17,"il faut que taille du Prefix entre ]1,3[");
+    else
+
+    SetStrGateValue("AlarmeEventModifer",2,PrefixINP);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,PrefixINP,4);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,LP,6);
+             SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+        TPageCloseByName("POPUP_OUTP");
+        end
+
+
+End
+/////////////////////////////////////////////////////////////////
+function void View_Energy_Add()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+
+     Admin_View_Display(CurrentPage,"Energy");
+	 FlagUses=False;
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Energy_Sub()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"Energy");
+FlagUses=False;
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Energy_First()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"Energy");
+FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Energy_End()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then
+        MaxPage =  MaxPage +1;
+    end
+
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"Energy");
+	 FlagUses=False;
+
+end
+//////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Energy_P_SelectRow_1()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+/////////////////////
+function void Energy_P_SelectRow_2()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_3()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_4()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_5()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_6()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_7()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_8()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_9()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SelectRow_10()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+
+            SetStrGateValue("AlarmeEventModifer",1,S);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,S,3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+    End
+end
+function void Energy_P_SansParent()
+
+
+
+
+            SetStrGateValue("AlarmeEventModifer",1,"*");
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,"*",3);
+        TPageCloseByName("Energy_Selector_Parent_POPUP");
+
+
+end
+/////////////////////////////////
+Function Void Bouton_OK_NOM_Energy()
+String PrefixINP;
+int LP;
+    PrefixINP = GetStrGateValue("AlarmeEventModifer",20);
+    LP=StrLen(PrefixINP);
+    if LP > 21 || LP==0 then
+        SetStrGateValue("AlarmeEventModifer",17,"il faut que taille du Nom soit entre ]1,20[");
+    else
+
+    SetStrGateValue("AlarmeEventModifer",0,PrefixINP);
+            Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,PrefixINP,2);
+
+             SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+        TPageCloseByName("POPUP_NOM_Energie");
+        end
+
+
+End
+Function Void Bouton_NOM_Energy()
+    SetStrGateValue("AlarmeEventModifer",20,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    ShowPoPUPs("POPUP_NOM_Energie");
+End
+
+
+
+
+function string Fetch_Energy(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+
+
+function String FR_Energy(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+
+
+//////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Function Void CopyEnergy()
+
+String Prefix="";
+String CodeNewEnergy;
+
+
+    CodeNewEnergy=FetchCodeAdd(ENV_PATH+"\Files\AllCompteur","");
+
+    Admin_Copy("Energy",CodeNewEnergy);
+      Confirme_Save=True;
+
+
+End
+
+//////////////////////
+Function Void DeleteEnergy()
+
+String WPath=ENV_PATH+"\Files\AllCompteur\WTempEnergy.CSV";
+String BackPath=ENV_PATH+"\Files\AllCompteur\Back_Temp_Energy.CSV";
+    Admin_Delete("Energy",WPath,BackPath);
+      Confirme_Save=True;
+End
+
+
+/*****************************************************************************/
+
+Function Void Add_New_Energy()
+String CodeNewAlarme;
+    CodeNewAlarme=FetchCodeAdd(ENV_PATH+"\Files\AllCompteur","");
+    Admin_New_Ligne("Energy",CodeNewAlarme);
+      Confirme_Save=True;
+end
+//////////////////////////////////////////////////////////////////
+function void Modier_Energy()
+    String FullPathFileName;
+    String BackFullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;  string EditRow;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    int save_pos = GetNumGateValue("EditPosition",0);
+    int Page = GetNumGateValue("EmailPageView",0);
+    string RowName;
+    string WFullPathFileName;
+    int WFileHandle;
+    bool W_already = false;
+         int Position_S=(Page-1)*10+save_pos;
+             if Page > 1 then
+       Position_S=Position_S+1;
+     end
+
+
+if ( Page == 1 ) then RowHeader = true; end
+    BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\Back_Temp_Energy.CSV";
+    FullPathFileName =Admin_View_Temp_File;
+    WFullPathFileName = ENV_PATH+"\Files\AllCompteur\WTemp_Energy.CSV";
+FileHandle=FileOpen(FullPathFileName,"rt");
+WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+      end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+while(FileEof(FileHandle)==0)
+     TextRow = FileReadLn(FileHandle);
+     if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+            if (TextRow != "" ) then
+               ReadRowPos = ReadRowPos+1;
+               if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+                  j = ReadRowPos-Row_Start+1;
+                    if j==10 && Page>1 then ReadRowPos=ReadRowPos+1; end
+                  if (Position_S== ReadRowPos) then EditRow =Admin_View_CurrentLine;
+                        FileWriteLn(WFileHandle,EditRow);
+                        W_already=true;
+                        RowName = "ROW"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+                        SetStrGateValue(RowName,4,GetStrGateValue("AlarmeEventModifer",4));
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+                        SetStrGateValue("AlarmeEventModifer",4,"");
+                        // change winlog alarm
+
+                         end
+                     end
+               end
+          end
+
+
+
+
+     if (W_already == false) && (TextRow!="") then FileWriteLn(WFileHandle,TextRow);end
+     W_already = false;
+
+
+end
+
+FileClose(FileHandle);
+FileClose(WFileHandle);
+
+
+    if ( FileExist(BackFullPathFileName) == true ) then
+        FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+  Confirme_Save=True;
+          SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+
+FileDelete(WFullPathFileName);
+    Clean_Formulaire();
+MessageBox("Fin De Sauvegardage ","Information :");
+return;
+end
+////////////////////////////////////////////////////////////////////////
+Function Void Energy_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\Config Compteur\Back_Energy.CSV";
+Admin_Commit(BackFullPathFileName);
+Read_Tableau_Energy();
+End

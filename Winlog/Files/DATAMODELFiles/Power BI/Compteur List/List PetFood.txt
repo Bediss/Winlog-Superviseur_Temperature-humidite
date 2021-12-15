@@ -1,0 +1,8 @@
+CC14,PetFood,Electrique
+CC141,cutteur,Electrique
+CC11S,PetFood Calcule,Electrique
+CC11S1,Ventio evap,Electrique
+CC1Q10,sdm2 (RESSUAGE+PETFOOD),Electrique
+CV14,PetFood,Vapeur
+CV1O5,AUTOCLAVE,Vapeur
+CV1O6,Atelier PETFOOD,Vapeur

@@ -1,0 +1,10 @@
+1,[T°c ]^S,Temperature,0
+5,T°c min^S,Temperature,0
+9,T°c max^S,Temperature,0
+13,Inc^S,Temperature,0
+19,[T°c ]^S-1,Temperature,0
+23,T°c min^S-1,Temperature,0
+27,T°c max^S-1,Temperature,0
+31,Inc^S-1,Temperature,0
+35,C %^S,Temperature,0
+39,C %^S-1,Temperature,0

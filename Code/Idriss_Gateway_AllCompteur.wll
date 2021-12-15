@@ -1,0 +1,476 @@
+
+Global String Selection_GateLine;
+Global String Desactiver_GateLine;
+Global String Place_GateLine;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+function void PlacerGD()
+    String ID="";
+    String IC="";
+    String CCode;
+    String CName;
+    String CMaster;
+    Bool QB;
+    String CID="";
+    String CIG="";
+    String AID="";
+    String AIC="";
+    String Coms="";
+    String Gateway="";
+    String Port="";
+
+    CCode=Fetch_Formule(Admin_View_CurrentLine,1,";");
+    CName=Fetch_Formule(Admin_View_CurrentLine,2,";");
+    CMaster=Fetch_Formule(Admin_View_CurrentLine,18,";");
+
+    AIC=Fetch_Formule(A_C_GateLine,1,";");
+    AID=Fetch_Formule(A_C_GateLine,2,";");
+
+
+    IC=Fetch_Formule(Temp_GateLine,1,";");
+    ID=Fetch_Formule(Temp_GateLine,2,";");
+
+    if(Fetch_Formule(Selection_GateLine,3,";")!="")then
+
+        QB=QuestionBox("Voulez vous vraiment Suprimer le device compteur "+CName,"Impotant !!");
+
+        if(QB=="false")then
+              SetStrGateValue("AlarmeEventModifer",18,"Choisie un autre position pour placer votre compteur");
+              return ;
+        end
+    end //code not empty
+
+    Place_GateLine=Temp_GateLine;
+
+    if AIC!="" && AID!="" then
+         Desactiver_GateLine =A_C_GateLine;
+    end
+    Gateway=Fetch_Formule(Temp_GateLine,4,";");
+    Port=Fetch_Formule(Temp_GateLine,7,";");
+    Coms=Gateway+":"+Port+":"+IC+":"+ID;
+    SetStrGateValue("AlarmeEventModifer",9,Coms);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Coms,19);
+                          if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    save_gateLine();
+
+end
+////////////////////////////////////////////////////////////
+function void save_gateLine()
+    int FileHandle;
+    int WFileHandle;
+    String FullPathFileName;
+    String WFullPathFileName;
+    String BackFullPathFileName;
+    String Ligne;
+    String PID="";
+    String PIC="";
+    String DID="";
+    String DIC="";
+    String CID="";
+    String CIC="";
+
+    FullPathFileName=ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.CSV";
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    WFullPathFileName = ENV_PATH+"\Files\Config Compteur\WGateway_Channel_Device.CSV";
+    BackFullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device_Back.CSV";
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    if Desactiver_GateLine!="" then
+        DIC=Fetch_Formule(Desactiver_GateLine,1,";");
+        DID=Fetch_Formule(Desactiver_GateLine,2,";");
+    end
+    if Place_GateLine!="" then
+        PIC=Fetch_Formule(Place_GateLine,1,";");
+        PID=Fetch_Formule(Place_GateLine,2,";");
+    end
+    Ligne=FileReadLn(FileHandle);
+    FileWriteLn(WFileHandle,Ligne);
+    while(FileEof(FileHandle)==0)
+         Ligne=FileReadLn(FileHandle);
+         CIC=Fetch_Formule(Ligne,1,";");
+         CID=Fetch_Formule(Ligne,2,";");
+         if PID==CID && PIC==CIC then
+              FileWriteLn(WFileHandle,Place_GateLine);
+          else
+              if DID==CID && DIC==CIC then
+                   FileWriteLn(WFileHandle,Desactiver_GateLine);
+               else
+                 FileWriteLn(WFileHandle,Ligne);
+              end
+         end
+
+
+    end // while*/
+
+          FileClose(WFileHandle);
+          FileClose(FileHandle);
+
+          if (FileExist(BackFullPathFileName)) then
+                FileDelete(BackFullPathFileName);
+          end
+
+          FileCopy(FullPathFileName,BackFullPathFileName,False);
+          FileCopy(WFullPathFileName,FullPathFileName,False);
+            FileDelete(WFullPathFileName);
+
+          TPageCloseByName("Display_AllCompteur_Gateway");
+
+  end
+/////////////////////////////////////////////////////////////////////////
+function String Recherche_device(String CCode,String RDGateway)
+String FullPathFileName;
+String WFullPathFileName;
+int WFileHandle;
+String code;
+String Port;
+String Ligne;
+String GateType;
+String Result="";
+int i;
+int j;
+j=0;
+i=0;
+
+    int FileHandle;
+    FullPathFileName=ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.CSV";
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    WFullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device_Temp.CSV";
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    if (FileHandle==0) then   MessageBox("Channel device file est manquant","Error");  Return; end
+
+    Ligne=FileReadLn(FileHandle);
+    FileWriteLn(WFileHandle,Ligne);
+
+    while(FileEof(FileHandle)==0)
+        i=i+1;
+        Ligne=FileReadLn(FileHandle);
+        code=Fetch_AllCompteur(Ligne, 3, ";");
+        GateType=Fetch_AllCompteur(Ligne, 6, ";");
+                if RDGateway==GateType then
+                    FileWriteLn(WFileHandle,Ligne);
+                    j=j+1;
+                        if code==CCode then
+                         Result=i+"|"+j+"|"+Ligne;
+                        end
+                 end
+    end
+     FileClose(WFileHandle);
+    FileClose(FileHandle);
+   Return Result;
+
+end
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function void DesactiverGD()
+
+String CName;
+String CCode;
+String Coms="";
+
+
+         Temp_GateLine =A_C_GateLine; //RESET THE TEMP TO ORIGINAL
+         CName=Fetch_Formule(Temp_GateLine,8,";");
+         CCode=Fetch_Formule(Temp_GateLine,3,";");
+
+         Temp_GateLine=FR_Formule(Temp_GateLine,"",3);
+         Temp_GateLine=FR_Formule(Temp_GateLine,"",5);
+         Temp_GateLine=FR_Formule(Temp_GateLine,"",8);
+         Desactiver_GateLine= Temp_GateLine;
+         save_gateLine();
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Coms,19);
+         SetStrGateValue("AlarmeEventModifer",9,Coms);
+         SetStrGateValue("AlarmeEventModifer",18,"la communication du compteur ="+CName+" original est desactiver. ");
+
+end
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function void Gateway_View_Display(int Page)
+
+    String FullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EmailView;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String CGateway;
+    String RDGateway;
+    String GateType;
+    String Ligne;
+	String TFullPathFileName;
+
+
+    SetNumGateValue("currentPosition",0,Page);
+  TFullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.CSV";
+  
+    FullPathFileName =ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device_Temp.CSV";
+	 FileCopy(TFullPathFileName,FullPathFileName,False);
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    if (FileHandle==0) then   MessageBox("Gateway file is missing","Error");  Return; end
+
+     scanfile(FullPathFileName);
+    //get total item if not set already
+     if (GetNumGateValue("AdminTotalItems",0)==0) then
+         SetNumGateValue("AdminTotalItems",0,GetNumGateValue("MaxCompteur",0));
+     end
+
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+    TextRow = FileReadLn(FileHandle); // Header
+    //read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        Ligne = FileReadLn(FileHandle);
+
+                TextRow=Ligne;
+              j = j+1;
+                EmailView = "EmailView"+j;
+                    // For Display
+
+                     SetDisplay_Gateway( TextRow , EmailView);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        MaxCol=10;
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+
+
+end
+
+
+/*********************************************************************************/
+/***********************************//********************************************/
+function void SetDisplay_Gateway( String Line , String GateName)
+
+                SetStrGateValue(GateName,11,Fetch_AllCompteur(Line, 1, ";"));      //
+                SetStrGateValue(GateName,12,Fetch_AllCompteur(Line, 2, ";"));      //
+                SetStrGateValue(GateName,13,Fetch_AllCompteur(Line, 8, ";"));      //
+                SetStrGateValue(GateName,14,Fetch_AllCompteur(Line, 5, ";"));     //
+                SetStrGateValue(GateName,15,Fetch_AllCompteur(Line, 9, ";"));     //
+                SetStrGateValue(GateName,16,Fetch_AllCompteur(Line, 11, ";"));     //
+                SetStrGateValue(GateName,17,Fetch_AllCompteur(Line, 7, ";"));     //
+
+
+end
+//////////////////////////////////////////////*/*****////////////////////////////////
+function void ViewGateway_Add()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("currentPosition",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",11) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("currentPosition",0,CurrentPage);
+
+     Gateway_View_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewGateway_Sub()
+int CurrentPage= GetNumGateValue("currentPosition",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",11) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("currentPosition",0,CurrentPage);
+    Gateway_View_Display(CurrentPage);
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewGateway_First()
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",11) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("currentPosition",0,1);
+    Gateway_View_Display(1);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewGateway_End()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then
+        MaxPage =  MaxPage +1;
+    end
+
+         if (GetStrGateValue("AlarmeEventModifer",11) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("currentPosition",0,MaxPage);
+     Gateway_View_Display(MaxPage);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+function void SelectRowG_1()
+    SetNumGateValue("EditPosition",0,1);
+    SelectEditLigneG(1);
+
+end
+function void SelectRowG_2()
+    SetNumGateValue("EditPosition",0,2);
+    SelectEditLigneG(2);
+end
+function void SelectRowG_3()
+    SetNumGateValue("EditPosition",0,3);
+    SelectEditLigneG(3);
+end
+function void SelectRowG_4()
+    SetNumGateValue("EditPosition",0,4);
+    SelectEditLigneG(4);
+end
+function void SelectRowG_5()
+    SetNumGateValue("EditPosition",0,5);
+    SelectEditLigneG(5);
+end
+function void SelectRowG_6()
+    SetNumGateValue("EditPosition",0,6);
+    SelectEditLigneG(6);
+end
+function void SelectRowG_7()
+    SetNumGateValue("EditPosition",0,7);
+    SelectEditLigneG(7);
+end
+function void SelectRowG_8()
+    SetNumGateValue("EditPosition",0,8);
+    SelectEditLigneG(8);
+end
+function void SelectRowG_9()
+    SetNumGateValue("EditPosition",0,9);
+    SelectEditLigneG(9);
+end
+function void SelectRowG_10()
+    SetNumGateValue("EditPosition",0,10);
+    SelectEditLigneG(10);
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+function void SelectEditLigneG(int row)
+int MaxPage=10;
+int curLigneNumber;
+String GateName;
+GateName="EmailView";
+string Name;
+Name= GateName+row;
+String CName;
+String CMaster;
+String ID;
+String IC;
+ID=GetStrGateValue(Name,11);
+IC=GetStrGateValue(Name,12);
+
+if (ID != "" && IC !="" ) then
+
+    curLigneNumber = (GetNumGateValue("currentPosition",0)-1)*MaxPage +row;
+    SetStrGateValue("AlarmeEventModifer",20,curLigneNumber);//current pos in file
+
+    Selection_GateLine=Lecture_GCD_View_Line();
+
+    CName=Fetch_Formule(Admin_View_CurrentLine,2,";");
+    CMaster=Fetch_Formule(Admin_View_CurrentLine,18,";");
+    CCode=Fetch_Formule(Admin_View_CurrentLine,1,";");
+
+
+    SetStrGateValue("AlarmeEventModifer",21,GetStrGateValue(Name,11));
+    SetStrGateValue("AlarmeEventModifer",22,GetStrGateValue(Name,12));
+    SetStrGateValue("AlarmeEventModifer",23,CName);
+    SetStrGateValue("AlarmeEventModifer",24,CMaster);
+    SetStrGateValue("AlarmeEventModifer",25,GetStrGateValue(Name,15));
+    SetStrGateValue("AlarmeEventModifer",26,GetStrGateValue(Name,16));
+    SetStrGateValue("AlarmeEventModifer",27,GetStrGateValue(Name,17));
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue(Name,19));
+
+    Temp_GateLine=Selection_GateLine;
+    Temp_GateLine=FR_Formule(Temp_GateLine,CName,8);
+    Temp_GateLine=FR_Formule(Temp_GateLine,CCode,3);
+    Temp_GateLine=FR_Formule(Temp_GateLine,CMaster,5);
+
+
+
+end
+end
+//////////////////////////////////////////////Lecture AllCompteur
+function String Lecture_GCD_View_Line()
+    int NumLigne=1;
+    int RowSelect;
+    RowSelect=StrToInt(GetStrGateValue("AlarmeEventModifer",20));
+
+    String FullPathFileName;
+    int FileHandle;
+    String Ligne;
+
+    FullPathFileName =ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device_Temp.CSV";
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+   int i;
+   Ligne = FileReadLn(FileHandle);
+    for i = 1 to RowSelect do
+    Ligne = FileReadLn(FileHandle);
+    end
+
+   return Ligne;
+end
+/*****************************************************************************/
+Function void GatewayCancel()
+
+TPageCloseByName("Display_AllCompteur_Gateway");
+
+end

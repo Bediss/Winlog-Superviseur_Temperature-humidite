@@ -1,0 +1,5 @@
+Code_Master_Pbi;Nom_Master_Pbi;View_Master_Pbi;Path_Data;Date_Creation;Master_PBI_Privilege;Createur ;Description_Master
+MPBI7;PBI_CLC_J;J;C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Data\1 HISTORY\J_H;17/2/2021_16:29;16383;Analyseur;Master PBI JOURNALIER
+MPBI8;PBI_CLC_S;S;C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Data\1 HISTORY\W_H;9/7/2020_8:7;16384;Analyseur;Master PBI HEBDOMADAIRE
+MPBI9;PBI_CLC_M;M;C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Data\1 HISTORY\M_H;9/7/2020_8:8;16385;Analyseur;Master PBI MENSUEL
+MPBI10;PBI_CLC_A;A;C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Data\1 HISTORY\A_H;17/2/2021_16:29;16383;Analyseur;Master PBI ANNUEL

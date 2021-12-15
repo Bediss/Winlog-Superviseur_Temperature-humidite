@@ -1,0 +1,6 @@
+Company
+Site
+Type de Site
+Usine
+Process
+Atelier

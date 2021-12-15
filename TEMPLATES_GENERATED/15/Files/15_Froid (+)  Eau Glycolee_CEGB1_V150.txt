@@ -1,0 +1,3 @@
+F:*§CEG1A;SMF ElMazeraa;Froid (+)  Eau Glycolee;CEGB1;Froid;4;*;M110;*;*;SMF-ElMazeraa;*;F(CEG1A);Process;Froid;*;Froid;*;*;F~(~CEG1A~)~;F~(~SMF ElMazeraa~)~;;;0;SalleMachine Froid ElMazeraa;*
+F:*§CEG1C;SMF Ressuage3;Froid (+)  Eau Glycolee;CEGB1;Froid;4;*;M130;*;*;SMF Ressuage3;*;F(CEG1C);Process;Froid;*;Froid;*;*;F~(~CEG1C~)~;F~(~SMF Ressuage3~)~;;;0;SalleMachine Froid Ressuage3;*
+F:*§CEG1B;SMF Surgele;Froid (+)  Eau Glycolee;CEGB1;Froid;4;*;M120;*;*;SMF Surgele;*;F(CEG1B);Process;Froid;*;Froid;*;*;F~(~CEG1B~)~;F~(~SMF Surgele~)~;;;0;SalleMachine Froid Surgele;*

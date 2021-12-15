@@ -1,0 +1,1 @@
+F:*§CEGB1;Froid;Froid (+)  Eau Glycolee;CEGB;Utilitaire F+;3;*;*;MA00;*;*;Froid;F(CEGB1);Usine;Froid;*;Froid;*;*;F~(~CEGB1~)~;F~(~Froid~)~;;;0;Froid;*

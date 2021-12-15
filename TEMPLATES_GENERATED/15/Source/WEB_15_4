@@ -1,0 +1,1079 @@
+#Version: 0x030213
+#Access: 0
+#Pos: 0,150
+#Size: 1350,720
+#BkColor: 0,28,0
+#Gates: 26
+  #STR: Business_unit,0
+  #CMP: Compteur_2,List_4
+  #CMP: Compteur_2,List_5
+  #CMP: Compteur_2,List_1
+  #CMP: Compteur_2,List_2
+  #CMP: Compteur_2,List_3
+  #CMP: Compteur_3,List_4
+  #CMP: Compteur_3,List_5
+  #CMP: Compteur_3,List_1
+  #CMP: Compteur_3,List_2
+  #CMP: Compteur_3,List_3
+  #CMP: Compteur_4,List_4
+  #CMP: Compteur_4,List_5
+  #CMP: Compteur_4,List_1
+  #CMP: Compteur_4,List_2
+  #CMP: Compteur_4,List_3
+  #CMP: Compteur_P,List_4
+  #CMP: Compteur_P,List_5
+  #CMP: Compteur_P,List_1
+  #CMP: Compteur_P,List_2
+  #CMP: Compteur_P,List_3
+  #CMP: Compteur_1,List_4
+  #CMP: Compteur_1,List_5
+  #CMP: Compteur_1,List_1
+  #CMP: Compteur_1,List_2
+  #CMP: Compteur_1,List_3
+#Style: Standard
+#StayOnTop: 0
+#Object: Frame
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1350,100
+  #BkColor: clWhite
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 45,14
+    #Size: 141,41
+    #Cursor: 0
+    #PBmpFile: 0,logo_typo.jpg
+    #TabOrder: 0
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 1145,0
+    #Size: 124,68
+    #Cursor: 0
+    #PBmpFile: 0,logo.png
+    #TabOrder: 1
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 252,14
+    #Size: 460,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,22,0001
+    #Label: ENERGY MANAGEMENT SYSTEM  :
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 712,14
+    #Size: 385,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,24,0101
+    #Gate: 0
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 33,70
+    #Size: 220,15
+    #Cursor: 0
+    #PBmpFile: 0,Navigateur.png
+    #TabOrder: 2
+    #CycleTime: 0,0
+    #Access: 0
+    #NewOnClick: Template,TableauxList
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 234,178
+  #Size: 260,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clYellow
+  #Font: Calibri,16,0001
+  #Label: Cmp_Name_P
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 545,178
+  #Size: 260,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clYellow
+  #Font: Calibri,16,0001
+  #Label: Cmp_Name_1
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 854,423
+  #Size: 260,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clYellow
+  #Font: Calibri,16,0001
+  #Label: Cmp_Name_4
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 855,203
+  #Size: 260,215
+  #BkColor: 26,26,26
+  #Style: 4
+  #TabOrder: 1
+  #Access: 0
+  #Object: Frame
+    #ID: 0
+    #Pos: 11,370
+    #Size: 119,1
+    #BkColor: 0,0,0
+    #Style: 1
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,13
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_1
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,178
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_5
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,143
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_4
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,143
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 1
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,178
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 2
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,6
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 1
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 3
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,56
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_2
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,51
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 2
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 4
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,96
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 3
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 5
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,101
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_3
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 545,448
+  #Size: 260,215
+  #BkColor: 26,26,26
+  #Style: 4
+  #TabOrder: 2
+  #Access: 0
+  #Object: Frame
+    #ID: 0
+    #Pos: 11,370
+    #Size: 119,1
+    #BkColor: 0,0,0
+    #Style: 1
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,13
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_1
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,178
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_5
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,143
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_4
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,143
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 6
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,178
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 7
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,6
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 1
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 8
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,56
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_2
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,51
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 2
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 9
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,96
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 3
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 10
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,101
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_3
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 854,448
+  #Size: 260,215
+  #BkColor: 26,26,26
+  #Style: 4
+  #TabOrder: 3
+  #Access: 0
+  #Object: Frame
+    #ID: 0
+    #Pos: 11,370
+    #Size: 119,1
+    #BkColor: 0,0,0
+    #Style: 1
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,13
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_1
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,178
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_5
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,143
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_4
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,143
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 11
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,178
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 12
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,6
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 1
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 13
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,56
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_2
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,51
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 2
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 14
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,96
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 3
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 15
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,101
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_3
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 545,423
+  #Size: 260,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clYellow
+  #Font: Calibri,16,0001
+  #Label: Cmp_Name_3
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 855,178
+  #Size: 260,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clYellow
+  #Font: Calibri,16,0001
+  #Label: Cmp_Name_2
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 234,203
+  #Size: 260,215
+  #BkColor: 26,26,26
+  #Style: 4
+  #TabOrder: 4
+  #Access: 0
+  #Object: Frame
+    #ID: 0
+    #Pos: 11,370
+    #Size: 119,1
+    #BkColor: 0,0,0
+    #Style: 1
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,13
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_1
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,178
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_5
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,143
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_4
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,143
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 16
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,178
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 17
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,6
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 1
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 18
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,56
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_2
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,51
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 2
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 19
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,96
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 3
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 20
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,101
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_3
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 545,203
+  #Size: 260,215
+  #BkColor: 26,26,26
+  #Style: 4
+  #TabOrder: 5
+  #Access: 0
+  #Object: Frame
+    #ID: 0
+    #Pos: 11,370
+    #Size: 119,1
+    #BkColor: 0,0,0
+    #Style: 1
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,13
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_1
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,178
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_5
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,143
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,12,0001
+    #Label: Label_4
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,143
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 21
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 90,178
+    #Size: 160,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: 255,170,170
+    #Font: Calibri,14,0001
+    #Gate: 22
+    #Label: %.*f
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,6
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 1
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 23
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,56
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_2
+    #Align: 22
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,51
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 2
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 24
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Frame
+    #ID: 0
+    #Pos: 90,96
+    #Size: 160,40
+    #BkColor: clBtnText
+    #Style: 2
+    #TabOrder: 3
+    #Access: 0
+    #Object: Label
+      #ID: 0
+      #Pos: 5,5
+      #Size: 150,30
+      #BkColor: 236,236,0
+      #Cursor: 0
+      #TxtColor: clInactiveCaptionText
+      #Font: SevenSegments,22,0000
+      #Gate: 25
+      #Label: %.*f
+      #Align: 37
+      #Frame: 1
+      #Access: 0
+    #EndObj
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 0,101
+    #Size: 80,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clYellow
+    #Font: Calibri,11,0001
+    #Label: Label_3
+    #Align: 38
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 20,105
+  #Size: 705,35
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindow
+  #Font: Calibri,16,0001
+  #Label: Path
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj

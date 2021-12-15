@@ -1,0 +1,717 @@
+function void Bouton_Unit()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+        LenPrefix=2;
+
+Confirme_Save();
+PageOpen="Unite";
+        SetNumGateValue("Show_Temp_Pointer",0,536870916);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+        SetNumGateValue("LastCodeAdd",0,0);
+            SetNumGateValue("Template_Control",0,0);
+
+        Admin_View_Temp_File=ENV_PATH+"\Files\AllCompteur\Temp_Unite.CSV";
+        Admin_View_Original_File=ENV_PATH+"\Files\AllCompteur\Unite.CSV";
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\AllCompteur\Recycler_Unit_Code.txt";
+          Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+           FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+         Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+        //Highest_Code_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+
+        ShowPage("Unite_Display");
+
+        Admin_View_Display(1 , "Unite" );
+        FlagUses=False;
+end
+///////////****************************////////////////////////////////////////////
+
+function string Fetch_Unit(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+/*/////////////////////////////////////////*/
+
+function void NameUniteBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("Unite_Name");
+End
+
+function void FillNameUnite()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+    // MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      //SetStrGateValue("AlarmeEventModifer",0,"");
+
+    end
+end
+
+
+
+function void DescriptionUniteBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",3));
+    ShowPoPUPs("Unite_Description");
+End
+
+function void FillDescriptionUnite()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",3,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,7);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+    end
+end
+
+function void SetDisplay_Unite_Table( String Line , String GateName)
+
+
+                SetStrGateValue(GateName,0,Fetch_Unit(Line, 2, ";"));
+                SetStrGateValue(GateName,1,Fetch_Unit(Line, 4, ";"));
+                SetStrGateValue(GateName,2,Fetch_Unit(Line, 6, ";"));
+                SetStrGateValue(GateName,3,Fetch_Unit(Line, 7, ";"));
+                SetStrGateValue(GateName,4,Fetch_Unit(Line, 8, ";"));
+
+end
+//////////////////////////**************************/////////////////////////////
+function String FR_Unite(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+
+
+//////////////////
+function void BUnite_NA_Parent()
+
+    String Ligne;
+    String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",3);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",4);
+
+    SetStrGateValue("AlarmeEventModifer",1,"*");
+                         if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("BUnit_Parent_SELECTOR");
+
+End
+////////////////////////////////////////////////////////////////////////////////
+function void Select_BUnite_Parent()
+
+    String Ligne;
+    String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+
+       Ligne=Select_BU();
+
+    if GetStrGateValue("BU_Selected",0)=="" then
+        Code="*";
+        Name="*";
+    else
+        Code=Fetch_Formule(Ligne,7,";");
+        Name=Fetch_Formule(Ligne,9,";");
+    end
+
+
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Code,3);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Name,4);
+
+    SetStrGateValue("AlarmeEventModifer",1,Name);
+                         if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("BUnite_Parent_SELECTOR");
+End
+////////////////////
+function Void BUnite_Parent_POPUP()
+   POPUP_Start();
+
+    ShowPoPUPs("BUnite_Parent_SELECTOR");
+End
+
+//////////////////////////*///////////
+function Void Level_POPUP()
+
+EVM_LIST_FILE=ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+Level_Display(1);
+ShowPoPUPs("Level_BU");
+End
+////////////
+function void Level_SelectRow_1()
+     string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView1",0);
+    NLevel= GetStrGateValue("EmailView1",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                             if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+        TPageCloseByName("Level_BU");
+
+
+
+
+end
+function void Level_SelectRow_2()
+     string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView2",0);
+    NLevel= GetStrGateValue("EmailView2",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                             if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+
+
+
+end
+
+function void Level_SelectRow_3()
+     string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView3",0);
+    NLevel= GetStrGateValue("EmailView3",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                            if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+
+
+
+end
+
+function void Level_SelectRow_4()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView4",0);
+    NLevel= GetStrGateValue("EmailView4",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+
+
+end
+
+function void Level_SelectRow_5()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView5",0);
+    NLevel= GetStrGateValue("EmailView5",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+
+end
+
+function void Level_SelectRow_6()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView6",0);
+    NLevel= GetStrGateValue("EmailView6",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+end
+
+function void Level_SelectRow_7()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView7",0);
+    NLevel= GetStrGateValue("EmailView7",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+end
+
+function void Level_SelectRow_8()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView8",0);
+    NLevel= GetStrGateValue("EmailView8",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+end
+
+function void Level_SelectRow_9()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView9",0);
+    NLevel= GetStrGateValue("EmailView9",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+end
+
+function void Level_SelectRow_10()
+
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView10",0);
+    NLevel= GetStrGateValue("EmailView10",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,6);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,5);
+
+    SetStrGateValue("AlarmeEventModifer",2,Level);
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("Level_BU");
+
+
+end
+/////////////////////////////////////////////
+function void Load_Groups_Set_AP_BUnite()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPs("SET_Access_Privilege_BUnite");
+end
+function void AP_Set_Groupes_BUnite()
+int Access;
+
+
+    Access=GetNumGateValue("AP_Value",0);
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Access,8);
+
+    SetStrGateValue("AlarmeEventModifer",4,Access);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("SET_Access_Privilege_BUnite");
+
+
+end
+
+
+//////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Function Void CopyBUnite()
+
+String Prefix="";
+String CodeNewEnergy;
+
+
+    CodeNewEnergy=FetchCodeAdd(ENV_PATH+"\Files\AllCompteur","BU");
+
+    Admin_Copy("Unite",CodeNewEnergy);
+      Confirme_Save=True;
+
+End
+
+//////////////////////
+Function Void DeleteBUnite()
+
+String WPath=ENV_PATH+"\Files\AllCompteur\WTempUnite.CSV";
+String BackPath=ENV_PATH+"\Files\AllCompteur\Back_Temp_Unite.CSV";
+
+    Admin_Delete("Unite",WPath,BackPath);
+      Confirme_Save=True;
+
+End
+
+
+/*****************************************************************************/
+
+Function Void Add_New_BUnite()
+String CodeNewAlarme;
+    CodeNewAlarme=FetchCodeAdd(ENV_PATH+"\Files\AllCompteur","BU");
+
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",3),7);
+
+
+    Admin_New_Ligne("Unite",CodeNewAlarme);
+      Confirme_Save=True;
+
+end
+//////////////////////////////////////////////////////////////////
+function void Modier_BUnite()
+    String FullPathFileName;
+    String BackFullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;  string EditRow;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    int save_pos = GetNumGateValue("EditPosition",0);
+    int Page = GetNumGateValue("EmailPageView",0);
+    string RowName;
+    string WFullPathFileName;
+    int WFileHandle;
+    bool W_already = false;
+     int Position_S=(Page-1)*10+save_pos;
+
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",3),7);
+if ( Page == 1 ) then RowHeader = true; end
+    BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\Back_Temp_Unite.CSV";
+    FullPathFileName =Admin_View_Temp_File;
+    WFullPathFileName = ENV_PATH+"\Files\AllCompteur\WTemp_Unite.CSV";
+
+
+FileHandle=FileOpen(FullPathFileName,"rt");
+WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+      end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+while(FileEof(FileHandle)==0)
+     TextRow = FileReadLn(FileHandle);
+
+
+     if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+            if (TextRow != "" ) then
+               ReadRowPos = ReadRowPos+1;
+               if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+                  j = ReadRowPos-Row_Start+1;
+                    if j==10 && Page>1 then ReadRowPos=ReadRowPos+1; end
+
+                    if (ReadRowPos== Position_S) then //EditRow =AnalyseSave_Alarme(Admin_View_CurrentLine);
+
+                    FileWriteLn(WFileHandle,Admin_View_CurrentLine);
+                        W_already=true;
+
+                        RowName = "ROW"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+                        SetStrGateValue(RowName,4,GetStrGateValue("AlarmeEventModifer",4));
+
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+                        SetStrGateValue("AlarmeEventModifer",4,"");
+
+                        // change winlog alarm
+
+                         end
+                     end
+               end
+          end
+
+
+
+     if (W_already == false) && (TextRow!="") then FileWriteLn(WFileHandle,TextRow);end
+     W_already = false;
+
+
+end
+
+FileClose(FileHandle);
+FileClose(WFileHandle);
+
+
+    if ( FileExist(BackFullPathFileName) == true ) then
+        FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+      Confirme_Save=True;
+             SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+
+
+FileDelete(WFullPathFileName);
+    Clean_Formulaire();
+MessageBox("Fin De Sauvegarde ","Information :");
+return;
+end
+////////////////////////////////////////////////////////////////////////
+Function Void BUnite_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\Config Compteur\Back_Unite.CSV";
+Admin_Commit(BackFullPathFileName);
+Read_Tableau_BU();
+End
+
+///////////////////////////////////////////////////////////////////////////////
+function void View_BU_Add()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+
+
+     Admin_View_Display(CurrentPage,"Unite");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_BU_Sub()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"Unite");
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_BU_First()
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"Unite");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_BU_End()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"Unite");
+
+end

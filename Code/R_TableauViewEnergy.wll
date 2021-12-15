@@ -1,0 +1,1747 @@
+global string R_TVECode;
+global string R_Row;
+global string R_Column;
+Global String R_PostCode;
+Global String R_CCode;
+//global Bool SelectView = false;
+global string R_Status;
+global string R_Nom;
+global string R_EnergyCode;
+global string R_FileTemplate;
+global int R_TotalRow;
+global int R_TotalCol;
+global int R_max_Col_Items =9;
+global int R_max_Row_Items =10;
+global string R_ColFullFileName;
+global string R_RowFullFileName;
+global int R_CompteurMax ;
+Global   Bool R_GOTO_TVE = FAlse;
+Global   string R_E;
+Global   string R_Cp;
+Global   string R_Cl;
+Global   string R_Cn;
+Global   string R_Cpc;
+Global   Int R_Curr_LigneInPage = 0;
+Global   Int R_PageCounter = 0;
+//global int CompteurMax = 70;
+/***************************************************************************/
+function String Generate_Report( String ReportCode, String EventAlarme_Name , String Email_Name )
+
+
+    string  FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    int     FileHandle;
+    String  Line;
+    String Code;
+    String Chart;
+    String ChartPATH = GetProjectPath() + "\Template\Chart_Reports\";
+    String ReportLigne;
+    Bool Found = False ;
+    Bool Exit  = False;
+    String ReportPATH = "";
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    If ( FileHandle == 0 ) Then MessageBox(FullPathFileName,"File Not Found"); Return;   End
+
+    While ( Exit == False )
+
+        Line = FileReadLn( FileHandle );
+
+        Code = Report_Fetch(Line,1,";");
+        If ( Code == ReportCode) Then
+
+            ReportLigne = Line;
+            Found = True;
+        End
+
+        IF ( FileEof( FileHandle ) != 0 ) Then
+            Exit = True;
+        End
+        If ( Found == True ) Then
+            Exit = True;
+        End
+
+    End
+    FileClose( FileHandle );
+
+    If ( Found == True ) Then
+
+    Chart = Report_Fetch(Line,15,";");
+
+      IF (Chart != "" || Chart != "*" || Chart != "-" ) Then
+            IF ( FileExist( ChartPATH + Chart ) == True ) Then
+                ReportPATH = R_TableauViewEnergy( ReportLigne,EventAlarme_Name ,Email_Name);
+
+            Else
+                //MessageBox( "Sorry. Chart Could Not be Generated !! ","Information");
+                Event_Runtime_LOG( " Chart Report Not found in File : " +ChartPATH + Chart );
+            End
+      End
+
+    Else
+    Event_Runtime_LOG( " Report Not found in File : "  + Code + " != " + ReportCode);
+     //MessageBox( "Sorry. Report Could Not be Generated !!","Information");
+    End
+    Return ReportPATH ;
+end
+/***************************************************************************/
+function String GET_ADHOC( String ADHOC_Tableau, String ADHOC_Energy, String ADHOC_View, String ADHOC_PostCode, String ADHOC_Cmpt , Bool ADHOC_USEUNIQUE , String ADHOC_UNIQUECODE)
+    string  FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    int     FileHandle;
+
+    String  CONFIG_FullPathFileName = "C:\Winlog\PowerShell\Search_File_Config.txt";
+    int     CONFIG_FileHandle;
+    String CONFIG_READFILE = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    String CONFIG_RESULTFILE = ENV_PATH + "\Files\DATAMODELFiles\Rapport\RESULT_SearchFile.txt";
+    String CONFIG_UNIQUECODE;
+
+    String  Line;
+    String Code;
+    String Chart;
+    String ChartPATH = GetProjectPath() + "\Template\Chart_Reports\";
+
+    String UNIQUE = "";
+
+    //String ReportLigne;
+    Bool Found = False ;
+    Bool Exit  = False;
+
+
+    //////////// Initialisation
+    FileDelete(CONFIG_RESULTFILE);
+
+    If ( ADHOC_USEUNIQUE == False ) Then
+      UNIQUE = GET_UNIQUE_CODE( ADHOC_Tableau,  ADHOC_View,  ADHOC_Energy,  ADHOC_PostCode,  ADHOC_Cmpt);
+    Else
+      UNIQUE = ADHOC_UNIQUECODE;
+    End
+
+    //////////// Write Config File
+     CONFIG_FileHandle = FileOpen(CONFIG_FullPathFileName,"wt");
+     CONFIG_UNIQUECODE = ";" + UNIQUE + ";" ;
+
+     FileWriteLn(CONFIG_FileHandle,CONFIG_READFILE);
+     FileWriteLn(CONFIG_FileHandle,CONFIG_RESULTFILE);
+     FileWriteLn(CONFIG_FileHandle,CONFIG_UNIQUECODE);
+
+     FileClose( CONFIG_FileHandle );
+     //////////// PowerShell Execution
+
+     ShellExec("Search file.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+     //////////// Read Result File
+
+     Line = PS_SearchFile_Wait( CONFIG_RESULTFILE );
+
+     IF ( Line == "" ) Then
+          MessageBox( "Sorry. Report Could Not be Generated !!","Information");
+          Return "";
+     Else
+
+     Return Line ;
+     //Line = ReplaceCharByChar( Line, ";" ,"," );
+     //PRINT_SingleReport_Generator( Line , "" , "");
+
+       /*IF ( R_Tableau(ADHOC_Tableau) == false ) Then
+        Chart = Report_Fetch(Line,15,";");
+        MessageBox(Chart,"");
+          IF (Chart != "" || Chart != "-" ) Then
+          //MessageBox(ChartPATH + Chart,FileExist( ChartPATH + Chart ));
+            IF ( FileExist( ChartPATH + Chart ) == True ) Then
+
+                //R_TableauViewEnergy( Line, "", "");
+                 Line = ReplaceCharByChar( Line, ";" ,"," );
+                 PRINT_SingleReport_Generator( Line , "" , "");
+                SetStrGateValue("BU_Selected",0,Report_Fetch(Line,2,";"));
+                Return Line;
+            Else
+                MessageBox( "Sorry. Chart Could Not be Generated !! ","Information");
+                Return "";
+            End
+
+          End // Chart != ""
+
+       Else
+
+                Line = ReplaceCharByChar( Line, ";" ,"," );
+                PRINT_SingleReport_Generator( Line , "" , "");
+                SetStrGateValue("BU_Selected",0,Report_Fetch(Line,2,";"));
+                Return Line;
+
+       End  // R_Tableau(ADHOC_Tableau) == false*/
+
+     End // Line != ""
+
+end
+/***************************************************************************/
+function String PS_SearchFile_Wait( String Path)
+
+    String DELTA_FullPathFileName = Path;
+    int DELTA_FileHandle;
+    String Message;
+    String Ln;
+
+
+     While (FileExist(DELTA_FullPathFileName) == False )
+        Sleep(250);
+     End
+
+      DELTA_FileHandle = FileOpen(DELTA_FullPathFileName,"rt");
+      Ln = FileReadLn(DELTA_FileHandle);
+
+      FileClose(DELTA_FileHandle);
+
+      Return Ln;
+end
+/***************************************************************************/
+function Bool R_Tableau( String Tableau)
+
+    IF (GetStrGateValue("Tableau_TVE",StrToInt(Tableau)) == "1") Then
+        Return true;
+      Else
+        Return false;
+    End
+
+end
+/***************************************************************************/
+function String R_TableauViewEnergy(string ReportLine , String EventAlarme_Name , string EMAILNAME)
+
+    R_CompteurMax = GetNumGateValue("MaxCompteur",0);
+    int FileHandle; int FileHandleOriginalQuery;
+    String Tenergy;
+    String TView;
+
+    int P;
+    string FullPathFileName;
+    string TextRow;
+    int Tableau;
+    int View;
+    int Energy;
+    string Code1;
+    string Code;
+    int Row_Page;
+    int Col_Page;
+    string Row_Filename;    string Col_Filename;
+    string Template;
+    String TemplateName;
+    String TemplatePath = GetProjectPath() + "\Template\Test\" ;
+    String R_Tableau;
+    String R_Energy;
+    String R_PostCode;
+    String R_View;
+    String R_CompteurCode;
+    String ReportMaster;
+    String ReportLayout;
+    String LayoutPath = ENV_PATH + "\Files\DATAMODELFiles\Rapport\";
+    String REPORT_DIR_CONFIG = GetProjectPath() + "\Reports\" ;
+    String Report_Path  ;
+    String Report_Name;
+    String Description_Report;
+    String DD;  String MM;  String YYYY;    String HH; String mm;
+    String ChartPATH = GetProjectPath() + "\Template\Chart_Reports\";
+    string UserRName;
+    string Compteur_Code;
+    string MyCode;
+    Bool GENERATION = False;
+
+//////////////////////////////////////////////////////////////////////////////
+
+R_Tableau = Report_Fetch(ReportLine,3,";");
+
+//MessageBox(ReportLine,R_Tableau);
+
+    If ( R_Tableau == "" && R_Tableau == "*") Then  Return "";  End
+
+    IF ( R_Tableau(R_Tableau) == false ) Then
+       R_OpenChart();
+        SetStrGateValue("ReportView",0,EventAlarme_Name);
+        SetStrGateValue("ReportView",1,EMAILNAME);
+        SetStrGateValue("ReportView",2,R_TotalRow);
+        SetStrGateValue("ReportView",3,R_TotalCol);
+        SetStrGateValue("ReportView",4,10);
+        SetStrGateValue("ReportView",5,6);
+        Description_Report = Report_Fetch(ReportLine,20,";");
+
+        SetStrGateValue("ReportView",6, Change_Char(Change_Char_2(Description_Report)));
+        SetStrGateValue("ReportView",9,Report_Fetch(ReportLine,15,";"));
+        SetStrGateValue("ReportView",10,GetDateString("/",true)+" " +GetTimeString(":"));
+
+        ReportMaster = Report_Fetch(ReportLine,13,";");
+        ReportLayout = Report_Fetch(ReportLine,14,";");
+        //Report_Name = Report_Fetch(ReportLine,15,";")+"_V"+GetStrGateValue("Version",0);
+        Report_Name = Report_Fetch(ReportLine,15,";");
+        SetStrGateValue("ReportView",9,Report_Name);
+
+        LayoutPath = LayoutPath + ReportLayout + ".RTF";
+        REPORT_DIR_CONFIG = REPORT_DIR_CONFIG + ReportMaster + "\" + ReportMaster +".RTF";
+
+        FileCopy(LayoutPath , REPORT_DIR_CONFIG , False );
+    //MessageBox(ChartPATH + Report_Name,FileExist( ChartPATH + Report_Name ));
+
+        IF ( FileExist( ChartPATH + Report_Name ) == True ) Then
+           ReportCreate( ReportMaster ) ;
+        End
+
+    //MessageBox("C:\Winlog\Rapport\" + ReportMaster +".Pdf",FileExist("C:\Winlog\Rapport\" + ReportMaster +".Pdf"));
+          If ( FileExist("C:\Winlog\Rapport\" + ReportMaster +".Pdf") == True ) Then
+
+              HH = "00" + GetHour();
+              P = StrLen( HH ) -1;
+              HH = StrSubString( HH , P , 2 );
+
+              mm = "00" + GetMinute();
+              P = StrLen( mm ) -1;
+              mm = StrSubString( mm , P , 2 );
+
+              DD = "00" + GetDayOfMonth();
+              P = StrLen( DD ) -1;
+              DD = StrSubString( DD , P , 2 );
+
+              MM = "00" + GetMonth();
+              P = StrLen( MM ) -1;
+              MM = StrSubString( MM , P , 2 );
+
+              YYYY = "0000" + GetYear();
+              P = StrLen( YYYY ) -3;
+              YYYY = StrSubString( YYYY , P , 4);
+
+              Report_Path = Report_Fetch(ReportLine,18,";") + "\";
+              Report_Name = Report_Fetch(ReportLine,2,";") + "_" + DD + "-" + MM + "-" + YYYY + "-" + HH+mm +".Pdf" ;
+              Report_Path = Report_Path + Report_Name;
+              FileCopy( "C:\Winlog\Rapport\" + ReportMaster +".Pdf" , Report_Path , False );
+
+              While ( FileExist(Report_Path) == False )
+                Sleep(500);
+              End
+                //MessageBox(FileExist(Report_Path),"FileExist");
+          End
+
+          IF ( Report_Path == "" ) Then
+            Event_Runtime_LOG(" Empty Report Path Generated : " +  Report_Path +" *//* " + Report_Name);
+          End
+
+        Return Report_Path;
+    Else
+//////////////////////////////////////////////////////////////////////////////
+
+    GENERATION = GeneratedREPORT( ReportLine , EventAlarme_Name , EMAILNAME );
+    //MessageBox(GENERATION,"GENERATION");
+      IF ( GENERATION == True) Then
+
+        ReportMaster = Report_Fetch(ReportLine,13,";");
+          MessageBox("C:\Winlog\Rapport\" + ReportMaster +".Pdf",FileExist("C:\Winlog\Rapport\" + ReportMaster +".Pdf"));
+          If ( FileExist("C:\Winlog\Rapport\" + ReportMaster +".Pdf") == True ) Then
+
+              HH = "00" + GetHour();
+              P = StrLen( HH ) -1;
+              HH = StrSubString( HH , P , 2 );
+
+              mm = "00" + GetMinute();
+              P = StrLen( mm ) -1;
+              mm = StrSubString( mm , P , 2 );
+
+              DD = "00" + GetDayOfMonth();
+              P = StrLen( DD ) -1;
+              DD = StrSubString( DD , P , 2 );
+
+              MM = "00" + GetMonth();
+              P = StrLen( MM ) -1;
+              MM = StrSubString( MM , P , 2 );
+
+              YYYY = "0000" + GetYear();
+              P = StrLen( YYYY ) -3;
+              YYYY = StrSubString( YYYY , P , 4);
+
+              Report_Path = Report_Fetch(ReportLine,18,";") + "\";
+              Report_Name = Report_Fetch(ReportLine,2,";") + "_" + DD + "-" + MM + "-" + YYYY + "-" + HH+mm +".Pdf" ;
+              Report_Path = Report_Path + Report_Name;
+              //MessageBox("C:\Winlog\Rapport\" + ReportMaster +".Pdf" + Eol() +Report_Path,"Report_Path");
+              FileCopy( "C:\Winlog\Rapport\" + ReportMaster +".Pdf" , Report_Path , False );
+                //MessageBox(Report_Path,"Report_Path");
+          End
+        Return Report_Path;
+
+      Else
+        Return "Error";
+      End // GENERATION == true
+
+                //SetStrGateValue("ReportView",6,Report_Code);
+                //SetStrGateValue("ReportView",7,R_RowFullFileName);
+                //SetStrGateValue("ReportView",8,R_ColFullFileName);
+                //SetStrGateValue("ReportView",9,"Chart_"+Report_Code);
+
+
+            // return "";
+        //end// end TVE CODE
+  end//R_Tableau(R_Tableau) == false
+end//end function
+/***************************************************************************/
+function Bool GeneratedREPORT( String ReportLine , String EventAlarme_Name , String EMAILNAME )
+
+    String CL_FilePATH;
+    String ML_FilePATH;
+
+    String R_Tableau;
+    String R_Energy;
+    String R_PostCode;
+    String R_View;
+    String R_CompteurCode;
+    String ReportMaster;
+    String ReportLayout;
+    String Description_Report;
+    String REPORT_DIR_CONFIG = GetProjectPath() + "\Reports\" ;
+    String LayoutPath = ENV_PATH + "\Files\DATAMODELFiles\Rapport\";
+    CL_FilePATH = Report_Fetch(ReportLine,16,";");
+    ML_FilePATH = Report_Fetch(ReportLine,17,";");
+    Bool REPORTCREATION = FALSE;
+
+    IF ( FileExist( CL_FilePATH ) == False ) Then Return False; End
+    IF ( FileExist( ML_FilePATH ) == False ) Then Return False; End
+
+    R_Tableau =  Report_Fetch(ReportLine,3,";");
+    R_Energy =   Report_Fetch(ReportLine,5,";");
+    R_PostCode = Report_Fetch(ReportLine,9,";");
+    R_View =     Report_Fetch(ReportLine,7,";");
+    R_CompteurCode = Report_Fetch(ReportLine,11,";");
+    ReportMaster = Report_Fetch(ReportLine,13,";");
+    ReportLayout = Report_Fetch(ReportLine,14,";");
+
+    //MessageBox(CL_FilePATH,);
+    R_RowFullFileName = Get_RowLIST(CL_FilePATH , Report_Fetch(ReportLine,1,";"));
+
+    R_ColFullFileName = ML_FilePATH;
+    // Get_ColumnLIST();
+
+
+        SetStrGateValue("ReportView",0,EventAlarme_Name);
+        SetStrGateValue("ReportView",1,EMAILNAME);
+        //SetStrGateValue("ReportView",2,R_TotalRow);
+        //SetStrGateValue("ReportView",3,R_TotalCol);
+        SetStrGateValue("ReportView",4,10);
+        SetStrGateValue("ReportView",5,6);
+        Description_Report = Report_Fetch(ReportLine,20,";");
+
+        SetStrGateValue("ReportView",6, Change_Char(Change_Char_2(Description_Report)));
+        SetStrGateValue("ReportView",9,Report_Fetch(ReportLine,15,";"));
+        SetStrGateValue("ReportView",10,GetDateString("/",true)+" " +GetTimeString(":"));
+
+        SetStrGateValue("ReportView",0,EventAlarme_Name);
+        SetStrGateValue("ReportView",1,EMAILNAME);
+        //SetStrGateValue("ReportView",2,R_TotalRow);
+        //SetStrGateValue("ReportView",3,R_TotalCol);
+        SetStrGateValue("ReportView",4,10);
+        SetStrGateValue("ReportView",5,6);
+        LayoutPath = LayoutPath + ReportLayout + ".RTF";
+        REPORT_DIR_CONFIG = REPORT_DIR_CONFIG + ReportMaster + "\" + ReportMaster +".RTF";
+
+        //MessageBox(LayoutPath + Eol() + REPORT_DIR_CONFIG,ReportMaster);
+        FileCopy(LayoutPath , REPORT_DIR_CONFIG , False );
+
+        REPORTCREATION = ReportCreate( ReportMaster ) ;
+        //MessageBox(REPORTCREATION,ReportMaster);
+    Return REPORTCREATION;
+end
+/***************************************************************************/
+function String Get_RowLIST( String Compteur_List_Path , String REPORT_CODE )
+
+    string CFullPathFileName;
+    int CFileHandle;
+    string  HISTORICAL_FullPathFileName;
+    int     HISTORICAL_FileHandle;
+
+    String  E_FullPathFileName;
+    int     E_FileHandle;
+
+    String CompteurLigne;
+    String CompteurCode;
+    Bool Found = false;
+    //String PBI_Path;
+    int NBRCompteur = 0;
+    String CurrentENERGY = "First";
+    String ENERGY;
+    String Current_CL = "";
+
+    String SourceFile;
+    String NewFile;
+    String FilterLINE = "";
+    Int MaxEnergy = GetNumGateValue("EnergyMax",0);
+    int i;
+    Int TotalCompteur = 0;
+
+    String FINDQuery = "Query~";
+    String QUERY;
+    String CL_PATH;
+    Int CL_FileHandle;
+    Int NUM_LINE = 0;
+    Int QUERY_NBR = 0;
+    String LINE_ALLCOMPTEUR = "";
+
+
+//////////  Constract CL ligne
+        CFullPathFileName = Compteur_List_Path;
+        CFileHandle = FileOpen(CFullPathFileName,"rt");
+
+        If ( CFileHandle == 0 ) Then
+            MessageBox(CFullPathFileName,"Report CL : File Not Found");
+            Return;
+        End
+
+        E_FullPathFileName = ENV_PATH + "\Files\" + REPORT_CODE +"_RowList.txt";
+
+        E_FileHandle = FileOpen(E_FullPathFileName,"wt");
+
+        While( FileEof(CFileHandle) == 0 )
+
+         CompteurLigne = FileReadLn(CFileHandle);
+
+           IF ( CompteurLigne != "" ) Then
+
+                NUM_LINE = NUM_LINE + 1;
+
+                CompteurCode = Report_Fetch(CompteurLigne,1,";");
+                ENERGY = Report_Fetch(CompteurLigne,3,";");
+                If ( ENERGY != "*" ) Then
+                  //CL_PATH = ENV_PATH + "" + PBI_CODE +"_"+ ENERGY + ".txt";
+
+                //IF ( FileExist(CL_PATH) == False ) Then
+                  //FileWriteLn(E_FileHandle,ENERGY + ";" + CL_PATH);
+                //End
+
+                //CL_FileHandle = FileOpen(CL_PATH,"at");
+
+                    IF ( CompteurCode == FINDQuery ) Then
+                        //MessageBox(CompteurCode,Fetch_PBI(CompteurLigne,4,";"));
+                        i = R_AnalyseQuerryCompteur( Fetch_PBI(CompteurLigne,4,";") , E_FileHandle , "TVE" , "" );
+                        TotalCompteur = TotalCompteur+i;
+                      Else
+                        FileWriteLn(E_FileHandle, Report_Fetch(CompteurLigne,1,";") +","+  Report_Fetch(CompteurLigne,2,";"));
+                        TotalCompteur = TotalCompteur+1;
+                    End
+
+                 //FileClose(CL_FileHandle);
+               End
+           End
+
+        End
+
+    FileClose(CFileHandle);
+    FileClose(E_FileHandle);
+
+        SetStrGateValue("ReportView",2,IntToStr( TotalCompteur) );
+
+    Return E_FullPathFileName;
+end
+/***************************************************************************
+function void Get_ColumnLIST( )
+
+end
+/***************************************************************************
+function void Reporting()
+R_max_Col_Items =6;
+R_max_Row_Items =10;
+string space26 = StrOfChar(32,26);
+string space20 = StrOfChar(32,20);
+string PageNumberLine;
+int Matrix_MaxRowPage;
+int Matrix_MaxColPage;
+int Row_Page;
+int Col_Page;
+//Int R_PageCounter ;
+R_TotalRow = StrToInt(GetStrGateValue("ReportView",2));
+R_TotalCol = StrToInt(GetStrGateValue("ReportView",3));
+R_TotalCol = 6;
+R_Curr_LigneInPage = 0;
+R_PageCounter = 1;
+              //R_TotalRow = R_TotalRow - FIST_PAGE_ROWS;
+
+              Matrix_MaxRowPage = R_TotalRow/R_max_Row_Items;
+              Matrix_MaxColPage = R_TotalCol/R_max_Col_Items;
+              IF ( Mod( R_TotalRow , R_max_Row_Items ) > 0 ) Then Matrix_MaxRowPage = Matrix_MaxRowPage +1; End
+              IF ( Mod( R_TotalCol , R_max_Col_Items ) > 0 ) Then Matrix_MaxColPage = Matrix_MaxColPage +1; End
+             ///MessageBox("Matrix_MaxRowPage: " + Matrix_MaxRowPage,"Matrix_MaxColPage : " + Matrix_MaxColPage);
+                ReportInsertTemplate("ReportHeader");
+                ReportInsertText(Eol());
+
+
+              for Row_Page = 1 to Matrix_MaxRowPage do
+
+                     for Col_Page = 1 to Matrix_MaxColPage do
+                     //insert Body
+                       R_Curr_LigneInPage = R_Display(Row_Page,Col_Page );
+
+                     end
+
+              end
+end
+/***************************************************************************/
+
+function void R_GetEnergy(string RowQuery, string ColQuery)
+int P;
+string V;
+string MyString ;
+
+        MyString =RowQuery;
+        P = StrPos(MyString,":");
+        V = StrSubString(MyString,1,P-1);
+
+     if (V == "C") then
+        MyString=StrDelete(MyString,1,P);
+        P = StrPos(MyString,",");
+        R_EnergyCode = StrSubString(MyString,1,P-1);
+        else
+
+        MyString =ColQuery;
+        P = StrPos(MyString,":");
+        V = StrSubString(MyString,1,P-1);
+
+          if (V == "C") then
+          MyString=StrDelete(MyString,1,P);
+          P = StrPos(MyString,",");
+          R_EnergyCode = StrSubString(MyString,1,P-1);
+          end
+
+     end
+end
+/***************************************************************************/
+function void R_AnalyseTableauViewEnergy(String TextRow)
+int P;  int i;
+
+    P = StrPos(TextRow,";");
+    R_TVECode=StrSubString(TextRow,1,P-1);
+    TextRow=StrDelete(TextRow,1,P);
+
+    P = StrPos(TextRow,";");
+    R_Nom=StrSubString(TextRow,1,P-1);
+    TextRow=StrDelete(TextRow,1,P);
+
+        for i = 1 to 4 do
+            P = StrPos(TextRow,";");
+            TextRow=StrDelete(TextRow,1,P);
+        end
+
+    P = StrPos(TextRow,";");
+    R_FileTemplate=StrSubString(TextRow,1,P-1);
+    TextRow=StrDelete(TextRow,1,P);
+
+    P = StrPos(TextRow,";");
+    R_Row=StrSubString(TextRow,1,P-1);
+    TextRow=StrDelete(TextRow,1,P);
+
+    P = StrPos(TextRow,";");
+    R_Column=StrSubString(TextRow,1,P-1);
+    TextRow=StrDelete(TextRow,1,P);
+
+    P = StrPos(TextRow,";");
+    R_Status=StrSubString(TextRow,1,P-1);
+
+end
+/***************************************************************************/
+function void R_CompteurQuerry( String CompteurQuery)
+    int P;
+
+
+        P = StrPos(CompteurQuery,",");
+        R_E = StrSubString(CompteurQuery,1,P-1);
+        CompteurQuery=StrDelete(CompteurQuery,1,P);
+
+        P = StrPos(CompteurQuery,",");
+        R_Cp = StrSubString(CompteurQuery,1,P-1);
+        SetStrGateValue("Setting_CParent",0,R_Cp);
+        CompteurQuery=StrDelete(CompteurQuery,1,P);
+
+        P = StrPos(CompteurQuery,",");
+        R_Cl = StrSubString(CompteurQuery,1,P-1);
+        SetStrGateValue("Setting_CLevel",0,R_Cl);
+        CompteurQuery=StrDelete(CompteurQuery,1,P);
+
+        P = StrPos(CompteurQuery,",");
+        R_Cn = StrSubString(CompteurQuery,1,P-1);
+        CompteurQuery=StrDelete(CompteurQuery,1,P);
+
+        P = StrPos(CompteurQuery,",");
+        R_Cpc = StrSubString(CompteurQuery,1,P-1);
+        StrDelete(CompteurQuery,1,P);
+
+end
+/***************************************************************************/
+function int R_AnalyseQuerryCompteur( string CompteurQuery, int FileHandle , String From , String HeaderLigne_BU)
+   int P;   int i;     int nb_Compteur = 0;
+   String LIST_NUMBER ="";
+   BOOL FILS_Flag;
+
+   string CnString;
+    bool CompteurFound = false;
+   string V;
+   string PCP;  string PCD; string PCC;
+   string NameCompteur;
+   CompteurMax = GetNumGateValue("MaxCompteur",0);
+   bool E_OK = true;    bool Cp_OK = true;   bool Cl_OK = true;
+   bool Cpc_OK = true;  bool PCD_OK = true;  bool PCC_OK = true; bool PCP_OK = true;
+   bool Cn_OK = true;
+   Bool Q_Result = False;
+
+   IF ( From == "TVE" || From == "BU_S") THEN FILS_Flag = False;
+   Else
+    FILS_Flag = True;
+     P = StrPos(From,"$");
+        IF ( P != 0 ) Then
+            LIST_NUMBER = StrSubString(From,P+1,StrLen(From));
+          Else
+            LIST_NUMBER = "" ;
+        End
+    End
+
+
+
+   CompteurQuerry( CompteurQuery );
+
+/**********************************************************************/
+
+/**********         Post Code Production        ************************/
+        P = StrPos(Cpc,"/");
+        PCP = StrSubString(Cpc,1,P-1);
+        Cpc=StrDelete(Cpc,1,P);
+/**********         Post Code Distribution      ************************/
+        P = StrPos(Cpc,"/");
+        PCD = StrSubString(Cpc,1,P-1);
+        PCC=StrDelete(Cpc,1,P);
+
+/**********************************************************************/
+
+
+        if ( Cn != "*" ) then
+
+          CnString = Cn;
+          P = StrPos(CnString,"/");
+
+             While (   P != 0 )
+
+                        V = StrSubString(CnString,1,P-1);
+                        CnString=StrDelete(CnString,1,P);
+
+                            for i = 1 to CompteurMax do
+                                if ( V == GetStrGateValue("Compteur_Code",i)) then
+
+                                    //Query_OUTPUT
+
+                                    nb_Compteur = Query_OUTPUT(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU);
+                                    CompteurFound = true;
+                                    i = CompteurMax+1;
+                                end
+                            end
+                        P = StrPos(CnString,"/");
+             end// end While
+
+               if ( CompteurFound == false ) then
+                    MessageBox("Compteur Not found ","Information");
+               end
+        else
+
+
+
+           for i = 1 to CompteurMax do
+
+             E_OK = True;
+             Cp_OK = True;
+             Cl_OK = True;
+             Cpc_OK = True;
+
+             NameCompteur = GetStrGateValue("Compteur_Code",i);
+
+
+
+                if (E   != "*" ) then
+                    if (E   ==  GetStrGateValue("Compteur_Energy",i)) then
+                    E_OK = true;
+                    else  E_OK = false; end
+
+                end
+
+
+                if (Cp   != "*" ) then
+                    if (Cp   ==  GetStrGateValue("Compteur_Parent",i)) then
+                    Cp_OK = true;
+                    else  Cp_OK = false; end
+
+                end
+
+                if (Cl   != "*" ) then
+                    if (Cl   ==  GetStrGateValue("Compteur_Level",i)) then
+                    Cl_OK = true;
+                    else  Cl_OK = false; end
+                end
+
+                if (PCP   != "*" ) then
+                    if (PCP   ==  GetStrGateValue("Compteur_PCP",i)) then
+                        PCP_OK = true;
+                    else  PCP_OK = false; end
+                end
+
+                if (PCD   != "*" ) then
+                    if (PCD   ==  GetStrGateValue("Compteur_PCD",i)) then
+                        PCD_OK = true;
+                    else  PCD_OK = false; end
+                end
+
+                if (PCC   != "*" ) then
+                    if (PCC   ==  GetStrGateValue("Compteur_PCC",i)) then
+                        PCC_OK = true;
+                    else  PCC_OK = false; end
+                end
+
+
+               IF ( E_OK == True && Cp_OK == True && Cl_OK == True && PCP_OK == True && PCD_OK == True && PCC_OK == True )then Q_Result = True;
+               Else Q_Result = false;
+               End
+
+               IF (Q_Result == True ) Then
+
+               nb_Compteur = Query_OUTPUT(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU);
+
+               END // Query == True
+
+           end//end for
+      end // end if (cn)
+
+      //MessageBox(nb_Compteur,"nb_Compteur");
+      //SetStrGateValue("ReportView",2,IntToStr( nb_Compteur) );
+return (nb_Compteur);
+
+end // end fonction
+/*****************************************************************************/
+function void R_SelectView()
+end
+/*****************************************************************************/
+function void R_SelectTableau()
+    String Querry;
+    String Energy;
+
+    Energy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    Querry = R_ConstractQuerry("TVE", Energy ,GetStrGateValue("Setting_CParent",0) ,
+                             GetStrGateValue("Setting_CLevel",0),GetStrGateValue("Setting_CCode",0) ,
+                             GetStrGateValue("Setting_PC",0));
+end
+/*****************************************************************************/
+function void R_SelectEnergy()
+    String Querry;
+    String Energy;
+
+    Energy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+
+    Querry = R_ConstractQuerry("TVE", Energy ,GetStrGateValue("Setting_CParent",0) ,
+                             GetStrGateValue("Setting_CLevel",0),GetStrGateValue("Setting_CCode",0) ,
+                             GetStrGateValue("Setting_PC",0));
+end
+/*****************************************************************************/
+function void R_Select_BU()
+int TID;
+    int MaxRow = 15;
+    String Selected = GetStrGateValue("BU_Selected",0);
+    Int CurrPos = GetNumGateValue("EmailPageView",0);
+    Bool Exit = false;
+    int NumLigne;
+    String ReadLigne ="";
+    String View;
+    String Querry;
+    String Energy;
+    String PostCode;
+    String BuName;
+    String CNumber;
+    String TemplateName;
+    String Ligne ="";
+    int i = 0;
+    String Filename = ENV_PATH+"\Files\AllCompteur\BU\BU.txt";
+    Int FileHandle;
+
+    If ( Selected != "") then
+
+      While (Exit == False)
+         i = i+1;
+
+         IF ( Selected ==  GetStrGateValue("RowList",i) )then
+          NumLigne = CurrPos + i - 1;
+          Exit = True;
+         End
+
+      End
+
+      Exit = False;
+      FileHandle  = FileOpen(Filename,"rt");
+      i=0;
+
+      While (Exit == False)
+       Ligne = FileReadLn(FileHandle);
+       If ( Ligne != "" ) Then
+         i = i+1;
+         If ( i == NumLigne ) Then
+         ReadLigne = Ligne;
+         Exit = True;
+         End
+       End
+      End
+
+      View = GetStrGateValue("ReportViewNames",GetNumGateValue("SelectView",0));
+      Energy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+      PostCode = FetchBU(ReadLigne,10,";") + "/" + FetchBU(ReadLigne,11,";") +"/"+ FetchBU(ReadLigne,12,";");
+      BuName = FetchBU(ReadLigne,7,";") + "/" + FetchBU(ReadLigne,8,";") +"/"+ FetchBU(ReadLigne,9,";");
+      CNumber =  FetchBU(ReadLigne,4,";");
+
+
+      SetStrGateValue("Setting_PC",0,PostCode);
+      SetStrGateValue("Setting_CCode",0,CNumber);
+      SetStrGateValue("Setting_BUName",0,BuName);
+
+      Querry = R_ConstractQuerry("TVE", Energy ,GetStrGateValue("Setting_CParent",0) ,
+                             GetStrGateValue("Setting_CLevel",0),GetStrGateValue("Setting_CCode",0) ,
+                             GetStrGateValue("Setting_PC",0));
+
+
+
+    Else
+      MessageBox("S'il vous plait cliquez pour sélectionner votre choix","Information");
+      Return;
+    End
+
+end
+/*****************************************************************************/
+function void R_SelectCompteur(string SelectedCode)
+int i =0;     string Name;  bool Found = false; int FileHandle; string FileName;
+string V;   string FullPathFileName;    String LocalTVECode;    bool ExitCondition;
+int CompteurMax = GetNumGateValue("MaxCompteur",0);
+string Template;
+String TView;
+String Tenergy;
+int PosOriginalQuery = 0;
+string OriginalRowQuery;
+string OriginalColQuery;
+int FileHandleOriginalQuery;
+int TID = 0;
+
+            FileHandleOriginalQuery = FileOpen(ENV_PATH+"\Files\OriginalQuery.txt","rt");
+          if (FileHandleOriginalQuery==0) then
+            MessageBox("Display:GetRowHeaders:File not Found","Error");
+            return;
+           end
+
+            OriginalRowQuery = FileReadLn(FileHandleOriginalQuery);
+            FileClose(FileHandleOriginalQuery);
+            string WhatsintheRow = StrSubString(OriginalRowQuery,1,1);
+
+  LocalTVECode = GetNumGateValue("SelectTableau",0)+GetNumGateValue("SelectView",0)+GetNumGateValue("SelectEnergie",0);
+
+        if ( WhatsintheRow == "C" ) then
+            FileName = "TVE_"+LocalTVECode+"_Row";
+         else
+            FileName = "TVE_"+LocalTVECode+"_Column";
+        end
+           FullPathFileName=ENV_PATH+"\Files\"+FileName+".txt";
+
+ ExitCondition = false ;
+
+    while ( ExitCondition == false)
+         i = i+1;
+        if (SelectedCode == GetStrGateValue("Compteur_Code",i) ) then
+            V =  GetStrGateValue("Compteur_Code",i) +"," +GetStrGateValue("Compteur_Name",i);
+            FileHandle=FileOpen(FullPathFileName,"w+");
+            FileWriteLn(FileHandle, V);
+            FileClose(FileHandle);
+
+            return;
+        end
+        if ( i > R_CompteurMax ) then  ExitCondition = true ;   end
+
+
+
+     end
+
+        MessageBox(GetStrGateValue("SelectCompteur",0) + "Not found in the list","Error");
+
+    return;
+end
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+function String R_GetListName(string ListLabelString, string ListItem)
+int P; int ListPos = StrToInt(ListItem);    int i;
+string MyString = ListLabelString;  string V;
+
+        P = StrPos(MyString,";");
+        MyString = StrDelete(MyString,1,P);
+
+        for i = 0 to ListPos do
+            P = StrPos(MyString,";");
+            V = StrSubString(MyString,1,P-1);
+            MyString=StrDelete(MyString,1,P);
+        end
+        return(V);
+end
+/***************************************************************************/
+function void R_GetList(String R_TVECode, string Query, string R_C)
+   int i =0;    string ListLabelString;
+   int P;   int FileHandle; int EOQuery;
+   string V;    string FileName;    string FullPathFileName;
+   int PosInitial;  string Name;
+   string LabelFullPathFileName;        String TextRow;
+   Int LabelFileHandle;
+   Bool EnergyFound = False;
+
+           FileName = "TVE_"+R_TVECode+"_"+R_C;
+           FullPathFileName=ENV_PATH+"\Files\"+FileName+".txt";
+           FileHandle=FileOpen(FullPathFileName,"w+");
+
+        P = StrPos(Query,":");
+        V = StrSubString(Query,1,P-1);
+        Query=StrDelete(Query,1,P);
+
+        If ( V == "L" )then
+        ////////////Get Energy Ligne ////////////////////////////////////
+         LabelFullPathFileName =ENV_PATH+"\Files\AllCompteur\EnergyMeasureView.csv";
+           LabelFileHandle=FileOpen(LabelFullPathFileName,"rt");
+            if (LabelFileHandle==0) then  MessageBox("File not Found","Error");   return; end
+
+           While(EnergyFound == False && FileEof(LabelFileHandle)==0)
+             TextRow=FileReadLn(LabelFileHandle);
+                P = StrPos(TextRow,";");
+                if ( R_EnergyCode == StrSubString(TextRow,1,P-1) ) then
+                  ListLabelString = TextRow;
+                  EnergyFound = True;
+                End
+
+            end
+           FileClose(LabelFileHandle);
+         ////////////Energy Ligne Found////////////////////////////////////
+
+           P = StrPos(Query,",");
+
+                        While (   P != 0 )
+                        P = StrPos(Query,",");
+                        V = StrSubString(Query,1,P-1);
+                        Query=StrDelete(Query,1,P);
+                        Name = R_GetListName(ListLabelString, V);
+                        V = V+","+Name;
+                        FileWriteLn(FileHandle,V);
+                        i=i+1;
+                        end
+        end
+
+         if ( V == "C" )then
+
+                       i = R_AnalyseQuerryCompteur(Query,FileHandle,"TVE" , "");
+
+         end
+
+           FileClose(FileHandle);
+           if (R_C == "Column") then
+           R_TotalCol = i;
+           R_ColFullFileName = ENV_PATH+"\Files\"+FileName+".txt";
+
+
+           end
+           if (R_C == "Row") then
+           R_TotalRow = i;
+           R_RowFullFileName = ENV_PATH+"\Files\"+FileName+".txt";
+
+           end
+
+end
+/***************************************************************************/
+function Int R_Display( int Row_Page, int Col_Page )
+
+ int ReadRowPos=0; int ReadColPos=0; int i=0; int j=0;
+ int ColID; int RowID = 1;  INT P;
+int Row;    int Col;    STRING CodeRow; string TextCol; string CodeCol;
+string FileName;    string FullPathFileName;    string TextRow; int FileHandle;
+string WhatsintheRow;   string WhatsintheCol;   string NameRow; string CompteurName;    string ListName;
+int FileHandleOriginalQuery = 0;
+string ROW0;    String SPACE20 = StrOfChar(32,20); string SPACE30 =StrOfChar(32,10);   string CELL; string tab=StrOfChar(32,6);
+String Display; string WriteLine;
+
+int Row_Start;    int Row_End;
+int Col_Start;    int Col_End;
+string Compteurlabel;   string ListLabel;
+String R1;   String R2;   String R3;   String R4;
+String R5;   String R6;   String R7;   String R8;
+String R9;   String R10;
+
+String C1;    String C2;    String C3;   String C4;
+string C5;   String C6;    String C7;   String C8;
+String C9;
+
+String LR1;   String LR2;   String LR3;   String LR4;
+String LR5;   String LR6;   String LR7;   String LR8;
+String LR9;   String LR10;
+
+String LC1;    String LC2;    String LC3;   String LC4;
+string LC5;   String LC6;    String LC7;   String LC8;
+String LC9;
+ int PosOriginalQuery;
+ string OriginalRowQuery ;   string OriginalColQuery ;
+
+ Int LigneInPage = 0;
+ Int Max_LigneInFirstPage = 15;
+ Int Max_LigneInOtherPage = 20;
+ //Int R_Curr_LigneInPage;
+ Int Nbr_CharInCell;
+  string RowLine = "";
+  string LABEL = "";
+ //Int R_PageCounter;
+ //string X;
+
+  //MessageBox(R_PageCounter,R_Curr_LigneInPage);
+ If ( R_PageCounter == 1 ) Then LigneInPage = Max_LigneInFirstPage;
+ Else LigneInPage = Max_LigneInOtherPage; End
+
+//R_max_Row_Items = StrToInt(GetStrGateValue("ReportView",4));
+//R_max_Col_Items = StrToInt(GetStrGateValue("ReportView",5));
+
+Row_Start = (Row_Page - 1)*R_max_Row_Items+1;
+Row_End = Row_Page*R_max_Row_Items;
+
+Col_Start = (Col_Page - 1)*R_max_Col_Items+1;
+Col_End = Col_Page*R_max_Col_Items;
+
+//MessageBox(R_RowFullFileName,"R_RowFullFileName");
+//MessageBox(R_ColFullFileName,"R_ColFullFileName");
+           FileHandle=FileOpen(R_RowFullFileName,"rt");
+
+
+          if (FileHandle==0) then
+            MessageBox(R_RowFullFileName+"  Display:GetRowHeaders11:File not Found","Error");
+            return 0;
+           end
+
+
+      while(FileEof(FileHandle)== 0)
+        TextRow=FileReadLn(FileHandle);
+
+       if (TextRow != "" ) then
+        ReadRowPos = ReadRowPos+1;
+
+
+        P = StrPos(TextRow,",");
+        CodeRow = StrSubString(TextRow,1,P-1);
+        //CodeRow = Report_Fetch(TextRow,1,",");
+        TextRow=StrDelete(TextRow,1,P);
+
+
+            if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+            i = ReadRowPos-Row_Start+1;
+                //MessageBox(TextRow,"");
+                //TextRow = Report_Fetch(TextRow,2,",");
+
+            if (i == 1) then    R1 =CodeRow ;  LR1 = TextRow; else
+            if (i == 2) then    R2 =CodeRow ;  LR2 = TextRow; else
+            if (i == 3) then    R3 =CodeRow ;  LR3 = TextRow; else
+            if (i == 4) then    R4 =CodeRow ;  LR4 = TextRow; else
+            if (i == 5) then    R5 =CodeRow ;  LR5 = TextRow; else
+            if (i == 6) then    R6 =CodeRow ;  LR6 = TextRow; else
+            if (i == 7) then    R7 =CodeRow ;  LR7 = TextRow; else
+            if (i == 8) then    R8 =CodeRow ;  LR8 = TextRow; else
+            if (i == 9) then    R9 =CodeRow ;  LR9 = TextRow; else
+            if (i == 10) then   R10 =CodeRow ; LR10 = TextRow; end end end end  end end end  end end end
+            end
+        end
+      end
+
+
+        FileClose(FileHandle);
+
+//R_ColFullFileName = R_ColFullFileName;
+
+           FileHandle=FileOpen(R_ColFullFileName,"r");
+
+          if (FileHandle==0) then
+            MessageBox(R_ColFullFileName,"Display:GetColHeaders:File not Found");
+            return 0;
+           end
+
+
+    while(FileEof(FileHandle)==0)
+        TextCol=FileReadLn(FileHandle);
+      if (TextCol != "" ) then
+        ReadColPos = ReadColPos+1;
+
+        P = StrPos(TextCol,",");
+        CodeCol = StrSubString(TextCol,1,P-1);
+        //CodeCol = Report_Fetch(TextCol,1,",");
+        TextCol=StrDelete(TextCol,1,P);
+
+            if ( ReadColPos >=  Col_Start && ReadColPos <= Col_End ) then
+            j = ReadColPos-Col_Start+1;
+            //MessageBox(TextCol,Report_Fetch(TextCol,2,","));
+            //TextCol = Report_Fetch(TextCol,2,",");
+            if (j == 1) then    C1 =CodeCol ;  LC1 = TextCol; else
+            if (j == 2) then    C2 =CodeCol ;  LC2 = TextCol; else
+            if (j == 3) then    C3 =CodeCol ;  LC3 = TextCol; else
+            if (j == 4) then    C4 =CodeCol ;  LC4 = TextCol; else
+            if (j == 5) then    C5 =CodeCol ;  LC5 = TextCol; else
+            if (j == 6) then    C6 =CodeCol ;  LC6 = TextCol; else
+            if (j == 7) then    C7 =CodeCol ;  LC7 = TextCol; else
+            if (j == 8) then    C8 =CodeCol ;  LC8 = TextCol; else
+            if (j == 9) then    C9 =CodeCol ;  LC9 = TextCol; end end end  end end end  end end end
+
+
+            end
+       end
+    end
+
+    FileClose(FileHandle);
+
+//display Page
+
+
+        FileHandleOriginalQuery = FileOpen(ENV_PATH+"\Files\OriginalQuery.txt","rt");
+          if (FileHandleOriginalQuery==0) then
+            MessageBox("Display:OriginalQuery:File not Found","Error");
+            return 0;
+           end
+
+      while(PosOriginalQuery < 2)
+
+        PosOriginalQuery = PosOriginalQuery +1;
+            if ( PosOriginalQuery == 1 ) then
+            OriginalRowQuery = FileReadLn(FileHandleOriginalQuery);
+            end
+
+            if ( PosOriginalQuery == 2 ) then
+            OriginalColQuery = FileReadLn(FileHandleOriginalQuery);
+            end
+
+     end
+
+    FileClose(FileHandleOriginalQuery);
+
+WhatsintheRow = StrSubString(OriginalRowQuery,1,1);
+WhatsintheCol = StrSubString(OriginalColQuery,1,1);
+
+    if ( i == 0 || j == 0 ) then
+
+    MessageBox("Desolé : Aucun Compteur trouvé : " + i + "*" + j ,"Pour votre Information");
+    MessageBox(R_PageCounter,R_Curr_LigneInPage);
+    return 0;
+    end
+
+    // Header Row
+
+    RowLine = "";
+    LABEL = "";
+      for Col = 0 to j-1 do
+
+              if ( Col == 0) then Display = LC1; else
+              if ( Col == 1) then Display = LC2; else
+              if ( Col == 2) then Display = LC3; else
+              if ( Col == 3) then Display = LC4; else
+              if ( Col == 4) then Display = LC5; else
+              if ( Col == 5) then Display = LC6; else
+              if ( Col == 6) then Display = LC7; else
+              if ( Col == 7) then Display = LC8; else
+              if ( Col == 8) then Display = LC9; end end end  end end end  end end end
+
+              //Nbr_CharInCell = RealToInt( (10 - StrLen( Display ) )/2 );
+              //Display = StrSubString( StrOfChar(32,Nbr_CharInCell) + Display+ SPACE30,1,10);
+              //LABEL = StrConcat(LABEL,StrSubString(Display + SPACE30,1,10));
+              Display = Report_Fetch(Display,1,",");
+              LABEL = LABEL + StrOfChar(32,2) + Display;
+
+      end
+
+      If ((R_Curr_LigneInPage == 0)) Then
+     //MessageBox(LABEL,"LABEL");
+       ReportInsertText(StrConcat(SPACE20,LABEL));
+       ReportInsertText(Eol());
+       ReportInsertText(Eol());
+      End
+
+    for Row = 1 to i do
+
+            NameRow = "ROW"+Row;
+
+            //SetNumGateValue("ROW0",Row,0);
+              if ( Row == 1) then ROW0 =LR1;  else
+              if ( Row == 2) then ROW0 =LR2;  else
+              if ( Row == 3) then ROW0 =LR3;  else
+              if ( Row == 4) then ROW0 =LR4;  else
+              if ( Row == 5) then ROW0 =LR5;  else
+              if ( Row == 6) then ROW0 =LR6;  else
+              if ( Row == 7) then ROW0 =LR7;  else
+              if ( Row == 8) then ROW0 =LR8;  else
+              if ( Row == 9) then ROW0 =LR9;  else
+              if ( Row == 10) then ROW0 =LR10;  end end end  end end end  end end end end
+
+
+            if ( WhatsintheRow == "C") then
+
+              if ( Row == 1) then CompteurName= R1;  else
+              if ( Row == 2) then CompteurName= R2;  else
+              if ( Row == 3) then CompteurName= R3;  else
+              if ( Row == 4) then CompteurName= R4;  else
+              if ( Row == 5) then CompteurName= R5;  else
+              if ( Row == 6) then CompteurName= R6;  else
+              if ( Row == 7) then CompteurName= R7;  else
+              if ( Row == 8) then CompteurName= R8;  else
+              if ( Row == 9) then CompteurName= R9;  else
+              if ( Row == 10) then CompteurName= R10;  end end end  end end end  end end end end
+
+
+
+
+             else
+
+              if ( Row == 1) then ListName= R1;  else
+              if ( Row == 2) then ListName= R2;  else
+              if ( Row == 3) then ListName= R3;  else
+              if ( Row == 4) then ListName= R4;  else
+              if ( Row == 5) then ListName= R5;  else
+              if ( Row == 6) then ListName= R6;  else
+              if ( Row == 7) then ListName= R7;  else
+              if ( Row == 8) then ListName= R8;  else
+              if ( Row == 9) then ListName= R9;  else
+              if ( Row == 10) then ListName= R10;  end end end  end end end  end end end end
+
+
+
+            end
+
+            RowLine = StrSubString(ROW0+ SPACE20,1,20);
+
+
+        for Col = 0 to j-1 do
+
+              if ( Col == 0) then Display = LC1; else
+              if ( Col == 1) then Display = LC2; else
+              if ( Col == 2) then Display = LC3; else
+              if ( Col == 3) then Display = LC4; else
+              if ( Col == 4) then Display = LC5; else
+              if ( Col == 5) then Display = LC6; else
+              if ( Col == 6) then Display = LC7; else
+              if ( Col == 7) then Display = LC8; else
+              if ( Col == 8) then Display = LC9; end end end  end end end  end end end
+
+            if ( WhatsintheCol == "L") then
+
+              if ( Col == 0) then ListName= C1; else
+              if ( Col == 1) then ListName= C2; else
+              if ( Col == 2) then ListName= C3; else
+              if ( Col == 3) then ListName= C4; else
+              if ( Col == 4) then ListName= C5; else
+              if ( Col == 5) then ListName= C6; else
+              if ( Col == 6) then ListName= C7; else
+              if ( Col == 7) then ListName= C8; else
+              if ( Col == 8) then ListName= C9; end end end  end end end  end end end
+
+
+
+            else
+
+
+              if ( Col == 0) then CompteurName= C1; else
+              if ( Col == 1) then CompteurName= C2; else
+              if ( Col == 2) then CompteurName= C3; else
+              if ( Col == 3) then CompteurName= C4; else
+              if ( Col == 4) then CompteurName= C5; else
+              if ( Col == 5) then CompteurName= C6; else
+              if ( Col == 6) then CompteurName= C7; else
+              if ( Col == 7) then CompteurName= C8; else
+              if ( Col == 8) then CompteurName= C9; end end end  end end end  end end end
+
+
+
+
+
+            end
+
+
+                   if ( CmpGateExists(CompteurName,StrToInt(ListName)) == true ) then
+
+                        //CELL = StrSubString(GetCmpGateValue(CompteurName,StrToInt(ListName))+ SPACE30,1,10);
+                        Nbr_CharInCell = StrLen( StrToReal( GetCmpGateValue(CompteurName,StrToInt(ListName)) ) );
+                        Nbr_CharInCell = RealToInt( (10 - Nbr_CharInCell)/2 ) ;
+                        //CELL =  StrOfChar(32,Nbr_CharInCell) + CELL + StrOfChar(32,Nbr_CharInCell) ;
+                        CELL = StrSubString(StrOfChar(32,Nbr_CharInCell) + GetCmpGateValue(CompteurName,StrToInt(ListName))+ SPACE30,1,10);
+                        RowLine = StrConcat(RowLine,CELL);
+
+                    else  RowLine = StrConcat(RowLine,SPACE30);
+                   end
+
+        end
+
+         If ( R_PageCounter == 1 ) Then LigneInPage = Max_LigneInFirstPage;
+         Else LigneInPage = Max_LigneInOtherPage; End
+
+              IF ( R_Curr_LigneInPage >= LigneInPage ) Then
+                ReportInsertText(StrConcat(SPACE20,LABEL));
+                ReportInsertText(Eol());
+                ReportInsertText(Eol());
+                // reset
+                R_Curr_LigneInPage = 0;
+                R_PageCounter = R_PageCounter +1 ;
+              End
+
+                //MessageBox(RowLine,R_Curr_LigneInPage);
+
+        ReportInsertText(RowLine);
+        ReportInsertText(Eol());
+        ReportInsertText(Eol());
+        R_Curr_LigneInPage = R_Curr_LigneInPage+1;
+        //IF (Curr_LigneInPage >= Max_LigneInPage ) Then Curr_LigneInPage = 0; End
+        RowLine= "";
+        //MessageBox(Curr_LigneInPage,"Curr_LigneInPage");
+    end
+
+    Return R_Curr_LigneInPage;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String R_TemplateNameBuilder(string Tableau, String View, string Energy, string PostCode, string CCode)
+
+    string VEPCT ;
+    //String VEPCT_Code;
+    string V;
+    string E;
+    string P;
+    string C;
+    string T;
+    int POS;
+    String Name;
+    string PCP;     string PCD;     string PCC;
+
+    If (Tableau == "18") Then Return "AllCompteur";  End
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",StrToInt(Tableau));
+
+    Name = Tableau ;
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then    Name = Name + "_" + Energy;                     end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+
+        POS = StrPos(PostCode,"/");
+        PCP = StrSubString(PostCode,1,POS-1);
+        If ( PCP == "*" ) Then PCP = "#"; End
+        PostCode = StrDelete(PostCode,1,POS);
+        POS = StrPos(PostCode,"/");
+        PCD = StrSubString(PostCode,1,POS-1);
+        If ( PCD == "*" ) Then PCD = "#"; End
+        PCC = StrDelete(PostCode,1,POS);
+
+        If ( PCC == "*" ) Then PCC = "#"; End
+
+        If ( P == "C" && PCC != "#" ) Then
+        R_Cpc = "*/*/" +PCC;
+        Name = Name + "_"+"#&#&" +PCC;      end
+
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then    Name = Name+"_"+ View;                        end
+///////////////////////////////////////////////////////////////////////////////
+    C   =StrSubString(VEPCT,7,1);
+    if ( C == "1" ) then
+    R_Cn = R_CCode;
+    Name = Name+"_"+ R_CCode;                     end
+    Return Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String R_ConstractQuerry(String Destination, String Energy ,String C_Parent ,String C_Level ,String C_Nomber ,String C_Postcode)
+    String NewQuerry;
+
+    If ( Destination == "TVE" ) Then
+        NewQuerry = "C:"+ Energy +","+ C_Parent +","+ C_Level +","+ C_Nomber +"/,"+ C_Postcode;
+        Return NewQuerry;
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Function void R_OpenChart()
+   int dd = GetDayOfMonth();
+   int mm = GetMonth();
+   int yy = GetYear();
+   int hh = GetHour() +1;
+   int hh_24 = hh -24;
+   int timespan = GetNumGateValue("chart_time_span",0);
+
+   if ( timespan == 1) then // rolling 24heures
+    ChartSetTimeRange(dd,mm,yy,hh_24,0,0,dd,mm,yy,hh,0,0);
+    else
+
+    if ( timespan == 2) then // 00 to 23:59
+      ChartSetTimeRange(dd,mm,yy,0,0,0,dd,mm,yy,23,59,59);
+    end
+
+   end
+
+end
+/////////////////////////////////// 2 Get Rapport Path ////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String GetReportPATH( String ReportName)
+
+    Int POS;
+    String Name = ReportName;
+    String DirBit = "";
+    String R_Type;
+    String Path ;
+    String PBI_View;
+
+    POS = StrPos(Name,"_");
+    R_Type = StrSubString(Name,1,POS-1);
+    Name = StrDelete(Name,1,POS);
+
+
+
+  IF (R_Type == "R") Then
+
+
+      Path = ENV_PATH+"\Rapport\Rapport\";
+
+      POS = StrPos(Name,"_");
+      DirBit = StrSubString(Name,1,POS-1);// Tableau
+      Name = StrDelete(Name,1,POS);
+
+      Path = Path + GetStrGateValue("TableauNames",StrToInt(DirBit))+ "\";
+
+
+     While (POS > 0)
+      POS = StrPos(Name,"_");
+      ////////////////////////////////////
+      If (POS == 0) Then
+        DirBit = Name;
+       Else
+        DirBit = StrSubString(Name,1,POS-1);
+      End
+      ////////////////////////////////////
+      If (DirBit != "-")Then
+        Path = Path + DirBit + "\" ;
+      End
+      ////////////////////////////////////
+      Name = StrDelete(Name,1,POS);
+     END
+
+
+  End
+
+
+  IF (R_Type == "PBI") Then
+
+   Path = ENV_PATH+"\Rapport\Power BI\";
+
+    POS = StrPos(Name,"_");
+    PBI_View = StrSubString(Name,1,POS-1);
+    DirBit = StrDelete(Name,1,POS); // Delete R
+
+    Path = Path +PBI_View +"\"+ ReportName +"\"+ ReportName + ".pbix";
+
+  End
+
+    Return Path;
+End
+///////////////////////////////////////////////////////////////////////////////
+function string Report_Fetch(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+
+     return V;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_UNIQUE_CODE(string Tableau, String View, string Energy, string PostCode, string CCode)
+    string VEPCT ;
+    //String VEPCT_Code;
+    string V;
+    string E;
+    string P;
+    string C;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    string PCP;     string PCD;     string PCC;
+
+    If (Tableau == "18") Then Return "18_-_-_-_-";  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+
+       Name = Tableau ;
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then
+        Name = Name + "_" + Energy;
+    Else
+        Name = Name + "_-";
+    end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+
+        POS = StrPos(PostCode,"/");
+        PCP = StrSubString(PostCode,1,POS-1);
+        If ( PCP == "*" ) Then PCP = "#"; End
+        PostCode = StrDelete(PostCode,1,POS);
+        POS = StrPos(PostCode,"/");
+        PCD = StrSubString(PostCode,1,POS-1);
+        If ( PCD == "*" ) Then PCD = "#"; End
+        PCC = StrDelete(PostCode,1,POS);
+
+        If ( PCC == "*" ) Then PCC = "#"; End
+
+        If ( P == "C" && PCC != "#" ) Then
+        Cpc = "*/*/" +PCC;
+        Name = Name + "_"+"#&#&" +PCC;      end
+    Else
+    Name = Name + "_-";
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then
+        Name = Name+"_"+ View;
+    Else
+    Name = Name + "_-";
+    end
+///////////////////////////////////////////////////////////////////////////////
+    C   =StrSubString(VEPCT,7,1);
+    if ( C == "1" ) then
+        Cn = CCode;
+        Name = Name+"_"+ CCode;
+    Else
+        Name = Name + "_-";
+    end
+///////////////////////////////////////////////////////////////////////////////
+
+    Return Name ;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void PrintCurr_REPORT()
+
+    String CurrTableau;
+    String CurrCode;
+    String CurrPC;
+    String TView;
+    String Tenergy;
+
+    CurrTableau = GetNumGateValue("SelectTableau",0);
+    Tenergy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    TView = GetStrGateValue("ReportViewNames", GetNumGateValue("SelectView",0) );
+    CurrPC =  GetStrGateValue("Setting_PC",0);
+    CurrCode = GetStrGateValue("Setting_CCode",0);
+
+    GET_ADHOC( CurrTableau , Tenergy , TView , CurrPC , CurrCode , False , "") ;
+
+end
+Function String Change_Char(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"&")+1;
+    MaxD=Occurence_operateur(Formule,"#")+1;
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"&");
+                TSimple=TSimple+blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+    if MaxD<1 then
+        TTSimple =TSimple;
+
+    Else
+
+        For i=1 to MaxD do
+            blob=FetchBlob(TSimple,i,"#");
+            TTSimple=TTSimple+blob;
+
+        end
+
+
+    end
+    return TTSimple;
+
+End
+/////////////////////////////////////////////////////////////////////////////////////////
+Function String FetchParts(String Ligne,int Col,String op)
+    String txt = Ligne;
+    String CODE = " ";
+    int i;  int P;
+    MessageBox(Ligne,"l");
+   // for i =1  to Col do
+             P = StrPos(txt,op);
+             CODE=StrSubString(txt,1,P-1);
+             txt=StrDelete(txt,1,P);
+             MessageBox(txt,CODE);
+            //    end
+      return CODE;
+end
+
+Function String Change_Char_2(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"_")+1;
+
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"_");
+                TSimple=TSimple+" " +blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+
+    return TSimple;
+
+End
+/////////////////////////////////////////////////////////////
+Function void testREPORT()
+Bool  R ;
+//MessageBox(R,"R");
+    R = ReportCreate( "Report_2" ) ;
+    MessageBox(R,"R");
+end

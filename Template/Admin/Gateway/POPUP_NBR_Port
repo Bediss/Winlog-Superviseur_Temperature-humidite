@@ -1,0 +1,78 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 980,275
+#Size: 260,130
+#BkColor: clWhite
+#Gates: 3
+  #STR: SelectMailingList,0
+  #STR: AlarmeEventModifer,17
+  #STR: AlarmeEventModifer,11
+#Style: Fixed
+#StayOnTop: 1
+#Object: Button
+  #ID: 0
+  #Pos: 9,95
+  #Size: 120,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,NBR_Port_OK()
+  #OnClick: Close
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 130,95
+  #Size: 120,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Edit
+  #ID: 0
+  #Pos: 20,35
+  #Size: 220,25
+  #BkColor: clWindow
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #NeedApply: 0
+  #Style: 0
+  #TabOrder: 2
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,65
+  #Size: 240,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clMaroon
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,Bouton_Select_List_Mesure()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 240,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: Tapez le nombre de Port ici :
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj

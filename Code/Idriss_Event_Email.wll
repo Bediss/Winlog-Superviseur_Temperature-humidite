@@ -1,0 +1,409 @@
+/*****************************************************************************/
+/*****************************************************************************/
+function void Bouton_EventEmail()
+
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+MaxRow = 10 ;
+MaxCol = 5;
+LenPrefix=1;
+//InitialiseAdminTemplate();
+Confirme_Save();
+PageOpen="EventEmail";
+    SetNumGateValue("Show_Temp_Pointer",0,1073741832);
+    SetNumGateValue("Show_Temp_Pointer",0,1073741832);
+     SetNumGateValue("EmailPageView",0,1);
+     SetNumGateValue("AdminTotalItems",0,0);
+     SetNumGateValue("EditPosition",0,0);
+
+              SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+     Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\EventEmail\Temp_EventEmail.CSV";
+     Admin_View_Original_File=ENV_PATH+"\Files\DATAMODELFiles\EventEmail\EventEmail.CSV";
+     Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\EventEmail\Recycler_Event_Email_Code.txt";
+       Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+        FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+     Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+
+
+     //Highest_Code_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+
+     Admin_View_Display(1,"EventEmail");
+      ShowPage("EventEmail");
+      FlagUses=False;
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+function void Bouton_SaveEventEmail()
+if ( GetStrGateValue("AlarmeEventModifer",0) == "" ) then
+MessageBox("Vous n'avez rien a sauvegarder. Veuillez selectionner une ligne pour modifier", "Attention:");
+else Save_EventEmail();
+end
+end
+
+/////////////////////////////////////////////////////////////////
+function void NameCasEmailBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("CasEmail_Name");
+End
+
+function void FillNameCasEmail()
+String V = GetStrGateValue("AlarmeEventModifer",19);
+V=FR_Speciale_CHar(V);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+     ShowPoPUPs("");
+      NameUses= UniqueName(ENV_PATH+"\Files\DATAMODELFiles\EventEmail\","Temp_EventEmail.CSV",V ,2);
+    SetStrGateValue("AlarmeEventModifer",19,"");
+
+end
+
+
+
+
+
+
+function void DescriptionCasEmailBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",4));
+    ShowPoPUPs("CasEmail_Description");
+End
+
+function void FillDescriptionCasEmail()
+
+    String V = GetStrGateValue("AlarmeEventModifer",19);
+    //MessageBox(V,"Nom");
+        //if ( V != "") then
+        //MessageBox(V,"Nom");
+        SetStrGateValue("AlarmeEventModifer",4,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,6);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+   // end
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+function void ChoiceEventType()
+
+if ( GetNumGateValue("EventEmailEventType",0) == 1 ) then
+    SetStrGateValue("AlarmeEventModifer",3,"Alarme");
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"Alarme",5);
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+else
+    SetStrGateValue("AlarmeEventModifer",3,"Regulier");
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"Regulier",5);
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+end
+end
+/*****************************************************************************/
+/*****************************************************************************/
+
+function string ChoiceEvent()
+string EVENTTYPE = GetStrGateValue("AlarmeEventModifer",3);
+SetStrGateValue("SelectMailingList",0,"");
+
+        SetStrGateValue("PopUpList_Path",0,"");
+       //SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\Event\TempList");
+       Path_Display_Popup=ENV_PATH+"\Files\DATAMODELFiles\Event\TempList\";
+        POPUPList_Extension = ".txt";
+    if ( EVENTTYPE == "Alarme" ) then
+     SplitFile( ENV_PATH+"\Files\DATAMODELFiles\Event\", "Alarme_F_Reporting.csv", 9, 1);
+
+        PopupList_MaxPAGES();
+        PopupList_Display(1);
+        SetStrGateValue("PopUpList_Path",0,"Incidents");
+        ShowPoPUPs("PopUp_List");
+
+    else
+        if ( EVENTTYPE == "Regulier" ) then
+            SplitFile( ENV_PATH+"\Files\DATAMODELFiles\Event\", "Reporting_F_Regulier.csv", 2, 1);
+
+             PopupList_MaxPAGES();
+             PopupList_Display(1);
+             SetStrGateValue("PopUpList_Path",0,"Evenements");
+             ShowPoPUPs("PopUp_List");
+        else
+            MessageBox("Choisir un type d'evenement valide - Alarme ou Regulier","Attention : ");
+
+        end
+    end
+end
+
+///////////////////////////////////////////////////////
+/*****************************************************************************/
+/*****************************************************************************/
+function string FillChoiceEvent()
+    string choice = GetStrGateValue("SelectMailingList",0);
+    string path = ENV_PATH+"\Files\DATAMODELFiles\Event\TempList\";
+    string FullPathName = path + choice +".txt";
+    int FileHandle;
+    string Code;
+
+    if ( choice != "") then
+     SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),3);
+
+     FileHandle = FileOpen(FullPathName,"rt");
+        Code = FileReadLn(FileHandle);
+        FileClose(FileHandle);
+        if ( Code == "" ) then MessageBox("Code est vide","Attention"); end
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Code,7);
+
+    end
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+function string ChoiceEmail()
+    SetStrGateValue("SelectMailingList",0,"");
+    SplitFile( ENV_PATH+"\Files\DATAMODELFiles\EMail\", "EMail.csv", 2, 1);
+    POPUPList_Extension=".txt";
+        SetStrGateValue("PopUpList_Path",0,"");
+       // SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\EMail\TempList");
+        Path_Display_Popup=ENV_PATH+"\Files\DATAMODELFiles\EMail\TempList\";
+             PopupList_MaxPAGES();
+             PopupList_Display(1);
+             SetStrGateValue("PopUpList_Path",0,"Email");
+             ShowPoPUPs("PopUp_List");
+
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void FillChoiceEmail()
+    string choice = GetStrGateValue("SelectMailingList",0);
+    string path = ENV_PATH+"\Files\DATAMODELFiles\EMail\TempList\";
+    string FullPathName = path + choice +".txt";
+    int FileHandle;
+    string Code;
+
+    if ( choice != "") then
+     SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,choice,4);
+     //MessageBox(Admin_View_CurrentLine,choice+"//"+GetStrGateValue("AlarmeEventModifer",2));
+     FileHandle = FileOpen(FullPathName,"rt");
+        Code = FileReadLn(FileHandle);
+        FileClose(FileHandle);
+        if ( Code == "" ) then MessageBox("Email_Code est vide","Attention"); end
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Code,8);
+    end
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function string AnalyseSave_EventEmail(string TextRow,int j)
+string txt = TextRow;
+int P;
+String EmailView = "EmailView"+j;
+string EditRow;
+
+string CODE;
+string NEWNAME          = GetStrGateValue("AlarmeEventModifer",0);
+string NEWDESC          = GetStrGateValue("AlarmeEventModifer",4);
+
+
+ Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NEWNAME,2);
+  Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NEWDESC,6);
+
+
+EditRow =Admin_View_CurrentLine;
+return(EditRow);
+end
+////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+function void Save_EventEmail()
+
+
+
+    if NameUses== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");  return; end
+    if NameUses == False then
+        SetStrGateValue("AlarmeEventModifer",17,"");
+    end
+
+    Admin_modifier(ENV_PATH+"\Files\DATAMODELFiles\EventEMail\","Temp_EventEmail.CSV" );
+end
+//////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+Function Void Copy_EventEmail()
+String CodeNewAlarme;
+String PathC=ENV_PATH+"\Files\DATAMODELFiles\EventEMail";
+String Prefix="R";
+   CodeNewAlarme=FetchCodeAdd(PathC,Prefix);
+
+    Admin_Copy("EventEmail",CodeNewAlarme);
+       Confirme_Save=True;
+
+End
+
+/*****************************************************************************/
+Function Void Add_New_Event_Email()
+
+String CodeNewAlarme ;
+
+             if NameUses== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");  return; end
+ if NameUses == False then
+    SetStrGateValue("AlarmeEventModifer",17,"");
+   end
+    CodeNewAlarme=FetchCodeAdd(ENV_PATH+"\Files\DATAMODELFiles\EventEMail","R");
+
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",1),3);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",2),4);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",3),5);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",4),6);
+    if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'NOM DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,5,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'TYPE DE CAS' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,7,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'CAS' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,8,";")=="" then  MessageBox("Veuillez saisir une valeur pour  'L'EMAIL' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+     Admin_New_Ligne("EventEmail",CodeNewAlarme);
+        Confirme_Save=True;
+
+
+end
+
+/*****************************************************************************/
+function void Bouton_DeleteEventEmail()
+
+String CodeNewAlarme;
+String PathC=ENV_PATH+"\Files\DATAMODELFiles\EventEmail";
+String Prefix="R";
+String WPath=ENV_PATH+"\Files\DATAMODELFiles\EventEMail\WTemp_EventEmail.csv";
+String BackPath=ENV_PATH+"\Files\DATAMODELFiles\EventEMail\Back_Temp_EventEmail.csv";
+
+
+    Admin_Delete("EventEmail",WPath,BackPath);
+       Confirme_Save=True;
+
+End
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+/*****************************************************************************/
+/*****************************************************************************/
+//          Event-Email
+/*****************************************************************************/
+/*****************************************************************************/
+
+function void ViewEventEmailAdd()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+        MaxPage= ReguliersTotalItems/MaxRow;
+       If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+ //MessageBox(ReguliersTotalItems,CurrentPage);
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage,"EventEmail");
+	 FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewEventEmailSub()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     //MessageBox("",CurrentPage);
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage,"EventEmail");
+	 FlagUses=False;
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewEventEmailFirst()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+     Admin_View_Display(1,"EventEmail");
+	 FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewEventEmailEnd()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage;
+bool Continue;
+
+       MaxPage= ReguliersTotalItems/MaxRow;
+       If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+//MessageBox(ReguliersTotalItems,MaxPage);
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"EventEmail");
+	 FlagUses=False;
+end
+/*****************************************************************************/
+/*****************************************************************************/
+
+Function Void Event_Email_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\EventEMail\Back_EventEmail.CSV";
+Admin_Commit(BackFullPathFileName);
+End
+
+

@@ -1,0 +1,9 @@
+ML_Code;ML_Name;ML_Path;63;Description
+ML2;T - LIVE;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML3;H;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML4;T + H;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;32767;Compteur List
+ML5;T - A;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML6;T - J ;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML7;T - M;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML8;T - S;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;63;Compteur List
+ML9;T;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\MesureList\;0;Compteur List

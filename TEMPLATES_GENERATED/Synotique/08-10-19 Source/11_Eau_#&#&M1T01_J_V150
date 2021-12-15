@@ -1,0 +1,263 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clBtnFace
+#Gates: 10
+  #CMP: CET1,0
+  #CMP: CETA3,0
+  #CMP: CET1M,0
+  #CMP: CET1M1,0
+  #CMP: CET1M2,0
+  #EVN: AHT1M1,8
+  #EVN: AHT1M2,8
+  #EVN: AHTA3,8
+  #EVN: AHT1,8
+  #EVN: AHT1M,8
+#PBkBmp: 0,0,1350,530,Synoptique_Eau_Condenseur resuage petfood V6.jpg
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Led
+  #ID: 0
+  #Pos: 761,362
+  #Size: 36,37
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 5,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 511,362
+  #Size: 36,36
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 6,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 653,209
+  #Size: 35,35
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 7,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 652,111
+  #Size: 27,28
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 8,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 53,471
+  #Size: 41,36
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 9,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 30,15
+  #Size: 50,50
+  #Cursor: 0
+  #OffPBmpFile: zoom(-)2.png
+  #OnPBmpFile: zoom(-)2.png
+  #BmpBkC: 0,128,128
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: Template,11_Eau_#&#&M200_J
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 645,472
+  #Size: 140,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 2
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 800,367
+  #Size: 140,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 3
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 555,367
+  #Size: 140,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 4
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 695,212
+  #Size: 140,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 1
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 685,112
+  #Size: 140,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 0
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 53,468
+  #Size: 578,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #NewOnClick: Template,17_CET1M
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 468,398
+  #Size: 113,28
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #NewOnClick: Template,17_CET1M2
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 723,398
+  #Size: 113,28
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 2
+  #Access: 0
+  #NewOnClick: Template,17_CET1M1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 648,208
+  #Size: 43,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 3
+  #Access: 0
+  #NewOnClick: Template,17_CETA3
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 648,108
+  #Size: 33,33
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 4
+  #Access: 0
+  #NewOnClick: Template,17_CET1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 533,148
+  #Size: 293,33
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 5
+  #Access: 0
+  #NewOnClick: Template,17_CET1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 508,358
+  #Size: 43,43
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 6
+  #Access: 0
+  #NewOnClick: Template,17_CET1M2
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 758,360
+  #Size: 43,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 7
+  #Access: 0
+  #NewOnClick: Template,17_CET1M1
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 265,10
+  #Size: 790,52
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0001
+  #Label: Path
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj

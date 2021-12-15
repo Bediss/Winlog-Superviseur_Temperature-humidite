@@ -1,0 +1,4 @@
+CODE;NAME;ACCESS
+11;¤ Synoptique T_RH.      ;32767
+14;¤ Suivi conformite.     ;32767
+17;¤ Lectures pt mesure.   ;32767

@@ -1,0 +1,990 @@
+
+function String PBI_TableauViewEnergy( String PBI_Code)
+
+    string FullPathFileName;
+    int FileHandle;
+    String TextRow;
+    String CompteurList_Code;
+    String MeasureList_Code;
+    String CompteurList_Querry;
+    String MeasureList_Querry;
+
+    String CompteurList_Path;
+    String MeasureList_Path;
+    //String PBI_Code;
+    String PBI_Path;
+    String PBI_View;
+    String Attarch;
+    String DATA_MASTER_PATH;
+    String MASTER_NAME;
+    String PBI_NAME;
+    Bool CL_Exist = False;
+    Bool ML_Exist = False;
+    Int MaxCheck = 5;
+    Int i = 0 ; Bool Exit = false;
+
+    // 1 Read PBI .csv File to find PBI Code //
+
+    PBI_Path = ENV_PATH + "\DeskTopBI\Package\"+PBI_Code;
+
+     If ( FileExist(PBI_Path + ".Zip" ) == True ) Then
+         FileDelete(PBI_Path + ".Zip");
+     End
+
+    DirectoryCreate(PBI_Path);
+
+    FullPathFileName = ENV_PATH + GetStrGateValue("PBI_TVE_Path",0);
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    IF (FileHandle==0) then MessageBox("PBI :File not Found","Error");  return; End
+
+    TextRow=FileReadLn(FileHandle);//Header
+
+     While(FileEof(FileHandle)==0)
+      TextRow=FileReadLn(FileHandle);
+
+        IF (Fetch_PBI(TextRow,1,";") == PBI_Code) Then
+
+          PBI_NAME              = Fetch_PBI(TextRow,2,";") ;
+          CompteurList_Code     = Fetch_PBI(TextRow,7,";") ;
+          MeasureList_Code      = Fetch_PBI(TextRow,8,";") ;
+          PBI_View              = Fetch_PBI(TextRow,12,";") ;
+          DATA_MASTER_PATH      = Fetch_PBI(TextRow,3,";") ;
+          MASTER_NAME           = Fetch_PBI(TextRow,4,";");
+
+        End
+
+     End//While (Read PBI File)
+
+     FileClose(FileHandle);
+
+    CompteurList_Path = ENV_PATH + GetStrGateValue("PBI_CL_TVE_Path",0) + CompteurList_Code + ".txt";
+    MeasureList_Path  = ENV_PATH + GetStrGateValue("PBI_ML_TVE_Path",0) + MeasureList_Code + ".txt";
+
+    IF ( FileExist( CompteurList_Path ) == True ) Then CL_Exist = True; Else  CL_Exist = False;   End
+    IF ( FileExist( MeasureList_Path )  == True ) Then ML_Exist = True; Else  ML_Exist = False;   End
+
+
+    IF ( CL_Exist == True && ML_Exist == True ) Then
+
+        Attarch = PBI_Display(PBI_Code, CompteurList_Path,MeasureList_Path,PBI_View,PBI_Path,DATA_MASTER_PATH , MASTER_NAME , PBI_NAME);
+
+        ShellExec( "PACKAGE_CREATOR.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+            i=0;
+            Exit = False;
+            While ( Exit == false)
+                Sleep(1000);
+                IF ( (FileExist(Attarch) == true) || (i > MaxCheck) )then
+                   Exit = True;
+                End
+            End
+
+
+            //Messagebox(ENV_PATH + "\DeskTopBI\Package\" + PBI_NAME + ".ZIP","");
+            //FileCopy(Attarch , ENV_PATH + "\DeskTopBI\Package\" + PBI_NAME + ".ZIP" ,False);
+
+     Else
+        Attarch = "";
+        Messagebox(CL_Exist,ML_Exist);
+    End
+
+    Return Attarch ;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  Fetch_PBI
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_PBI(string Ligne, int NUMCol, string Seperator)
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to NUMCol do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  GET Querry
+///////////////////////////////////////////////////////////////////////////////
+function String GET_Querry( String File_Path,  String QuerryCode)
+
+    string FullPathFileName = File_Path;
+    int FileHandle;
+    String TextRow;
+    Bool Found = False;
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    IF (FileHandle==0) then
+      MessageBox("PBI Querry :File not Found","Error");
+      FileClose(FileHandle);
+      return "-1";
+    End
+    TextRow = FileReadLn(FileHandle);//Header
+
+     While(FileEof(FileHandle)==0)
+      TextRow = FileReadLn(FileHandle);
+       if ( Fetch_PBI(TextRow,1,";") == QuerryCode) Then
+        Found = True;
+
+         IF (Fetch_PBI(TextRow,3,";") == "*") Then
+            FileClose(FileHandle);
+            Return Fetch_PBI(TextRow,4,";");
+          Else
+            FileClose(FileHandle);
+            Return Fetch_PBI(TextRow,3,";");
+         End
+
+       End
+     End
+
+     If ( Found == False ) Then
+      FileClose(FileHandle);
+      Return "-1" ;
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  GetListName
+///////////////////////////////////////////////////////////////////////////////
+function String PBI_GetListName(string ListLabelString, string ListItem)
+int P; int ListPos = StrToInt(ListItem);    int i;
+string MyString = ListLabelString;  string V;
+
+        P = StrPos(MyString,";");
+        MyString = StrDelete(MyString,1,P);
+
+        for i = 0 to ListPos do
+            P = StrPos(MyString,";");
+            V = StrSubString(MyString,1,P-1);
+            MyString=StrDelete(MyString,1,P);
+        end
+        return(V);
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  GetList
+///////////////////////////////////////////////////////////////////////////////
+function String PBI_GetList( string Query, string R_C, string CompteurList_Code, string MeasureList_Code)
+   int i =0;
+   string ListLabelString;
+   int P;
+   int FileHandle;
+   int EOQuery;
+   string V;
+   string FileName;
+   string FullPathFileName;
+   int PosInitial;
+   string Name;
+   string LabelFullPathFileName;
+   String TextRow;
+   Int LabelFileHandle;
+   Bool EnergyFound = False;
+
+
+
+
+        P = StrPos(Query,":");
+        V = StrSubString(Query,1,P-1);
+        Query=StrDelete(Query,1,P);
+
+        If ( V == "L" )then
+            FileName = "PBI_"+MeasureList_Code+"_"+R_C;
+           FullPathFileName=ENV_PATH + "\Files\DATAMODELFiles\Power BI\Measure List\"+FileName+".txt";
+           FileHandle=FileOpen(FullPathFileName,"w+");
+
+
+
+             P = StrPos(Query,",");
+
+                        While (   P != 0 )
+                        P = StrPos(Query,",");
+                        V = StrSubString(Query,1,P-1);
+                        Query=StrDelete(Query,1,P);
+                        Name = PBI_GetListName(ListLabelString, V);
+                        V = V+","+Name;
+                        FileWriteLn(FileHandle,V);
+                        i=i+1;
+                        end
+        Else
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+          if ( V == "C" )then
+            FileName = "PBI_"+CompteurList_Code+"_"+R_C;
+           FullPathFileName=ENV_PATH + "\Files\DATAMODELFiles\Power BI\Compteur List\"+FileName+".txt";
+           //FullPathFileName=CompteurList_Path+FileName+".txt";
+           FileHandle=FileOpen(FullPathFileName,"w+");
+
+
+          //i = PBI_AnalyseQuerryCompteur(Query,FileHandle,"TVE");
+
+          Else
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+            FileClose(FileHandle);
+            Return "File";
+          End// V == C
+        End// V == L
+
+           FileClose(FileHandle);
+           if (R_C == "Column") then
+           TotalCol = i;
+           ///ColFullFileName = FullPathFileName;
+
+           end
+
+           if (R_C == "Row") then
+           TotalRow = i;
+           ///RowFullFileName = FullPathFileName;
+           end
+   Return FullPathFileName ;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  GetList
+///////////////////////////////////////////////////////////////////////////////
+function String PBI_AnalyseQuerryCompteur( string CompteurQuery, int FileHandle , String From , String HeaderLigne_BU)
+   int P;   int i;     int nb_Compteur = 0;
+   String LIST_NUMBER ="";
+   BOOL FILS_Flag;
+
+   string CnString;
+   String PBI_CL_Query = "";
+    bool CompteurFound = false;
+   string V;
+   string PCP;  string PCD; string PCC;
+   string NameCompteur;
+   //string E;    string Cp;  string Cl;  string Cn;  string Cpc;
+   CompteurMax = GetNumGateValue("MaxCompteur",0);
+   bool E_OK = true;    bool Cp_OK = true;   bool Cl_OK = true;
+   bool Cpc_OK = true;  bool PCD_OK = true;  bool PCC_OK = true; bool PCP_OK = true;
+   bool Cn_OK = true;
+   Bool Q_Result = False;
+
+   IF ( From == "TVE" || From == "BU_S" || From == "PBI") THEN FILS_Flag = False;
+   Else
+    FILS_Flag = True;
+     P = StrPos(From,"$");
+        IF ( P != 0 ) Then
+            LIST_NUMBER = StrSubString(From,P+1,StrLen(From));
+          Else
+            LIST_NUMBER = "" ;
+        End
+    End
+
+
+
+   CompteurQuerry( CompteurQuery );
+
+
+/**********         Post Code Production        ************************/
+        P = StrPos(Cpc,"/");
+        PCP = StrSubString(Cpc,1,P-1);
+        Cpc=StrDelete(Cpc,1,P);
+/**********         Post Code Distribution      ************************/
+        P = StrPos(Cpc,"/");
+        PCD = StrSubString(Cpc,1,P-1);
+        PCC=StrDelete(Cpc,1,P);
+
+
+
+        if ( Cn != "*" ) then
+
+          CnString = Cn;
+          P = StrPos(CnString,"/");
+
+             While (   P != 0 )
+
+                        V = StrSubString(CnString,1,P-1);
+                        CnString=StrDelete(CnString,1,P);
+
+                            for i = 1 to CompteurMax do
+                                if ( V == GetStrGateValue("Compteur_Code",i)) then
+
+
+                                    nb_Compteur = Query_OUTPUT(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU);
+                                    PBI_CL_Query = PBI_CL_Query + GetStrGateValue("Compteur_Code",i) + ",";
+                                    CompteurFound = true;
+                                    i = CompteurMax+1;
+                                end
+                            end
+                        P = StrPos(CnString,"/");
+             end// end While
+
+               if ( CompteurFound == false ) then
+                    MessageBox("Compteur Not found ","Information");
+               end
+        else
+
+
+
+           for i = 1 to CompteurMax do
+
+             E_OK = True;
+             Cp_OK = True;
+             Cl_OK = True;
+             Cpc_OK = True;
+
+             NameCompteur = GetStrGateValue("Compteur_Code",i);
+
+
+
+                if (E   != "*" ) then
+                    if (E   ==  GetStrGateValue("Compteur_Energy",i)) then
+                    E_OK = true;
+                    else  E_OK = false; end
+
+                end
+
+
+                if (Cp   != "*" ) then
+                    if (Cp   ==  GetStrGateValue("Compteur_Parent",i)) then
+                    Cp_OK = true;
+                    else  Cp_OK = false; end
+
+                end
+
+                if (Cl   != "*" ) then
+                    if (Cl   ==  GetStrGateValue("Compteur_Level",i)) then
+                    Cl_OK = true;
+                    else  Cl_OK = false; end
+                end
+
+                if (PCP   != "*" ) then
+                    if (PCP   ==  GetStrGateValue("Compteur_PCP",i)) then
+                        PCP_OK = true;
+                    else  PCP_OK = false; end
+                end
+
+                if (PCD   != "*" ) then
+                    if (PCD   ==  GetStrGateValue("Compteur_PCD",i)) then
+                        PCD_OK = true;
+                    else  PCD_OK = false; end
+                end
+
+                if (PCC   != "*" ) then
+                    if (PCC   ==  GetStrGateValue("Compteur_PCC",i)) then
+                        PCC_OK = true;
+                    else  PCC_OK = false; end
+                end
+
+
+               IF ( E_OK == True && Cp_OK == True && Cl_OK == True && PCP_OK == True && PCD_OK == True && PCC_OK == True )then Q_Result = True;
+               Else Q_Result = false;
+               End
+
+
+
+               IF (Q_Result == True )
+Then
+
+               nb_Compteur = Query_OUTPUT(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU);
+               PBI_CL_Query = PBI_CL_Query + GetStrGateValue("Compteur_Code",i) + ",";
+
+               END // Query == True
+
+           end//end for
+      end // end if (cn)
+
+  return PBI_CL_Query  +"/"+ nb_Compteur;
+
+end // end fonction*
+///////////////////////////////////////////////////////////////////////////////
+//                                  PBI Display
+///////////////////////////////////////////////////////////////////////////////
+function String PBI_Display(String PBI_CODE , String Compteur_List_Path, String MeasureList_Path, String View,
+                            String PBI_Path , String DATA_MASTER_PATH , String MASTER_NAME , String PBI_NAME)
+
+    String  E_FullPathFileName;
+    Int     E_FileHandle;
+    String SourceFile;
+    String NewFile;
+    String ENERGY_File;
+    String ENERGY_Line;
+    Int ENERGY_FileHandle;
+    String ENERGY;
+    String READLINE;
+    String FilterLINE;
+    String Current_CL;
+    Int NBRCompteur;
+    int i;
+    Int MaxEnergy = GetNumGateValue("EnergyMax",0);
+    String ATTACHE;
+    DirectoryCreate(PBI_Path + "\Data");
+
+    //////////  Copy Headers
+      for i = 1 to MaxEnergy do
+        SourceFile = ENV_PATH + "\Data\1 HISTORY\J_H\Source\" +GetStrGateValue("Energy_Name",i)+".csv";
+        NewFile =  PBI_Path +"\Data\" +GetStrGateValue("Energy_Name",i)+".csv";
+        FileCopy(SourceFile,NewFile,False);
+
+        SourceFile = ENV_PATH + GetStrGateValue("PBI_CL_TVE_Path",0) + PBI_CODE +"_"+ GetStrGateValue("Energy_Name",i) + ".txt";
+        IF ( FileExist( SourceFile ) == True ) Then FileDelete(SourceFile);   End
+      end
+////////////////////////////////
+
+    E_FullPathFileName = DECOMPOSE_CL( PBI_CODE , Compteur_List_Path );
+
+    E_FileHandle = FileOpen( E_FullPathFileName , "rt" );
+
+    While( FileEof(E_FileHandle) == 0 )
+        READLINE = FileReadLn(E_FileHandle);
+        ENERGY = Fetch_PBI(READLINE,1,";");
+        ENERGY_File = Fetch_PBI(READLINE,2,";");
+
+        IF (ENERGY_File != "" && FileExist(ENERGY_File) == True) Then
+
+            ENERGY_FileHandle = FileOpen( ENERGY_File , "rt" );
+            ENERGY_Line = Construct_CL( ENERGY_FileHandle );
+            Current_CL  = Fetch_PBI(ENERGY_Line,1,"/");
+            NBRCompteur = StrToInt( Fetch_PBI(ENERGY_Line,2,"/") );
+            FileClose(ENERGY_FileHandle);
+
+            FilterLINE = PBI_ML_Filter( MeasureList_Path , View , ENERGY );
+
+            GET_HistoricalROW( ENERGY , Current_CL, NBRCompteur , PBI_CODE , View , PBI_Path , FilterLINE );
+
+        End
+    End
+
+    Create_ALLCOMPTEUR_PBI( E_FileHandle , PBI_Path );
+
+    FileClose( E_FileHandle );
+
+    ATTACHE = Package_Generator( PBI_Path , PBI_CODE , View , MASTER_NAME ,DATA_MASTER_PATH , PBI_NAME );
+
+    Return ATTACHE;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+//                               GetRow
+///////////////////////////////////////////////////////////////////////////////
+function void GET_HistoricalROW( String Energy , string Current_CL ,Int NBRCompteur , String PBI_Code, String View, String PBI_Path, String FilterLINE)
+
+    string HFullPathFileName;
+    int HFileHandle;
+
+    string WRITEFullPathFileName;
+    int WRITEFileHandle;
+
+    String DATALigne;
+    Bool Found = False;
+    String Path ;
+    String CL;
+    Int MAX_CL;
+    Path = ENV_PATH + "\Rapport\Power_BI\";
+    Int i = 0;
+    Int j;
+    Int Counter =0;
+    String Filter = Fetch_PBI(FilterLINE,1,"/");
+    int MaxFilter;
+    Bool WRITEHISTORY = False;
+
+    MaxFilter = StrToInt( Fetch_PBI(FilterLINE,2,"/") );
+    HFullPathFileName = ENV_PATH + "\Data\1 HISTORY\" + View+ "_H\" + Energy +".csv";
+
+
+    HFileHandle = FileOpen(HFullPathFileName,"rt");
+
+      IF (HFileHandle==0) then
+        Return;
+      End
+
+      WRITEFullPathFileName =PBI_Path+"\Data\"+Energy +".csv";
+      WRITEFileHandle = FileOpen(WRITEFullPathFileName,"at");
+      CL = Current_CL;
+      MAX_CL = NBRCompteur;
+
+    While( FileEof(HFileHandle) == 0 )
+     DATALigne = FileReadLn(HFileHandle);
+
+       For j = 1 to MAX_CL do
+        IF ( Fetch_PBI(DATALigne,3,";") == Fetch_PBI(CL,j,",") ) Then
+         WRITEHISTORY = True;
+         j = MAX_CL + 1;
+        End
+       End
+
+       IF ( WRITEHISTORY == True ) Then
+         For i = 1 to MaxFilter do
+            IF ( Fetch_PBI(Filter,i,",") == "F" ) Then
+                DATALigne = Find_Replace_PBI(DATALigne , 0 , i+3 , ";");
+            End
+         End
+
+         FileWriteLn(WRITEFileHandle,DATALigne);
+         Counter = Counter+1;
+         WRITEHISTORY = False;
+
+        End
+    End
+
+    FileClose(HFileHandle);
+    FileClose(WRITEFileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  GetDir
+///////////////////////////////////////////////////////////////////////////////
+function string Get_Code_Path( String PBI_Name, String PBI_View)
+
+
+    Int FileHandle ;
+    String Path ;
+    String Ligne;
+    String OutPut_Code;
+    String OutPut_Path;
+
+    Path = ENV_PATH + "\Rapport\Power BI\"+PBI_View +"\"+ PBI_Name +"\"+ PBI_Name +".txt";
+    FileHandle = FileOpen(Path,"rt");
+
+    IF (FileHandle == 0) Then MessageBox(Path,"File Not found"); Return "-1"; End
+
+       Ligne = FileReadLn(FileHandle);
+        IF ( Ligne != "" ) Then
+         OutPut_Code = Ligne;
+        End
+
+       Ligne = FileReadLn(FileHandle);
+        IF ( Ligne != "" ) Then
+         OutPut_Path = Ligne;
+        End
+
+
+    FileClose(FileHandle);
+    Return OutPut_Code+";"+OutPut_Path;
+End
+///////////////////////////////////////////////////////////////////////////////
+//                                  test PBI
+///////////////////////////////////////////////////////////////////////////////
+function String PBI_ML_Filter( String ML_Code , String PBI_View, String PBI_Energy)
+
+    string HFullPathFileName;
+    int HFileHandle;
+
+    String DATALigne;
+    Bool Found = False;
+    String Path ;
+    Path = ENV_PATH + "\Data\1 HISTORY\1-UPDATEGATES\";
+    Int Source_Counter = 0;
+    Int ML_Counter = 0;
+    Int i = 0;
+    Int j = 0;
+    String SourceLINE = "";
+    String ML_LINE = "";
+    String Filter_LINE = "";
+    Bool FoundFilter = False;
+    String OBJECTIF = "O:";
+///////////////////////////////////////////////////////////////////////////////
+// Source File to line + Counter
+///////////////////////////////////////////////////////////////////////////////
+     IF (PBI_Energy != "" && PBI_Energy != "*") Then
+
+      HFullPathFileName = Path+ PBI_Energy +"_"+PBI_View+".txt";
+      HFileHandle = FileOpen(HFullPathFileName,"rt");
+
+      IF (HFileHandle==0) then
+        MessageBox(HFullPathFileName,"Error");
+        return "";
+      End
+     End
+
+    While( FileEof(HFileHandle) == 0 )
+     DATALigne = FileReadLn(HFileHandle);
+        IF ( DATALigne != "" ) Then
+         SourceLINE = SourceLINE + DATALigne + "," ;
+         Source_Counter = Source_Counter +1;
+        End
+    End
+
+    FileClose(HFileHandle);
+///////////////////////////////////////////////////////////////////////////////
+// ML File to line + Counter
+///////////////////////////////////////////////////////////////////////////////
+    Path = ENV_PATH+"\Files\Display_Templates\MesureList";
+    HFullPathFileName = Path+ ML_Code +".txt";
+    HFileHandle = FileOpen(ML_Code,"rt");
+    IF (HFileHandle==0) then
+      MessageBox(HFullPathFileName,"Error");
+        return "";
+    End
+
+    While( FileEof(HFileHandle) == 0 )
+     DATALigne = FileReadLn(HFileHandle);
+        IF ( DATALigne != "" && PBI_Energy == Fetch_PBI(DATALigne,3,",") ) Then
+         ML_LINE = ML_LINE + Fetch_PBI(DATALigne,1,",") + "," ;
+         ML_Counter = ML_Counter +1;
+        End
+    End
+
+    FileClose(HFileHandle);
+///////////////////////////////////////////////////////////////////////////////
+// ML VS Source == >  Filter Line
+///////////////////////////////////////////////////////////////////////////////
+
+
+    For j = 1 to Source_Counter do
+    Filter_LINE = Filter_LINE + "F,";
+    End
+
+    For i = 1 to ML_Counter do
+
+        For j = 1 to Source_Counter do
+
+        OBJECTIF = "O:" + Fetch_PBI(ML_LINE,i,",");
+            IF ( Fetch_PBI(ML_LINE,i,",") ==  Fetch_PBI(SourceLINE,j,",") || Fetch_PBI(SourceLINE,j,",") ==  OBJECTIF) Then
+            //FoundFilter = True;
+            Filter_LINE = Find_Replace_PBI(Filter_LINE, "T" , j , ",");
+            End
+        End
+
+    FoundFilter = False;
+    End
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+    Return Filter_LINE +"/" + Source_Counter;
+End
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String Find_Replace_PBI(String Ligne,string Replace , Int NumFild , String Seperator)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,Seperator);
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,Seperator);
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String Find_First_EQUAL( String Search , Int FildTOScan , String Seperator , Int READ_FileHandle)
+
+    Bool Exit = False;
+    Bool Found = False;
+    String LINE;
+    String Searched_PART;
+    String Returned = "";
+
+    while ( Exit == False)
+
+     LINE = FileReadLn(READ_FileHandle);
+
+     IF ( LINE != "" ) Then
+        Searched_PART = Fetch_PBI(LINE,FildTOScan,Seperator);
+            IF (Searched_PART == Search) Then
+                Returned = LINE;
+                Found = True;
+            Else
+                Found = False;
+            End
+
+            If ( Found == True || FileEof(READ_FileHandle) != 0 ) Then
+                Exit = False;
+            End
+
+     End
+
+
+    end
+
+
+    Return Returned;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Find_First_DIFFERNT( String Search , Int FildTOScan , String Seperator , Int READ_FileHandle , Int WRITE_FileHandle)
+
+    Bool Exit = False;
+    Bool Found = False;
+    String LINE;
+    String Searched_PART;
+    String Returned = "";
+
+    while ( Exit == False)
+
+     LINE = FileReadLn(READ_FileHandle);
+
+     IF ( LINE != "" ) Then
+        Searched_PART = Fetch_PBI(LINE,FildTOScan,Seperator);
+            IF (Searched_PART == Search) Then
+                FileWriteLn(WRITE_FileHandle,LINE);
+                Found = True;
+            Else
+                Found = False;
+            End
+
+            If ( Found == True || FileEof(READ_FileHandle) != 0 ) Then
+                Exit = False;
+            End
+
+     End
+
+
+    end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String DECOMPOSE_CL(String PBI_CODE , String Compteur_List_Path )
+
+
+    string CFullPathFileName;
+    int CFileHandle;
+    string  HISTORICAL_FullPathFileName;
+    int     HISTORICAL_FileHandle;
+
+    String  E_FullPathFileName;
+    int     E_FileHandle;
+
+    String CompteurLigne;
+    String CompteurCode;
+    Bool Found = false;
+    //String PBI_Path;
+    int NBRCompteur = 0;
+    String CurrentENERGY = "First";
+    String ENERGY;
+    String Current_CL = "";
+
+    String SourceFile;
+    String NewFile;
+    String FilterLINE = "";
+    Int MaxEnergy = GetNumGateValue("EnergyMax",0);
+    int i;
+
+    String FINDQuery = "Query~";
+    String QUERY;
+    String CL_PATH;
+    Int CL_FileHandle;
+    Int NUM_LINE = 0;
+    Int QUERY_NBR = 0;
+    String LINE_ALLCOMPTEUR = "";
+
+
+//////////  Constract CL ligne
+        CFullPathFileName = Compteur_List_Path;
+        CFileHandle = FileOpen(CFullPathFileName,"rt");
+
+        If ( CFileHandle == 0 ) Then
+            MessageBox(CFullPathFileName,"CL : File Not Found");
+            Return;
+        End
+
+        E_FullPathFileName = ENV_PATH + GetStrGateValue("PBI_CL_TVE_Path",0) + PBI_CODE +"_ENERGYLIST.txt";
+
+        E_FileHandle = FileOpen(E_FullPathFileName,"wt");
+
+        While( FileEof(CFileHandle) == 0 )
+
+         CompteurLigne = FileReadLn(CFileHandle);
+           IF ( CompteurLigne != "" ) Then
+                NUM_LINE = NUM_LINE + 1;
+                CompteurCode = Fetch_PBI(CompteurLigne,1,";");
+                ENERGY = Fetch_PBI(CompteurLigne,3,";");
+               If ( ENERGY != "*" ) Then
+                CL_PATH = ENV_PATH + GetStrGateValue("PBI_CL_TVE_Path",0) + PBI_CODE +"_"+ ENERGY + ".txt";
+
+                IF ( FileExist(CL_PATH) == False ) Then
+                  FileWriteLn(E_FileHandle,ENERGY + ";" + CL_PATH);
+                End
+
+                CL_FileHandle = FileOpen(CL_PATH,"at");
+
+                    IF ( CompteurCode == FINDQuery ) Then
+                        CL_PATH = PBI_AnalyseQuerryCompteur( Fetch_PBI(CompteurLigne,4,";") , CL_FileHandle , "PBI" , "" );
+                      Else
+                        FileWriteLn(CL_FileHandle,CompteurLigne);
+
+
+                    End
+                 FileClose(CL_FileHandle);
+               End
+           End
+
+        End
+
+    FileClose(CFileHandle);
+    FileClose(E_FileHandle);
+
+    Return E_FullPathFileName;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Construct_CL( Int FILEHANDLE )
+
+    String LINE;
+    String CompteurCode;
+    String FullCOMPTEUR = "";
+    Int NBRCOMPTEUR = 0;
+
+    While( FileEof(FILEHANDLE) == 0 )
+        LINE = FileReadLn(FILEHANDLE);
+        IF (LINE != "" ) Then
+            CompteurCode = Fetch_PBI(LINE,1,";");
+            NBRCOMPTEUR = NBRCOMPTEUR+1;
+            FullCOMPTEUR = FullCOMPTEUR + CompteurCode + ",";
+        End
+    End
+
+    FullCOMPTEUR = FullCOMPTEUR + "/" + NBRCOMPTEUR;
+    Return FullCOMPTEUR;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_ALLCOMPTEUR_PBI( Int ENERGY_LIST , String PBI_PATH )
+
+    String FullPathFileName;
+    Int FileHandle;
+
+    String WriteFullPathFileName;
+    Int WriteFileHandle;
+
+    String QFullPathFileName;
+    Int QFileHandle;
+
+    String LINE;
+    String QLINE;
+    Int QUERY_NBR = 0;
+    Int LINE_NBR = 0;
+    String Compteur;
+    String LISTCOMPTEUR = "";
+    Int TOTAL_COMPTEUR = 1;
+    Int i;
+    String TATOLCOMPTEURS = "";
+    Bool Write = False;
+
+
+
+     WriteFullPathFileName = PBI_PATH +"\Data\AllCompteur.csv";
+      FileCopy(ENV_PATH + "\Data\1 HISTORY\J_H\Source\AllCompteur.csv",WriteFullPathFileName,False);
+     WriteFileHandle = FileOpen(WriteFullPathFileName,"at");
+
+
+     FileSeek(ENERGY_LIST,0,0);
+
+     While( FileEof(ENERGY_LIST) == 0 )
+        LINE = FileReadLn(ENERGY_LIST);
+        IF (LINE != "") Then
+          //MessageBox(LINE,Fetch_PBI(LINE,2,";"));
+          QFileHandle = FileOpen( Fetch_PBI(LINE,2,";") , "rt");
+
+          While( FileEof(QFileHandle) == 0 )
+          LISTCOMPTEUR = FileReadLn(QFileHandle);
+            //MessageBox(LISTCOMPTEUR,"LISTCOMPTEUR");
+          IF ( LISTCOMPTEUR != "" ) Then
+             Compteur = Fetch_PBI(LISTCOMPTEUR,1,";");
+              Write = True;
+              For i = 1 to TOTAL_COMPTEUR do
+               IF ( Compteur == Fetch_PBI(TATOLCOMPTEURS,i,",") ) Then    Write = False; End
+              End
+
+             If ( Write == True ) Then
+              FileWriteLn(WriteFileHandle,LISTCOMPTEUR);
+              TATOLCOMPTEURS = TATOLCOMPTEURS + Compteur + ",";
+              TOTAL_COMPTEUR = TOTAL_COMPTEUR + 1;
+
+             End
+
+
+          End // LISTCOMPTEURS != ""
+          End // While( FileEof(QFileHandle) == 0 )
+
+          FileClose(QFileHandle);
+        End // LINE != ""
+     End // While( FileEof(ENERGY_LIST) == 0 )
+
+     FileClose(WriteFileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  Package GENERATER
+///////////////////////////////////////////////////////////////////////////////
+function String Package_Generator( String PBI_PATH , String PBI_CODE , String PBI_VIEW , String MASTER_NAME , String DATA_MASTER_PATH , String PBI_NAME)
+
+    String L1 = "clear host";
+    //String L2 = "$Package_Path    =" + CharToStr(34) + PBI_PATH + CharToStr(34);
+    String L2 = PBI_PATH ;
+    //String L3 = "$Package_Name    =" + CharToStr(34) + PBI_CODE + CharToStr(34);
+    //String L4 = "$Package_View    =" + CharToStr(34) + PBI_VIEW + CharToStr(34);
+    //String L5 = "$MasterPBI_Path  =" + CharToStr(34) + ENV_PATH + "\DeskTopBI\Masters\" + MASTER_NAME + ".pbix" + CharToStr(34);
+    String L5 =  ENV_PATH + "\DeskTopBI\Masters\" + MASTER_NAME + ".pbix" ;
+    //String L6 = "$NEWPBI_Path     =" + CharToStr(34) + PBI_PATH + "\PBI"+ CharToStr(34);
+    String L6 = PBI_PATH + "\PBI";
+
+    //String L7 = "$Unit_Path   =" + CharToStr(34) +  PBI_PATH + "\Data" + CharToStr(34);
+    String L7 = PBI_PATH + "\Data" ;
+    //String L8 = "$Unit_Source     =" + CharToStr(34) + ENV_PATH + "\Files\AllCompteur\Unite.CSV" + CharToStr(34);
+    String L8 =  ENV_PATH + "\Files\AllCompteur\Unite.CSV";
+    //String L9 = "$Master_EXE_Path =" + CharToStr(34) +  ENV_PATH + "\PowerShell\PACKAGE_CREATOR_SETUP.exe" + CharToStr(34);
+    //String L10 = "$NEW_EXE_Path   =" + CharToStr(34) + PBI_PATH + CharToStr(34);
+
+    //String L11 = "$RAR_FILE       =" + CharToStr(34) + PBI_PATH +".Zip"+ CharToStr(34);
+    String L11 =  PBI_PATH +".Zip";
+
+    String L12 = "##########  COPY PBI MASTER  ##########";
+    String L13 ="If(!(test-path $NEWPBI_Path)){New-Item -ItemType Directory -Force -Path $NEWPBI_Path}";
+    String L14 = "xcopy $MasterPBI_Path $NEWPBI_Path /c /q /g /s /e /k /r /h /y /j /z";
+
+    String L15 = "##########  COPY Unit MASTER ##########";
+    String L16 ="If(!(test-path $Unit_Path)){New-Item -ItemType Directory -Force -Path $Unit_Path}";
+    String L17 = "xcopy $Unit_Source $Unit_Path /c /k /r /h /y /j /z";
+
+    //String L18 = "##########  COPY EXE MASTER  ##########";
+    //String L19 ="If(!(test-path $NEW_EXE_Path)){New-Item -ItemType Directory -Force -Path $NEW_EXE_Path}";
+    //String L20 = "xcopy $Master_EXE_Path $NEW_EXE_Path /c /q /g /s /e /k /r /h /y /j /z";
+
+    String L21 = "##########  Compresser Package  ##########";
+    String L22 = "Compress-Archive -Path $Package_Path -CompressionLevel Optimal -DestinationPath $RAR_FILE";
+
+
+    //String PS_FullPathFileName = ENV_PATH + "\PowerShell\SERVEUR_PART_Pbi.ps1" ;
+    String PS_FullPathFileName = "C:\Winlog\PowerShell\PBI_Config.txt" ;
+    Int    PS_FileHandle;
+
+    //FileCopy(L5,ENV_PATH + "\DeskTopBI\Masters\" + PBI_NAME + ".pbix",False);
+
+    PS_FileHandle = FileOpen( PS_FullPathFileName , "wt" );
+
+
+        FileWriteLn(PS_FileHandle,L2);
+        FileWriteLn(PS_FileHandle,L5);
+        FileWriteLn(PS_FileHandle,L6);
+        FileWriteLn(PS_FileHandle,L7);
+        FileWriteLn(PS_FileHandle,L8);
+        FileWriteLn(PS_FileHandle,L11);
+
+
+    FileClose(PS_FileHandle);
+
+    PS_FullPathFileName = ENV_PATH + "\DeskTopBI\Package\" + PBI_CODE +"\PATH.txt";
+    PS_FileHandle = FileOpen( PS_FullPathFileName , "wt" );
+
+        FileWriteLn(PS_FileHandle,DATA_MASTER_PATH);
+        FileWriteLn(PS_FileHandle,MASTER_NAME);
+
+    FileClose(PS_FileHandle);
+
+    Return PBI_PATH + ".Zip";
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  test PBI
+///////////////////////////////////////////////////////////////////////////////
+function void Test_PBI()
+    String A;
+
+    //A = GetTimeString(":");
+    PBI_TableauViewEnergy( "PBI4" );
+end

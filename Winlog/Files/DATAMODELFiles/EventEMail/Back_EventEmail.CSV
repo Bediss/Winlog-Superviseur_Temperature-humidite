@@ -1,0 +1,8 @@
+Cas_Email_Code;Cas_Email_Nom;Cas_Nom;Email_Nom;Cas_Type;description;Cas_Code;Email_Code
+R1;Test1;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R2;test 2;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R3;test 3 ;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R4;test 4 ;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R5;test 5 ;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R6;test 6 ;10 MIN;SYNOPTIQUE TRH CLC;Regulier;;E1;M54;;;;;;;;;;;;
+R7;test 7 ;10 MIN;ADHOC - CH F COMMERCIAL T T;Regulier;;E1;M2;;;;;;;;;;;;

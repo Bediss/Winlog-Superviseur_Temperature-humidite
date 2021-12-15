@@ -1,0 +1,24 @@
+Channel;Device;GateID;N ID;Address;Description;Multiply factor 1;Gate Type 1;GateID1;N ID 1;Operation;Multiply factor 2;Gate Type 2;GateID2;N ID 2;Measured val. 1;Engineering val. 1;Measured val. 2;Engineering val. 2;Decimal digits;Record on historical file;Enable writing to device;Access groups;Apply decimal factor;From gate;Decimal Digits Gate Type;Decimal Digits Gate ID;Decimal Digits N Id
+0;0;CMPGate;0;;Name_Tonne Live;1;CMP;NUMGate;0;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;1;;Name_Tonne J;1;CMP;CMPGate;101;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;101;;Name_Tonne J;1;NUM;CMPGate;0;-;1;NUM;NUMGate_J-1;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;2;;Name_Tonne S;1;CMP;CMPGate;102;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;102;;Name_Tonne S;1;NUM;CMPGate;0;-;1;NUM;NUMGate_S-1;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;3;;Name_Tonne M;1;CMP;CMPGate;103;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;103;;Name_Tonne M;1;NUM;CMPGate;0;-;1;NUM;NUMGate_M-1;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;4;;Name_Tonne A;1;CMP;CMPGate;104;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;104;;Name_Tonne A;1;NUM;CMPGate;0;-;1;NUM;NUMGate_A-1;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;5;;Name_Tonne J-1;1;NUM;NUMGate;5;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;6;;Name_Tonne S-1;1;NUM;NUMGate;6;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;7;;Name_Tonne M-1;1;NUM;NUMGate;7;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;8;;Name_Tonne A-1;1;NUM;NUMGate;8;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;9;;Name_Inc J;1;NUM;NUMGate;17;-;1;NUM;NUMGate_J-1;1;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;10;;Name_Inc S;1;NUM;NUMGate;17;-;1;NUM;NUMGate_S-1;1;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;11;;Name_Inc M;1;NUM;NUMGate;17;-;1;NUM;NUMGate_M-1;1;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;12;;Name_Inc A;1;NUM;NUMGate;17;-;1;NUM;NUMGate_A-1;1;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;13;;Name_Inc J-1;1;NUM;NUMGate;13;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;14;;Name_Inc S-1;1;NUM;NUMGate;14;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;15;;Name_Inc M-1;1;NUM;NUMGate;15;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;16;;Name_Inc A-1;1;NUM;NUMGate;16;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;17;;Name_Inc Live;1;CMP;NUMGate;17;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;
+0;0;CMPGate;49;;Name_Inc Live;1;CMP;NUMGate;49;DISCARD Lo;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;

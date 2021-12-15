@@ -1,0 +1,4 @@
+function void Reel_Alarme_Calculatrice()
+  String CompteurCode ;
+  Int NBR ;
+End

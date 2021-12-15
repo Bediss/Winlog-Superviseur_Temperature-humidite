@@ -1,0 +1,117 @@
+CCE;VMZ Consomation Electrique;*;*;*;*;V100;VMZ
+CC1;ElMazeraa Electrique;*;*;*;*;M200;ElMazeraa
+CCA;Production;*;*;*;*;Z100;Production
+CC11;Abattoir Electrique;*;*;*;*;M210;Abattoir
+CC112;Plumage Electrique;S200;STEG;*;*;M219;Plumage
+CC114;Ressuage Electrique;S200;STEG;*;*;M215;Ressuage
+CC117;Aabttage Electrique;S200;STEG;*;*;M213;Abattage
+CC118;DECOUPE Electrique;S200;STEG;*;*;M217;Decoupe
+CC12;Charcuterie Electrique;*;*;*;*;M220;Charcuterie
+CC13;Conserve Electrique;*;*;M180;PosteTR3;M230;Conserve
+CC14;PetFood Electrique;*;*;M190;PosteTR4;M240;PetFood
+CC15;Surgele Electrique;*;*;M1B0;PosteTR6;M250;Surgele
+CC16;UCPC Electrique;S200;STEG;M180;PosteTR3;M260;UCPC
+CCB;Utilitaire;*;*;*;*;Z200;Utilitaire
+CCB1;Froid Electrique;*;*;*;*;MA00;Froid
+CC1A;SalleMachine Froid ElMazeraa;S200;STEG;*;*;M110;SalleMachine Froid ElMazeraa
+CC1A1;York;S200;STEG;*;*;M11D;York
+CC1A2;IMEF;S200;STEG;*;*;MA01;IMEF
+CC1AA;Extension IMEF1;S200;STEG;M160;PosteTR1;M115;Extension IMEF1
+CC1AB;Extension IMEF2;S200;STEG;M180;PosteTR3;M116;Extension IMEF2
+CC1A3;Matal;S200;STEG;M180;PosteTR3;M11C;Matal
+CC1B;SalleMachine Froid Surgele;S200;STEG;M1B0;PosteTR6;M120;SalleMachine Froid Surgele
+CCB5;SalleMachine Froid Ressuage3;S200;STEG;M1A0;PosteTR5;M130;SalleMachine Froid Ressuage3
+CCB4;Chaufferie Electrique;S200;STEG;*;*;MC00;Chaufferie
+CC1F;ChaufferieSurgele;S200;STEG;M1B0;PosteTR6;M140;ChaufferieSurgele
+CCB2;Eau Electrique;S200;STEG;*;*;MB00;Eau
+CC1C;Eau TR1;S200;STEG;M160;PosteTR1;MB07;Eau TR1
+CC1E;Froid TR1;S200;STEG;M160;PosteTR1;MA02;Froid TR1
+CC1P11;Extension IMEF1 TR1;S200;STEG;M160;PosteTR1;MA02A;Extension IMEF1
+CC1P12;York TR1;S200;STEG;M160;PosteTR1;M11D1;York TR1
+CC1D;Abattoir TR1;S200;STEG;M160;PosteTR1;M21I;Abattoir TR1
+CC1I1;Charcuterie TR2;S200;STEG;M229;PosteTR2;M229;Charcuterie TR2
+CC1I11;Charcuterie 1 ;S200;STEG;M170;PosteTR2;M221;Charcuterie 1 
+CC1I12;conditionnement  Charcuterie;S200;STEG;M170;PosteTR2;M223;conditionnement  Charcuterie
+CC1I2;Abattoir TR2;S200;STEG;M170;PosteTR2;M21J;Abattoir TR2
+CC1Z;Coproduit TR2;S200;STEG;M170;PosteTR2;M152A;PosteTR2
+CC1I31;GA 30;S200;STEG;M170;PosteTR2;M153;GA 30
+CC1I32;GA 50;S200;STEG;M170;PosteTR2;M154;GA 50
+CC1I34;CHAUFFERIE+ air comprime;S200;STEG;M170;PosteTR2;M1R0;CHAUFFERIE+ air comprime
+CC1X;Froid TR2;S200;STEG;M170;PosteTR2;MA03;Froid TR2
+CC1Q6;MPF  ancienne  ;S200;STEG;M170;PosteTR2;MA03A;MPF  ancienne  
+CC1Y;Eau TR2;S200;STEG;M170;PosteTR2;MB08;Eau TR2
+CC1I4;facility TR2;S200;STEG;M170;PosteTR2;Z300;PosteTR2
+CC1T;Charcuterie TR3;S200;STEG;M22A;PosteTR3;M22A;Charcuterie TR3
+CC1T1;Charcuterie 2  ;S200;STEG;M222;PosteTR3;M222;Charcuterie 2  
+CC162;ProcessUCPC;S200;STEG;M180;PosteTR3;M261;PosteTR3
+CC1N1;StationOsmose1;S200;STEG;M180;PosteTR3;MB03;StationOsmose1
+CC1J4;Froid TR3;S200;STEG;M180;PosteTR3;MA04;Froid TR3
+CC1J1;Extension IMEF2 TR3;S200;STEG;M180;PosteTR3;MA04B;Extension IMEF2 TR3
+CC1J2;Matal TR3;S200;STEG;M180;PosteTR3;MA04E;Matal TR3
+CC1J3;SalleMachine Froid ElMazeraa TR3;S200;STEG;M180;PosteTR3;MA04H;SalleMachine Froid ElMazeraa TR3
+CC1J31;ARMOIR EVAP Ch 04-012 FROID;S200;STEG;M180;PosteTR3;MA04A;ARMOIR EVAP Ch 04-012 FROID
+CC1J33;SDM1 COMPR MATAL;S200;STEG;M180;PosteTR3;MA04J;SDM1 COMPR MATAL
+CC1K1;Coproduit TR4;S200;STEG;M190;PosteTR4;M152B;Coproduit TR4
+CC1K11;Atelier Coopr;S200;STEG;M190;PosteTR4;C210;Atelier Coopr
+CC1K12;Coproduit Collecte;S200;STEG;M190;PosteTR4;C220;Coproduit Collecte
+CC1K13;TP Coopr;S200;STEG;M190;PosteTR4;C240;TP Coopr
+CC1K2;PetFood TR4;S200;STEG;M190;PosteTR4;M242;PosteTR4
+CC1K22;PetFood Calcule;S200;STEG;M190;PosteTR4;M24B;PetFood Calcule
+CC1U;Eau TR4;S200;STEG;M190;PosteTR4;MB09;Eau TR4
+CC1U1;S P Nouveau  TR 4;S200;STEG;M190;PosteTR4;MB04;S P Nouveau  TR 4
+CC1U2;StationOsmose2;S200;STEG;M190;PosteTR4;MB05;StationOsmose2
+CC1K3;Abattoir TR4;S200;STEG;M190;PosteTR4;M21K;Abattoir TR4
+CC1Q5;EXT MPF 18 BIS + 19 BIS;S200;STEG;M190;PosteTR4;MA06;EXT MPF 18 BIS + 19 BIS
+CC1V;Dick TR5;S200;STEG;M1A0;PosteTR5;D200;PosteTR5
+CC1N4;Station Wedeco;S200;STEG;M1A0;PosteTR5;MB06;Station Wedeco
+CC1W;Froid TR5;S200;STEG;M1A0;PosteTR5;MA05;Froid TR5
+CC1C7;SalleMachine Froid Ressuage3 TR5;S200;STEG;M1A0;PosteTR5;MA05A;SalleMachine Froid Ressuage3 TR5
+CC1Q10;sdm2 (RESSUAGE+PETFOOD);S200;STEG;M1A0;PosteTR5;MA05D;sdm2 (RESSUAGE+PETFOOD)
+CC1M1;Surgele TR6;S200;STEG;M1B0;PosteTR6;M25G;Surgele TR6
+CC1M11;Armoires Surgele TR6;S200;STEG;M1B0;PosteTR6;M25H;Armoires Surgele TR6
+CC156;MONTE CHARGE;S200;STEG;M1B0;PosteTR6;M256;MONTE CHARGE
+CC15C;vestiere;S200;STEG;M1B0;PosteTR6;M25C;vestiere
+CC15D;baratte;S200;STEG;M1B0;PosteTR6;M25D;baratte
+CC15E;charge batterie chariot;S200;STEG;M1B0;PosteTR6;M25E;charge batterie chariot
+CC1Q2;DIVER SURGELE SAUF SKID NEGATIF;S200;STEG;M1B0;PosteTR6;M25F;DIVER SURGELE SAUF SKID NEGATIF
+CC1M2;SalleMachine Froid Surgele TR6;S200;STEG;M1B0;PosteTR6;MA09E;SalleMachine Froid Surgele TR6
+CC1M21;groupe negatif compresseur;S200;STEG;M1B0;PosteTR6;MA09F;groupe negatif compresseur
+CC1M22;groupe positif compresseur;S200;STEG;M1B0;PosteTR6;MA09G;groupe positif compresseur
+CC1M23;groupe positif 2 compresseur;S200;STEG;M1B0;PosteTR6;MA09H;groupe positif 2 compresseur
+CC1M24;SKID NEGATIF;S200;STEG;M1B0;PosteTR6;MA09I;SKID NEGATIF
+CC1M33;sondage bas;S200;STEG;M1B0;PosteTR6;M147;sondage bas
+CC1O4;Chaine Ressuage;S200;STEG;MX00;Poste TRX;M21H;Chaine Ressuage
+CC1O5;Atelier Osso Bucoo;S200;STEG;MX00;Poste TRX;M21E;Atelier Osso Bucoo
+CC1O9;Local Chariot +Grp electrogene;S200;STEG;MX00;Poste TRX;M156;local chariot +groupe electrogene
+CC3;CoProduit Electrique;S200;STEG;*;*;C200;CoProduit
+CV1O4;Atelier CONSERVE;M2C0;Chaudiere 1+2+Cogen;M200;ElMazeraa;M233;Atelier conserve
+CV1O6;Atelier PETFOOD;M2C0;Chaudiere 1+2+Cogen;M200;ElMazeraa;M243;Atelier PETFOOD
+CG021;Cogeneration Gaz;S200;STEG;*;*;N200;Cogeneration
+CGB2;Oxydeur;S200;STEG;M310;Oxydeur;M310;Oxydeur
+CG3;GIPA Gaz;S200;STEG;G200;GIPA;G200;GIPA
+CEG1A6;SKID -16;*;*;M110;SalleMachine Froid ElMazeraa;M112;SKID -16
+CEG1C7;Ressuage 3;*;*;M130;SalleMachine Froid Ressuage3;M131;Ressuage 3
+CEG1B4;Groupe Eau Gycolee;*;*;M120;SalleMachine Froid Surgele;M122;Groupe Eau Glycolee
+CAM1A5;SKID -40_ElMazeraa;*;*;M110;SalleMachine Froid ElMazeraa;M111;SKID -40
+CEC;Admin + Facility;*;*;*;*;Z400;Admin + Facility
+CEC1;Administration Eau;*;*;*;*;M270;Administration
+CEC2;Refectoire Eau;*;*;*;*;M290;Refectoire
+CEC3;Magasin Eau;*;*;*;*;M280;Magasin
+CE6;PAF Eau;*;*;*;*;V110;PAF
+CEBF;Sortie B2000 vers Osmose;*;*;*;*;M1C0;SalleOsmose
+CEBI;CB21_Filtre a sable;*;*;M1C0;SalleOsmose;M1V1;Bassin1000
+CEB131;CB39_Toilette UCPC;*;*;M1V1;Bassin1000;M264;vestier UCPC
+CEB2A;Eau Brute_PetFood;*;*;M1V1;Bassin1000;M244;Eau Brute_PetFood
+CEB2A1;CB38_vestiere PetFood;*;*;M1V1;Bassin1000;M245;vestiere PetFood
+CEB144;CB45_Station Primere;*;*;M1V1;Bassin1000;M246;Station Primere
+CEBAA11;Condenseur;*;*;M1V1;Bassin1000;M1T0;Condenseur
+CEB32;CB50_Admin Cooproduit;*;*;M1V1;Bassin1000;M152C;Administration coproduit
+CEB31;CB49_Lavage Hp Cooproduit;*;*;M1V1;Bassin1000;M152D;Lavage coproduit
+CEF1C1;CF1_Nouveau Forage vers B2000;M1O0;Nouveau Forage;*;*;M1V2;Bassin2000
+CET01;Salle Osmose;M1V2;Bassin2000;*;*;M1V3;Bassin3000
+CET131;CT41_Osmose ADM coproduit;M1C0;SalleOsmose;M1V3;Bassin3000;M152E;Osmose ADM coproduit
+CETB12;CT18_Station-eau-Glacee;M1C0;SalleOsmose;M1V3;Bassin3000;M21F;Station-eau-Glacee
+CETA52;CT41_Osmose entre surgele 1;M1C0;SalleOsmose;M1V3;Bassin3000;M25I;Osmose entre surgele 1
+CET1I;CT33_UCPC_Comble;M1C0;SalleOsmose;M1V3;Bassin3000;M263;UCPC Comble
+CETA6;CT36_Appoint Condenseur;M1C0;SalleOsmose;M1V3;Bassin3000;M25J;Appoint Condenseur
+X6;STEG;*;*;*;*;S200;STEG

@@ -1,0 +1,3 @@
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;§CV1O;Chaudiere 1+2+C;Vapeur;CVB;Utilitaire Vap;3;M2C0;*;*;Chaudiere 1+2+C;*;*;F(CV1O);Usine;*;*;Chaufferie;*;*;F~(~CV1O~)~;F~(~Chaudiere 1+2+C~)~;;;0;Chaudiere 1+2+Cogeneration;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;§CV1O9;chaudiere n1;Vapeur;CVB;Utilitaire Vap;7;M2C0;*;*;Chaudiere 1+2+C;*;*;Reel;Machine;*;*;Salle chaudiere;!~*;!~*;;;;;2;chaudiere n1;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;§CV1OA;chaudiere n2;Vapeur;CVB;Utilitaire Vap;7;M2C0;*;*;Chaudiere 1+2+C;*;*;Reel;Machine;*;*;Salle chaudiere;!~*;!~*;;;;;2;chaudiere n2;*

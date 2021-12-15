@@ -1,0 +1,260 @@
+Nom;unite;Parent;Parent Name;level;type;description;Access
+*;*;;;;;;*
+V100;VMZ;*;*;0;Company;VMZ;512
+D200;Dick;V100;VMZ;1;Site;Dick;2
+D200;Dickgfrdg;V100;VMZ;1;Site;Dick;2
+G200;GIPA;V100;VMZ;1;Site;GIPA;1
+S200;STEG;V100;VMZ;1;Site;STEG;1
+V110;PAF;V100;VMZ;2;Site;PAF;1
+V110;PAF14.;V100;VMZ;2;Site;PAF;1
+C210;Prod Coproduit;C200;CoProduit;2;Type de Site;Production Coproduit;4
+M152A;CoProduit TR2;C210;Prod Coproduit;3;Usine;CoProduit TR2;4
+M152;COP-eclairage;M152A;CoProduit TR2;4;Process;eclairage coproduit;4
+M152B;CoProduit TR4;C210;Prod Coproduit;3;Usine;CoProduit TR4;4
+C211;ATL-Coproduit;M152B;CoProduit TR4;4;Process;Atelier Coproduit;4
+C212;COP-collecte;M152B;CoProduit TR4;4;Process;Coproduit collecte;4
+C213;TP-Coproduit;M152B;CoProduit TR4;4;Process;TP-Coproduit;4
+C214;COP-Process;M152B;CoProduit TR4;4;Process;Coproduit Process;4
+M152E;COP-Osmose-ADM;C210;Prod Coproduit;3;Usine;Osmose ADM coproduit;4
+C220;COP-Facility;C200;CoProduit;2;Type de Site;Facility Coproduit;4
+M152D;COP-Lavage;C220;CoProduit;3;Usine;Lavage coproduit;4
+M200;ElMazeraa;V100;VMZ;1;Site;ElMazeraa;9
+Z100;Production;M200;ElMazeraa;2;Type de Site;Production;8
+M210;Abattoir;Z100;Production;3;Usine;Abattoir;16
+M211;Ramassage;M210;Abattoir;4;Process;Ramassage;16
+M212;Accrochage;M210;Abattoir;4;Process;Accrochage;16
+M21I;Hangar-A;M212;Accrochage;5;Atelier;hangar d'attente;16
+M213;Abattage;M210;Abattoir;4;Process;Abattage;16
+M21F;Abattage-Eclair;M213;Abattage;5;Atelier;Eclairage Abattage;16
+M21J;chaine abattage;M213;Abattage;5;Atelier;chaine abattage;16
+M21K;ECHAUDOIRE;M213;Abattage;5;Atelier;ECHAUDOIRE;16
+M21L;LAVEUSE CAISSE;M213;Abattage;5;Atelier;LAVEUSE CAISSE;16
+M1E0;Comble-Abattage;M213;Abattage;5;Atelier;Comble-Abattage;16
+M1E1;SKID-NEGATIF;M1E0;Comble-Abattage;6;SubAtelier;SKID-NEGATIF;16
+M1E2;ARMOIR-F-EVAP ;M1E0;Comble-Abattage;6;SubAtelier;ARMOIR EVAP Ch 04-05-06-07-08-09-010-011-012 FROID;16
+M1E3;EXT-MPF 18+19-B;M1E0;Comble-Abattage;6;SubAtelier;EXT-MPF 18 BIS + 19 BIS;16
+M1E4;MPF-Ancienne  ;M1E0;Comble-Abattage;6;SubAtelier;MPF-Ancienne  ;16
+M1E5;SKID IMEF-16C;M1E0;Comble-Abattage;6;SubAtelier;SKID IMEF-16C;16
+M1E6;SDM1-COMP-SK;M1E0;Comble-Abattage;6;SubAtelier;sdm1 comp sk(imef)+sk(-16)+sk(-40);16
+M1E7;SDM1-COMP-MATAL;M1E0;Comble-Abattage;6;SubAtelier;SDM1-COMP-MATAL;16
+M1E8;SDM2-RES+PET;M1E0;Comble-Abattage;6;SubAtelier;SDM2 (RESSUAGE+PETFOOD);16
+M214;Echaudoire+Plum;M210;Abattoir;4;Process;Plumaison et Echaudoire;16
+M219;Plumage;M214;Echaudoire+Plum;5;Atelier;Plumage;16
+M218;Pompe a Vide;M219;Plumage;6;SubAtelier;Pompe a Vide;16
+M21A;Pompe a Vide 1;M219;Plumage;7;SubAtelier;Pompe a Vide 1;16
+M21B;Pompe a Vide 2;M219;Plumage;8;SubAtelier;Pompe a Vide 2;16
+M21C;Pompe a Vide P;M219;Plumage;9;SubAtelier;Pompe a Vide Poumons;16
+M215;Ressuage;M210;Abattoir;4;Process;Ressuage;16
+M21F;Station-E-Glace;M215;Ressuage;5;Atelier;Station-eau-Glacee;16
+M21G;Refroidisseur;M215;Ressuage;5;Atelier;Refroidisseur;16
+M21H;Hydro nettoyeur;M215;Ressuage;5;Atelier;Hydro nettoyeur;16
+M21G;ventilo-ressuag;M215;Ressuage;5;Atelier;ventilo ressuag 1 et 2;16
+M21H;chaine-ressuage;M215;Ressuage;5;Atelier;chaine-ressuage;16
+M21M;ventilo ress-3;M215;Ressuage;6;SubAtelier;ventilo ress 3 44 ventilos;16
+M216;Calibrage;M210;Abattoir;4;Process;Calibrage;16
+M21E;Atelier-OB;M216;Calibrage;5;Atelier;Atelier Osso Bucoo;16
+M217;Decoupe;M210;Abattoir;4;Process;Decoupe;16
+M21D;Pompe a Vide D;M217;Decoupe;5;Atelier;Pompe a Vide Decoupe;16
+M31E;Decoupe automat;M217;Decoupe;5;Atelier;;16
+M21I;Abattoir TR1;M210;Abattoir;4;Process;Abattoir TR1;16
+M21J;Abattoir TR2;M210;Abattoir;4;Process;Abattoir TR2;16
+M21K;Abattoir TR4;M210;Abattoir;4;Process;Abattoir TR4;16
+M220;Charcuterie;Z100;Production;3;Usine;Charcuterie;32
+M221;Charcuterie-Pro;M220;Charcuterie;4;Process;Process Charcuterie;32
+M22I;BAINS-CUISSON;M221;Charcuterie-Pro;5;Atelier;;32
+M229;Charcuterie TR2;M220;Charcuterie;4;Process;Charcuterie TR2;32
+M221;charcuterie 1 ;M229;Charcuterie TR2;5;Atelier;charcuterie 1 ;32
+M223;conditionnement  ;M229;Charcuterie TR2;5;Atelier;conditionnement  ;32
+M224;Cutter 500 ;M229;Charcuterie TR2;5;Atelier;Cutter 500 ;32
+M227;Machine a glace ;M229;Charcuterie TR2;5;Atelier;Machine a glace ;32
+M228;Separateur R;M229;Charcuterie TR2;5;Atelier;Separateur Recoscrenn;32
+M22A;Charcuterie TR3;M220;Charcuterie;4;Process;Charcuterie TR3;32
+M222;Charcuterie 2  ;M220;Charcuterie;5;Atelier;Charcuterie 2  ;32
+M225;Hachoir CB 160 ;M22A;Charcuterie TR3;5;Atelier;Hachoir CB 160 ;32
+M226;Hachwar GEA  ;M22A;Charcuterie TR3;5;Atelier;Hachwar GEA  ;32
+M22B;cutteru N1;M22A;Charcuterie TR3;5;Atelier;cutteru N1;32
+M22C;cutteur N2;M22A;Charcuterie TR3;5;Atelier;cutteur N2;32
+M22E;A-Condenseur;M220;Charcuterie;4;Process;Appoint Condenseur;32
+M230;Conserve;Z100;Production;3;Usine;Conserve;32
+M231;Conserve-Pro;M230;Conserve;4;Process;Process Conserve;32
+M261;Autoclave;M230;Conserve;4;Process;Autoclave;32
+M233;ATL-conserve;M230;Conserve;4;Process;Atelier conserve;32
+M240;PetFood;Z100;Production;3;Usine;PetFood;32
+M241;Autoclave PetFd;M240;PetFood;4;Process;Autoclave PetFood;32
+M242;PetFood TR4;M240;PetFood;4;Process;PetFood TR4;32
+M24A;cutteur PetFood;M242;PetFood TR4;5;Atelier;cutteur PetFood;32
+M24B;PetFood Calcule;M242;PetFood TR4;5;Atelier;PetFood Calcule;32
+M24C;Ventio evap;M242;PetFood TR4;5;Atelier;Ventio evap;32
+M243;Atelier PETFOOD;M240;PetFood;4;Process;Atelier PETFOOD;32
+M244;EB-PetFood;M240;PetFood;4;Process;Eau Brute_PetFood;32
+M245;vestier-PetFood;M240;PetFood;4;Process;vestier-PetFood;32
+M246;Station Primere;M240;PetFood;4;Process;Station Primere;32
+M247;Bain Marie C;M240;PetFood;4;Process;Bain marie de cuissant;32
+M250;Surgele;Z100;Production;3;Usine;Surgele;32
+M25G;Surgele TR6;M250;Surgele;4;Process;Surgele TR6;32
+M25H;ARM-Surgele TR6;M250;Surgele;4;Process;Armoires Surgele TR6;32
+M251;ARM DISTRIB L1;M25H;ARM-Surgele TR6;5;Atelier;ARMOIRE DISTRIBUTION LIGNE 1;32
+M252;ARM DISTRIB L2;M25H;ARM-Surgele TR6;5;Atelier;ARMOIRE DISTRIBUTION LIGNE 2;32
+M253;ARM GRP FROID+;M25H;ARM-Surgele TR6;5;Atelier;ARMOIRE GROUPE FROID POSITIF;32
+M254;ARMOIRE POSITIF;M25H;ARM-Surgele TR6;5;Atelier;;32
+M255;ARM ECLAIR USINE;M25H;ARM-Surgele TR6;5;Atelier;ARMOIRE ECLAIREGE USINE ;32
+M257;ARMOIRE AMONIAC;M25H;ARM-Surgele TR6;5;Atelier;;32
+M258;ARMOIRE CHAUF;M25H;ARM-Surgele TR6;5;Atelier;ARMOIRE CHAUFFERIE;32
+M259;ARMOIRE PORTE;M25H;ARM-Surgele TR6;5;Atelier;;32
+M25M;Surgelateurs;M250;Surgele;4;Process;Surgelateurs;32
+M25C;vestiere;M250;Surgele;4;Process;vestiere;32
+M25D;baratte;M250;Surgele;4;Process;baratte;32
+M25E;chargeB chariot;M250;Surgele;4;Process;charge batterie chariot;32
+M25N;Osmose Surgele;M250;Surgele;4;Process;Osmose Surgele;32
+M25F;Osmose Surgele2;M25N;Osmose Surgele;5;Atelier;Osmose entre surgele 2;32
+M25I;Osmose Surgele1;M25N;Osmose Surgele;5;Atelier;Osmose entre surgele 1;32
+M25J;A-Condenseur;M25N;Osmose Surgele;5;Atelier;Appoint Condenseur;32
+M1T2;Condenseur S;M25N;Osmose Surgele;5;Atelier;Condenseur Surgele;32
+M25L;Net-Surgele;M250;Surgele;4;Process;Nettoyage Surgele;32
+M25O;Net-Surgele 2;M25L;Net-Surgele;5;Atelier;Nettoyage Surgele 2;32
+M25P;Net-Surgele 1;M25L;Net-Surgele;5;Atelier;Nettoyage Surgele 1;32
+M25F;DIVER SURG S-;M250;Surgele;4;Process;DIVER SURGELE SAUF SKID NEGATIF;32
+M260;UCPC;Z100;Production;3;Usine;UCPC;32
+M261;ProcessUCPC;M260;UCPC;4;Process;ProcessUCPC;32
+M264;vestier UCPC;M260;UCPC;4;Process;vestier UCPC;32
+M263;UCPC Comble;M260;UCPC;4;Process;UCPC Comble;32
+M262;Froid UCPC;M260;UCPC;4;Process;Froid UCPC;32
+Z200;Utilitaire;M200;ElMazeraa;2;Type de Site;Utilitaire;1
+MA00;Froid;Z200;Utilitaire;3;Usine;Froid;1
+MA08;EXT MPF 18+19 B;MA00;Froid;4;Process;EXT MPF 18 BIS + 19 BIS;1
+MA06;Salles Machines;MA00;Froid;4;Process;Salles Machines;1
+M110;SMF-ElMazeraa;MA00;Froid;5;Atelier;SalleMachine Froid ElMazeraa;1
+M2H0;Autoclave, Ch+;M110;SMF-ElMazeraa;6;SubAtelier;Autoclave, Ch+;1
+M111;SKID -40;M110;SMF-ElMazeraa;6;SubAtelier;SKID -40;1
+M2I0;Surgelateurs GEA;M111;SKID -40;7;Machine;Surgelateurs Alco GEA Ch -;1
+M2D0;Tunnels T-CH;M111;SKID -40;7;Machine;Tunnels :T1,T2,T3,Ch03;1
+M112;SKID -16;M110;SMF-ElMazeraa;6;SubAtelier;SKID -16;1
+M2E0;Ch+Bains saumur;M112;SKID -16;7;Machine;Ch 6 -28 +32 Bains saumure;1
+M113;Extension IMEF;M110;SMF-ElMazeraa;6;SubAtelier;Extension IMEF;1
+M115;Extension IMEF1;M113;Extension IMEF;7;Machine;Extension IMEF1;1
+M116;Extension IMEF2;M113;Extension IMEF;7;Machine;Extension IMEF2;1
+M11C;Matal;M110;SMF-ElMazeraa;6;SubAtelier;Matal;1
+M11K;compresseur1;M11C;Matal;7;Machine;compresseur1;1
+M11L;compresseur2;M11C;Matal;7;Machine;compresseur2;1
+M11D;York;M110;SMF-ElMazeraa;6;SubAtelier;York;1
+M11D1;York TR1;M11D;York;;;York TR1;1
+M11N;compresseur1;M11D1;York TR1;7;Machine;compresseur1;1
+M11O;compresseur2;M11D1;York TR1;7;Machine;compresseur2;1
+M11P;compresseur3;M11D1;York TR1;7;Machine;compresseur3;1
+M11Q;compresseur4;M11D1;York TR1;7;Machine;compresseur4;1
+M11R;compresseur5;M11D1;York TR1;7;Machine;compresseur5;1
+M11S;compresseur6;M11D1;York TR1;7;Machine;compresseur6;1
+M120;SMF Surgele;MA00;Froid;5;Atelier;SalleMachine Froid Surgele;1
+M2J0;Ch-PF,Ch Prepar;M120;SMF Surgele;6;SubAtelier;Ch Produit Fini , Ch Preparation;1
+M122;Groupe EG;M120;SMF Surgele;6;SubAtelier;Groupe Eau Glycolee;1
+M123;GRP (-) compres;M120;SMF Surgele;6;SubAtelier;groupe negatif compresseur;1
+M124;GRP (+) compres;M120;SMF Surgele;6;SubAtelier;groupe positif compresseur;1
+M125;GRP(+)2 compres;M120;SMF Surgele;6;SubAtelier;groupe positif 2 compresseur;1
+M130;SMF Ressuage3;MA00;Froid;5;Atelier;SalleMachine Froid Ressuage3;1
+M2L0;Ch+PF,Ch+MP;M130;SMF Ressuage3;6;SubAtelier;Ch + PF  , Ch + MP;1
+M131;Ressuage 3;M130;SMF Ressuage3;6;SubAtelier;Ressuage 3;1
+M133;Skid SM Ress3;M130;SMF Ressuage3;6;SubAtelier;Skid Salle Machine Ressuage 3;1
+M133;compresseur1;M130;SMF Ressuage3;6;SubAtelier;compresseur1;1
+M134;compresseur2;M130;SMF Ressuage3;6;SubAtelier;compresseur2;1
+M1T0;Condenseur;MA00;Froid;4;Process;Condenseur;1
+MA01;IMEF;MA00;Froid;4;Process;IMEF;1
+MA02;Froid TR1;MA00;Froid;4;Process;Froid TR1;1
+MA02A;EXT IMEF1 TR1;MA02;Froid TR1;5;Atelier;Extension IMEF1 TR1;1
+MA02B;C skid+evap/tr1;MA02;Froid TR1;5;Atelier;compteur skid + evap sur tr1;1
+MA02C;compresseur1_1;MA02;Froid TR1;5;Atelier;compresseur1_1;1
+MA02D;compresseur2_1;MA02;Froid TR1;5;Atelier;compresseur2_1;1
+MA02E;SDM1 comp sk;MA02;Froid TR1;5;Atelier;sdm1 comp sk(imef)+sk(-16)+sk(-40);1
+MA03;Froid TR2;MA00;Froid;4;Process;Froid TR2;1
+MA03A;MPF  ancienne  ;MA03;Froid TR2;5;Atelier;MPF  ancienne  ;1
+MA04;Froid TR3;MA00;Froid;4;Process;Froid TR3;1
+MA04A;ARMOIR EVAP Ch FROID;MA04;Froid TR3;5;Atelier;ARMOIR EVAP Ch 04-05-06-07-08-09-010-011-012 FROID;1
+MA04B;EXT IMEF2 TR3;MA04;Froid TR3;5;Atelier;Extension IMEF2 TR3;1
+MA04C;compresseur3_3;MA04;Froid TR3;5;Atelier;compresseur3_3;1
+MA04D;compresseur4_3;MA04;Froid TR3;5;Atelier;compresseur4_3;1
+MA04E;Matal TR3;MA04;Froid TR3;5;Atelier;Matal TR3;1
+MA04F;compresseur1_3;MA04;Froid TR3;5;Atelier;compresseur1_3;1
+MA04G;compresseur2_3;MA04;Froid TR3;5;Atelier;compresseur2_3;1
+MA04H;SMF ElMazraaTR3;MA04;Froid TR3;5;Atelier;Salle Machine Froid ElMazeraa TR3;1
+MA04I;SKID IMEF -16°C;MA04;Froid TR3;5;Atelier;SKID IMEF -16°C;1
+MA04J;SDM1 COMP MATAL;MA04;Froid TR3;5;Atelier;SDM1 COMP MATAL;1
+MA05;Froid TR5;MA00;Froid;4;Process;Froid TR5;1
+MA05A;SMF Ress3 TR5;MA05;Froid TR5;5;Atelier;SalleMachine Froid Ressuage3 TR5;1
+MA05B;compresseur1_5;MA05;Froid TR5;5;Atelier;compresseur1_5;1
+MA05C;compresseur2_5;MA05;Froid TR5;5;Atelier;compresseur2_5;1
+MA05D;SDM2(RES+PETF);MA05;Froid TR5;5;Atelier;sdm2 (RESSUAGE+PETFOOD);1
+MA09;Froid TR6;MA00;Froid;4;Process;Froid TR6;1
+MA09E;SMF Surgele TR6;MA09;Froid TR6;5;Atelier;SalleMachine Froid Surgele TR6;1
+MA09F;GRP (-) compres;MA09;Froid TR6;5;Atelier;groupe negatif compresseur;1
+MA09G;GRP (+) compres;MA09;Froid TR6;5;Atelier;groupe positif compresseur;1
+MA09H;GRP(+)2 compres;MA09;Froid TR6;5;Atelier;groupe positif 2 compresseur;1
+MA9I;SKID NEGATIF;MA09;Froid TR6;5;Atelier;SKID NEGATIF;1
+M11M;skid;MA09;Froid TR6;7;Machine;skid;1
+M2A0;ElMazraa Eclair;Z200;Utilitaire;3;Usine;;1
+MB00;Eau;Z200;Utilitaire;3;Usine;Eau;1
+M1M0;D80-1000;MB00;Eau;4;Process;D80-1000;1
+MB07;Eau TR1;MB00;Eau;4;Process;Eau TR1;1
+MB01;Forage;MB00;Eau;4;Process;Forage;1
+M1V0;B 2000+3000;MB01;Forage;5;Atelier;Bassin 2000 + 3000;1
+M1V1;Bassin1000;MB01;Forage;5;Atelier;Bassin1000;1
+M1V2;Bassin2000;MB01;Forage;5;Atelier;Bassin2000;1
+M1V3;Bassin3000;MB01;Forage;5;Atelier;Bassin3000;1
+M1V4;Bassin500;MB01;Forage;5;Atelier;Bassin500;1
+MB08;Eau TR2;MB00;Eau;4;Process;Eau TR2;1
+MB02;SP TR2  x 6;MB08;Eau TR2;5;Atelier;Station Primaire TR2  x 6;1
+MB03;StationOsmose1;MB08;Eau TR2;5;Atelier;StationOsmose1;1
+MB09;Eau TR4;MB00;Eau;4;Process;Eau TR4;1
+MB04;SP Nouveau TR4;MB09;Eau TR4;5;Atelier;SP Nouveau TR4;1
+MB05;StationOsmose2;MB09;Eau TR4;5;Atelier;StationOsmose2;1
+MB06;Station Wedeco;MB09;Eau TR4;5;Atelier;Station Wedeco;1
+MC00;Chaufferie;Z200;Utilitaire;3;Usine;Chaufferie;1
+M140;ChaufferieSurgel;MC00;Chaufferie;4;Process;;1
+M141;compressuer air1;M140;ChaufferieSurgel;5;Atelier;compressuer a air1;1
+M142;compressuer air2;M140;ChaufferieSurgel;5;Atelier;compressuer a air2;1
+M143;Chaudiere1;M140;ChaufferieSurgel;5;Atelier;Chaudiere1;1
+M144;bache eau+four;M140;ChaufferieSurgel;5;Atelier;bache a eau et four;1
+M145;Equipement4;M140;ChaufferieSurgel;5;Atelier;Equipement4;1
+M146;Equipement5;M140;ChaufferieSurgel;5;Atelier;Equipement5;1
+M147;sondage bas;M140;ChaufferieSurgel;6;Atelier;sondage bas;1
+M150;ElMazeraa Chauf;MC00;Chaufferie;4;Process;ChaufferieElMazeraa;1
+M153;GA 30;M150;ElMazeraa Chauf;5;Atelier;GA 30;1
+M154;GA 50;M150;ElMazeraa Chauf;5;Atelier;GA 50;1
+M155;Compress-Kaeser;M150;ElMazeraa Chauf;5;Atelier;CompresseurKaeser;1
+M156;Lchariot+GRP-EL;M150;ElMazeraa Chauf;5;Atelier;local chariot +groupe electrogene;1
+M157;Equipement1;M150;ElMazeraa Chauf;5;Atelier;Equipement1;1
+M158;Equipement2;M150;ElMazeraa Chauf;5;Atelier;Equipement2;1
+M159;Equipement3;M150;ElMazeraa Chauf;5;Atelier;Equipement3;1
+M2B0;CHAUDIERES 1+2;MC00;Chaufferie;4;Process;CHAUDIERES 1+2;1
+M151;Chaudiere;M2B0;CHAUDIERES 1+2;5;Atelier;Chaudiere;1
+M15A;Chaudiere 5T;M151;Chaudiere;6;SubAtelier;Chaudiere 5T;1
+M15B;Chaudiere 8T;M151;Chaudiere;6;SubAtelier;Chaudiere 8T;1
+M2C0;Chaudiere 1+2+C;MC00;Chaufferie;4;Process;Chaudiere 1+2+Cogeneration;1
+M1R0;CHAUFFERIE+AC;MC00;Chaufferie;4;Process;CHAUFFERIE+ air comprime;1
+MELEC;Post Transfo;Z200;Utilitaire;3;Usine;Post Transfo;1
+M160;PosteTR1;MELEC;Post Transfo;4;Process;PosteTR1;1
+M161;General 1/1;M160;PosteTR1;5;Atelier;General 1/1;1
+M162;General 1/2;M160;PosteTR1;5;Atelier;General 1/2;1
+M170;PosteTR2;MELEC;Post Transfo;4;Process;PosteTR2;1
+M180;PosteTR3;MELEC;Post Transfo;4;Process;PosteTR3;1
+M190;PosteTR4;MELEC;Post Transfo;4;Process;PosteTR4;1
+M1A0;PosteTR5;MELEC;Post Transfo;4;Process;PosteTR5;1
+M1B0;PosteTR6;MELEC;Post Transfo;4;Process;PosteTR6;1
+MX00;Poste TRX;MELEC;Post Transfo;4;Process;Poste TRX;1
+M1C0;SalleOsmose;Z200;Utilitaire;3;Usine;SalleOsmose;1
+M1C1;StationOsmose1;M1C0;SalleOsmose;4;Process;StationOsmose1;1
+M1C2;StationOsmose2;M1C0;SalleOsmose;4;Process;StationOsmose2;1
+M1C3;StationOsmose3;M1C0;SalleOsmose;4;Process;StationOsmose3;1
+M1C5;Station trait;M1C0;SalleOsmose;4;Process;Station traitement;1
+M1C7;SP TR2x6;M1C0;SalleOsmose;4;Process;Station Primaire TR2  x 6;1
+M1C1;Zonne Haute;Z200;Utilitaire;3;Usine;Zonne Haute;1
+M1J0;Jenene;M1C1;Zonne Haute;4;Process;Jenene;1
+M1K0;Sondage Haut;M1C1;Zonne Haute;4;Process;Sondage Haut;1
+M1L0;Sondage Bas;M1C1;Zonne Haute;4;Process;Sondage Bas;1
+M1N0;Rayhane;M1C1;Zonne Haute;4;Process;Rayhane;1
+M1O0;Nouveau Forage;M1C1;Zonne Haute;4;Process;Nouveau Forage;1
+M1P0;Sondage D80 ;M1C1;Zonne Haute;4;Process;Sondage D80 ;1
+M1Q0;Elysse;M1C1;Zonne Haute;4;Process;Elysse;1
+Z300;Facility;M200;ElMazeraa;2;Type de Site;Facility;1
+M270;Administration;Z300;Facility;3;Usine;Administration;1
+M280;Magasin;Z300;Facility;3;Usine;Magasin;1
+M290;Refectoire;Z300;Facility;3;Usine;Refectoire;1
+

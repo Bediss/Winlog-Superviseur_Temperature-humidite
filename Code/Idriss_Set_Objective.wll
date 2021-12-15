@@ -1,0 +1,482 @@
+Global String ObjectCompteur;
+Global String savebool=False;
+Global int NBRList;
+
+function void Objective_View()
+String NomCompteur;
+String Energy;
+bool Ok;
+int i=1;
+Objective_Set_Get="Set";
+String CodeCompteur;
+
+String EVMLigne;
+savebool=True;
+    SetNumGateValue("PageInsert",0,1);
+
+if(Fetch_Email(Admin_View_CurrentLine,1,";")=="") then  MessageBox("selectionner un compteur avant", "info"); return; end
+if(Fetch_Email(Admin_View_CurrentLine,3,";")=="*") then  MessageBox("Il faut fixé l'energie du compteur avant !!", "info"); return; end
+Energy=Fetch_Email(Admin_View_CurrentLine,3,";");
+CompteurC_EV=Fetch_Email(Admin_View_CurrentLine,1,";");
+NomCompteur=Fetch_Email(Admin_View_CurrentLine,2,";");
+
+ObjectCompteur=Objective_Gates( CompteurC_EV);
+
+
+    while (i<20)
+        i=i+1;
+        if GetStrGateValue("Energy_Name",i)==Energy then
+            NBRList=GetNumGateValue("NBR_List_Energy",i);
+
+        end
+    end
+
+    for i=0 to NBRList do
+        Ok=NumGateExists(ObjectCompteur,i);
+
+
+
+    if Ok==True then
+
+        SetStrGateValue("BU_Energy",0,Energy);
+       SetStrGateValue("SetObjective_CCode",0,NomCompteur);
+//MessageBox(Energy,GetStrGateValue("SetObjective_CCode",0));
+//MessageBox(Energy,GetStrGateValue("SetObjective_CCode",0));
+
+        EVMLigne = GET_EVM_Compteur(Energy);
+        EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\EVM_LIST_Compteur.txt";
+        Objective_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+        Objective_Display(1);
+        ShowPoPUPs("POPUP_Set_Objective");
+     else
+        MessageBox("Le compteur Ne conctient pas des objective ","Information");
+    end
+    end
+
+end
+///////////////////////////////////////////////
+function Void Objective_StringToFile( String Ligne , String Search ,  String FullPathFileName)
+    String EVM = Ligne;
+    String Part;
+
+    Int Pos;
+    Int i =0;
+    Int Len = 0;
+
+      Int FileHandle=FileOpen(FullPathFileName,"wt");
+
+    Len = StrLen(EVM);
+    Pos = StrPos(EVM,Search);
+    EVM = StrDelete(EVM,1,Pos); // Energy header
+    Pos = StrPos(EVM,Search);
+    While( Pos !=  0 && Len != 0)
+      Part = StrSubString(EVM,1,Pos-1);
+      if Part!="" then
+
+
+
+         FileWriteLn(FileHandle,i+";"+Part+";"+GetNumGateValue(ObjectCompteur,i));
+
+        i=i+1;
+       end
+      EVM = StrDelete(EVM,1,Pos);
+      Pos = StrPos(EVM,Search);
+      Len = StrLen(EVM);
+
+
+    End
+
+    If ( Pos == 0 && Len != 0) Then
+        Part = StrSubString(EVM,1,Len);
+
+        IF (StrSubString(Part,1,2) != "  " ) Then
+
+          FileWriteLn(FileHandle,i+";"+Part+";"+GetNumGateValue(ObjectCompteur,i));
+        End
+    End
+
+    FileClose(FileHandle);
+    EVM_Max_Items =  i+1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Objective_Display( Int Page)
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String Part1;
+    String Part2;
+    String Part3;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+        SetStrGateValue("EmailView6",1,"");
+        SetStrGateValue("EmailView7",1,"");
+        SetStrGateValue("EmailView8",1,"");
+        SetStrGateValue("EmailView9",1,"");
+        SetStrGateValue("EmailView10",1,"");
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Part1=Fetch_Formule(TextRow,1,";");
+        Part2=Fetch_Formule(TextRow,2,";");
+        Part3=GetNumGateValue(ObjectCompteur,StrToInt(Part1));
+
+                     j = j+1;
+                EVM = "EmailView"+j;
+
+                    // For Display
+                    if (Part1!="") then
+                SetStrGateValue(EVM,0,Part1+";"+Part2);
+                SetStrGateValue(EVM,1,Part3);
+                end
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+
+/////////////////////////////************/////////////////////////////
+function Void EVM_Compteur_StringToFile( String Ligne , String Search ,  String FullPathFileName)
+    String EVM = Ligne;
+    String Part;
+
+    Int Pos;
+    Int i =0;
+    Int Len = 0;
+      Int FileHandle=FileOpen(FullPathFileName,"wt");
+
+    Len = StrLen(EVM);
+    Pos = StrPos(EVM,Search);
+    EVM = StrDelete(EVM,1,Pos); // Energy header
+    Pos = StrPos(EVM,Search);
+    While( Pos !=  0 && Len != 0)
+      Part = StrSubString(EVM,1,Pos-1);
+
+
+         FileWriteLn(FileHandle,i+";"+Part);
+
+
+      EVM = StrDelete(EVM,1,Pos);
+      Pos = StrPos(EVM,Search);
+      Len = StrLen(EVM);
+      i=i+1;
+    End
+
+    If ( Pos == 0 && Len != 0) Then
+        Part = StrSubString(EVM,1,Len);
+        IF (StrSubString(Part,1,2) != "  " ) Then
+          i=i+1;
+
+          FileWriteLn(FileHandle,i+";"+Part);
+
+        End
+    End
+
+    FileClose(FileHandle);
+    EVM_Max_Items =  i+1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Void Save_Object_StringToFile()
+    String Ligne;
+    String FullPathFileName=EVM_LIST_FILE;
+    String WFullPathFileName=ENV_PATH+"\Files\AllCompteur\WEVM_LIST_Compteur.txt";
+    String BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\BACK_EVM_LIST_Compteur.txt";
+    String Part1;
+    String Part2;
+    int Page=0;
+    int MaxRow=10;
+    int Sp=0;
+    int Ep=0;
+    int Object;
+    int FileHandle;
+    Int WFileHandle=FileOpen(WFullPathFileName,"wt");
+    int i=0;
+    int j=0;
+    String EVM;
+    if ( FileExist(FullPathFileName) == false ) then
+        FileHandle=FileOpen(FullPathFileName,"wt");
+        FileWriteLn(FileHandle,"Energy\\ID;0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23;24;25;26;27;28;29;30;31;32;33;34;35;36;37;38;39;40;41;42;43;44;45;46;47;48");
+    end
+        FileHandle=FileOpen(FullPathFileName,"rt");
+
+    while(FileEof(FileHandle)==0)
+
+        Ligne=FileReadLn(FileHandle);
+         if Ligne!="" then
+            j=j+1;
+        Part1=Fetch_Formule(Ligne,1,";");
+        Part2=Fetch_Formule(Ligne,2,";");
+
+
+            Page=GetNumGateValue("PageInsert",0);
+            Sp=(Page-1)*MaxRow+1;
+            Ep=Sp+MaxRow-1;
+            if Sp<1 then Sp=1; end
+            if (j>=Sp && j<=Ep) then
+              i=i+1;
+
+             EVM = "EmailView"+i;
+
+                Object=StrToInt(GetStrGateValue(EVM,1));
+                Ligne=Part1+";"+Part2+";"+Object;
+                Part1=Fetch_Formule(Ligne,1,";");
+
+        SetNumGateValue(ObjectCompteur,StrToInt(Part1),Object);
+
+            end
+
+          FileWriteLn(WFileHandle,Ligne);
+
+        end
+      end
+    savebool=True;
+     FileClose(WFileHandle);
+     FileClose(FileHandle);
+
+         if ( FileExist(BackFullPathFileName) == true ) then
+        FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+
+    FileDelete(WFullPathFileName);
+end
+///////////////////////////////////////////
+
+Function Void Commit_Objective_Name()
+String Path=ENV_PATH+"\Data\Objective";
+String FullPathFileName=EVM_LIST_FILE;
+int FileHandle=FileOpen(FullPathFileName,"rt");
+int WFileHandle;
+String Energy;
+String Part1;
+String Part3;
+String Ligne;
+Energy=GetStrGateValue("BU_Energy",0);
+
+    DirectoryCreate(Path+"\"+Energy);
+    WFileHandle=FileOpen(Path+"\"+Energy+"\"+CompteurC_EV+"_Ob.txt","wt");
+
+    While(FileEof(FileHandle)==0)
+        Ligne=FileReadLn(FileHandle);
+        if Ligne!="" then
+        FileWriteLn(WFileHandle,Ligne);
+        Part1=Fetch_Formule(Ligne,1,";");
+        Part3=Fetch_Formule(Ligne,3,";");
+
+        SetNumGateValue(ObjectCompteur,StrToInt(Part1),StrToInt(Part3));
+        end
+    End
+    TPageCloseByName("POPUP_Set_Objective");
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+        SetStrGateValue("EmailView6",1,"");
+        SetStrGateValue("EmailView7",1,"");
+        SetStrGateValue("EmailView8",1,"");
+        SetStrGateValue("EmailView9",1,"");
+        SetStrGateValue("EmailView10",1,"");
+  FileClose(FileHandle);
+   FileClose(WFileHandle);
+Retour_Get_Objective();
+
+End
+
+///////////////////////////////////////////////////////////////////////////////
+function String GET_EVM_Compteur( String Energy)
+
+      Bool Exist = False;
+      Bool EnergyFound = False;
+      String TextRow;
+      String ListLabel;
+
+      Int P;
+
+      String LabelFullPathFileName =ENV_PATH+"\Files\AllCompteur\EnergyMeasureView.csv";
+      Int LabelFileHandle=FileOpen(LabelFullPathFileName,"rt");
+
+
+      if (LabelFileHandle==0) then  MessageBox("File not Found","Error");   return; end
+
+      While( Exist == False )
+       TextRow=FileReadLn(LabelFileHandle);
+       P = StrPos(TextRow,";");
+        if ( Energy == StrSubString(TextRow,1,P-1) ) then
+         ListLabel = TextRow;
+         EnergyFound = True;
+        End
+
+        If (FileEof(LabelFileHandle)!=0 || EnergyFound == True) Then Exist = True; End
+      End
+
+           FileClose(LabelFileHandle);
+
+           If ( EnergyFound == true ) Then
+           return ListLabel;
+           Else
+           return "*";
+           End
+end
+
+/////////////////////////////************/////////////////////////////
+function String Objective_Gates( String CompteurCode)
+
+    int i;
+    Int Energy_Number;
+    Int CompteurMax = GetNumGateValue("MaxCompteur",0);
+    String Gate;
+
+//MessageBox(CompteurMax,"CompteurMax");
+    for i = 1 to CompteurMax do
+
+        If (GetStrGateValue("Compteur_Code",i) == CompteurCode ) Then
+            Gate = "O" + Listen_CompteurTrueNumber( CompteurCode , GetStrGateValue("Compteur_Energy",i) );
+            Return Gate;
+        End
+
+    end
+
+end
+//////////////////////*************************///////////////////////////////////////
+function void Objective_Add()
+
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageInsert",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+     if Objective_Set_Get=="Set" then
+        if(savebool==False)then
+        Continue=QuestionBox("Voulez Vous vraiment changez la page sans enregistrer","Attention");
+        if Continue==False then
+             return; end
+    end
+    end
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+    // savebool=False;
+     SetNumGateValue("PageInsert",0,CurrentPage);
+     Objective_Display(CurrentPage);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Objective_Sub()
+int CurrentPage= GetNumGateValue("PageInsert",0);
+bool Continue;
+ if Objective_Set_Get=="Set" then
+        if(savebool==False)then
+        Continue=QuestionBox("Voulez Vous vraiment changez la page sans enregistrer","Attention");
+        if Continue==False then
+             return; end
+    end
+    end
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+   //  savebool=False;
+     SetNumGateValue("PageInsert",0,CurrentPage);
+    Objective_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Objective_First()
+bool Continue;
+  if Objective_Set_Get=="Set" then
+        if(savebool==False)then
+        Continue=QuestionBox("Voulez Vous vraiment changez la page sans enregistrer","Attention");
+        if Continue==False then
+             return; end
+    end
+    end
+  //  savebool=False;
+     SetNumGateValue("PageInsert",0,1);
+    Objective_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Objective_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+    if Objective_Set_Get=="Set" then
+        if(savebool==False)then
+            Continue=QuestionBox("Voulez Vous vraiment changez la page sans enregistrer","Attention");
+        if Continue==False then
+             return; end
+     end
+     end
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+       // savebool=False;
+     SetNumGateValue("PageInsert",0,MaxPage);
+     Objective_Display(MaxPage);
+end
+

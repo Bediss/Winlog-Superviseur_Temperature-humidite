@@ -1,0 +1,7 @@
+D2;Production
+D3;CH_F_Commerciale
+D4;Laboratoire
+D5;Salle_De_Fermentation
+D6;Matiere_Premiere_P1
+D7;CH_CHAUD_LABO
+D8;Local Habillement

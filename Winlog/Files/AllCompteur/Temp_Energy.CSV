@@ -1,0 +1,3 @@
+Code_Energy;Name_Energy;Parent_Energy;OUTP_Prefix_Energy;INP_Prefix_Energy;NBR_PREFIX;NB_C_INP;NBR_List_Energy;Last_Code_Energy;Acces_Energy;Energy_LIVEInc_List;Display TAG
+1;Temperature;*;CTC;TC;3;2;41;0;*;17;T°c
+2;Humidite;*;CHC;HC;3;2;41;0;*;17;H%

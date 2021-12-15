@@ -1,0 +1,565 @@
+Global String Path_Master_PBI=ENV_PATH+"\Data\1 HISTORY\";
+function void Bouton_PBI_MASTER()
+//InitialiseAdminTemplate();
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+
+Confirme_Save();
+PageOpen="MasterPBI";
+        LenPrefix=4;
+        SetNumGateValue("Show_Temp_Pointer",0,1073741888);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+          SetNumGateValue("Template_Control",0,0);
+  Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+        Admin_View_Temp_File=ENV_PATH+"\DeskTopBI\Temp_PBI_Master.CSV";
+        Admin_View_Original_File=ENV_PATH+"\DeskTopBI\PBI_Master.CSV";
+           FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+        //MessageBox(Admin_View_Original_File,"");
+        Admin_View_Recycle_Code=ENV_PATH+"\DeskTopBI\Recycler_PBI_Master_Code.txt";
+        Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+        //Highest_Code2_InitialisationHighest_Code2_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+
+        ShowPage("Display_Master_PBI");
+        Admin_View_Display(1 , "MasterPBI");
+        FlagUses=False;
+
+
+end
+
+function string Fetch_MasterPBI(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+/*****************************************************************************/
+function void NameMPBIBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("MPBI_Name");
+End
+
+function void FillNameMPBI()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+    // MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      //SetStrGateValue("AlarmeEventModifer",0,"");
+
+    end
+end
+
+
+function void CreateurMasterBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",4));
+    ShowPoPUPs("MPBI_Creator");
+End
+
+function void FillNameCreateurMaster()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+    // MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",4,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,7);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      //SetStrGateValue("AlarmeEventModifer",0,"");
+
+    end
+end
+
+
+function void DescriptionMPBIBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",5));
+    ShowPoPUPs("MPBI_Description");
+End
+
+
+function void FillDescriptionMPBI()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+   // if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",5,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,8);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+   // end
+end
+
+function String FR_MasterPBI(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+
+end
+/////////////////////////////////////////////////////////////////////////////////////
+function void SetDisplay_MasterPBI( String Line , String GateName)
+String VFullPathFileName=ENV_PATH+"\Files\AllCompteur\Views.CSV";
+int VFileHandle=FileOpen(VFullPathFileName,"rt");
+STRING View=Fetch_MasterPBI(Line,3, ";");
+STRING FView;
+String TextRow;
+
+
+                    TextRow = FileReadLn(VFileHandle);// Read file
+                While( FileEof(VFileHandle) == 0 )
+                    TextRow = FileReadLn(VFileHandle);// Read file
+                    FView=Fetch_MasterPBI(TextRow,3, ";");
+                    if View==FView then
+                        View=Fetch_MasterPBI(TextRow,2, ";");
+                     end
+                end
+                FileClose(VFileHandle);
+                SetStrGateValue(GateName,0,Fetch_MasterPBI(Line,2, ";"));
+                SetStrGateValue(GateName,1,View);
+                SetStrGateValue(GateName,2,Fetch_MasterPBI(Line,5, ";"));
+                SetStrGateValue(GateName,3,Fetch_MasterPBI(Line,6, ";"));
+                SetStrGateValue(GateName,4,Fetch_MasterPBI(Line,7, ";"));
+                SetStrGateValue(GateName,5,Fetch_MasterPBI(Line,8, ";"));
+
+
+end
+//////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/*                         Pagination                               */
+//////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function void View_PBIM_Add()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+
+     Admin_View_Display(CurrentPage,"MasterPBI");
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_PBIM_Sub()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"MasterPBI");
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_PBIM_First()
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"MasterPBI");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_PBIM_End()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"MasterPBI");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Modifier_MasterPBI()
+
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,DateTimeNow(),5);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",4),7);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",5),8);
+    if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le ' NOM DE MASTER PBI' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,3,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' PERIDE PBI MASTER' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+
+
+    Admin_modifier(ENV_PATH+"\DeskTopBI\","Temp_PBI_Master.CSV" );
+end
+////////////////////////////////////////////////////////////////////////
+Function Void MasterPBI_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\DeskTopBI\Back_PBI_Master.CSV";
+Admin_Commit(BackFullPathFileName);
+End
+//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+Function Void Copy_PBI_Master()
+
+
+String PathC=ENV_PATH+"\DeskTopBI\";
+String Prefix="MPBI";
+String CodeNewPBI;
+
+    CodeNewPBI=FetchCodeAdd(PathC,Prefix);
+
+    Admin_Copy("MasterPBI",CodeNewPBI);
+        Confirme_Save=True;
+
+End
+
+//////////////////////
+
+Function Void Delete_PBI_Master()
+
+String PathC=Admin_View_Temp_File;
+String WPath=ENV_PATH+"\DeskTopBI\WTemp_PBI_Master.CSV";
+String BackPath=ENV_PATH+"\DeskTopBI\Back_Temp_PBI_Master.CSV";
+    bool Exist = False;
+    String Name=Fetch_Alarm_search(Admin_View_CurrentLine,2,";");
+
+
+
+    Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","PBI.CSV",ENV_PATH + "\Files\DATAMODELFiles\Power BI\",Name,4,0);
+    //MessageBox(Fild,Exist);
+    if Exist == False then
+
+    Admin_Delete("MasterPBI",WPath,BackPath);
+        Confirme_Save=True;
+       else
+
+         SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer Le Master PBI "+Name+", Il est Attaché");
+      end
+End
+
+
+/*****************************************************************************/
+Function Void Add_New_PBI_Master()
+
+String PathC=ENV_PATH+"\DeskTopBI\";
+String Prefix="MPBI";
+String CodeNewPBI;
+
+
+    CodeNewPBI=FetchCodeAdd(PathC,Prefix);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,DateTimeNow(),5);
+
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",4),7);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",5),8);
+    if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le ' NOM DE MASTER PBI' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,3,";")=="" then  MessageBox("Veuillez saisir une valeur pour  ' PERIDE PBI MASTER' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+
+    Admin_Copy("MasterPBI",CodeNewPBI);
+        Confirme_Save=True;
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////
+
+function void View_SelectRow_PBIM_1()
+String S;
+String C;
+    C = GetStrGateValue("EmailView1",0);
+    S = GetStrGateValue("EmailView1",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+               Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_2()
+String S;
+String C;
+    C = GetStrGateValue("EmailView2",0);
+    S = GetStrGateValue("EmailView2",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_3()
+String S;
+String C;
+    C = GetStrGateValue("EmailView3",0);
+    S = GetStrGateValue("EmailView3",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                 Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_4()
+String S;
+String C;
+    C = GetStrGateValue("EmailView4",0);
+    S = GetStrGateValue("EmailView4",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+
+function void View_SelectRow_PBIM_5()
+String S;
+String C;
+    C = GetStrGateValue("EmailView5",0);
+    S = GetStrGateValue("EmailView5",2);
+    IF ( S != "" ) Then
+         SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                  Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_6()
+String S;
+String C;
+    C = GetStrGateValue("EmailView6",0);
+    S = GetStrGateValue("EmailView6",2);
+     IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_7()
+String S;
+String C;
+    C = GetStrGateValue("EmailView7",0);
+    S = GetStrGateValue("EmailView7",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_8()
+String S;
+String C;
+    C = GetStrGateValue("EmailView8",0);
+    S = GetStrGateValue("EmailView8",2);
+      IF ( S != "" ) Then
+           SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+              Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_9()
+String S;
+String C;
+    C = GetStrGateValue("EmailView9",0);
+    S = GetStrGateValue("EmailView9",2);
+    IF ( S != "" ) Then
+          SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+                      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+function void View_SelectRow_PBIM_10()
+String S;
+String C;
+
+    C = GetStrGateValue("EmailView10",0);
+    S = GetStrGateValue("EmailView10",2);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,3);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Path_Master_PBI+S+"_H",4);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      TPageCloseByName("Select_VIEW_PBI_Master");
+
+    End
+end
+/////////////////////////////////
+function void Bouton_View_PBI_Master()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Views.csv";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_VIEW_PBI_Master" );
+
+end
+///////////////////////////////////////////////////////
+////////////////////////////////////////////
+function void Load_Groups_Set_AP_PBI_Master()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPs("SET_Access_Privilege_MasterPBI");
+end
+
+function void AP_Set_Groupes_PBI_Master()
+int Access;
+
+    Access=GetNumGateValue("AP_Value",0);
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Access,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Access);
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("SET_Access_Privilege_MasterPBI");
+
+
+end
+

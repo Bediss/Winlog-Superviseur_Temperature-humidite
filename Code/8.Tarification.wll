@@ -1,0 +1,166 @@
+function void UpdateTarification()
+
+   String AWAKEFILE;
+   Int AWAKEFileHandle;
+   String Tarif;
+   String Tarif_Code;
+   String CompteurList_File;
+
+    AWAKEFILE = CHECK_TarificationFile();
+
+    AWAKEFileHandle=FileOpen(AWAKEFILE,"rt");
+
+    While(FileEof(AWAKEFileHandle)==0 )
+    Tarif = FileReadLn(AWAKEFileHandle);
+    Tarif_Code = Tarif_Fetch(Tarif,1,";");
+        If (Tarif_Code != "") Then
+        //MessageBox(Tarif_Code,"");
+         CompteurList_File = Get_TarifCompteur_List( Tarif_Code );
+         UpdateCompteur_Price( CompteurList_File ,  Tarif );
+         //MessageBox(Tarif_Code,"ENd");
+        End
+    End
+    FileClose(AWAKEFileHandle);
+    MessageBox("End","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void UpdateCompteur_Price( String CompteurList_File ,  String TarifLigne )
+
+   int FileHandle;
+   string FullPathFileName = CompteurList_File;
+   String CompteurList_Ligne = "";
+   String CompteurCode = "";
+   Int List_Price = 50;
+   Int Price;
+   String INPUT_CODE;
+
+   Price = Get_Price( TarifLigne ) ;
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    FileReadLn(FileHandle);  //Header
+
+    While( FileEof(FileHandle)==0 )
+      CompteurList_Ligne = FileReadLn(FileHandle);
+      CompteurCode = Tarif_Fetch(CompteurList_Ligne,1,";");
+      INPUT_CODE = InPutGates( CompteurCode,Tarif_Fetch(CompteurList_Ligne,3,";") );
+      MessageBox(INPUT_CODE + ","+List_Price,Price + "/" + NumGateExists(INPUT_CODE,List_Price));
+        If (NumGateExists(INPUT_CODE,List_Price) == True) Then
+        //MessageBox(CompteurCode + ","+List_Price,Price);
+          SetNumGateValue(INPUT_CODE,List_Price,Price);
+        End
+    End
+
+    FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Get_Price( String TarifLigne )
+
+    Int NBR_Periode = 0;
+    String Periode;
+    Int Offcet_Periode = 6;
+    Int MAX_Periode = 0;
+    Int TIME  = 0;
+    Int TARIF = 0;
+    Int Curr_MUNITE = 0;
+    Int i;
+    Bool Found = False;
+
+
+    Curr_MUNITE =GetHour()*60 +GetMinute();
+
+    NBR_Periode = StrToInt(Tarif_Fetch(TarifLigne,Offcet_Periode,";"));
+    MAX_Periode = Offcet_Periode + NBR_Periode;
+
+        For i = Offcet_Periode to MAX_Periode do
+         Periode = Tarif_Fetch(TarifLigne,i,";");
+         TIME  = StrToInt(Tarif_Fetch(Periode,1,":"));
+
+           IF ( Curr_MUNITE <= TIME && Found == False) Then
+             TARIF = StrToInt(Tarif_Fetch(Periode,2,":"));
+             Found = True;
+           End
+
+        End
+
+    Return TARIF;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Get_TarifCompteur_List( String Tarif_Code )
+
+    String Sourcefile = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    String ResultFile = ENV_PATH + "\Files\Tarification\"+ Tarif_Code +"_Compteurs.csv";
+    Int NbrParameter = 1;
+    String Parameters = "Tarification:" + Tarif_Code;
+    String Config_File;
+    Int FILEHandle;
+
+    FileDelete(ResultFile);
+
+         SearchInFileWithPS( Sourcefile ,
+                            ResultFile ,
+                            NbrParameter ,
+                            Parameters );
+
+        While (FileExist( ResultFile ) == False )
+         Sleep(500);
+        End
+    Return ResultFile;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String CHECK_TarificationFile()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\Tarification\TarificationByTime.csv";
+
+   Int AWAKE_FileHandle;
+   String AWAKE_FullPathFileName = ENV_PATH+"\Files\Tarification\AWAKED_List.txt";
+
+   string Tarif_Ligne ="";
+   String Tarif_Code ="";
+   String Tarif_Next_Check ="";
+   Int Tarif_Mois = 0;
+   Int ToutAnnee = 0;
+
+   int List=0;
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Tarification not Found","Error");  return "";  end
+   AWAKE_FileHandle=FileOpen(AWAKE_FullPathFileName,"wt");
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    Tarif_Ligne = FileReadLn(FileHandle);
+    Tarif_Code  = Tarif_Fetch(Tarif_Ligne,1 ,";");
+
+        If ( Tarif_Code != "" || Tarif_Code != "*" ) then
+            Tarif_Next_Check = Tarif_Fetch(Tarif_Ligne,3,";");
+
+            IF ( Check_Trigger(Tarif_Next_Check ,Tarif_Fetch(Tarif_Ligne,2,";") ) == TRUE ) THEN
+
+            Tarif_Mois = StrToInt(Tarif_Fetch(Tarif_Ligne,5,";"));
+
+              IF ( Tarif_Mois == ToutAnnee || Tarif_Mois == GetMonth() ) Then
+                FileWriteLn(AWAKE_FileHandle,Tarif_Ligne);
+              End
+
+            END
+        End
+   end
+    FileClose(AWAKE_FileHandle);
+   FileClose(FileHandle);
+    Return AWAKE_FullPathFileName;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Tarif_Fetch(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end

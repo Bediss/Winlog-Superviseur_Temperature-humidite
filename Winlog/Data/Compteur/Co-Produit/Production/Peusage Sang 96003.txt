@@ -1,0 +1,8 @@
+Automate;AB
+Rail;X5
+Port 5/6;Peusage Farine Viande
+Port 7/8;Peusage Farine Plume 1
+Port 9/10;Peusage Farine Plume 2
+Port 11/12;Peusage Farine Sang
+Module DI; i7053-FG_DI16
+Module Protocol; DCON

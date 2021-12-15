@@ -1,0 +1,10 @@
+0,[T°c ]^J,Temperature,0
+4,T°c min^J,Temperature,0
+8,T°c Max^J,Temperature,0
+12,Inc^J,Temperature,0
+18,[T°c ]^J-1,Temperature,0
+22,T°c min^J-1,Temperature,0
+26,T°c Max^J-1,Temperature,0
+30,Inc^J-1,Temperature,0
+34,C %^J,Temperature,0
+38,C %^J-1,Temperature,0

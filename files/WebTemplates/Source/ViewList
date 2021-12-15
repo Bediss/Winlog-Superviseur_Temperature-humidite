@@ -1,0 +1,196 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,720
+#BkColor: 0,28,0
+#Gates: 1
+  #STR: Business_unit,0
+#PBkBmp: 30,110,300,120,List1G.png
+#PBkBmp: 360,110,300,120,List2G.png
+#PBkBmp: 690,110,300,120,List3G.png
+#PBkBmp: 1020,110,300,120,List4V.png
+#Object: Label
+  #ID: 0
+  #Pos: 35,240
+  #Size: 200,100
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,14,0101
+  #Label: Flag_Tableaux
+  #Align: 33
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 9999
+  #Pos: 355,240
+  #Size: 200,100
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,14,0101
+  #Label: Flag_Unite
+  #Align: 33
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 680,240
+  #Size: 200,100
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,14,0101
+  #Label: Flag_Energy
+  #Align: 33
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1350,100
+  #BkColor: clWhite
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 45,14
+    #Size: 141,41
+    #Cursor: 0
+    #PBmpFile: 0,logo_typo.jpg
+    #TabOrder: 0
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 1145,0
+    #Size: 124,68
+    #Cursor: 0
+    #PBmpFile: 0,logo.png
+    #TabOrder: 1
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 252,14
+    #Size: 460,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,22,0001
+    #Label: ENERGY MANAGEMENT SYSTEM  :
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 712,14
+    #Size: 385,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,24,0101
+    #Gate: 0
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 33,70
+    #Size: 220,15
+    #Cursor: 0
+    #PBmpFile: 0,Navigateur.png
+    #TabOrder: 2
+    #CycleTime: 0,0
+    #Access: 0
+    #NewOnClick: Template,TableauxList
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 9696
+  #Pos: 1020,265
+  #Size: 305,445
+  #BkColor: 255,255,255
+  #Style: 2
+  #TabOrder: 1
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 3,2
+    #Size: 298,22
+    #BkColor: clInactiveCaptionText
+    #Cursor: 0
+    #TxtColor: clHighlightText
+    #Font: Calibri,13,0001
+    #Label: ¤ Temps réel.
+    #Align: 32
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,ViewList
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 3,24
+    #Size: 298,22
+    #BkColor: clInactiveCaptionText
+    #Cursor: 0
+    #TxtColor: clHighlightText
+    #Font: Calibri,13,0001
+    #Label: ¤ Journalier.
+    #Align: 32
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,ViewList
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 3,46
+    #Size: 298,22
+    #BkColor: clInactiveCaptionText
+    #Cursor: 0
+    #TxtColor: clHighlightText
+    #Font: Calibri,13,0001
+    #Label: ¤ Hebdomadaire.
+    #Align: 32
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,ViewList
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 3,68
+    #Size: 298,22
+    #BkColor: clInactiveCaptionText
+    #Cursor: 0
+    #TxtColor: clHighlightText
+    #Font: Calibri,13,0001
+    #Label: ¤ Mensuel.
+    #Align: 32
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,ViewList
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 3,90
+    #Size: 298,22
+    #BkColor: clInactiveCaptionText
+    #Cursor: 0
+    #TxtColor: clHighlightText
+    #Font: Calibri,13,0001
+    #Label: ¤ Annuel.
+    #Align: 32
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,ViewList
+  #EndObj
+#EndObj

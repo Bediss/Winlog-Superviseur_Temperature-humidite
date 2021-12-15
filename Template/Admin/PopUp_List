@@ -1,0 +1,204 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 500,305
+#Size: 350,215
+#BkColor: 255,255,255
+#Gates: 7
+  #STR: Display,1
+  #STR: Display,2
+  #STR: Display,3
+  #STR: Display,4
+  #STR: Display,5
+  #STR: PopUpList_Path,0
+  #STR: Display,6
+#Style: Fixed
+#StayOnTop: 1
+#Object: Frame
+  #ID: 0
+  #Pos: 5,35
+  #Size: 335,130
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,0
+    #Size: 330,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,10,0000
+    #Gate: 0
+    #Label:   %s
+    #Align: 36
+    #Frame: 4
+    #Access: 0
+    #NewOnClick: StartF,SelectPOPUPList_L1()
+    #NewOnClick: Close
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,25
+    #Size: 330,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,10,0000
+    #Gate: 1
+    #Label:   %s
+    #Align: 36
+    #Frame: 4
+    #Access: 0
+    #NewOnClick: StartF,SelectPOPUPList_L2()
+    #NewOnClick: Close
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,50
+    #Size: 330,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,10,0000
+    #Gate: 2
+    #Label:   %s
+    #Align: 36
+    #Frame: 4
+    #Access: 0
+    #NewOnClick: StartF,SelectPOPUPList_L3()
+    #NewOnClick: Close
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,75
+    #Size: 330,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,10,0000
+    #Gate: 3
+    #Label:   %s
+    #Align: 36
+    #Frame: 4
+    #Access: 0
+    #NewOnClick: StartF,SelectPOPUPList_L4()
+    #NewOnClick: Close
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,100
+    #Size: 330,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,10,0000
+    #Gate: 4
+    #Label:   %s
+    #Align: 36
+    #Frame: 4
+    #Access: 0
+    #NewOnClick: StartF,SelectPOPUPList_L5()
+    #NewOnClick: Close
+  #EndObj
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,185
+  #Size: 330,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 270,160
+  #Size: 25,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Label: >>
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,PopupList_LAST()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 55,160
+  #Size: 25,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Label: <<
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,PopupList_First()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 330,25
+  #BkColor: clGray
+  #Cursor: 0
+  #TxtColor: clBtnFace
+  #Font: Gotham Book,10,0001
+  #Gate: 5
+  #Label: Liste : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,SelectCompteurPopUp_1()
+  #NewOnDbClk: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 105,160
+  #Size: 140,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Gate: 6
+  #Label: %s
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,SelectCompteurPopUp_1()
+  #NewOnDbClk: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 80,160
+  #Size: 25,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Label: <
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,PopupList_Sub()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 245,160
+  #Size: 25,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Label: >
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,PopupList_Add()
+#EndObj

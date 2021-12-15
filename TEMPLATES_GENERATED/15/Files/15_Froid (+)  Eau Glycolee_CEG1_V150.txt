@@ -1,0 +1,1 @@
+F:*§CEGB;Utilitaire F+;Froid (+)  Eau Glycolee;CEG1;ElMazeraa EG;2;*;*;Z200;*;*;Utilitaire;F(CEGB);Type de Site;Froid;*;*;*;*;F~(~CEGB~)~;F~(~Utilitaire F+~)~;;;0;Utilitaire Froid (+) Eau Glycolee;*

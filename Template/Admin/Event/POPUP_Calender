@@ -1,0 +1,336 @@
+#Version: 0x030217
+#Name: Calendrier
+#Access: 0
+#Pos: 700,275
+#Size: 170,315
+#BkColor: clWhite
+#Gates: 6
+  #STR: AlarmeEventModifer,10
+  #STR: AlarmeEventModifer,11
+  #STR: AlarmeEventModifer,14
+  #STR: AlarmeEventModifer,15
+  #STR: AlarmeEventModifer,12
+  #STR: AlarmeEventModifer,13
+#Style: Fixed
+#StayOnTop: 1
+#Object: Button
+  #ID: 0
+  #Pos: 10,250
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,DateTimeOK()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,280
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: StartF,DateTimeCancel()
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 10,5
+  #Size: 150,135
+  #BkColor: clWhite
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label:  Date 
+  #Align: 0
+  #TabOrder: 2
+  #Object: Label
+    #ID: 0
+    #Pos: 5,20
+    #Size: 50,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Jour
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 65,20
+    #Size: 50,30
+    #BkColor: clBtnHighlight
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Gate: 1
+    #Label: %s
+    #Align: 37
+    #Frame: 4
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,20
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: +
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,JourPlus()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,35
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: -
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,JourMoin()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,55
+    #Size: 50,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Mois
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,55
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: +
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,MoisPlus()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,70
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: -
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,MoisMoin()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 65,55
+    #Size: 50,30
+    #BkColor: clBtnHighlight
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Gate: 4
+    #Label: %s
+    #Align: 37
+    #Frame: 4
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,90
+    #Size: 50,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Année
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,90
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: +
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,AnPlus()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 115,105
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: -
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,AnMoin()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 65,90
+    #Size: 50,30
+    #BkColor: clBtnHighlight
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Gate: 5
+    #Label: %s
+    #Align: 37
+    #Frame: 4
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 10,145
+  #Size: 150,100
+  #BkColor: clWhite
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label:  Heure 
+  #Align: 0
+  #TabOrder: 3
+  #Object: Label
+    #ID: 0
+    #Pos: 10,20
+    #Size: 60,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Heures
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 70,20
+    #Size: 50,30
+    #BkColor: clBtnHighlight
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Gate: 2
+    #Label: %s
+    #Align: 37
+    #Frame: 4
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 120,20
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: +
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,HeurePlus()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 120,35
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: -
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,HeureMoin()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,55
+    #Size: 60,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Minutes
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 70,55
+    #Size: 50,30
+    #BkColor: clBtnHighlight
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Gate: 3
+    #Label: %s
+    #Align: 37
+    #Frame: 4
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 120,55
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: +
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,MinutePlus()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 120,70
+    #Size: 20,15
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: -
+    #Align: 37
+    #Frame: 6
+    #Access: 0
+    #NewOnClick: StartF,MinuteMoin()
+  #EndObj
+#EndObj

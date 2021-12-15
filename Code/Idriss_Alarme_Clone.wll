@@ -1,0 +1,448 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+Function Void CloneAlarme()
+String RFullPathFileName;
+String ToClounFullPathFileName;
+String ClounedFullPathFileName;
+String TempFullPathFileName;
+int RFileHandle;
+int ToClounFileHandle;
+int ClounedFileHandle;
+int TempFileHandle;
+String LevelFullPathFileName;
+int LevelFileHandle;
+int KOP;
+int Pos;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String PCD="";
+String PCC="";
+int i;
+int Sp;
+int K;
+
+
+
+        int f;
+          SetStrGateValue("alarmeEventModifer",30,"Alarme ");
+        for i =1 to do
+            SetDigGateValue("QuerrySelect",f,0);
+            end
+
+
+    CCode=Fetch_Alarm_search(Admin_View_CurrentLine,2,";");
+
+    if CCode=="" then MessageBox("Selectionnez une Alarme pour cloner SVP","info"); return ; end
+    CCode=Fetch_Alarm_search(CCode,1,"$");
+
+
+    //Query Variable
+
+     Pos=GET_COMPTEUR(CCode);
+
+
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);//Code level
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+    //Query Display
+    //MessageBox(CCode,Pos);
+    CName=GetStrGateValue("Compteur_Name",Pos);
+    //MessageBox("Compteur_Name",CName);
+    SetStrGateValue("ROW0",1,CName);//Compteur Name
+           Sp=StrToInt(CCodeL);
+
+        LevelFullPathFileName = ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+
+    LevelFileHandle=FileOpen(LevelFullPathFileName,"rt");
+
+     if ( LevelFileHandle == 0 ) then MessageBox(LevelFullPathFileName," File Note found");return ; end
+
+
+            FileReadLn(LevelFileHandle);
+
+            for i =0 to Sp do
+
+
+                Ligne=FileReadLn(LevelFileHandle);
+
+                LName=Fetch_Alarm_search(Ligne,2,";");
+
+            end
+             FileClose(LevelFileHandle);
+
+            SetStrGateValue("ROW0",2,LName);
+
+
+        K=GET_COMPTEUR(CParent);
+
+        if K==0 then
+            CParentN="*";
+        else
+            CParentN=GetStrGateValue("Compteur_Name",K);
+        end
+
+    SetStrGateValue("ROW0",3,CParentN);//Compteur Parent name
+
+    SetStrGateValue("ROW0",4,CCodeE);//Compteur energy
+    PCP=GetStrGateValue("Compteur_NameP",Pos);
+    SetStrGateValue("ROW0",5,PCP);//Post Code Production
+    PCD=GetStrGateValue("Compteur_NameD",Pos);
+    SetStrGateValue("ROW0",6,PCD);//Post Code Distribution
+    PCC=GetStrGateValue("Compteur_NameC",Pos);
+    SetStrGateValue("ROW0",7,PCC);//Post Code Consommation
+    ShowPoPUPs("POPUPQuery");
+     Confirme_Save=True;
+
+     //FileClose(TempFileHandle);
+
+
+End
+/////////////////////////////////////////////
+Function Void CheckQueryAlarme()
+
+String ToClounFullPathFileName;
+int ToClounFileHandle;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String CodePos="";
+
+int KOP;
+int Pos;
+   if GetDigGateValue("QuerrySelect",0)==0 && GetDigGateValue("QuerrySelect",1) == 0 && GetDigGateValue("QuerrySelect",2)== 0 && GetDigGateValue("QuerrySelect",3)== 0 && GetDigGateValue("QuerrySelect",4)== 0 && GetDigGateValue("QuerrySelect",5)== 0 && GetDigGateValue("QuerrySelect",6)== 0 then
+            MessageBox("Pour Cloner il faut selectionner au moin un seul filtre ","Info");return; end
+   CCode=Fetch_Alarm_search(Admin_View_CurrentLine,2,";");
+
+    if CCode=="" THEN MessageBox("Selectionnez une alarme pour cloner SVP","info");end
+
+    ToClounFullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Event\TOCloneList.txt";
+    ToClounFileHandle=FileOpen(ToClounFullPathFileName,"wt");
+
+
+
+    CCode=Fetch_Formule(CCode,1,"$");
+     Pos=GET_COMPTEUR(CCode);
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);//Code level
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+    CCodeP=GetStrGateValue("Compteur_PCP",Pos);//Code Compteur_PCP
+    CCodeD=GetStrGateValue("Compteur_PCD",Pos);//Code Compteur_PCD
+    CCodeC=GetStrGateValue("Compteur_PCC",Pos);//Code Compteur_PCC
+
+  if GetDigGateValue("QuerrySelect",0)==0 then
+       CCode="*";
+       else
+       CParent=CCode;
+    end
+     if GetDigGateValue("QuerrySelect",1)==0 then
+       CCodeL="*";
+    end
+     if GetDigGateValue("QuerrySelect",0)==0 && GetDigGateValue("QuerrySelect",2)==0 then
+       CParent="*";
+
+    end
+     if GetDigGateValue("QuerrySelect",3)==0 then
+       CCodeE="*";
+    end
+     if GetDigGateValue("QuerrySelect",4)==0 then
+       CCodeP="*";
+    end
+     if GetDigGateValue("QuerrySelect",5)==0 then
+       CCodeD="*";
+    end
+     if GetDigGateValue("QuerrySelect",6)==0 then
+       CCodeC="*";
+    end
+
+
+    Query=ConstractQuerry(CCodeE,CParent,CCodeL,"*",CCodeP+"/"+CCodeD+"/"+CCodeC);
+
+
+    KOP=AnalyseQuerryCompteur(Query, ToClounFileHandle ,"TVE","");
+
+
+        FileClose(ToClounFileHandle);
+
+     AddCloned(KOP);
+
+    end
+//////////////////////////////////////////////////////
+Function String InCNewCOMPTEUR(String CodeCompteur)
+    int i;
+    int Num;
+    bool Exist;
+    String Out;
+    String Final;
+    int NbrEnergy;
+    NbrEnergy=GetNumGateValue("EnergyMax",0);
+    for i =1 to NbrEnergy do
+        if StrPos(CodeCompteur,GetStrGateValue("PreFix_OutPut",i))!=0 then
+            Exist=True;
+            Num=i;
+            i=NbrEnergy+1;
+        end
+    end
+    if Exist==True then
+         Out=StrDelete(CodeCompteur,1,GetNumGateValue("NBR_PRFIX_OUTP",Num));
+         Final=GetStrGateValue("PreFix_InPut",Num)+Out;
+    end
+return Final;
+End
+///////////////////////////////////////////
+Function void AddCloned(int KOP)
+
+String ClounedFullPathFileName;
+String ToClounFullPathFileName;
+String FullPathFileName;
+String Ligne;
+String NewCompteur;
+String CurrentNCompteur;
+String CurrentCCompteur;
+String LigneC;
+int ClounedFileHandle;
+int ToClounFileHandle;
+String InCNCompteur;
+String CodeAlarme;
+String CNewCompteur;
+String IncNewCompteur;
+String RFullPathFileName;
+String Objectif;
+String MVM;
+String FormObj;
+String Code;
+String Part;
+string Energy;
+string TAG;
+String AvantTexte;
+ int i;
+
+TAG= Fetch_Formule(Admin_View_CurrentLine,14,";");
+    ToClounFullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Event\TOCloneList.txt";
+    ToClounFileHandle=FileOpen(ToClounFullPathFileName,"rt");
+       FullPathFileName =ENV_PATH +  "\Files\DATAMODELFiles\Event\TEMP_Alarme_F_Reporting.CSV";
+       RFullPathFileName=Admin_View_Recycle_Code;
+    If ( ToClounFileHandle == 0 ) Then MessageBox(ToClounFullPathFileName,"File Not Found "); Return ; End
+
+
+    ClounedFullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\ClonedList.txt";
+    AvantTexte=GetStrGateValue("alarmeEventModifer",30);
+    ClounedFileHandle = FileOpen(ClounedFullPathFileName,"wt");
+    CurrentCCompteur=Fetch_Formule(Admin_View_CurrentLine,2,";");
+    CurrentCCompteur=Fetch_Formule(CurrentCCompteur,1,"$");
+    CurrentNCompteur=Fetch_Formule(Admin_View_CurrentLine,11,";");
+    CurrentNCompteur=Fetch_Formule(CurrentNCompteur,1,"$");
+    InCNCompteur=Fetch_Formule(Admin_View_CurrentLine,4,";");
+    LigneC=Admin_View_CurrentLine;
+    Part=Fetch_Formule(Admin_View_CurrentLine,2,";");
+     CompteurC_EV=Fetch_Formule(Part,1,"$");
+
+
+
+        for i = 1 to KOP do
+        Ligne =FileReadLn(ToClounFileHandle);
+         NewCompteur=Fetch_Formule(Ligne,1,",");
+         IncNewCompteur=InCNewCOMPTEUR(CurrentCCompteur);
+   //MessageBox(NewCompteur,"NewCompteur");
+
+        if (Ligne != "" ) && ( NewCompteur != CurrentCCompteur) && ( NewCompteur!="" ) then
+
+
+             LigneC=SearchAndReplace_code(LigneC,CurrentCCompteur,NewCompteur,"$");
+                 IncNewCompteur=InCNewCOMPTEUR(NewCompteur);
+
+                 InCNCompteur=FR_Formule_Clone(InCNCompteur,IncNewCompteur,1,"$");
+
+            CNewCompteur=Fetch_Formule(Ligne,2,",");
+
+            LigneC=SearchAndReplace_code(LigneC,CurrentNCompteur,CNewCompteur,"$");
+
+             LigneC=FR_Formule_Clone(LigneC,AvantTexte+" "+TAG+" "+CNewCompteur,9,";");
+
+               Objectif=Fetch_Formule(LigneC,6,";");
+                  FormObj=Fetch_Formule(LigneC,10,";");
+
+
+                if Fetch_Formule(Objectif,1,":") == "O" then
+
+
+       for i = 1 to CompteurMax do
+
+        If (GetStrGateValue("Compteur_Code",i) == CompteurC_EV ) Then
+            Energy=GetStrGateValue("Compteur_Energy",i);
+        End
+        end
+
+                CompteurINPUT_EV = CompteurINPUTCODE_EV( NewCompteur, Energy );
+        If (CompteurINPUT_EV != "-1") Then
+        CompteurINPUT_EV = "O" + CompteurINPUT_EV;
+        Else
+            MessageBox("Le Compteur N'exist pas","Erreur");
+
+        End
+                    //Objectif=FR_Formule_Clone(Objectif,CurrentCCompteur,1,":");
+                   // MessageBox(CurrentCCompteur,IncNewCompteur);
+                  //  MessageBox(Objectif,CurrentNCompteur);
+
+                    MVM=Fetch_Formule(Objectif,2,"_");
+                     Code=Fetch_Formule(Objectif,2,":");
+
+
+                      Objectif=FR_Formule_Clone(Objectif,"objective "+CNewCompteur+"_"+MVM,3,":");
+                      FormObj=FR_Formule_Clone(FormObj,"objective "+CNewCompteur+"_"+MVM,3,":");
+                        //LigneC=FR_Formule(LigneC,Objectif,6);
+
+                          Code=FR_Formule_Clone(Code,CompteurINPUT_EV,1,"$");
+
+                          SetStrGateValue("SetObjective_CCode",0,CompteurN_EV);
+                         // MessageBox(Code,CompteurINPUT_EV);
+                          /*
+
+FormObj=FR_Formule_Clone(FormObj,"objective "+CNewCompteur+"_"+MVM,3,":");
+
+                           Objectif=FR_Formule_Clone(Objectif,Code,2,":");
+                             //MessageBox(Objectif,Code);
+                             FormObj=FR_Formule_Clone(FormObj,Code,2,":");
+                            MessageBox(FormObj,Objectif);*/
+
+                             Objectif=FR_Formule_Clone(Objectif,Code,2,":");
+                             FormObj=FR_Formule_Clone(FormObj,Code,2,":");
+
+                                LigneC=FR_Formule(LigneC,Objectif,6);
+
+                             LigneC=FR_Formule(LigneC,FormObj,10);
+
+
+                           //  MessageBox(Code,Objectif);
+
+
+
+
+                    end
+
+             CodeAlarme="A";
+            LigneC=FR_Formule(LigneC,CodeAlarme,1);
+
+            FileWriteLn(ClounedFileHandle,LigneC);
+
+             end
+
+              LigneC=Admin_View_CurrentLine;
+
+     end
+       SetStrGateValue("alarmeEventModifer",30,TAG);
+
+    FileClose(ToClounFileHandle);
+    FileClose(ClounedFileHandle);
+    //Highest_Code_Initialisation(FullPathFileName,RFullPathFileName);
+    //Highest_Code_Initialisation(FullPathFileName,RFullPathFileName);
+    Save_ClonedList(ClounedFullPathFileName,KOP);
+End
+
+
+/////////////////////////
+
+function String FR_Formule_Clone(String Ligne,string Replace , Int NumFild,String op)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,op);
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,op);
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+        Return NewLigne + Replace + txt;
+
+end
+
+///////////////////////////////////////////////////
+Function Void Save_ClonedList(String ClounedFullPathFileName,int KOP)
+
+int ClounedFileHandle;
+int CurrentPage;
+int FileHandle;
+int AlarmsTotalItems;
+String Ligne;
+String CFullPathFileName;
+String ClFullPathFileName;
+String Code;
+String CodeAlarme;
+ int i;
+    CFullPathFileName =ENV_PATH +  "\Files\DATAMODELFiles\Event\Copie_TEMP_Alarme_F_Reporting.CSV";
+     ClFullPathFileName =ENV_PATH +  "\Files\DATAMODELFiles\Event\Cloned_Copie.txt";
+    FileCopy(Admin_View_Temp_File,CFullPathFileName,False);
+    FileCopy(ClounedFullPathFileName,ClFullPathFileName,False);
+
+     ClounedFileHandle=FileOpen(ClFullPathFileName,"rt");
+    If ( ClounedFileHandle == 0 ) Then MessageBox(ClFullPathFileName,"File Not Found "); Return ; End
+
+    FileHandle=FileOpen(CFullPathFileName,"at");
+    AlarmsTotalItems=GetNumGateValue("AdminTotalItems",0);
+
+
+
+
+
+        for i = 1 to KOP do
+            Ligne=FileReadLn(ClounedFileHandle);
+
+            Code=Fetch_Formule(Ligne,3,";");
+
+            if Code != "" then
+                if (StrLen(Ligne)>5) then
+                CodeAlarme=FetchCodeAddClone("A");
+                Ligne=FR_Formule(Ligne,CodeAlarme,1);
+
+                FileWriteLn(FileHandle,Ligne);
+                AlarmsTotalItems=AlarmsTotalItems+1;
+                end
+            end
+
+
+         end
+    FileClose(ClounedFileHandle);
+      FileClose(FileHandle);
+
+
+       FileCopy(CFullPathFileName,Admin_View_Temp_File,False);
+         CurrentPage=AlarmsTotalItems/MaxRow;
+       If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+
+      SetNumGateValue("EmailPageView",0,CurrentPage);
+      SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+              SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+             AlarmeFormuleEdit_FLAG = True;
+      Admin_View_Display(CurrentPage,"Alarme");
+
+End

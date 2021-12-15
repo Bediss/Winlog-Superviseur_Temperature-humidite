@@ -1,0 +1,242 @@
+function void T1()
+    TPagePrint(True);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function void Build_Templates_10()
+     String FullPathFileName = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 10 : Please wait ...");
+
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\10\10_FILES_LIST.txt");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\10\Files";
+     Create_PS_DeleteFiles( Destination );
+     //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     //PS_XCopy_Wait( Destination );
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+            Create_10_Files( ALLCOMPTEUR_LIGNE );
+        End
+
+     End
+
+     FileClose(FileHandle);
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 10 : Please wait ...");
+        Create_Templates_10();
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate Templates 10 : Created");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Build_Templates_14()
+     String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 14 : Please wait ...");
+
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\14\14_FILES_LIST.txt");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\14\Files";
+     //Create_PS_DeleteFiles( Destination );
+     ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     //PS_XCopy_Wait( Destination );
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+
+          Create_14_Files( ALLCOMPTEUR_LIGNE );
+
+        End
+     End
+
+     FileClose(FileHandle);
+
+     Add_Parent_14();
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 14 : Please wait ...");
+     Create_Templates_14();
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 14 : Created ");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Build_Templates_15()
+     String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+
+    SetStrGateValue("Errors_GTemplates", 0 , " Deleting old Files 15: Please wait ...");
+     FileDelete( GetProjectPath()+"\TEMPLATES_GENERATED\15\15_FILES_LIST.txt");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\15\Files";
+     Create_PS_DeleteFiles( Destination );
+     //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+     Destination = GetProjectPath() +"\TEMPLATES_GENERATED\PSDelete.txt";
+     //PS_XCopy_Wait( Destination );
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+
+          Create_15_Files( ALLCOMPTEUR_LIGNE );
+
+        End
+     End
+
+     FileClose(FileHandle);
+
+     Add_Parent_15();
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 15 : Please wait ...");
+     Create_Templates_15();
+     SetStrGateValue("Errors_GTemplates", 0 , " Generate templates 15 : Created ");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Build_Templates_16()
+     String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+          Create_Templates16_17( ALLCOMPTEUR_LIGNE , "16");
+          //Create_Templates16_17( ALLCOMPTEUR_LIGNE , "17");
+        End
+     End
+
+     FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Build_Templates_17()
+     String FullPathFileName = ENV_PATH +  "\Files\AllCompteur\AllCompteur.csv";
+     int FileHandle;
+     String ALLCOMPTEUR_LIGNE;
+     Int NOTEXIST;
+     String Destination;
+     String LastReportCode;
+
+
+     NOTEXIST = Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_List_V"+ GetStrGateValue("version",0) +".csv");
+     NOTEXIST = NOTEXIST + Check_Validation_List( GetProjectPath()+"\TEMPLATES_GENERATED\" ,"Tableau_Source_V"+ GetStrGateValue("version",0) +".csv");
+
+     SetStrGateValue("Errors_GTemplates", 0 , " Check Source Files : " + Eol() + " Total Files Not Found = " + NOTEXIST );
+
+     ALLCOMPTEUR_LIGNE = GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_"+ GetStrGateValue("version",0)+".csv";
+
+     FileCopy( GetProjectPath()+"\TEMPLATES_GENERATED\DataModel\Genereted_Templates_Header.csv" , ALLCOMPTEUR_LIGNE , False);
+
+     FileHandle = FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then MessageBox("All Compteur File not Found","Error");  return; end
+
+     ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+     While(FileEof(FileHandle)==0)
+       ALLCOMPTEUR_LIGNE = FileReadLn(FileHandle);
+
+        If ( Fetch_TEMP_GENERATOR(ALLCOMPTEUR_LIGNE,1,";") != "" ) Then
+          //Create_Templates16_17( ALLCOMPTEUR_LIGNE , "16");
+          Create_Templates16_17( ALLCOMPTEUR_LIGNE , "17");
+        End
+     End
+
+     FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SAVE_TEMPLATES()
+ /// COPY ONLY DESKTOP & WEB ///
+            Insert_LastSTEP( "CMR3.3_Create Templates" );
+
+            XCopyTemplates( "10" );
+            XCopyTemplates( "14" );
+            XCopyTemplates( "15" );
+
+            ShellExec("RestartWinlog.exe" , "open" , ENV_PATH+"\PowerShell\" ,1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,1521 @@
+Global Int AccessALL = 32767;
+function void Web_Navigator()
+
+  int i;
+  Int ii;
+  int j;
+  int k;
+  int l;
+  Int ll;
+  String Tableau;
+  String BU;
+  String BULigne;
+  String Energy;
+  String View;
+  String BU_tableau;
+  String Energy_BU_tableau;
+  String View_Energy_BU_tableau;
+  String Navigator_Path = GetProjectPath()+"\files\WebTemplates\";
+  String Navigator_NextName;
+  Int MaxTableau;
+  Int MaxBu;
+  Int MaxEnergy;
+  Int MaxView;
+  Int NumTableau;
+  Int CMaxTableau;
+  Int CMaxBu;
+  Int CMaxEnergy;
+  Int CMaxView;
+
+  int Tableoffset = 9;
+  int Viewoffset = -1;
+  String LienFinal;
+  String PostCode;
+  Bool Tableau_OK = False;
+  Bool BU_OK = False;
+  Bool Energy_OK = False;
+  Bool View_OK = False;
+  string level = "3";
+  string Compteur = "";
+  //MaxBu = Create_BU_File(level);
+
+//////////////////////////////////Master Templates/////////////////////////////
+    //CMaxTableau = Site();
+    BUList(MaxBu);
+    //EnergyList();
+    //ViewList();
+
+    //Return;
+///////////////////////////////////////////////////////////////////////////////
+
+  String BUFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\BU_List.txt";
+  Int BUFileHandle;
+
+  MaxTableau = GetNumGateValue("MaxTableau",0);
+  MaxEnergy =  GetNumGateValue("EnergyMax",0);
+  MaxView =    GetNumGateValue("MaxView",1);
+  String PCC;
+
+  String Version = " V_" + GetStrGateValue("Version",0);
+
+
+    For i = 1 to  MaxTableau do
+      ii = Tableoffset + i;
+
+     IF ( GetStrGateValue("Tableau_TVE",ii) == "0" ) Then
+
+      Tableau = GetStrGateValue("TableauNames",ii);
+      IF (Tableau != "") then
+        Tableau_OK = True;
+        CMaxBu = MaxBu;
+        CMaxEnergy= MaxEnergy;
+        CMaxView = MaxView;
+       Else
+        Tableau_OK = False;
+        CMaxBu = 0;
+        CMaxEnergy= 0;
+        CMaxView = 0;
+      End
+
+      BU_tableau =  ii+"_BUsList" + Version ;
+
+      Create_Templates("BUsList",BU_tableau);
+
+      Modif_Templates("Site"+Version, Tableau+".", BU_tableau , "","","",CMaxTableau);
+
+
+      BUFileHandle=FileOpen(BUFullPathFileName,"rt");
+      IF (BUFileHandle==0) then MessageBox(BUFullPathFileName,"BU File not Found");  return; end
+
+
+
+        For j = 1 to  CMaxBu do
+
+          BULigne = FileReadLn(BUFileHandle);
+
+           If (BULigne != "" ) Then  BU_OK = True;
+           Else BU_OK = False;
+           End
+
+           If (BU_OK == true) then
+             BU= FetchBU(BULigne,8,";");
+             If (BU == "*" ) then BU_OK = false; end
+           End
+
+         IF (BU_OK == True) Then
+           CMaxEnergy= MaxEnergy;
+           CMaxView = MaxView;
+         Else
+           CMaxEnergy= 0;
+           CMaxView = 0;
+         End
+
+              PostCode = FetchBU(BULigne,3,";")+"/"+FetchBU(BULigne,5,";")+"/"+FetchBU(BULigne,7,";");
+
+      ////////////////////////////////////////////////////////////////
+      IF (WEB_Check_BU(ii) == False) Then
+
+            BU = "Tous les Unités";
+            FileCopy(Navigator_Path + "Source\All_BUsList",Navigator_Path +"Templates\"+ BU_tableau,False);
+           Energy_BU_tableau =  ii+"_AllBU_EnergyList" + Version;
+
+              Modif_Templates(BU_tableau, "Tous les Unités.", Energy_BU_tableau , Tableau, "", "" ,1);
+              Create_Templates("EnergyList",Energy_BU_tableau);
+
+      Else
+           Energy_BU_tableau =  ii+"_"+BU+"_EnergyList" + Version;
+           Modif_Templates(BU_tableau, BU+".", Energy_BU_tableau , Tableau, "", "" ,CMaxBu);
+           Create_Templates("EnergyList",Energy_BU_tableau);
+
+       End
+      ////////////////////////////////////////////////////////////////
+
+              PCC = FetchBU(BULigne,7,";");
+
+
+            For k = 1 to CMaxEnergy  do
+
+             Energy = GetStrGateValue("Energy_Name",k);
+
+             IF (Energy != "") then
+               Energy_OK = True;
+               CMaxView = MaxView;
+
+
+
+                ////////////////////////////////////////////////////////////////
+                IF (WEB_Check_Energy(ii) == False) Then
+
+
+                    View_Energy_BU_tableau =  Construct_WEBNAVIGATOR_Name(ii,3,BU,Energy,"") + Version ;
+                    Energy = "Tous les Energies";
+                    FileCopy(Navigator_Path + "Source\All_EnergyList",Navigator_Path +"Templates\"+ Energy_BU_tableau,False);
+                    Modif_Templates(Energy_BU_tableau, "Tous les Energies.", View_Energy_BU_tableau, Tableau, BU, "" ,1);
+
+
+                Else
+                    View_Energy_BU_tableau =  Construct_WEBNAVIGATOR_Name(ii,3,BU,Energy,"") +Version ;
+                    Modif_Templates(Energy_BU_tableau, Energy+"." , View_Energy_BU_tableau , Tableau, BU, "" ,CMaxEnergy);
+
+                End
+      ////////////////////////////////////////////////////////////////
+
+                Create_Templates("ViewList",View_Energy_BU_tableau);
+             Else
+               Energy_OK = False;
+               CMaxView = 0;
+             End
+
+
+                For l = 1 to  CMaxView do
+
+                  ll = Viewoffset + l;
+                  View = GetStrGateValue("ViewNames",ll);
+
+                  IF (View != "") then
+
+
+                    If ( ii == 16 || ii == 17) Then // tous les templates de compteur
+                     NumTableau = 11;// Go to synoptique pour choisir un compteur
+                    Else
+                     NumTableau = ii;
+                    End
+
+
+                    If ( ii == 14 || ii == 15) Then // tous les templates de compteur
+                     Compteur = GetCompteurCode(Energy,level,PCC);
+                    Else
+                     Compteur = "";
+                    End
+
+
+                      LienFinal = TemplateNameBuilder(NumTableau, GetStrGateValue("ReportViewNames",ll), Energy, PostCode,Compteur);
+
+
+                    ///////////////////////////////////////////////////////////
+                    IF (WEB_Check_View(ii) == False) Then
+
+                        View = "Tous les periodes";
+                        FileCopy(Navigator_Path + "Source\All_ViewList",Navigator_Path +"Templates\"+ View_Energy_BU_tableau,False);
+                        Modif_Templates(View_Energy_BU_tableau, View+".", LienFinal, Tableau, BU, Energy,1);
+
+                    Else
+
+                        Modif_Templates(View_Energy_BU_tableau, View+".", LienFinal, Tableau, BU, Energy,CMaxView);
+                    End
+                    ///////////////////////////////////////////////////////////
+                  End
+                End//View
+            End//Energy
+        End//BU
+        FileClose(BUFileHandle);
+     End//TVE Tableau ==0
+    End//Tableau
+
+end
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Create_Templates(String TemplateSource, String NewTemplateName)
+
+    String SourcePathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+TemplateSource;
+    String PathFileName = NAV_PATH + NewTemplateName;
+    Int SourceFileHandle;
+    Int WFileHandle;
+    String Ligne="";
+
+
+    String LOGFullPathFileName = GetProjectPath()+"\files\WebTemplates\LOG.txt";
+    Int LOGFileHandle;
+    LOGFileHandle=FileOpen(LOGFullPathFileName,"at");
+
+     FileCopy(SourcePathFileName,PathFileName,False);
+
+    FileWriteLn(LOGFileHandle,NewTemplateName);
+    FileClose(LOGFileHandle);
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Modif_Templates(String TemplateName, String ModifLigne , String Lien, String Tableaux , String BU , String Energy, int MaxLabel )
+
+    String FullPathFileName = GetProjectPath()+"\files\WebTemplates\Templates\"+TemplateName;
+    String WFullPathFileName = GetProjectPath()+"\files\WebTemplates\Templates\W"+TemplateName;
+    Int SourceFileHandle;
+    Int WFileHandle;
+    String ReadLigne;
+    String NewLigne;
+    String LienPath;
+    Bool Do_ONCLICK = True;
+    int POS1;
+    Int POS2;
+
+    String BUILD_FullPathFileName;
+    Int BUILD_FileHandle;
+
+     BUILD_FullPathFileName = ENV_PATH + "\BUILD_LOG.txt";
+     BUILD_FileHandle=FileOpen(BUILD_FullPathFileName,"at");
+    //Bool Label9999 = False;
+
+    String Flag_Tableaux = "Flag_Tableaux";
+    String Flag_BU = "Flag_Unite";
+    String Flag_Energy = "Flag_Energy";
+
+    String  L9="    #Label:  ";
+    String  ID="  #ID: 9696";
+    String  SiZE9696="  #Size: 305,";
+    Int NewH9696 =22;
+    Int MaxLabelAllowed = 20;
+
+    String LOGFullPathFileName = GetProjectPath()+"\files\WebTemplates\LOG.txt";
+    Int LOGFileHandle;
+
+
+
+    IF (StrPos(TemplateName,"ViewList") > 0 ) Then
+        LienPath = GetProjectPath()+"\WebTemplate\"+Lien;
+
+        Do_ONCLICK = FileExist(LienPath);
+
+        IF (Do_ONCLICK == False ) Then
+
+          FileWriteLn(BUILD_FileHandle," Web_Navigator : Modif_Templates "TemplateName +"  "+ Lien + "Doesn't Exist");
+
+        End
+    End
+
+
+
+    LOGFileHandle=FileOpen(LOGFullPathFileName,"at");
+
+    If ( MaxLabel > MaxLabelAllowed )  Then
+
+        FileWriteLn(LOGFileHandle,TemplateName +">>Warning Max Label = "+MaxLabel+" > MaxLabelAllowed"+MaxLabelAllowed);
+        MaxLabel = MaxLabelAllowed;
+
+    end
+
+    SourceFileHandle=FileOpen(FullPathFileName,"rt");
+    IF (SourceFileHandle==0) then
+      //MessageBox(FullPathFileName,"File Not Found");
+      FileWriteLn(LOGFileHandle,FullPathFileName+" File Not Found");
+      FileClose(LOGFileHandle);
+      return;
+    end
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    While( FileEof(SourceFileHandle) == 0 )
+
+      ReadLigne = FileReadLn(SourceFileHandle);
+
+        POS1 =  StrPos(ReadLigne,"#ID: 9999");
+
+     If ( POS1 > 0 )Then
+        FileWriteLn(WFileHandle,ReadLigne);
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//POS
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//SIZE
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//BKColor
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Cursor
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//txtColor
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Font
+        FileReadLn(SourceFileHandle);//Label
+        FileWriteLn(WFileHandle,L9 + BU);
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Align
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Frame
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Access
+        FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//endObj
+    Else
+
+    POS1 =  StrPos(ReadLigne,"#Label:");
+    POS2 =  StrPos(ReadLigne,ModifLigne);
+
+        If ( POS1 > 0 && POS2 > 0 ) Then
+
+
+
+         FileWriteLn(WFileHandle,ReadLigne);//Label
+         FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Align
+         FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Frame
+         FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Access
+         ReadLigne = FileReadLn(SourceFileHandle);
+         NewLigne = "  #NewOnClick: Template,"+Lien;
+
+         IF (Do_ONCLICK == True) Then
+            FileWriteLn(WFileHandle,NewLigne);//NewOnClick
+         End
+         FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//end Object
+
+
+        Else
+         If ( StrPos(ReadLigne,ID) > 0 ) Then
+           NewH9696 = (MaxLabel*NewH9696)+5;
+           FileWriteLn(WFileHandle,ReadLigne);
+           FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//#Pos:
+           FileReadLn(SourceFileHandle);// ORiginal size
+           FileWriteLn(WFileHandle,SiZE9696+NewH9696);// NewSize
+
+         Else
+
+            If ( StrPos(ReadLigne,Flag_Tableaux) > 0 && Tableaux != ""  ) Then
+             FileWriteLn(WFileHandle,L9 + Tableaux);
+            Else
+
+                If ( StrPos(ReadLigne,Flag_BU) > 0 && BU != "" ) Then
+                 FileWriteLn(WFileHandle,L9 + BU);
+                Else
+
+                    If ( StrPos(ReadLigne,Flag_Energy) > 0 && Energy != "" ) Then
+                     FileWriteLn(WFileHandle,L9 + Energy);
+                    Else
+
+                      FileWriteLn(WFileHandle,ReadLigne);
+                    End//energy
+
+                End//bu
+
+            End//tableaux
+
+         End//Max Label 9696
+
+        End//onclick
+      End//9999
+    End// end While
+
+    FileClose(WFileHandle);
+    FileClose(BUILD_FileHandle);
+    FileClose(SourceFileHandle);
+    FileClose(LOGFileHandle);
+
+    If (FileDelete(FullPathFileName) == True) Then
+        FileRename(WFullPathFileName,FullPathFileName);
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function string Web_FINDAndREPLACE(string Ligne,string search, string replace)
+    int P = 0;
+    string Txt = Ligne;
+    string V = Ligne;
+    String Partie1;
+    String Partie2;
+
+
+    P = StrPos(Txt,search);
+    if ( P == 0 ) then return V;
+      else
+
+       Partie1 = StrSubString(Txt,1,P-1);
+       Txt = StrDelete(Txt,1,P-1);
+       P = StrPos(Txt,",");
+
+        IF (P == 0) then Partie2 = "";
+        Else   Partie2 = StrDelete(Txt,1,P-1); End
+
+       V = Partie1 + replace + Partie2;
+
+    end
+
+    return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+function int Create_BU_File_ByLEVEL( String LEVELMIN , String LEVELMAX )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+
+    Num_LEVEL_MIN = StrToInt(LEVELMIN);
+    Num_LEVEL_MAX = StrToInt(LEVELMAX);
+    Int NUM_LEVEL;
+    String LABEL;
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+    FileHandle   = FileOpen(FullPathFileName,"rt");
+    If (FileHandle == 0) Then Return 0; End
+
+    ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+ S1_MEATDATA_FILE +".txt";
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS");
+
+    While ( FileEof(FileHandle) == 0 )
+       Ligne = FileReadLn(FileHandle);
+        If ( Ligne != "" ) Then
+        LEVEL = FetchBU(Ligne,5,";");
+
+        NUM_LEVEL = StrToInt(LEVEL);
+
+            If ( LEVEL >= Num_LEVEL_MIN && LEVEL <= Num_LEVEL_MAX ) Then
+                Code = FetchBU(Ligne,1,";");
+                Name = FetchBU(Ligne,2,";");
+                LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,8,";");
+
+
+                i=i+1;
+                FileWriteLn(ListFileHandle,Code+";"+LABEL+";"+ Access);
+
+            End
+
+        End
+
+    End
+
+    FileClose(ListFileHandle);
+    FileClose(FileHandle);
+
+    Return i;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function int Create_BU_File_ByPCODE( String PCode , String LEVEL )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    //String PCode;
+    String Code;
+    String Name;
+    String READ_LEVEL;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    String Access;
+    Int NUM_LEVEL = StrToInt( LEVEL );
+    Int NUm_READLEVEL;
+    String LABEL;
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+    FileHandle   = FileOpen(FullPathFileName,"rt");
+    If (FileHandle == 0) Then Return 0; End
+
+    ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S2_MEATDATA_FILE+".txt";
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+       FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS");
+       LABEL = TRIM_NAV_NAME22( ALL + "POINT DE MESURE");
+       FileWriteLn(ListFileHandle,"*;"+LABEL+";" + AccessALL);
+       i=i+1;
+
+    While ( FileEof(FileHandle) == 0 )
+       Ligne = FileReadLn(FileHandle);
+        If ( Ligne != "" ) Then
+        Code = FetchBU(Ligne,3,";");
+
+         READ_LEVEL = FetchBU(Ligne,5,";");
+         NUm_READLEVEL = StrToInt( READ_LEVEL );
+
+            If ( Code == PCode && NUm_READLEVEL >= NUM_LEVEL ) Then
+                Code = FetchBU(Ligne,1,";");
+                Name = FetchBU(Ligne,2,";");
+                LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,8,";");
+                i=i+1;
+                FileWriteLn(ListFileHandle,Code+";"+LABEL+";"+Access);
+
+            End
+
+        End
+
+    End
+
+    FileClose(ListFileHandle);
+    FileClose(FileHandle);
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Create_TableauList()
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+    string LABEL;
+
+
+    FullPathFileName = ENV_PATH + "\Files\Display_Templates\Tableaux.csv";
+    FileHandle   = FileOpen(FullPathFileName,"rt");
+    If (FileHandle == 0) Then Return 0; End
+
+    ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S3_MEATDATA_FILE+".txt";
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS");
+
+    Ligne = FileReadLn(FileHandle);
+
+    While ( FileEof(FileHandle) == 0 )
+       Ligne = FileReadLn(FileHandle);
+       If (FetchBU(Ligne,1,";") != "" ) Then
+        If (  (MODE == "D" && FetchBU(Ligne,13,";") == "1") ||  (MODE == "W" && FetchBU(Ligne,14,";") == "1")) Then // NAV SELECTION
+
+                Code = FetchBU(Ligne,1,";");
+                Name = FetchBU(Ligne,3,";");
+                LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,7,";");
+                i=i+1;
+                If ( Access == "*" || Access == "" ) then  Access = AccessALL;    End
+                FileWriteLn(ListFileHandle,Code+";"+LABEL+";"+ Access);
+
+        End
+       End
+    End
+
+    FileClose(ListFileHandle);
+    FileClose(FileHandle);
+
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Create_EnergyList( String TableauCode )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+    String LABEL;
+    String Shortname;
+
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Energy.csv";
+
+
+    ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S4_MEATDATA_FILE+".txt";
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS;SHORTNAME");
+
+    IF ( Check_VEPC( TableauCode , "E" ) == False ) Then // Energy Found in Name
+
+            //LABEL = TRIM_NAV_NAME22( ALL +S4_SUBFIX);
+            LABEL = TRIM_NAV_NAME22( ALL + "Capteur");
+            FileWriteLn(ListFileHandle,"*;"+LABEL+";" + AccessALL+";*");
+            i=i+1;
+
+    Else
+        FileHandle   = FileOpen(FullPathFileName,"rt");
+
+        If (FileHandle == 0) Then
+            FileClose(ListFileHandle);
+            Return 0;
+        End
+
+        Ligne = FileReadLn(FileHandle); // header
+
+        While ( FileEof(FileHandle) == 0 )
+            Ligne = FileReadLn(FileHandle);
+
+            IF ( Ligne != "" ) Then
+
+
+                Code = FetchBU(Ligne,1,";");
+                Name = FetchBU(Ligne,2,";");
+                Shortname = Name;
+                LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,10,";");
+
+                i=i+1;
+                If ( Access == "*" || Access == "" ) then  Access = AccessALL;    End
+                FileWriteLn(ListFileHandle,Code+";"+LABEL+";"+ Access+";"+ Shortname);
+                End
+            End
+
+            FileClose(FileHandle);
+    End
+
+    FileClose(ListFileHandle);
+
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Create_ViewList( String TableauCode )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    String Shortname;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+    String LABEL;
+
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Views.csv";
+
+    ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S5_MEATDATA_FILE+".txt";
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS;SHORTNAME");
+
+    IF ( Check_VEPC( TableauCode , "V" ) == False ) Then // Energy Found in Name
+
+        LABEL = TRIM_NAV_NAME22( ALL + "PERIODICTE");
+        FileWriteLn(ListFileHandle,"*;"+LABEL+";" + AccessALL+";*");
+        i=i+1;
+
+    Else
+
+        FileHandle   = FileOpen(FullPathFileName,"rt");
+
+        If (FileHandle == 0) Then
+          FileClose(ListFileHandle);
+            Return 0;
+        End
+
+        Ligne = FileReadLn(FileHandle); // header
+
+        While ( FileEof(FileHandle) == 0 )
+            Ligne = FileReadLn(FileHandle);
+
+                IF ( Ligne != "" ) Then
+
+                Code = FetchBU(Ligne,1,";");
+                Name = FetchBU(Ligne,2,";");
+                LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,4,";");
+                Shortname = FetchBU(Ligne,3,";");
+                i=i+1;
+                If ( Access == "*" || Access == "" ) then  Access = AccessALL;    End
+                FileWriteLn(ListFileHandle,Code+";"+LABEL+";"+ Access+";"+ Shortname);
+
+                End
+
+        End
+
+        FileClose(FileHandle);
+
+
+   End
+
+    FileClose(ListFileHandle);
+
+    Return i;
+end
+//////////////////////////////////////////////////////////////////////////////
+function String SiteList( Int MaxBu )
+
+    Int MaxTableau;
+    Int Tableoffset = 9;
+    Int i;
+    Int ii;
+    String Tableau;
+  MaxTableau = GetNumGateValue("MaxTableau",0);
+    int TOP_offset =25;
+    Int Last_TOP = 220;
+    //Int POS = 0;
+    Int O =0;
+    Int Top;
+    Int CMaxTableaux = 0;
+    String BUFullPathFileName;
+    Int BUFileHandle;
+    String BULigne;
+    int j;
+    Bool BU_OK = False;
+    String BU;
+    String Access;
+    Int NUM_Access;
+
+
+    Int MAX_CHAR_NAME = 22;
+    String SPACE50;
+    String LABEL;
+
+    SPACE50 = StrOfChar(32,MAX_CHAR_NAME);
+
+String  L1="  #Object: Button";
+String  L2="    #ID: 0";
+String  L3="    #Pos: 1,";//"  #Pos: 500,TOP";
+String  L4="    #Size: 268,25";
+//String  L5="    #BkColor: clInactiveCaptionText";
+String  L6="    #Cursor: 0";
+//String  L7="    #TxtColor: clHighlightText";
+//String  L8="    #Font: Calibri,13,0001";
+String  L9="    #Label: ";//"  #Label:   NomTableaux"
+String L10="    #Font: Courier New,12,0001";
+//String L10="    #Align: 32";
+//String L11="    #Frame: 1";
+String L11="     #TabOrder: 0";
+String L12="     #Access: ";
+String L13="     #NewOnClick: Template,STEP1";
+String L14="   #EndObj";
+
+String L15="#EndObj";
+
+
+    if (MODE == "D") Then Last_TOP = 120;   End
+
+    String HeaderFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+MODE+"_"+S1_SUBFIX+"_Header";
+    String FullPathFileName ;
+
+    FullPathFileName = NAV_PATH + S1_SUBFIX;
+    Int FileHandle;
+
+    FileCopy(HeaderFullPathFileName,FullPathFileName,False);
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+      BUFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S1_MEATDATA_FILE+".txt";
+      BUFileHandle=FileOpen(BUFullPathFileName,"rt");
+      IF (BUFileHandle==0) then MessageBox(BUFullPathFileName,"Program File not Found");  return; end
+
+      If ( MaxBu > MAX_BUTTONS ) Then MaxBu = MAX_BUTTONS; End
+
+      FileReadLn(BUFileHandle);
+
+        For j = 1 to  MaxBu do
+
+          BULigne = FileReadLn(BUFileHandle);
+
+           If (BULigne != "" ) Then  BU_OK = True; End
+           If (BU_OK == true) then
+             BU= FetchBU(BULigne,2,";");
+             Access = FetchBU(BULigne,3,";");
+             If (BU == "*" ) then BU_OK = false; end
+           End
+
+           IF (BU_OK == True) Then
+
+            //BU_tableau =  ii+"_BUsList" ;
+            FileWriteLn(FileHandle,L1);
+            FileWriteLn(FileHandle,L2);
+            O = O+1;
+            Top = Last_TOP +j + (O-1) * TOP_offset;
+
+            FileWriteLn(FileHandle,L3+Top);
+
+            FileWriteLn(FileHandle,L4);
+            //FileWriteLn(FileHandle,L5);
+            FileWriteLn(FileHandle,L6);
+            //FileWriteLn(FileHandle,L7);
+            //FileWriteLn(FileHandle,L8);
+
+            FileWriteLn(FileHandle,L9+BU);
+
+            FileWriteLn(FileHandle,L10);
+            FileWriteLn(FileHandle,L11);
+
+            IF (Access == "") Then NUM_Access = 0;
+            Else
+                IF (Access == "*") Then NUM_Access = AccessALL;
+                Else
+                    NUM_Access = StrToInt(Access);
+                End
+            End
+
+
+            FileWriteLn(FileHandle,L12 + NUM_Access);
+            //FileWriteLn(FileHandle,L13);
+            FileWriteLn(FileHandle,L14);
+        End
+
+    End
+
+    //FileWriteLn(FileHandle,L15);
+    FileClose(FileHandle);
+    FileClose(BUFileHandle);
+    Return "FILE#" + BUFullPathFileName;
+end
+
+//////////////////////////////////////////////////////////////////////////////
+function String BUList(Int MaxBu)
+
+    //Int Tableoffset = 9;
+    Int j;
+
+    String BU;
+    //MaxTableau = GetNumGateValue("MaxTableau",0);
+    int TOP_offset =25;
+    Int Last_TOP = 220;
+    Int O =0;
+    Int Top;
+    Int BUFileHandle;
+    String BUFullPathFileName;
+    String BULigne;
+    Bool BU_OK = False;
+
+    Int MAX_CHAR_NAME = 22;
+    String SPACE50;
+    String LABEL;
+
+    SPACE50 = StrOfChar(32,MAX_CHAR_NAME);
+
+String  L1="  #Object: Button";
+String  L2="    #ID: 0";
+String  L3="    #Pos: 271,";//"  #Pos: 500,TOP";
+String  L4="    #Size: 268,25";
+//String  L5="    #BkColor: clInactiveCaptionText";
+String  L6="    #Cursor: 0";
+//String  L7="    #TxtColor: clHighlightText";
+//String  L8="    #Font: Calibri,13,0001";
+String  L9="    #Label: ";//"  #Label:   NomTableaux"
+String L10="    #Font: Courier New,12,0001";
+//String L10="    #Align: 32";
+//String L11="    #Frame: 1";
+String L11="     #TabOrder: 0";
+String L12="     #Access: 0";
+String L13="     #NewOnClick: Template,BUsList";
+String L14="   #EndObj";
+
+String L15="#EndObj";
+
+    String HeaderFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+MODE+"_"+S2_SUBFIX+"_Header";
+    String FullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\" + S2_SUBFIX;
+    Int FileHandle;
+
+    FileCopy(HeaderFullPathFileName,FullPathFileName,False);
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+    BUFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S2_MEATDATA_FILE+".txt";
+      BUFileHandle=FileOpen(BUFullPathFileName,"rt");
+      IF (BUFileHandle==0) then MessageBox(BUFullPathFileName,"List File not Found");  return; end
+
+       if (MODE == "D") Then Last_TOP = 120;   End
+
+If ( MaxBu > MAX_BUTTONS ) Then MaxBu = MAX_BUTTONS; End
+
+        FileReadLn(BUFileHandle);
+
+        For j = 1 to  MaxBu do
+
+          BULigne = FileReadLn(BUFileHandle);
+
+           If (BULigne != "" ) Then  BU_OK = True; End
+           If (BU_OK == true) then
+             BU= FetchBU(BULigne,2,";");
+             If (BU == "*" ) then BU_OK = false; end
+           End
+
+           IF (BU_OK == True) Then
+
+            FileWriteLn(FileHandle,L1);
+            FileWriteLn(FileHandle,L2);
+            O = O+1;
+            Top = Last_TOP + j+ (O-1) * TOP_offset;
+
+            FileWriteLn(FileHandle,L3+Top);
+
+            FileWriteLn(FileHandle,L4);
+            FileWriteLn(FileHandle,L6);
+
+            FileWriteLn(FileHandle,L9+BU);
+
+            FileWriteLn(FileHandle,L10);
+            FileWriteLn(FileHandle,L11);
+            FileWriteLn(FileHandle,L12);
+            FileWriteLn(FileHandle,L14);
+        End
+
+    End
+        FileClose(FileHandle);
+        FileClose(BUFileHandle);
+    Return "FILE#" + BUFullPathFileName;
+end
+//////////////////////////////////////////////////////////////////////////////
+function String Site( Int MaxTableau )
+
+    Int Tableoffset = 9;
+    Int i;
+    Int ii;
+    String Tableau;
+    String Ligne;
+    int TOP_offset =25;
+    Int Last_TOP = 220;
+    Int O =0;
+    Int Top;
+    Int CMaxTableaux = 0;
+
+    Int MAX_CHAR_NAME = 22;
+    String SPACE50;
+    String LABEL;
+
+    SPACE50 = StrOfChar(32,MAX_CHAR_NAME);
+
+String  L1="  #Object: Button";
+String  L2="    #ID: 0";
+String  L3="    #Pos: 541,";//"  #Pos: 500,TOP";
+String  L4="    #Size: 268,25";
+//String  L5="    #BkColor: clInactiveCaptionText";
+String  L6="    #Cursor: 0";
+//String  L7="    #TxtColor: clHighlightText";
+//String  L8="    #Font: Calibri,13,0001";
+String  L9="    #Label: ";//"  #Label:   NomTableaux"
+String L10="    #Font: Courier New,12,0001";
+//String L10="    #Align: 32";
+//String L11="    #Frame: 1";
+String L11="     #TabOrder: 0";
+String L12="     #Access: 0";
+String L13="     #NewOnClick: Template,Site";
+String L14="   #EndObj";
+
+String L15="#EndObj";
+    String HeaderFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+MODE+"_"+S3_SUBFIX+"_Header";
+    String FullPathFileName ;
+
+    FullPathFileName = GetProjectPath()+ "\files\WebTemplates\Source\" + S3_SUBFIX;
+    Int FileHandle;
+
+    FileCopy(HeaderFullPathFileName,FullPathFileName,False);
+
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+
+    String ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S3_MEATDATA_FILE+".txt";
+    Int ListFileHandle=FileOpen(ListFullPathFileName,"rt");
+    IF (ListFileHandle==0) then MessageBox(ListFullPathFileName,"List File not Found");  return; end
+
+    If ( MaxTableau > MAX_BUTTONS ) Then MaxTableau = MAX_BUTTONS; End
+
+    if (MODE == "D") Then Last_TOP = 120;   End
+        FileReadLn(ListFileHandle);
+
+        For i = 1 to  MaxTableau do
+
+          Ligne = FileReadLn(ListFileHandle);
+           If (Ligne != "" ) Then
+            Tableau= FetchBU(Ligne,2,";");
+            FileWriteLn(FileHandle,L1);
+            FileWriteLn(FileHandle,L2);
+            O = O+1;
+            Top = Last_TOP + i+ (O-1)*TOP_offset;
+            FileWriteLn(FileHandle,L3+Top);
+
+            FileWriteLn(FileHandle,L4);
+            FileWriteLn(FileHandle,L6);
+
+            FileWriteLn(FileHandle,L9+Tableau);
+
+            FileWriteLn(FileHandle,L10);
+            FileWriteLn(FileHandle,L11);
+            FileWriteLn(FileHandle,L12);
+            FileWriteLn(FileHandle,L14);
+        End
+
+    End
+
+
+FileClose(FileHandle);
+FileClose(ListFileHandle);
+
+    Return "FILE#" + ListFullPathFileName;
+end
+//////////////////////////////////////////////////////////////////////////////
+function String EnergyList( Int MaxEnergy )
+
+    Int k;
+    String Energy;
+    int TOP_offset =25;
+    Int Last_TOP = 220;
+    Int O =0;
+    Int Top;
+    Bool Energy_OK = False;
+    String Ligne;
+    Int MAX_CHAR_NAME = 22;
+    String SPACE50;
+    String LABEL;
+
+    SPACE50 = StrOfChar(32,MAX_CHAR_NAME);
+
+
+String  L1="  #Object: Button";
+String  L2="    #ID: 0";
+String  L3="    #Pos: 811,";//"  #Pos: 500,TOP";
+String  L4="    #Size: 268,25";
+//String  L5="    #BkColor: clInactiveCaptionText";
+String  L6="    #Cursor: 0";
+//String  L7="    #TxtColor: clHighlightText";
+//String  L8="    #Font: Calibri,13,0001";
+String  L9="    #Label: ";//"  #Label:   NomTableaux"
+String L10="    #Font: Courier New,12,0001";
+//String L10="    #Align: 32";
+//String L11="    #Frame: 1";
+String L11="     #TabOrder: 0";
+String L12="     #Access: 0";
+String L13="     #NewOnClick: Template,EnergyList";
+String L14="   #EndObj";
+
+String L15="#EndObj";
+
+    String HeaderFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+MODE+"_"+S4_SUBFIX+"_Header";
+    String FullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\" + S4_SUBFIX;
+    Int FileHandle;
+    if (MODE == "D") Then Last_TOP = 120;   End
+    FileCopy(HeaderFullPathFileName,FullPathFileName,False);
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+    String ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\" + S4_MEATDATA_FILE + ".txt";
+    Int ListFileHandle=FileOpen(ListFullPathFileName,"rt");
+    IF (ListFileHandle==0) then MessageBox(ListFullPathFileName,"List File not Found");  return; end
+
+    If ( MaxEnergy > MAX_BUTTONS ) Then MaxEnergy = MAX_BUTTONS; End
+
+    FileReadLn(ListFileHandle);
+
+     For k = 1 to  MaxEnergy do
+
+         Ligne = FileReadLn(ListFileHandle);
+         If (Ligne != "" ) Then
+            Energy= FetchBU(Ligne,2,";");
+
+            FileWriteLn(FileHandle,L1);
+            FileWriteLn(FileHandle,L2);
+            O = O+1;
+            Top = Last_TOP +k+ (O-1)*TOP_offset;
+            FileWriteLn(FileHandle,L3+Top);
+
+            FileWriteLn(FileHandle,L4);
+            FileWriteLn(FileHandle,L6);
+
+            FileWriteLn(FileHandle,L9+Energy);
+
+            FileWriteLn(FileHandle,L10);
+            FileWriteLn(FileHandle,L11);
+            FileWriteLn(FileHandle,L12);
+            FileWriteLn(FileHandle,L14);
+          End
+
+    End
+
+    FileClose(FileHandle);
+    FileClose(ListFileHandle);
+
+ Return "FILE#" + ListFullPathFileName;
+end
+
+//////////////////////////////////////////////////////////////////////////////
+function String ViewList( Int MaxView )
+
+    Int k;
+    int ll;
+    Int Viewoffset = -1;
+
+    String View;
+    int TOP_offset =25;
+    Int Last_TOP = 220;
+    Int O =0;
+    Int Top;
+    String Ligne;
+    Int MAX_CHAR_NAME = 22;
+    String SPACE50;
+    String LABEL;
+
+    SPACE50 = StrOfChar(32,MAX_CHAR_NAME);
+
+
+String  L1="  #Object: Button";
+String  L2="    #ID: 0";
+String  L3="    #Pos: 1081,";//"  #Pos: 500,TOP";
+String  L4="    #Size: 268,25";
+//String  L5="    #BkColor: clInactiveCaptionText";
+String  L6="    #Cursor: 0";
+//String  L7="    #TxtColor: clHighlightText";
+//String  L8="    #Font: Calibri,13,0001";
+String  L9="    #Label: ";//"  #Label:   NomTableaux"
+String L10="    #Font: Courier New,12,0001";
+//String L10="    #Align: 32";
+//String L11="    #Frame: 1";
+String L11="     #TabOrder: 0";
+String L12="     #Access: 0";
+String L13="     #NewOnClick: Template,ViewList";
+String L14="   #EndObj";
+
+String L15="#EndObj";
+
+    String HeaderFullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\"+MODE+"_"+S5_SUBFIX+"_Header";
+    String FullPathFileName = GetProjectPath()+"\files\WebTemplates\Source\" + S5_SUBFIX;
+    Int FileHandle;
+
+    FileCopy(HeaderFullPathFileName,FullPathFileName,False);
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+    String ListFullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+S5_MEATDATA_FILE+".txt";
+    Int ListFileHandle=FileOpen(ListFullPathFileName,"rt");
+
+    IF (ListFileHandle==0) then MessageBox(ListFullPathFileName,"List File not Found");  return; end
+
+    If ( MaxView > MAX_BUTTONS ) Then MaxView = MAX_BUTTONS; End
+    if (MODE == "D") Then Last_TOP = 120;   End
+    FileReadLn(ListFileHandle);
+
+     For k = 1 to  MaxView do
+
+         Ligne = FileReadLn(ListFileHandle);
+
+         IF (Ligne != "") then
+
+            View= FetchBU(Ligne,2,";");
+
+            FileWriteLn(FileHandle,L1);
+            FileWriteLn(FileHandle,L2);
+            O = O+1;
+            Top = Last_TOP + k+(O-1)*TOP_offset;
+            FileWriteLn(FileHandle,L3+Top);
+
+            FileWriteLn(FileHandle,L4);
+            FileWriteLn(FileHandle,L6);
+
+            FileWriteLn(FileHandle,L9+View);
+
+            FileWriteLn(FileHandle,L10);
+            FileWriteLn(FileHandle,L11);
+            FileWriteLn(FileHandle,L12);
+            FileWriteLn(FileHandle,L14);
+          End
+
+    End
+    FileClose(FileHandle);
+    FileClose(ListFileHandle);
+ Return "FILE#" + ListFullPathFileName;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool Check_VEPC( String Tableau , String TO_Check )
+
+    Int CurrTABLEAU;
+    String VEPCT;
+    String E;
+    String V;
+    String C;
+
+    If (Tableau == "18") Then Return False;  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+
+    IF ( TO_Check == "E" ) Then
+    ///////////////////////////////////////////////////////////////////////////
+        E   =StrSubString(VEPCT,1,1);
+        if ( E == "1" ) then
+            Return True;
+         Else
+            Return False;
+        end
+    ///////////////////////////////////////////////////////////////////////////
+    Else
+
+        IF (TO_Check == "V") Then
+        ///////////////////////////////////////////////////////////////////////
+            V   =StrSubString(VEPCT,5,1);
+            if ( V == "1" ) then
+             Return True;
+            Else
+             Return False;
+            end
+        ///////////////////////////////////////////////////////////////////////
+        Else
+
+            IF (TO_Check == "C") Then
+            ///////////////////////////////////////////////////////////////////
+                C   =StrSubString(VEPCT,7,1);
+                if ( C == "1" ) then
+                 Return True;
+                Else
+                 Return False;
+                end
+            ///////////////////////////////////////////////////////////////////
+            End // C
+
+        End // V
+
+    End // E
+
+end
+///////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Function String GetCompteurCode(String Energy, String level, String PCC)
+
+  int i=0;
+  bool found = false;
+  Bool Exit = False;
+  String Code = "";
+  int numLevel = StrToInt(level);
+  String currLevel;
+  Int CompteurMax;
+  CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    while ( Exit == false && found == false )
+      i=i+1;
+      IF ( GetStrGateValue("Compteur_Energy",i) == Energy ) Then // Energy
+        IF ( GetStrGateValue("Compteur_PCC",i) == PCC ) Then // Post code consimmation
+           currLevel = GetStrGateValue("Compteur_Level",i);
+          IF ( StrToInt(currLevel) <= numLevel ) Then // Level
+
+            Code = GetStrGateValue("Compteur_Code",i) ;
+            found = True;
+
+          End//Level
+        End // Post code consimmation
+      End //Energy
+
+
+      IF (i  >= CompteurMax && found == False) then
+        Exit = True;
+      End
+
+      IF ( found == True ) then
+        Exit = True;
+      End
+
+    End // Found == false
+
+     IF ( found == true) Then
+         Return Code;
+      Else
+         Return "";
+      End
+End
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function Bool WEB_Check_BU(string Tableau)
+
+    string VEPCT ;
+    //String VEPCT_Code;
+    Bool View = False;
+    Bool Energy = False;
+    Bool CCode = False;
+    String V;
+    string P;
+    string C;
+    string Compteur;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    Bool PostCode = False;
+
+    If (Tableau == "18") Then Return False;  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then
+        Energy = True;
+    end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+    PostCode = True;
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then
+     View = True;
+    end
+///////////////////////////////////////////////////////////////////////////////
+    C   =StrSubString(VEPCT,7,1);
+    if ( C == "1" ) then
+      CCode = True;
+      //Name = Name+"_"+ CCode;
+    end
+///////////////////////////////////////////////////////////////////////////////
+  /* T   =StrSubString(VEPCT,9,1);
+    If ( T == "1" ) then GOTO_TVE = True;
+    Else GOTO_TVE = False;
+    end*/
+///////////////////////////////////////////////////////////////////////////////
+    //MessageBox(V+"/"+E+"/"+P+"/"+C,T);
+    If (CCode == True  || PostCode == True) Then Return True;
+    Else    Return False;
+    End
+
+end
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function Bool WEB_Check_View(string Tableau)
+
+    string VEPCT ;
+    //String VEPCT_Code;
+    Bool View = False;
+    Bool Energy = False;
+    String V;
+    string P;
+    string Compteur;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    Bool PostCode = False;
+
+    If (Tableau == "18") Then Return False;  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then
+        Energy = True;
+    end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+    PostCode = True;
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then
+     View = True;
+    end
+//////////////////////////////////////////////////////////////////////////////
+
+
+    Return View;
+end
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function Bool WEB_Check_Energy(string Tableau)
+
+    string VEPCT ;
+    Bool View = False;
+    Bool Energy = False;
+    String V;
+    string P;
+    string Compteur;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    Bool PostCode = False;
+
+    If (Tableau == "18") Then Return False;  End
+
+     CurrTABLEAU = StrToInt(Tableau);
+
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+///////////////////////////////////////////////////////////////////////////////
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then
+        Energy = True;
+    end
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+    PostCode = True;
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then
+     View = True;
+    end
+///////////////////////////////////////////////////////////////////////////////
+
+    Return Energy;
+end
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function String Construct_WEBNAVIGATOR_Name(int Tableau, int Step, String BU, String Energy,  String View)
+
+    String Final_Name = "";
+    String Part_ENERGY = "AllEnergy";
+    String Part_BU = "AllBU";
+    String Part_VIEW = "AllView";
+
+///////////////////////////////////////////////////////////////////////////////
+    IF (Step == 1) Then
+        IF (WEB_Check_BU(Tableau) == True) Then Part_BU = BU;               End
+        Final_Name = Tableau +"_"+ Part_BU;
+    End
+///////////////////////////////////////////////////////////////////////////////
+    IF (Step == 2) Then
+        IF (WEB_Check_BU(Tableau) == True) Then Part_BU = BU;               End
+        Final_Name = Tableau +"_"+ Part_BU;
+        IF (WEB_Check_Energy(Tableau) == True) Then Part_ENERGY = Energy;   End
+        Final_Name = Final_Name +"_"+ Part_ENERGY;
+    End
+///////////////////////////////////////////////////////////////////////////////
+    IF (Step == 3) Then
+        IF (WEB_Check_BU(Tableau) == True) Then Part_BU = BU;               End
+        Final_Name = Tableau +"_"+ Part_BU;
+        IF (WEB_Check_Energy(Tableau) == True) Then Part_ENERGY = Energy;   End
+        Final_Name = Final_Name +"_"+ Part_ENERGY;
+        IF (WEB_Check_View(Tableau) == True) Then Part_VIEW = View;         End
+        Final_Name = Final_Name +"_ViewList";
+    End
+///////////////////////////////////////////////////////////////////////////////
+    Return  Final_Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String TRIM_NAV_NAME22( String NAME)
+
+    String SPACE22;
+    String LABEL;
+    Int MAXLABEL;
+
+    SPACE22 = StrOfChar(32,MAX_CHAR_NAV_NAME);
+    MAXLABEL = MAX_CHAR_NAV_NAME-4;
+
+    LABEL= StrSubString( NAME , 1 , MAXLABEL );
+    LABEL = Prefix + LABEL + Postfix + SPACE22;
+
+    LABEL = StrSubString(LABEL,1,MAX_CHAR_NAV_NAME);
+
+
+    Return LABEL;
+end

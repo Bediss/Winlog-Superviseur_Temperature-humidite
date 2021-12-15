@@ -1,0 +1,11 @@
+CHC1;Production;Humidite;CHCA;CLC;;*;*;D2;*;*;Production;;Unite;;Production Humidite
+CHC1A;Process_Pasto;Humidite;CHC1;Production;;D69;*;D21;RH  CH_Ambiante;*;Process_Pasto;;Point de mesure;;Process_Pasto Humidite
+CHC1B;Process_Sterilo;Humidite;CHC1;Production;;D69;*;D22;RH  CH_Ambiante;*;Process_Sterilo;;Point de mesure;;Process_Sterilo Humidite
+CHC1C;Cond_UHT1_P1;Humidite;CHC1;Production;;D69;*;D23;RH  CH_Ambiante;*;Cond_UHT1_P1;;Point de mesure;;Cond_UHT1_P1 Humidite
+CHC1D;Cond_UHT1_P2;Humidite;CHC1;Production;;D69;*;D24;RH  CH_Ambiante;*;Cond_UHT1_P2;;Point de mesure;;Cond_UHT1_P2 Humidite
+CHC1E;Process_Lait_Fermente;Humidite;CHC1;Production;;D69;*;D25;RH  CH_Ambiante;*;Process_Lait_Fermente;;Point de mesure;;Process_Lait_Fermente Humidite
+CHC1F;Galdi;Humidite;CHC1;Production;;*;*;D26;*;*;Galdi;;Atelier;;Galdi Humidite
+CHC1G;Beurrerie;Humidite;CHC1;Production;;*;*;D27;*;*;Beurrerie;;Atelier;;Beurrerie Humidite
+CHC1H;CH_Chaud_P1;Humidite;CHC1;Production;;D68;*;D28;RH  CH_Chaude;*;CH_Chaud_P1;;Point de mesure;;CH_Chaud_P1 Humidite
+CHC1I;CH_Froid_P1;Humidite;CHC1;Production;;D70;*;D2A;RH  CH_Positive;*;CH_Froid_P1;;Point de mesure;;CH_Froid_P1 Humidite
+CHC1J;CH_Froid_P2;Humidite;CHC1;Production;;D70;*;D2B;RH  CH_Positive;*;CH_Froid_P2;;Point de mesure;;CH_Froid_P2 Humidite

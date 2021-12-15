@@ -1,0 +1,8 @@
+nom du compteur;SCHNEIDER SC
+Marque;SCHNEIDER
+Reference;PM710
+Connecion;Modbus RS485
+Adresse;2
+Baude;9600
+Data;8 bit
+Stop;1 bit

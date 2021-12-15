@@ -1,0 +1,14 @@
+Electrique;28
+Vapeur;27
+Gaz;25
+Froid;27
+Froid (+)  Eau Glycolee;27
+Froid (-)  Ammoniac;27
+Air Comprime;26
+Eau;25
+Eau Brute;25
+Eau Forage;25
+Eau Sonede;25
+Eau Traite;25
+Eau Rejet;25
+Tonnage;0

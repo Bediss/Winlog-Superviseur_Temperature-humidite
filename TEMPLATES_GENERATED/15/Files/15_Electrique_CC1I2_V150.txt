@@ -1,0 +1,6 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I21;Abattage TR2;Electrique;CC1I2;Abattoir TR2;6;S200;M170;M213;STEG;PosteTR2;Abattage;Reel;SubAtelier;*;*;Abattoir;!~*;!~*;;;;;2;Abattage TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I22;hangar A;Electrique;CC1I2;Abattoir TR2;7;S200;M170;M21I;STEG;PosteTR2;Hangar-A;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;hangar d'attente;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I23;Decoupe;Electrique;CC1I2;Abattoir TR2;6;S200;M170;M217;STEG;PosteTR2;Decoupe;Reel;SubAtelier;*;*;Abattoir;!~*;!~*;;;;;2;Decoupe;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I24;Pompe a Vide;Electrique;CC1I2;Abattoir TR2;7;S200;M170;M218;STEG;PosteTR2;Pompe a Vide;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;Pompe a Vide;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I25;Plumeuse;Electrique;CC1I2;Abattoir TR2;7;S200;M170;M219;STEG;PosteTR2;Plumage;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;Plumeuse;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I26;Pompe a Vide P;Electrique;CC1I2;Abattoir TR2;7;S200;M170;M21C;STEG;PosteTR2;Pompe a Vide P;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;Pompe a Vide Poumons;*

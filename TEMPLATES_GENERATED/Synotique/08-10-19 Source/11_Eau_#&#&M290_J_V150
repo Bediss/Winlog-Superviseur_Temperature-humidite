@@ -1,0 +1,300 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clBtnFace
+#Gates: 10
+  #CMP: CEC2,0
+  #CMP: CEB1,0
+  #CMP: CEB1D,0
+  #CMP: CES1,0
+  #CMP: CES1B,0
+  #EVN: AHB1D,8
+  #EVN: AHB1,8
+  #EVN: AHS1B,8
+  #EVN: AHS1,8
+  #EVN: AHC2,8
+#PBkBmp: 0,0,1350,530,Synoptique_Eau_RefectoireV2.jpg
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Led
+  #ID: 0
+  #Pos: 874,341
+  #Size: 37,37
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 5,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 877,157
+  #Size: 33,33
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 5,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 930,78
+  #Size: 30,30
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 6,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 702,335
+  #Size: 38,38
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 7,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 645,93
+  #Size: 25,25
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 8,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 1048,46
+  #Size: 44,43
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 9,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 35,10
+  #Size: 50,50
+  #Cursor: 0
+  #OffPBmpFile: zoom(-)2.png
+  #OnPBmpFile: zoom(-)2.png
+  #BmpBkC: 0,128,128
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: Template,11_Eau_#&#&M200_J
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 1043,40
+  #Size: 258,53
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #NewOnClick: Template,17_CEC2
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 873,155
+  #Size: 43,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #NewOnClick: Template,17_CEB1D
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 868,335
+  #Size: 48,48
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 2
+  #Access: 0
+  #NewOnClick: Template,17_CEB1D
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 698,330
+  #Size: 48,48
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 3
+  #Access: 0
+  #NewOnClick: Template,17_CES1B
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 644,90
+  #Size: 37,33
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 4
+  #Access: 0
+  #NewOnClick: Template,17_CES1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 539,115
+  #Size: 267,33
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 5
+  #Access: 0
+  #NewOnClick: Template,17_CES1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 928,75
+  #Size: 38,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 6
+  #Access: 0
+  #NewOnClick: Template,17_CEB1
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 818,110
+  #Size: 258,33
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 7
+  #Access: 0
+  #NewOnClick: Template,17_CEB1
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1175,87
+  #Size: 160,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 0
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 965,77
+  #Size: 140,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 1
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 675,90
+  #Size: 120,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 3
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 915,158
+  #Size: 160,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 2
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 915,342
+  #Size: 160,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 2
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 545,340
+  #Size: 160,27
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Calibri,18,0001
+  #Gate: 4
+  #Label: %.*f M³
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 688,385
+  #Size: 223,38
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 8
+  #Access: 0
+  #NewOnClick: Template,17_CEC2
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,0
+  #Size: 920,42
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0001
+  #Label: Path
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj

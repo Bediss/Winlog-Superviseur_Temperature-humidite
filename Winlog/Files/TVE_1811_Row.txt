@@ -1,0 +1,7 @@
+CTCA,CLC
+CTC2,Production
+CTC3,CH_F_Commerciale
+CTC4,Laboratoire
+CTC5,Salle_De_Fermentation
+CTC6,Matiere_Premiere_P1
+CTC7,CH_CHAUD_LABO

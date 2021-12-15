@@ -1,0 +1,129 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 630,320
+#Size: 150,185
+#BkColor: clWhite
+#Gates: 4
+  #NUM: AP_Value,0
+  #STR: EmailView1,1
+  #STR: EmailView1,2
+  #STR: EmailView1,3
+#Style: Fixed
+#StayOnTop: 1
+#Object: CheckBox
+  #ID: 0
+  #Pos: 15,40
+  #Size: 20,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #NeedApply: 0
+  #OnMask: 0,0001,0001
+  #TabOrder: 0
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 15,65
+  #Size: 20,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #NeedApply: 0
+  #OnMask: 0,0002,0002
+  #TabOrder: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,40
+  #Size: 100,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: Email
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,65
+  #Size: 100,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: SMS Server
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,90
+  #Size: 100,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: Fax
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 130,30
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Gate: 1
+  #Label: choisissez un ou plusieur type :
+  #Align: 21
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,150
+  #Size: 130,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 2
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 15,90
+  #Size: 20,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #NeedApply: 0
+  #OnMask: 0,0004,0004
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,120
+  #Size: 130,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 4
+  #Access: 0
+  #OnClick: StartF,Select_Type_Mmailinglist()
+  #OnClick: Close
+#EndObj

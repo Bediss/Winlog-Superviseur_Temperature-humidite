@@ -1,0 +1,218 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clBtnFace
+#Gates: 9
+  #CMP: CC14,0
+  #CMP: CC1K21,0
+  #CMP: CC1K22,0
+  #CMP: CC1K23,0
+  #EVN: AE14,29
+  #EVN: AE1K22,29
+  #EVN: AE1K21,29
+  #EVN: AE1K23,29
+  #EVN: AE1K2,29
+#PBkBmp: 0,0,1350,530,Synoptique_Electrique_PETFOOD.jpg
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Led
+  #ID: 0
+  #Pos: 385,80
+  #Size: 50,50
+  #Cursor: 0
+  #OffPBmpFile: zoom(-)2.png
+  #OnPBmpFile: zoom(-)2.png
+  #BmpBkC: 0,128,128
+  #Flashing: 0
+  #Access: 0
+  #NewOnClick: Template,11_Electrique_#&#&M200_J
+  #NewOnClick: Close
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 442,86
+  #Size: 48,48
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 4,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 482,184
+  #Size: 46,46
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 5,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 482,243
+  #Size: 46,46
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 6,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 482,303
+  #Size: 46,46
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 7,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Led
+  #ID: 0
+  #Pos: 86,217
+  #Size: 35,35
+  #Cursor: 0
+  #OffBmpRes: 52
+  #OnBmpRes: 51
+  #BmpBkC: 0,128,128
+  #On: 8,6,1
+  #Flashing: 0
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 490,85
+  #Size: 175,50
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #NewOnClick: Template,17_CC14
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 535,180
+  #Size: 255,50
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #NewOnClick: Template,17_CC1K22
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 535,235
+  #Size: 135,50
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 2
+  #Access: 0
+  #NewOnClick: Template,17_CC1K21
+  #NewOnClick: Close
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 540,290
+  #Size: 200,50
+  #BkColor: clNone
+  #Style: 1
+  #TabOrder: 3
+  #Access: 0
+  #NewOnClick: Template,17_CC1K23
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 670,100
+  #Size: 225,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Segoe UI,18,0000
+  #Gate: 0
+  #Label: %.*f KWh
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 680,245
+  #Size: 225,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Segoe UI,18,0000
+  #Gate: 1
+  #Label: %.*f KWh
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 750,305
+  #Size: 225,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Segoe UI,18,0000
+  #Gate: 3
+  #Label: %.*f KWh
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 800,190
+  #Size: 225,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Segoe UI,18,0000
+  #Gate: 2
+  #Label: %.*f KWh
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 150,200
+  #Size: 225,32
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,0,255
+  #Font: Segoe UI,18,0000
+  #Gate: 0
+  #Label: %.*f KWh
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,10
+  #Size: 920,37
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0001
+  #Label: Path
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj

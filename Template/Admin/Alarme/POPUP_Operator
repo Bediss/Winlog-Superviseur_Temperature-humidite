@@ -1,0 +1,131 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 800,275
+#Size: 125,155
+#BkColor: clWhite
+#Gates: 1
+  #STR: Operateur_Formule,0
+#Style: Fixed
+#StayOnTop: 1
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 105,25
+  #BkColor: clBtnHighlight
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #Label: %s
+  #Align: 37
+  #Frame: 7
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,90
+  #Size: 105,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,SaveOP()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,120
+  #Size: 105,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: StartF,CancelOP
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,35
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: !=
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_Diff()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,60
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: =
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_Egal()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 45,35
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: <=
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_InfEgal()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 45,60
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: <
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_Inf()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 80,35
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: >=
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_SupEgal()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 80,60
+  #Size: 35,25
+  #BkColor: 250,250,250
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: >
+  #Align: 37
+  #Frame: 5
+  #Access: 0
+  #NewOnClick: StartF,ClickOperator_Sup()
+#EndObj

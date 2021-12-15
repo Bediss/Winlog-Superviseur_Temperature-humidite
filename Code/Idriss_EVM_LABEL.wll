@@ -1,0 +1,286 @@
+
+    Global Int EVM_Max_Items;
+    Global String EVM_LIST_FILE;
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_View()
+
+    String Energy;
+    String EVMLigne;
+    Energy = GetStrGateValue("BU_Energy",0);
+    EVMLigne = GET_EVM_Ligne( Energy );
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+    EVM_Display( 1 );
+    TPageOpen("EVM_SELECTOR");
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_EVM_Ligne( String Energy)
+
+      Bool Exist = False;
+      Bool EnergyFound = False;
+      String TextRow;
+      String ListLabel;
+
+      Int P;
+
+      String LabelFullPathFileName =ENV_PATH+"\Files\AllCompteur\EnergyMeasureView.csv";
+      Int LabelFileHandle=FileOpen(LabelFullPathFileName,"rt");
+      if (LabelFileHandle==0) then  MessageBox("File not Found","Error");   return; end
+
+      While( Exist == False )
+       TextRow=FileReadLn(LabelFileHandle);
+       P = StrPos(TextRow,";");
+        if ( Energy == StrSubString(TextRow,1,P-1) ) then
+         ListLabel = TextRow;
+         EnergyFound = True;
+        End
+
+        If (FileEof(LabelFileHandle)!=0 || EnergyFound == True) Then Exist = True; End
+      End
+
+           FileClose(LabelFileHandle);
+
+           If ( EnergyFound == true ) Then
+           return ListLabel;
+           Else
+           return "*";
+           End
+end
+///////////////////////////////////////////////////////////////////////////////
+function Void EVM_StringToFile( String Ligne , String Search ,  String FullPathFileName)
+    String EVM = Ligne;
+    String Part;
+
+    Int Pos;
+    Int i =0;
+    Int Len = 0;
+      Int FileHandle=FileOpen(FullPathFileName,"wt");
+
+    Len = StrLen(EVM);
+    Pos = StrPos(EVM,Search);
+    EVM = StrDelete(EVM,1,Pos); // Energy header
+    Pos = StrPos(EVM,Search);
+    While( Pos !=  0 && Len != 0)
+      Part = StrSubString(EVM,1,Pos-1);
+
+
+         FileWriteLn(FileHandle,i+";"+Part);
+
+
+      EVM = StrDelete(EVM,1,Pos);
+      Pos = StrPos(EVM,Search);
+      Len = StrLen(EVM);
+      i=i+1;
+    End
+
+    If ( Pos == 0 && Len != 0) Then
+        Part = StrSubString(EVM,1,Len);
+        IF (StrSubString(Part,1,2) != "  " ) Then
+          i=i+1;
+          FileWriteLn(FileHandle,i+";"+Part);
+        End
+    End
+
+    FileClose(FileHandle);
+    EVM_Max_Items =  i+1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_Display( Int Page)
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+        SetStrGateValue("EmailView6",1,"");
+        SetStrGateValue("EmailView7",1,"");
+        SetStrGateValue("EmailView8",1,"");
+        SetStrGateValue("EmailView9",1,"");
+        SetStrGateValue("EmailView10",1,"");
+
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+
+                SetStrGateValue(EVM,1,TextRow);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     EVM_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void EVM_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    EVM_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void EVM_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    EVM_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void EVM_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     EVM_Display(MaxPage);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",1);
+    IF ( S != "" ) Then
+     SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_9()
+String S;
+    S = GetStrGateValue("EmailView9",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+function void EVM_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("EV_Measure",0,S);
+      TPageCloseByName("EVM_SELECTOR");
+    End
+end
+///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,2855 @@
+global int MaxRow;
+global int MaxCol;
+global int LenPrefix;
+Global bool Confirme_Save=False;
+Global String PageOpen="";
+Global int SommeR=0;
+
+Global String Admin_View_Original_File = "";
+Global String Admin_View_Temp_File = "";
+Global String Admin_View_CurrentLine="";
+Global String Temp_Admin_View_Recycle_Code="";
+Global bool NameUses=False;
+Global Int POPUPList_MaxPages;
+Global String POPUPList_Extension ;
+Global bool FlagUses = False;
+
+function void Bouton_Admin()
+    ShowPath("PathAdmin");
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+Function void Confirme_Save()
+//if Confirme_Save== True then
+int A;
+bool res=False;
+     ShowPoPUPs("");
+if Confirme_Save == True then
+    MessageBeep(2);
+    A=IconMessageBox("Si vous partez, Vous perdez votre travaille.Cliquez Ok : Enregistrer ton travail ; Cancel: Partir sans les sauvgarder .","AVERTISSEMENT!!",5,2,3);
+    //MessageBox(A,"_____");
+    IF A==7  then
+        Confirme_Save=False;
+        //res=True;
+        if PageOpen== "Gateway" then
+        //MessageBox(Confirme_Save,PageOpen);
+            Gateway_Commit();
+        end
+         if PageOpen== "EventEmail" then
+            Event_Email_Commit();
+         end
+          if PageOpen== "Regulier" then
+            Event_Commit();
+         end
+           if PageOpen== "Alarme" then
+            Commit_Alarme();
+         end
+                if PageOpen== "Email" then
+            Email_Commit();
+         end
+                if PageOpen== "Report" then
+            Report_Commit();
+         end
+          if PageOpen== "PBI" then
+            PBI_Commit();
+         end
+         if PageOpen== "MasterPBI" then
+            MasterPBI_Commit();
+         end
+             if PageOpen== "User_Master" then
+            Master_User_Commit();
+         end
+          if PageOpen== "AllCompteur" then
+            Save_Action_New_DATA_Model();
+         end
+            if PageOpen== "Tableaux" then
+            Tableaux_Commit();
+         end
+           if PageOpen== "Views" then
+            Views_Commit();
+         end
+         if PageOpen== "Energy" then
+            Energy_Commit();
+         end
+          if PageOpen== "Unite" then
+            Report_Commit();
+         end
+                if PageOpen== "MailingList" then
+            save_MailingList();
+         end
+                if PageOpen== "MesureList" then
+            save_MesureList();
+         end
+                if PageOpen== "CompteurList" then
+            save_CompteurList();
+         end
+        else
+         Confirme_Save=False;
+
+    end
+end
+//return res;
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void View_Admin()
+string UserName = GetUserName();
+    int UserGroupe = GetUserGroups();
+   // Authentification
+    if ( GetBit( UserGroupe , 13) == 0 ) then
+        MessageBox("Je suis désolé, vous n'êtes pas autorisé à accéder à la destination choisie. Veuillez contacter votre administrateur système.","Attention");
+        return;
+    end
+    SetDigGateValue("AdminIN",0,1);
+    SetNumGateValue("LOGIN_SUP_ADMIN",0,2);
+   MaxRow = 10 ;
+   MaxCol = 4;
+    ShowPath("PathAdmin");
+    //BoutonAlarmes();
+
+end
+/*****************************************************************************/
+function void Bouton_SELECTION_LISTS()
+        ShowPoPUPs("Selection_Lists");
+end
+/*****************************************************************************/
+function void InitialiseAdminTemplate()
+
+TPageCloseByName("PathAdmin");
+TPageCloseByName("Path");
+TPageCloseByName("AdminListView");
+TPageCloseByName("POPUPEvent");
+TPageCloseByName("POPUPEventType");
+TPageCloseByName("POPUPMail");
+TPageCloseByName("POPUPMailBody");
+TPageCloseByName("POPUPMailCC");
+TPageCloseByName("POPUPMAilSub");
+TPageCloseByName("POPUPMailTO");
+TPageCloseByName("POPUPReport");
+TPageCloseByName("SelectEventAlarm");
+
+//TPageOpen("PathAdmin");
+
+end
+
+function String FR_Speciale_CHar(String Var)
+
+String SP=":,;,>,<,=,/,\,*,~,|,?,"+CharToStr(34);
+
+int i;
+int j;
+int Pos;
+int MaxSP;
+String Char;
+String blob;
+String TSimple;
+for i = 1 to 12 do
+   Char= Fetch_Report(SP,i,",");
+   //MessageBox(Char,i);
+   Pos = StrPos(Var,Char);
+   if Pos!=0 then
+    MaxSP=Occurence_operateur(Var,Char);
+
+      if MaxSP<1 then
+       TSimple = Var;
+
+        else
+          For j=1 to MaxSP do
+                blob=FetchBlob(Var,i,Char);
+                TSimple=TSimple+" "+blob;
+            end
+
+
+       end
+        Var=TSimple;
+
+
+    end
+end
+return Var;
+
+End
+
+Function Void Clean_Formulaire()
+int i;
+
+    for i = 0 to 16 do
+        SetStrGateValue("AlarmeEventModifer",i,"");
+    end
+
+    Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+    SetNumGateValue("Template_Control",0,0);
+End
+
+
+/////////
+
+Function String ReplaceCharByChar(String originalSTR, String ORChar,String NVChar)
+    int i=0;
+    int NbrChar=0;
+    String ResultSTR;
+    String Part;
+
+    NbrChar=Occurence_operateur(originalSTR,ORChar);
+    Part=Fetch_Admin(originalSTR,1,ORChar);
+    ResultSTR=Part;
+        for i =2 to NbrChar+1 do
+            Part=Fetch_Admin(originalSTR,i,ORChar);
+            ResultSTR=ResultSTR+NVChar+Part;
+        end
+    Return(ResultSTR);
+End
+/////////////////////
+function void Bouton_Gateway()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+MaxRow = 10;
+MaxCol = 6;
+  LenPrefix=1;
+//InitialiseAdminTemplate();
+Confirme_Save();
+PageOpen="Gateway";
+  SetNumGateValue("LastCodeAdd",0,0);
+    SetNumGateValue("Show_Temp_Pointer",0,536870914);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+         SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+        Admin_View_Temp_File=ENV_PATH+"\Files\Config Compteur\Temp_Gateways.csv";
+        Admin_View_Original_File=ENV_PATH+"\Files\Config Compteur\Gateways.csv";
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\Config Compteur\Recycler_Gateway_Code.txt";
+          Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+             FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+
+         Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+        //Highest_Code_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+
+
+
+        ShowPage("Gateway_Display");
+
+
+        Admin_View_Display(1 , "Gateway" );
+        FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////
+
+/*****************************************************************************/
+function void Bouton_CompteurDetailes()
+MaxRow = 19 ;
+MaxCol = 1;
+int i;
+
+       SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+        SetStrGateValue("PathFileCompteur",0,"");
+        SetStrGateValue("View",0,"");
+    ShowPage("TechnicalDetailesCompteur");
+    for i = 0 to MaxRow do
+            SetStrGateValue("Detail",i,"");
+     end
+     //DisplayDetailCompteur();
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void Load_CompteurDetailes()
+MaxRow = 19 ;
+MaxCol = 1;
+int i;
+
+//InitialiseAdminTemplate();
+    ShowPage("TechnicalDetailesCompteur");
+   /*for i = 0 to MaxRow do
+            SetStrGateValue("Detail",i,"");
+     end*/
+     Admin_View_Display(1 , "DetailCompteur" );
+end
+/*****************************************************************************/
+/*****************************************************************************/
+Function bool UniqueName(String FullPathNameFile,String FileName,String NameTest , int NFild)
+if FlagUses == True then Sleep(100); end
+
+
+bool Exist=False;
+
+    Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\",FileName,FullPathNameFile,NameTest,NFild,0);
+    FlagUses=False;
+return Exist;
+
+End
+
+Function bool UniqueNameFile(String FullPathNameFile)
+
+if FlagUses == True then Sleep(100); end
+bool Exist=False;
+
+    Exist = FileExist(FullPathNameFile);
+  if Exist== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre"); end
+ if Exist == False then
+    SetStrGateValue("AlarmeEventModifer",17,"");
+   end
+return Exist;
+End
+/*****************************************************************************/
+/*****************************************************************************/
+function void Bouton_PBI_CL()
+MaxRow = 10 ;
+MaxCol = 6;
+//InitialiseAdminTemplate();
+    //ShowPage("Email");
+     Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\CL.csv";
+     Admin_View_Original_File=ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\CL.csv";
+     ShowPage("PBI_CompteurList");
+     SetNumGateValue("EmailPageView",0,1);
+     SetNumGateValue("AdminTotalItems",0,0);
+     SetNumGateValue("EditPosition",0,0);
+     //GateName = "EmailView";
+     Admin_View_Display(1,"PBI_CL");
+end
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+function void SelectEvAlrBouton()
+//SelectEventAlarm
+ShowPoPUPs("SelectEventAlarm");
+end
+
+function void EventTypeBouton()
+//SelectEventAlarm
+ShowPoPUPs("POPUPEventType");
+end
+/*****************************************************************************/
+function void BoutonAlarmes()
+int LastCode;
+String LCFullPathFileName;
+int LCFileHandle;
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+MaxRow = 10 ;
+MaxCol = 4;
+
+
+Confirme_Save();
+PageOpen="Alarme";
+        //InitialiseAdminTemplate();
+        //MessageBox(GetNumGateValue("Template_Control",0),"Avant");
+
+             SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+        SetNumGateValue("Show_Temp_Pointer",0,1073741825);
+         //MessageBox(GetNumGateValue("Template_Control",0),"Apres");
+        SetNumGateValue("PageAlarmeEventView",0,1);
+       //NumGateValue("Template_Control",1,0);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("EditPosition",1,0);
+        SetNumGateValue("AdminTotalItems",0,0);
+          SetNumGateValue("LastCodeAdd",0,0);
+          LenPrefix=1;
+
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Event\Recycler_Alarme_Code.txt";
+        Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\Event\TEMP_Alarme_F_Reporting.csv";
+
+        Admin_View_Original_File=ENV_PATH+"\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv";
+
+        Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Event\Temp_Recycler_Alarme_Code.txt";
+        FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+        Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+        //Highest_Code_Initialisation(Admin_View_Temp_File,Admin_View_Recycle_Code);
+        SetStrGateValue("AlarmeEventModifer",17,"Loading All Incidents. Please wait a few moments!");
+        ShowPoPUPs("InfoPopup");
+
+        Check_ALAME();//Creation temp And int total Items
+
+        //Intitialisation Input
+        Admin_View_CurrentLine=";;;;;;;;;;;;;";
+        SetStrGateValue("AlarmeEventModifer",7,"");
+        SetStrGateValue("Display_Formule",0,"");
+        SetStrGateValue("Display_Formule",1,"");
+        SetStrGateValue("Display_Formule",2,"");
+        SetStrGateValue("Display_Formule",3,"");
+        SetStrGateValue("Display_Formule",4,"");
+        SetStrGateValue("Display_Formule",5,"");
+
+
+       Admin_View_Display( 1 ,"Alarme" );
+         SetStrGateValue("AlarmeEventModifer",17,"");
+
+       ShowPage("Alarm");
+       ShowPoPUPs("");
+       FlagUses=False;
+
+end
+
+function void View_Log()
+//InitialiseAdminTemplate();
+    ShowPage("Log");
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void View_LogEvent()
+//InitialiseAdminTemplate();
+    ShowPage("Log_Event");
+end
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*****************************************************************************/
+/*function void Bouton_SaveRegulier()
+if ( GetStrGateValue("AlarmeEventModifer",0) == "" ) then
+MessageBox("Vous n'avez rien à sauvegarder. Veuillez sélectionner une ligne à modifier", "Attention:");
+else Save_Regulier("SAVE");
+end
+end
+*/
+/*****************************************************************************/
+/*****************************************************************************/
+
+function void AdminListViewSelect()
+if ( GetStrGateValue("AlarmeEventModifer",0) == "" ) then
+MessageBox("Veuillez sélectionner une ligne à modifier en premier lieu.", "Attention:"); return;
+end
+//TPageOpen("AdminListView");
+ShowPoPUPs("AdminListView");
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void AdminListViewChoice()
+
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("ViewNames",GetNumGateValue("AdminListView",0)));
+/*if ( GetNumGateValue("AdminListView",0) == 1 ) then
+     SetStrGateValue("AlarmeEventModifer",1,"Temps réel");
+     return;
+end
+if ( GetNumGateValue("AdminListView",0) == 2 ) then
+     SetStrGateValue("AlarmeEventModifer",1,"Journalier");
+     return;
+end
+if ( GetNumGateValue("AdminListView",0) == 3 ) then
+     SetStrGateValue("AlarmeEventModifer",1,"Hebdomadaire");
+     return;
+end
+if ( GetNumGateValue("AdminListView",0) == 4 ) then
+     SetStrGateValue("AlarmeEventModifer",1,"Mensuel");
+     return;
+end
+if ( GetNumGateValue("AdminListView",0) == 5 ) then
+     SetStrGateValue("AlarmeEventModifer",1,"Annuel");
+     return;
+end*/
+end
+/*****************************************************************************/
+/*****************************************************************************/
+    //          Compteur View detail
+/*****************************************************************************/
+/****************************************************************************/
+/*function void DisplayDetailCompteur()
+
+int i= 0;
+   int FileHandle;
+   string FullPathFileName;
+   string TextRow;
+   string Path0;
+   Path0 = GetStrGateValue("PathFileCompteur",0)+"\";
+///////////////////////////////////////////////////////////////
+    FullPathFileName=Path0+GetStrGateValue("View",0)+".txt";
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+   end
+//////////////////////////////////////////////////////////////
+   while(FileEof(FileHandle)==0)
+
+    TextRow=FileReadLn(FileHandle);
+    AnalyseDetail(TextRow ,i);
+    i=i+1;
+  end
+   FileClose(FileHandle);
+end
+*/
+               /////   AnalyseData() "CSV File"    /////
+
+function void SetDisplay_DetailCompteur(string TextRow ,String GateName)
+
+string txt = TextRow;
+int P;
+string V;
+            P = StrPos(txt,";");
+            V=StrSubString(txt,1,P-1);
+            SetStrGateValue(GateName,1,V);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+                V=StrSubString(txt,1,P-1);
+                SetStrGateValue(GateName,2,V);
+                txt=StrDelete(txt,1,P);
+end
+
+
+
+
+/*****************************************************************************/
+/*****************************************************************************/
+               /////   AnalyseData() "CSV File"    /////
+/*****************************************************************************/
+/*****************************************************************************/
+function void SetDisplay_Email(string TextRow,String GateName)
+string txt = TextRow;
+int P;
+
+String EmailView = GateName;
+String NAME;
+string CODE;
+String DESCRIPTION;
+string EMAILTO;
+string EMAILCC;
+string SUBJECT;
+string BODY;
+string ATTACHEMENT;
+string TO_INTERNEL;
+string CC_INTERNEL;
+
+                txt = TextRow;
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                NAME=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,0,NAME);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EMAILTO=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,1,EMAILTO);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EMAILCC=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,2,EMAILCC);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                SUBJECT=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,3,SUBJECT);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                BODY=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,4,BODY);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                ATTACHEMENT=StrSubString(txt,1,P-1);
+                ATTACHEMENT=Fetch_Email(ATTACHEMENT,3,":");
+                SetStrGateValue(EmailView,5,ATTACHEMENT);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,6,DESCRIPTION);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                TO_INTERNEL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                CC_INTERNEL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_AllCompteur()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+Int A;
+
+////////////////////////////////////
+    A = IconMessageBox("Souhaitez-vous charger des enregistrements des Compteurs dans votre projet ?","Information",6,5,3);
+
+    If ( A == 2 ) Then
+      FlagUses=False;
+    Return;
+    Else
+    SetNumGateValue("Show_Temp_Pointer",0,536870913);
+           SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+    If ( A == 7 ) Then
+            Confirme_Save();
+            PageOpen="AllCompteur";
+            Admin_View_Original_File = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+            Admin_View_Temp_File = ENV_PATH+"\Files\AllCompteur\TEMP_AllCompteur.csv";
+            Admin_View_CurrentLine = "";
+            //MessageBox("7","True");
+            //ChoicePopup_Proceed();
+            Proceed_AllCompteur( True );
+        Else
+            If ( A == 4 ) Then
+                Confirme_Save();
+                PageOpen="AllCompteur";
+                Admin_View_Original_File = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+                Admin_View_Temp_File = ENV_PATH+"\Files\AllCompteur\TEMP_AllCompteur.csv";
+                Admin_View_CurrentLine = "";
+                //MessageBox("4","False");
+                //ChoicePopup_Cancel();
+                Proceed_AllCompteur( False );
+            End
+        End
+    End
+    FlagUses=False;
+End
+////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+/*****************************************************************************/
+/*
+function string AnalyseSave_Email(ftring TextRow,int j)
+string txt = TextRow;
+int P;
+String EmailView = "EmailView"+j;
+string EditRow;
+String NAME;
+string CODE;
+String DESCRIPTION;
+string EMAILTO;
+string EMAILCC;
+string SUBJECT;
+string BODY;
+string ATTACHEMENT;
+string TO_INTERNAL;
+string CC_INTERNAL;
+string NEWNAME = GetStrGateValue("AlarmeEventModifer",0);
+string NEWDESC = GetStrGateValue("AlarmeEventModifer",6);
+string NEWTO =GetStrGateValue("AlarmeEventModifer",1);
+string NEWCC =GetStrGateValue("AlarmeEventModifer",2);
+
+string NEWSUBJECT = GetStrGateValue("AlarmeEventModifer",3);
+string NEWBODY = GetStrGateValue("AlarmeEventModifer",4);
+string NEWATTACH = GetStrGateValue("AlarmeEventModifer",5);
+ // disect line from file
+                txt = TextRow;
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                NAME=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EMAILTO=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EMAILCC=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                SUBJECT=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                BODY=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                ATTACHEMENT=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                TO_INTERNAL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                CC_INTERNAL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+
+
+    if ( NEWTO != EMAILTO ) then  TO_INTERNAL =contruct_line(pathNEWTO);  end
+
+    if ( NEWCC != EMAILCC ) then CC_INTERNAL =contruct_line(pathNEWCC); end
+
+EditRow = CODE +";"+ NEWNAME +";"+ NEWTO +";"+ NEWCC +";"+ NEWSUBJECT +";"+ NEWBODY +";"+ NEWATTACH +";"+ NEWDESC +";"+ TO_INTERNAL +";"+ CC_INTERNAL;//Concatination
+
+return(EditRow);
+end*/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*****************************************************************************/
+    //          Mailing List
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*
+Function void DisplayMailingList(int Page)
+//*****************************************************************************
+//*****************************************************************************
+   String FullPathFileName;
+    int FileHandle; int j=0;    int i ;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+
+    string Path = GetStrGateValue("PathFileCompteur",0)+"\"+GetStrGateValue("View",0)+".txt";
+
+    if ( Page == 1 ) then SetNumGateValue("EmailPageView",0,1);end
+
+     if (GetNumGateValue("AdminTotalItems",0)==0) then scanfile(Path); end
+
+        FileHandle=FileOpen(Path,"rt");
+            if (FileHandle==0) then
+                MessageBox("File not Found","Error");
+            return;
+            end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+     while(FileEof(FileHandle)==0)
+
+        TextRow = FileReadLn(FileHandle);
+
+         if (TextRow != "" ) then
+            ReadRowPos = ReadRowPos+1;
+            if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+            j = ReadRowPos-Row_Start+1;
+                SetStrGateValue("Detail",j,TextRow);
+            //AnalyseDisplay_Email(TextRow,j);
+
+           end
+         end
+
+     end
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+     MessageBox("Il n'y a plus de pages disponibles","Pour votre information");
+     else
+            for i = j+1 to Row_End do
+            SetStrGateValue("Detail",i,"");
+            end
+     end
+
+end*/
+
+//*****************************************************************************
+Function void SaveItemFile(string Path, string Item, String Row)
+//*****************************************************************************
+// Create the empty .Bi file
+//*****************************************************************************
+    String FilePath = Path + "\" + Item + ".txt";
+    int FileHandle = FileOpen(FilePath, "w");
+    if (FileHandle == 0) then return; end
+    FileWriteLn(FileHandle,Row);
+    FileClose(FileHandle);
+end
+
+
+Function void DeleteBinFiles(string Path)
+//*****************************************************************************
+// Delete all .Bin files
+//*****************************************************************************
+    String FileToSearch = Path + "\*.txt";
+    String CurrFile;
+    int Handle = FileFindFirstEx(FileToSearch);
+    if (Handle != 0) then
+        CurrFile = FileNameFoundEx(Handle);
+        if (CurrFile != "") then
+            FileDelete(Path + "\" + CurrFile);
+            while (FileFindNextEx(Handle) != false)
+                CurrFile = FileNameFoundEx(Handle);
+                FileDelete(Path + "\" + CurrFile);
+            end
+        end
+        FileFindCloseEx(Handle);
+   end
+end
+/*
+/////////////////////////////////////////////
+Function Void Highest_Code2_Initialisation(String FullPathFileName,String RFullPathFileName)
+
+int FileHandle;
+int MLastCode=0;
+int LastCode=0;
+String Code;
+String TextRow;
+int S=1;
+int LCFileHandle;
+Bool B;
+
+      B=FileExist(RFullPathFileName);
+      if B==False then
+           FileHandle=FileOpen(RFullPathFileName,"wt");
+           FileClose(FileHandle);
+        end
+     FileHandle=FileOpen(FullPathFileName,"rt");
+
+
+    //Display file
+
+     while(FileEof(FileHandle)==0)
+
+        TextRow = FileReadLn(FileHandle);
+
+        Code=Fetch_Admin(TextRow,S,";");
+         LastCode=StrToInt(StrDelete(Code,1,LenPrefix));
+        //MessageBox(LastCode,"Code");
+        if(MLastCode<LastCode)then
+            MLastCode=LastCode;
+              //MessageBox(MLastCode,FullPathFileName);
+
+        end
+    end
+
+    FileClose(FileHandle);
+    //MessageBox(RFullPathFileName,"RFullPathFileName");
+    FileHandle=FileOpen(RFullPathFileName,"rt");
+
+    //Recycle File
+       while(FileEof(FileHandle)==0)
+
+        TextRow = FileReadLn(FileHandle);
+        Code=Fetch_Admin(TextRow,S,";");
+        LastCode=StrToInt(Code);
+        if(MLastCode<LastCode)then
+            MLastCode=LastCode;
+
+
+        end
+    end
+
+    //MessageBox(MLastCode,"CodeL");
+    SetNumGateValue("LastCodeAdd",0,MLastCode);
+   //MessageBox(MLastCode,"Nobre d'item");
+     //MessageBox("4","");
+     FileClose(FileHandle);
+    //MessageBox(GetNumGateValue("LastCodeAdd",0),"Code");
+
+End
+*/
+//****************************************************************************/
+//****************************************************************************/
+function void CleanEmptyRows(int StartRow, string GateName)
+string NomALRPageView;
+int i;  int j;
+
+    For i = StartRow to MaxRow do
+        NomALRPageView = GateName+i;
+        for j = 0 to 20 do
+        SetStrGateValue(NomALRPageView,j,"");
+        end
+    end
+
+end
+//****************************************************************************/
+function int scanfileBouton( string FullPathFileName)
+     int TotalItem = 0;
+     int WFileHandle;
+     String WFullPathFileName;
+     int FileHandle=FileOpen(FullPathFileName,"rt");
+     WFullPathFileName=ENV_PATH+"\Files\WritingFile.txt";
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+     bool Exit_condition =  false;
+     string TextRow;
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+     end
+
+     while(Exit_condition == false)
+
+        TextRow = FileReadLn(FileHandle);
+            if ( TextRow != "" ) then
+               TotalItem = TotalItem +1;
+               FileWriteLn(WFileHandle,TextRow);
+            end
+
+        if (FileEof(FileHandle)!=0) then Exit_condition = true; end
+
+     End
+    FileClose(WFileHandle);
+    FileClose(FileHandle);
+     Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+    SetNumGateValue("AdminTotalItems",1,TotalItem-1);
+
+   //MessageBox(GetNumGateValue("AdminTotalItems",0),TotalItem);
+
+    return TotalItem;
+
+end
+
+function int scanfileGate( string FullPathFileName)
+     int TotalItem = 0;
+     int WFileHandle;
+     String WFullPathFileName;
+     int FileHandle=FileOpen(FullPathFileName,"rt");
+     WFullPathFileName=ENV_PATH+"\Files\WritingFile.txt";
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+     bool Exit_condition =  false;
+     string TextRow;
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+     end
+
+     while(Exit_condition == false)
+
+        TextRow = FileReadLn(FileHandle);
+            if ( TextRow != "" ) then
+               TotalItem = TotalItem +1;
+               FileWriteLn(WFileHandle,TextRow);
+            end
+
+        if (FileEof(FileHandle)!=0) then Exit_condition = true; end
+
+     End
+    FileClose(WFileHandle);
+    FileClose(FileHandle);
+     Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+
+   //MessageBox(GetNumGateValue("AdminTotalItems",0),TotalItem);
+
+    return TotalItem;
+
+end
+//****************************************************************************/
+function int scanfile( string FullPathFileName)
+     int TotalItem = 0;
+     int WFileHandle;
+     String WFullPathFileName;
+
+     int FileHandle=FileOpen(FullPathFileName,"rt");
+
+     WFullPathFileName=ENV_PATH+"\Files\WritingFile.txt";
+
+
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+     bool Exit_condition =  false;
+     string TextRow;
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+     end
+
+     while(Exit_condition == false)
+
+        TextRow = FileReadLn(FileHandle);
+            if ( TextRow != "" ) then
+
+               TotalItem = TotalItem +1;
+
+               FileWriteLn(WFileHandle,TextRow);
+            end
+
+        if (FileEof(FileHandle)!=0) then Exit_condition = true; end
+
+     End
+    FileClose(WFileHandle);
+    FileClose(FileHandle);
+     Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+    SetNumGateValue("AdminTotalItems",0,TotalItem-1);
+
+   //MessageBox(GetNumGateValue("AdminTotalItems",0),TotalItem);
+
+    return TotalItem;
+
+end
+/*****************************************************************************/
+function void Initfile( string FullPathFileOriginal,string FullPathFileTemp)
+     int TotalItem = 0;
+     int FileHandle;
+     int WFileHandle;
+     String Code;
+     bool Exit_condition =  false;
+     string TextRow;
+
+
+     FileHandle=FileOpen(FullPathFileOriginal,"rt");
+     WFileHandle=FileOpen(FullPathFileTemp,"w+");
+
+
+
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+     end
+
+      //MessageBox(FullPathFileOriginal,FileEof(FileHandle));
+
+     TextRow = FileReadLn(FileHandle);
+     FileWriteLn(WFileHandle,TextRow);
+
+     while(Exit_condition == false)
+
+        TextRow = FileReadLn(FileHandle);
+
+         //MessageBox("loop FileHandle",FileEof(FileHandle));
+
+           Code=Fetch_Email(TextRow,1,";");
+            if ( Code != "" ) then
+
+               TotalItem = TotalItem +1;
+               //MessageBox("Loop "+Exit_condition,TotalItem);
+               FileWriteLn(WFileHandle,TextRow);
+
+            end //TextRow != ""
+
+            if (FileEof(FileHandle)!=0) then Exit_condition = true; end
+
+
+    end
+
+
+    SetNumGateValue("AdminTotalItems",0,TotalItem);
+    //MessageBox("end initfile"+GetNumGateValue("AdminTotalItems",0),TotalItem);
+
+    FileClose(WFileHandle);
+    FileClose(FileHandle);
+
+    //MessageBox(TotalItem,"Total Items");
+
+end
+/*****************************************************************************/
+    //          EditFonctions
+/*****************************************************************************/
+
+
+function void SelectRow_Alarme_1()
+    SetNumGateValue("EditPosition",1,1);
+    SelectEditLigneAlarme(1);
+
+end
+function void SelectRow_Alarme_2()
+    SetNumGateValue("EditPosition",1,2);
+    SelectEditLigneAlarme(2);
+end
+function void SelectRow_Alarme_3()
+    SetNumGateValue("EditPosition",1,3);
+    SelectEditLigneAlarme(3);
+end
+function void SelectRow_Alarme_4()
+    SetNumGateValue("EditPosition",1,4);
+    SelectEditLigneAlarme(4);
+end
+function void SelectRow_Alarme_5()
+    SetNumGateValue("EditPosition",1,5);
+    SelectEditLigneAlarme(5);
+end
+function void SelectRow_Alarme_6()
+    SetNumGateValue("EditPosition",1,6);
+    SelectEditLigneAlarme(6);
+end
+function void SelectRow_Alarme_7()
+    SetNumGateValue("EditPosition",1,7);
+    SelectEditLigneAlarme(7);
+end
+function void SelectRow_Alarme_8()
+    SetNumGateValue("EditPosition",1,8);
+    SelectEditLigneAlarme(8);
+end
+function void SelectRow_Alarme_9()
+    SetNumGateValue("EditPosition",1,9);
+    SelectEditLigneAlarme(9);
+end
+function void SelectRow_Alarme_10()
+    SetNumGateValue("EditPosition",1,10);
+    SelectEditLigneAlarme(10);
+end
+/*****************************************************************************/
+
+
+function void SelectRow_1()
+    SetNumGateValue("EditPosition",0,1);
+    SelectEditLigne(1);
+
+end
+function void SelectRow_2()
+    SetNumGateValue("EditPosition",0,2);
+    SelectEditLigne(2);
+end
+function void SelectRow_3()
+    SetNumGateValue("EditPosition",0,3);
+    SelectEditLigne(3);
+end
+function void SelectRow_4()
+    SetNumGateValue("EditPosition",0,4);
+    SelectEditLigne(4);
+end
+function void SelectRow_5()
+    SetNumGateValue("EditPosition",0,5);
+    SelectEditLigne(5);
+end
+function void SelectRow_6()
+    SetNumGateValue("EditPosition",0,6);
+    SelectEditLigne(6);
+end
+function void SelectRow_7()
+    SetNumGateValue("EditPosition",0,7);
+    SelectEditLigne(7);
+end
+function void SelectRow_8()
+    SetNumGateValue("EditPosition",0,8);
+    SelectEditLigne(8);
+end
+function void SelectRow_9()
+    SetNumGateValue("EditPosition",0,9);
+    SelectEditLigne(9);
+end
+function void SelectRow_10()
+    SetNumGateValue("EditPosition",0,10);
+    SelectEditLigne(10);
+end
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+function void SelectEditLigneAlarme(int row)
+int MaxPage=10;
+int curLigne;
+String GateName;
+GateName="ROW";
+string Name;
+Name= GateName+row;
+
+if ( GetStrGateValue(Name,0) != "" ) then
+curLigne = (GetNumGateValue("EmailPageView",0)-1)*MaxPage +row;
+SetStrGateValue("AlarmeEventModifer",20,row);//current pos in file
+
+SetNumGateValue("Template_Control",0,1);
+//MessageBox(GetStrGateValue("AlarmeEventModifer",20),curLigne);
+
+SetStrGateValue("AlarmeEventModifer",0,GetStrGateValue(Name,0));
+SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue(Name,1));
+SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue(Name,2));
+SetStrGateValue("AlarmeEventModifer",3,GetStrGateValue(Name,3));
+SetStrGateValue("AlarmeEventModifer",4,GetStrGateValue(Name,4));
+SetStrGateValue("AlarmeEventModifer",5,GetStrGateValue(Name,5));
+SetStrGateValue("AlarmeEventModifer",6,GetStrGateValue(Name,6));
+SetStrGateValue("AlarmeEventModifer",7,GetStrGateValue(Name,7));
+SetStrGateValue("AlarmeEventModifer",8,GetStrGateValue(Name,8));
+SetStrGateValue("AlarmeEventModifer",9,GetStrGateValue(Name,9));
+SetStrGateValue("AlarmeEventModifer",10,GetStrGateValue(Name,10));
+SetStrGateValue("AlarmeEventModifer",11,GetStrGateValue(Name,11));
+SetStrGateValue("AlarmeEventModifer",12,GetStrGateValue(Name,12));
+SetStrGateValue("AlarmeEventModifer",13,GetStrGateValue(Name,13));
+SetStrGateValue("AlarmeEventModifer",14,GetStrGateValue(Name,14));
+SetStrGateValue("AlarmeEventModifer",15,GetStrGateValue(Name,15));
+SetStrGateValue("AlarmeEventModifer",16,GetStrGateValue(Name,16));
+SetStrGateValue("AlarmeEventModifer",17,GetStrGateValue(Name,17));
+SetStrGateValue("AlarmeEventModifer",18,GetStrGateValue(Name,18));
+SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue(Name,19));
+
+
+
+//LigneAlarme=Lecture_Alarme_Ligne();
+
+Admin_View_CurrentLine=Lecture_Admin_View_Line();
+
+//MessageBox(Admin_View_CurrentLine,"");
+
+//MessageBox(LigneAllCompteur,curLigne);
+end
+end
+
+
+//////////////////////////////////////////////Lecture AllCompteur
+function String Lecture_Admin_View_Line()
+
+    int RowSelect;
+    int MaxLignePage = 10;
+    int NumLigne;
+    int Page=GetNumGateValue("EmailPageView",0);
+
+    RowSelect=StrToInt(GetStrGateValue("AlarmeEventModifer",20));
+//MessageBox("RowSelect="+RowSelect,"Page="+Page);
+    String FullPathFileName;
+    int FileHandle;
+    String Ligne;
+
+    FullPathFileName = Admin_View_Temp_File;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+   int i;
+   NumLigne=(Page-1)*MaxLignePage+RowSelect;
+  //MessageBox("NumLigne="+NumLigne,MaxLignePage);
+   Ligne = FileReadLn(FileHandle);
+    for i = 1 to NumLigne do
+    Ligne = FileReadLn(FileHandle);
+//MessageBox(Ligne,i);
+
+    end
+    //MessageBox(Ligne,"Ligne");
+FileClose(FileHandle);
+//MessageBox(Ligne,"Ligne");
+   return Ligne;
+end
+
+/////////////////////////////////////////////Lecture AllCompteur
+function String Lecture_Admin_View_Line_No_Header()
+
+    int RowSelect;
+    int MaxLignePage = 10;
+    int NumLigne;
+    int Page=GetNumGateValue("EmailPageView",0);
+
+    RowSelect=StrToInt(GetStrGateValue("AlarmeEventModifer",20));
+//MessageBox("RowSelect="+RowSelect,"Page="+Page);
+    String FullPathFileName;
+    int FileHandle;
+    String Ligne;
+
+    FullPathFileName = Admin_View_Temp_File;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+   int i;
+   NumLigne=(Page-1)*MaxLignePage+RowSelect;
+  //MessageBox("NumLigne="+NumLigne,MaxLignePage);
+   //Ligne = FileReadLn(FileHandle);
+    for i = 1 to NumLigne do
+    Ligne = FileReadLn(FileHandle);
+//MessageBox(Ligne,i);
+
+    end
+    //MessageBox(Ligne,"Ligne");
+FileClose(FileHandle);
+//MessageBox(Ligne,"Ligne");
+   return Ligne;
+end
+
+
+function void SelectEditLigne(int row)
+int MaxPage=10;
+int curLigne;
+String GateName;
+GateName="ROW";
+string Name;
+Name= GateName+row;
+
+if ( GetStrGateValue(Name,0) != "" ) then
+curLigne = (GetNumGateValue("EmailPageView",0)-1)*MaxPage +row;
+SetStrGateValue("AlarmeEventModifer",20,row);//current pos in file
+       SetNumGateValue("Template_Control",0,1);
+
+
+//MessageBox(GetStrGateValue("AlarmeEventModifer",20),curLigne);
+
+SetStrGateValue("AlarmeEventModifer",0,GetStrGateValue(Name,0));
+SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue(Name,1));
+SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue(Name,2));
+SetStrGateValue("AlarmeEventModifer",3,GetStrGateValue(Name,3));
+SetStrGateValue("AlarmeEventModifer",4,GetStrGateValue(Name,4));
+SetStrGateValue("AlarmeEventModifer",5,GetStrGateValue(Name,5));
+SetStrGateValue("AlarmeEventModifer",6,GetStrGateValue(Name,6));
+SetStrGateValue("AlarmeEventModifer",7,GetStrGateValue(Name,7));
+SetStrGateValue("AlarmeEventModifer",8,GetStrGateValue(Name,8));
+SetStrGateValue("AlarmeEventModifer",9,GetStrGateValue(Name,9));
+SetStrGateValue("AlarmeEventModifer",10,GetStrGateValue(Name,10));
+SetStrGateValue("AlarmeEventModifer",11,GetStrGateValue(Name,11));
+SetStrGateValue("AlarmeEventModifer",12,GetStrGateValue(Name,12));
+SetStrGateValue("AlarmeEventModifer",13,GetStrGateValue(Name,13));
+SetStrGateValue("AlarmeEventModifer",14,GetStrGateValue(Name,14));
+SetStrGateValue("AlarmeEventModifer",15,GetStrGateValue(Name,15));
+SetStrGateValue("AlarmeEventModifer",16,GetStrGateValue(Name,16));
+SetStrGateValue("AlarmeEventModifer",17,GetStrGateValue(Name,17));
+SetStrGateValue("AlarmeEventModifer",18,GetStrGateValue(Name,18));
+SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue(Name,19));
+
+
+
+//LigneAlarme=Lecture_Alarme_Ligne();
+
+Admin_View_CurrentLine=Lecture_Admin_View_Line();
+
+//MessageBox(Admin_View_CurrentLine,"");
+
+//MessageBox(LigneAllCompteur,curLigne);
+end
+end
+
+
+
+/*****************************************************************************/
+
+
+
+/*****************************************************************************/
+/*****************************************************************************/
+    //          Event Alarm Save
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*****************************************************************************/
+/*****************************************************************************/
+//          Test Day
+/*****************************************************************************/
+/*****************************************************************************/
+function void TestSTARTDATE(string userdate)
+
+    int DAY = GetDayOfMonth();  int userDay;    int P;
+    int MONTH = GetMonth();     int userMonth;
+    int YEAR = GetYear();       int userYear;
+    string TEMPTODAY;
+    bool OK = true;
+
+    P = StrPos(userdate,"/");
+    userDay=StrToInt(StrSubString(userdate,1,P-1));
+    userdate=StrDelete(userdate,1,P);
+    P = StrPos(userdate,"/");
+    userMonth=StrToInt(StrSubString(userdate,1,P-1));
+    userdate=StrDelete(userdate,1,P);
+    P = StrPos(userdate,"/");
+    userYear=StrToInt(StrSubString(userdate,1,P-1));
+    userdate=StrDelete(userdate,1,P);
+    if ( YEAR < userYear ) then OK = False ;
+    else
+        if (MONTH < userMonth ) then OK =FALSE ;
+        else
+            if (DAY < userDay ) then OK =FALSE; end
+        end
+    end
+    if (OK == FALSE ) then MessageBox("Date est superieur a la d'Aujourd'hui",""); end
+    return;
+end
+
+
+/*****************************************************************************/
+              /////   AnalyseData() "CSV File"    /////
+/*****************************************************************************/
+function void SetDisplay_EventEmail(string TextRow,String GateName)
+string txt = TextRow;
+int P;
+String EmailView = GateName;
+
+string CODE;
+String NAME;
+string EVENTNAME;
+string EMAILNAME;
+string EVENTTYPE;
+String DESCRIPTION;
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+
+                NAME=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,0,NAME);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EVENTNAME=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,1,EVENTNAME);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EMAILNAME=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,2,EMAILNAME);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                EVENTTYPE=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,3,EVENTTYPE);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,4,DESCRIPTION);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+
+end
+
+
+/*****************************************************************************/
+Function void SplitFile( string Path, string FileName, int DisplayCol, int CodeCol)
+//*****************************************************************************
+// Read ..\Temporan\SourceFile.txt and for each row, create an empty .bin file
+// with the name found in the row
+//*****************************************************************************
+    int pos=0;
+
+    DeleteTempFiles(Path+ "TempList");
+
+
+    string SourceFilePath = Path + FileName;
+//MessageBox(SourceFilePath,Path);
+
+    int FileHandle = FileOpen(SourceFilePath,"rt");
+    if (FileHandle == 0) then return; end
+    string Row;
+
+    While (FileEOF(FileHandle) == 0)
+        Row = FileReadLn(FileHandle);
+        pos =pos +1;
+        if (FileEOF(FileHandle) == 0) then
+            if ( pos > 1 ) then SaveTempFile(Path, Row , DisplayCol, CodeCol); end
+        end
+    end
+    FileClose(FileHandle);
+
+    TObjFunction(123456789,1);
+end
+
+function String Fetch_Admin(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+Function void SaveTempFile(string Path, string Item, int DisplayCol, int CodeCol)
+//*****************************************************************************
+// Create the empty .Bi file
+//*****************************************************************************
+string Name = Fetch_Admin(Item, DisplayCol,";");
+string Code = Fetch_Admin(Item, CodeCol,";");
+    if ( Name == "" ) then return; end
+    String FilePath = Path +"TempList\"+ Name + ".txt";
+    int FileHandle = FileOpen(FilePath, "wt");
+    if (FileHandle == 0) then return; end
+    FileWriteLn(FileHandle,Code);
+    FileClose(FileHandle);
+end
+//*****************************************************************************
+function String Fetch(string Item, int Col)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,";");
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+//*****************************************************************************
+Function void DeleteTempFiles(string Path)
+//*****************************************************************************
+// Delete all .Bin files
+//*****************************************************************************
+    String FileToSearch = Path + "\*.txt";
+    String CurrFile;
+    int Handle = FileFindFirstEx(FileToSearch);
+
+    if (Handle != 0) then
+        CurrFile = FileNameFoundEx(Handle);
+        if (CurrFile != "") then
+            FileDelete(Path + "\" + CurrFile);
+
+            while (FileFindNextEx(Handle) != false)
+                CurrFile = FileNameFoundEx(Handle);
+                FileDelete(Path + "\" + CurrFile);
+            end
+        end
+        FileFindCloseEx(Handle);
+   end
+end
+/****************************************************************************/
+//****************************************************************************/
+ /*                       Display_CL
+/*****************************************************************************/
+/*****************************************************************************/
+/*function void Display_CL(int Page)
+
+    String FullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+
+
+    if ( Page == 1 ) then RowHeader = true;   SetNumGateValue("EmailPageView",0,1);end
+
+    FullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\CL.csv";
+
+
+     if (GetNumGateValue("AdminTotalItems",0)==0) then scanfile(FullPathFileName); end
+
+     FileHandle=FileOpen(FullPathFileName,"rt");
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+      end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+     while(FileEof(FileHandle)==0)
+        TextRow = FileReadLn(FileHandle);
+        if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+         if (TextRow != "" ) then
+            ReadRowPos = ReadRowPos+1;
+            if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+            j = ReadRowPos-Row_Start+1;
+
+            AnalyseDisplay_CL(TextRow,j);
+
+           end
+         end
+       end
+     end
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+     MessageBox("Il n'y a plus de pages disponibles","Pour votre information");
+     else
+     CleanEmptyRows(j+1,"EmailView");
+     end
+
+        SetStrGateValue("AlarmeEventModifer",0,"");
+        SetStrGateValue("AlarmeEventModifer",1,"");
+        SetStrGateValue("AlarmeEventModifer",2,"");
+        SetStrGateValue("AlarmeEventModifer",3,"");
+        SetStrGateValue("AlarmeEventModifer",4,"");
+        SetStrGateValue("AlarmeEventModifer",5,"");
+        SetStrGateValue("AlarmeEventModifer",6,"");
+end*/
+/*****************************************************************************/
+/*****************************************************************************/
+               /////   AnalyseData() "CSV File"    /////
+/*****************************************************************************/
+/*****************************************************************************/
+
+/*
+function void SetDisplay_PBI_CL(string TextRow,string GateName)
+string txt = TextRow;
+int P;
+String EmailView = GateName;
+
+
+string CODE;
+String NAME;
+
+string Querry;
+String COMPTEURLIST;
+string DESCRIPTION;
+
+/*string MESUARELIST;
+string ML_CODE;
+string BODY;
+string ATTACHEMENT;
+string TO_INTERNEL;
+string CC_INTERNEL;
+
+                txt = TextRow;
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                NAME=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,0,NAME);
+                txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                Querry=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,1,Querry);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                COMPTEURLIST=StrSubString(txt,1,P-1);
+                //MessageBox(txt+" // "+P,COMPTEURLIST);
+                SetStrGateValue(EmailView,3,COMPTEURLIST);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,6,DESCRIPTION);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                /*P = StrPos(txt,";");
+                MESUARELIST=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,4,MESUARELIST);
+                txt=StrDelete(txt,1,P);
+//***********************************************************/
+               /* P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,6,DESCRIPTION);
+                txt=StrDelete(txt,1,P);
+//***********************************************************/
+                /*P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                SetStrGateValue(EmailView,6,DESCRIPTION);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                TO_INTERNEL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                CC_INTERNEL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+end*/
+///////////////////////////////////////////////////////////////////////////////
+function void ViewPBI_CL_Add()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage,"PBI_CL");
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewPBI_CL_Sub()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"PBI_CL");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewPBI_CL_First()
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"PBI_CL");
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewPBI_CL_End()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage =  ReguliersTotalItems/MaxRow+1;
+
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"PBI_CL");
+end
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//                                  Save PBI
+//////////////////////////////////////////////////////////////////////////////
+function void Save_CL(string EditOptionName)
+
+    String FullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;  string EditRow;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    int save_pos = GetNumGateValue("EditPosition",0);
+    int Page = GetNumGateValue("EmailPageView",0);
+    string RowName;
+    string WFullPathFileName;
+    int WFileHandle;
+    bool W_already = false; string FilaNameBack;
+    //String Cl_TemplistPath = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList\";
+    //String ML_TemplistPath = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Measure List\TempList\";
+if ( Page == 1 ) then RowHeader = true; end
+
+    FullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\CL.csv";
+    WFullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\WCL.csv";
+
+
+FileHandle=FileOpen(FullPathFileName,"rt");
+WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      if (FileHandle==0) then   MessageBox("File not Found","Error");   return;     end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+while(FileEof(FileHandle)==0)
+     TextRow = FileReadLn(FileHandle);
+
+     if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+            if (TextRow != "" ) then
+               ReadRowPos = ReadRowPos+1;
+
+               if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+                  j = ReadRowPos-Row_Start+1;
+
+                  if (j== save_pos) then EditRow = AnalyseSave_PBI_CL(TextRow,j);
+
+                     if ( EditOptionName == "SAVE" ) then
+
+
+                        FileWriteLn(WFileHandle,EditRow);
+                        W_already=true;
+
+                        RowName = "EmailView"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+                        SetStrGateValue(RowName,4,GetStrGateValue("AlarmeEventModifer",4));
+                        SetStrGateValue(RowName,5,GetStrGateValue("AlarmeEventModifer",5));
+                        SetStrGateValue(RowName,6,GetStrGateValue("AlarmeEventModifer",6));
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+                        SetStrGateValue("AlarmeEventModifer",4,"");
+                        SetStrGateValue("AlarmeEventModifer",5,"");
+                        SetStrGateValue("AlarmeEventModifer",6,"");
+                        // change winlog alarm
+                     else
+                         if (EditOptionName == "DELETE" ) then
+                           W_already=true;
+                         end
+
+                     end
+                  end
+               end
+            end
+     end
+
+     if (W_already == false) then FileWriteLn(WFileHandle,TextRow);end
+     W_already = false;
+
+
+end
+
+FileClose(FileHandle);
+FileClose(WFileHandle);
+
+    FileCopy(FullPathFileName,ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\CL_Back.csv",False);
+    FileCopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+MessageBox("Fin De Sauvegarde ","Information :");
+return;
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function string AnalyseSave_PBI_CL(string TextRow,int j)
+string txt = TextRow;
+int P;
+String EmailView = "EmailView"+j;
+string EditRow;
+
+
+String NAME;
+string CODE;
+String COMPTEURLIST;
+string MESUARELIST;
+string QUERRY;
+//string ML_CODE;
+string DESCRIPTION;
+
+int RenameStatus = -1;
+String RenamePath;
+String PBI_VIEW;
+String PBI_NAME;
+String PBI_NEWNAME;
+Int i;
+
+string NEWNAME = GetStrGateValue("AlarmeEventModifer",0);
+string NEW_COMPTEURLIST = GetStrGateValue("AlarmeEventModifer",3);
+//string NEW_MEASURELIST = GetStrGateValue("AlarmeEventModifer",4);
+string NEWDESC = GetStrGateValue("AlarmeEventModifer",6);
+
+string NEW_CL =GetStrGateValue("AlarmeEventModifer",1);
+string NEW_ML =GetStrGateValue("AlarmeEventModifer",2);
+
+//string pathNEWTO = GetStrGateValue("PathEmailListTO",0)+NEWTO+".txt";
+//string pathNEWCC = GetStrGateValue("PathEmailListCC",0)+NEWCC+".txt";
+
+
+ // disect line from file
+                txt = TextRow;
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                NAME=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                QUERRY=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                COMPTEURLIST=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                /*P = StrPos(txt,";");
+                MESUARELIST=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************/
+                /*P = StrPos(txt,";");
+                DESCRIPTION=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                TO_INTERNAL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************
+                P = StrPos(txt,";");
+                CC_INTERNAL=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+//***********************************************************/
+
+
+    /*if ( NEW_COMPTEURLIST != COMPTEURLIST ) then  CL_CODE =contruct_line(Cl_TemplistPath + NEW_COMPTEURLIST +".txt");  end
+
+    if ( NEW_MEASURELIST != MESUARELIST )   then  ML_CODE =contruct_line(ML_TemplistPath + NEW_MEASURELIST +".txt"); end
+
+    //MessageBox(NEWNAME,NAME);
+    If ( NEWNAME != NAME) Then
+
+
+
+        txt = NAME;
+        P = StrPos(txt,"_");
+        txt=StrDelete(txt,1,P);
+
+        P = StrPos(txt,"_");
+        PBI_VIEW=StrSubString(txt,1,P-1);
+        For i = 1 to 4 do
+
+            PBI_VIEW = GetStrGateValue("ReportViewNames",i);
+
+            RenamePath = ENV_PATH+"\Rapport\Power BI\" + PBI_VIEW +"\";
+
+            PBI_NAME = "PBI_"+PBI_VIEW+"_"+ NAME ;
+            PBI_NEWNAME = "PBI_"+PBI_VIEW+"_"+ NEWNAME;
+
+            //MessageBox(PBI_NAME+"//"+PBI_NEWNAME,"");
+          RenameStatus = FileRename(RenamePath + PBI_NAME +"\",RenamePath + PBI_NEWNAME +"\");
+
+          RenamePath = RenamePath +PBI_NEWNAME+"\";
+
+          If (RenameStatus == 0) Then
+
+            RenameStatus = FileRename(RenamePath + PBI_NAME+ ".pbix",   RenamePath + PBI_NEWNAME+".pbix");
+
+            RenameStatus = FileRename(RenamePath + PBI_NAME+".txt",     RenamePath + PBI_NEWNAME+".txt");
+
+          End
+
+        End
+
+
+    End*/
+
+EditRow = CODE +";"+ NEWNAME +";"+ QUERRY +";"+ NEW_COMPTEURLIST +";"+  NEWDESC ;//Concatination
+
+return(EditRow);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CL_SELECTOR()
+    String PDV;
+    string Energy;
+    String FileName;
+    Int FileHandle;
+    Bool Exit = false;
+    String ReadLigne;
+    String Ligne;
+    String Parent;
+    String PCP;
+    String PCD;
+    String PCC;
+    String Type;
+
+
+
+    Ligne = GetStrGateValue("Setting_Bu_init",0);
+    PDV = FetchBU(Ligne,1,",");
+    Energy = FetchBU(Ligne,2,",");
+    Parent = FetchBU(Ligne,3,",");
+    PCP = FetchBU(Ligne,4,",");
+    PCD = FetchBU(Ligne,5,",");
+    PCC = FetchBU(Ligne,6,",");
+    Type = FetchBU(Ligne,7,",");
+    Energy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    Create_DrillLevel(PDV,Energy,Parent,PCP,PCD,PCC);
+    DeleteTempFiles(ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList");
+    PopupBU_Display(1,PDV);
+    //TPageOpen("BU_SELECTOR");
+    ShowPoPUPs("CompteurList_SELECTOR");
+    SetStrGateValue("BU_Energy",0,Energy);
+    SetNumGateValue("EmailPageView",0,1);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void ADD_CL_Compteur()
+    Int FileHandle;
+    String FileName;
+//String FileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList\" + GetStrGateValue("BU_Selected",0)+".txt";
+    String Selected = GetStrGateValue("BU_Selected",0);
+    Int CurrPos = GetNumGateValue("EmailPageView",0);
+    int NumLigne;
+    Int i=0;
+    Bool Exit = False;
+    String BUFileName = ENV_PATH+"\Files\AllCompteur\BU\BU.txt";
+    Int BUFileHandle;
+    String Ligne;
+    String ReadLigne;
+
+////////////////////////////Calcule Numero de ligne du compteur selecter//////
+      While (Exit == False)
+         i = i+1;
+
+         IF ( Selected ==  GetStrGateValue("RowList",i) )then
+          NumLigne = CurrPos + i - 1;
+          Exit = True;
+         End
+
+      End
+////////////////////////////Initialisation/////////////////////////////////////
+      Exit = False;
+      i =0;
+      BUFileHandle  = FileOpen(BUFileName,"rt");
+////////////////////////////Trouver la ligne du compteur selecter//////////////
+      While (Exit == False)
+       Ligne = FileReadLn(BUFileHandle);
+       If ( Ligne != "" ) Then
+         i = i+1;
+         If ( i == NumLigne ) Then
+         ReadLigne = Ligne;
+         Exit = True;
+         End
+       End
+      End
+
+      FileClose(BUFileHandle);
+//////////Affichage et ecrire la ligne dans le ficher du compteur//////////////
+    FileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList\" +FetchBU(ReadLigne,5,";")+".txt";
+
+    FileHandle = FileOpen(FileName,"wt");
+      FileWriteLn(FileHandle,ReadLigne);
+    FileClose(FileHandle);
+    //MessageBox(FileName,FileHandle);
+    TObjFunction(12345,1);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Select_PBI_CompteurList()
+
+    //String CurrPath;
+    String FullPath;
+    String FileName;
+    String CurrFile;
+    Int Handle;
+    Int FileHandle;
+    String Ligne;
+    Bool NewWrite = True;
+
+    //CurrPath = GetProjectPath()+"\10_BilanEnergitique\Files\";
+    FullPath = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList\*.txt";
+    Handle =FileFindFirstEx(FullPath);
+
+    while (FileFindNextEx(Handle)!=false)
+    Handle =FileFindFirstEx(FullPath);
+      CurrFile=FileNameFoundEx(Handle);
+
+      IF (CurrFile != "") Then
+        FileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\TempList\"+CurrFile;
+        FileHandle=FileOpen(FileName,"rt");
+        If ( FileHandle == 0 ) then MessageBox(FileName,"");    return; end
+
+        While(FileEof(FileHandle)==0)
+
+            Ligne = FileReadLn(FileHandle);
+          IF (Ligne != "") Then
+            //MessageBox(Ligne,FileName);
+            NewWrite = CreateList(Ligne, NewWrite);
+          End
+        End
+
+        FileClose(FileHandle);
+        FileDelete(FileName);
+      End
+
+    //FileFindCloseEx(Handle);
+    End
+    //MessageBox("ENNNNNNNNNND","");
+    TObjFunction(12345,1);
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CreateList(String Ligne, Bool NewWrite)
+
+    String FileName;
+    Int FileHandle;
+
+    FileName = ENV_PATH+"\Files\DATAMODELFiles\Power BI\Compteur List\"+GetStrGateValue("AlarmeEventModifer",0)+".txt";
+
+    IF (NewWrite == True) Then
+        FileHandle=FileOpen(FileName,"wt");
+     Else
+        FileHandle=FileOpen(FileName,"at");
+    End
+    NewWrite = False;
+    FileWriteLn(FileHandle,Ligne);
+    FileClose(FileHandle);
+
+    Return NewWrite;
+end
+//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+Function Void Highest_Code_Initialisation(String FullPathFileName,String RFullPathFileName)
+
+int FileHandle;
+int MLastCode=0;
+int LastCode=0;
+String Code;
+String TextRow;
+int S=1;
+int LCFileHandle;
+Bool B;
+
+      B=FileExist(RFullPathFileName);
+      if B==False then
+           FileHandle=FileOpen(RFullPathFileName,"wt");
+           FileClose(FileHandle);
+        end
+            IF ( FileExist(FullPathFileName) == False) Then
+
+    Return ;
+    End
+
+     FileHandle=FileOpen(FullPathFileName,"rt");
+
+
+
+    //Display file
+
+     while(FileEof(FileHandle)==0)
+
+        TextRow = FileReadLn(FileHandle);
+
+        Code=Fetch_Admin(TextRow,S,";");
+         LastCode=StrToInt(StrDelete(Code,1,LenPrefix));
+        //MessageBox(LastCode,"CodeP");
+        if(MLastCode<LastCode)then
+            MLastCode=LastCode;
+
+        end
+    end
+
+    FileClose(FileHandle);
+    //MessageBox(RFullPathFileName,"RFullPathFileName");
+    SetNumGateValue("LastCodeAdd",0,MLastCode);
+
+    IF ( FileExist(RFullPathFileName) == False) Then
+    Return ;
+    End
+
+    FileHandle=FileOpen(RFullPathFileName,"rt");
+
+    //Recycle File
+       while(FileEof(FileHandle)==0)
+
+        TextRow = FileReadLn(FileHandle);
+        Code=Fetch_Admin(TextRow,S,";");
+         //MessageBox(LastCode,"CodeRR");
+         LastCode=StrToInt(Code);
+        if(MLastCode<LastCode)then
+            MLastCode=LastCode;
+
+        end
+    end
+
+    //MessageBox(MLastCode,"CodeL");
+    SetNumGateValue("LastCodeAdd",0,MLastCode);
+   //MessageBox(MLastCode,"Nobre d'item");
+     //MessageBox("4","");
+     FileClose(FileHandle);
+    //MessageBox(GetNumGateValue("LastCodeAdd",0),"Code");
+
+End
+/////////////////////
+function bool ExistingInFileWithPS( String Path_Out,String NameFile,String pathSRC ,String TargetList,int NFIELD1,int NFIELD2 )
+FlagUses=True;
+    String FullPathFileName = Path_Out+"Existing_Config.txt";
+    Int FileHandle = FileOpen(FullPathFileName,"wt");
+    String RESFullPathFileName=Path_Out+"ExistingList.txt";
+    int RFileHandle ;
+
+    bool Exist=False;
+    String Header;
+    String Ligne;
+  FileDelete(RESFullPathFileName);
+    // MessageBox(ENV_PATH + "\Files\DATAMODELFiles\EMail\"+NameFile+"_____"+Path_Out+"TempE_"+NameFile,"info");
+     FileCopy(pathSRC+NameFile,Path_Out+NameFile,False);
+    RFileHandle=FileOpen(FullPathFileName,"wt");
+    If ( FileExist( FileHandle ) == True ) Then FileDelete(FullPathFileName);  End
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Create Config File For Powershell Search
+     if (FileHandle == 0) then MessageBox("BU File not Found","Error");   return; end
+     RFileHandle=FileOpen(Path_Out+NameFile,"rt");
+        Header=FileReadLn(RFileHandle);
+        FileClose(RFileHandle);
+
+   FileWriteLn(FileHandle,Path_Out+NameFile);
+   FileWriteLn(FileHandle,TargetList);
+
+    FileWriteLn(FileHandle,Fetch_BU(Header,NFIELD1,";"));
+    if NFIELD2 != 0 then
+        FileWriteLn(FileHandle,Fetch_BU(Header,NFIELD2,";"));
+    end
+    FileClose(FileHandle);
+
+
+     ShellExec("EXistString.exe" , "open" , "C:\Winlog\PowerShell\" ,1,"","");
+
+        While (FileExist( RESFullPathFileName ) == False )
+         Sleep(50);
+        End
+
+     FileHandle = FileOpen(RESFullPathFileName,"rt");
+     Ligne=FileReadLn(FileHandle);
+     //MessageBox(RESFullPathFileName,Ligne);
+     if Ligne=="oui" then
+       Exist=True;
+        end
+     FileClose(FileHandle);
+    FileDelete(Path_Out+NameFile);
+    FlagUses=False;
+    return Exist;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+Function String FetchCodeAdd(String PathC,String Prefix)
+
+
+String RBackFullPathFileName;
+String WRFullPathFileName;
+
+String CodeNewAlarme="";
+int LCFileHandle;
+String Ligne="";
+int RFileHandle;
+int WRFileHandle;
+int i=0;
+int Code;
+String LigneNOW;
+
+
+     Code=GetNumGateValue("LastCodeAdd",0);
+
+    RFileHandle=FileOpen(Temp_Admin_View_Recycle_Code,"rt");
+         WRFullPathFileName = PathC+"\WTemp_Recycler_Code.txt";
+         WRFileHandle=FileOpen(WRFullPathFileName,"wt");
+         RBackFullPathFileName= PathC+"\Back_Temp_Recycler_Code.txt";
+
+         LigneNOW=FileReadLn(RFileHandle);
+            if  LigneNOW!=""  then
+            CodeNewAlarme=Prefix+LigneNOW;
+            while(FileEof(RFileHandle)==0)
+                Ligne=FileReadLn(RFileHandle);
+                 if Ligne!=LigneNOW then
+                    FileWriteLn(WRFileHandle,Ligne);
+                END
+            end
+
+            if (FileExist(RBackFullPathFileName)) then
+                FileDelete(RBackFullPathFileName);
+            end
+
+
+          FileCopy(Temp_Admin_View_Recycle_Code,RBackFullPathFileName,false);
+
+          FileCopy(WRFullPathFileName,Temp_Admin_View_Recycle_Code,false);
+
+                FileDelete(WRFullPathFileName);
+
+    else
+
+        Code=GetNumGateValue("LastCodeAdd",0);
+        Code=Code+1;
+
+        CodeNewAlarme=Prefix+Code;
+        SetNumGateValue("LastCodeAdd",0,Code);
+    end
+
+
+            FileClose(WRFileHandle);
+            FileClose(RFileHandle);
+   return CodeNewAlarme;
+end
+
+Function String FetchCodeAddClone(String Prefix)
+
+String RFullPathFileName;
+String RBackFullPathFileName;
+String WRFullPathFileName;
+
+String CodeNewAlarme="";
+int LCFileHandle;
+String Ligne="";
+int RFileHandle;
+int WRFileHandle;
+int i=0;
+int Code;
+
+//MessageBox(PathC,Prefix);
+     //MessageBox(Code,"");
+     //FileClose(LCFileHandle);
+        Code=GetNumGateValue("LastCodeAdd",0);
+        Code=Code+1;
+          // MessageBox(Code,"" );
+        CodeNewAlarme=Prefix+Code;
+        SetNumGateValue("LastCodeAdd",0,Code);
+
+           //FileClose(LCFileHandle);
+
+   return CodeNewAlarme;
+    // MessageBox(CodeNewAlarme,"CodeNewReport");
+end
+/////////////////////////////////////
+Function void Admin_Copy(String Type,String CodeNewAlarme)
+
+    int  AlarmsTotalItems ;
+int  MaxRow=10;
+int TempFileHandle;
+int WFileHandle;
+String TempFullPathFileName;
+String WFullPathFileName;
+String BackFullPathFileName;
+
+String Ligne;
+int CurrentPage;
+Bool QB;
+String Nom;
+String WTemp_File;
+bool A;
+bool B;
+      Nom=Fetch_Gateway(Admin_View_CurrentLine,2,";");
+      if Nom=="" then MessageBox("Il faut selectionnez une ligne   "+ Type +" pour copier!","erreur"); return ; end
+   WTemp_File = GetProjectPath()+ "\Winlog\Files\DATAMODELFiles\Wtemp.TXT";
+
+B=FileCopy(Admin_View_Temp_File,WTemp_File,False);
+if B == False then MessageBox("",B); end
+
+A=FileDelete(Admin_View_Temp_File);
+    if A == False then
+
+    FileDelete(Admin_View_Temp_File);
+    end
+
+
+    //QB=QuestionBox("  Voulez-vous vraiment Copier" +Type+ " selectionner?","Attention:");
+    QB=True;
+    if QB==False then return; end
+
+    AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+    AlarmsTotalItems=AlarmsTotalItems+1;
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,CodeNewAlarme ,1);
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"Copie "+Nom ,2);
+
+    TempFileHandle=FileOpen(WTemp_File,"a+");
+
+       if TempFileHandle ==0 then
+        MessageBox("write ln 1" +Eol()+ WTemp_File,TempFileHandle);end
+
+        FileWriteLn(TempFileHandle,Admin_View_CurrentLine);
+
+     FileClose(TempFileHandle);
+
+     FileCopy(WTemp_File,Admin_View_Temp_File,False);
+      FileDelete(WTemp_File);
+
+       CurrentPage=AlarmsTotalItems/MaxRow;
+       If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+
+    SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+    SetNumGateValue("EmailPageView",0,CurrentPage);
+
+     Admin_View_Display(CurrentPage,Type);
+              SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+
+
+End
+
+
+///////////////////////////////////////////////////////////////
+Function Void Admin_Delete(String Type,String WPath,String BackPath)
+
+String TempFullPathFileName;
+String RFullPathFileName;
+String WFullPathFileName;
+String BackFullPathFileName;
+String CodeEvent="";
+String CodeLigne="";
+String Ligne="";
+String Code="";
+int  MaxRow=10;
+int MaxPage;
+int TempFileHandle;
+int RFileHandle;
+int WFileHandle;
+int CurrentPage;
+int AlarmsTotalItems;
+String Nom;
+bool QB;
+int lastPage;
+
+    AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+
+
+
+
+      Nom=Fetch_Gateway(Admin_View_CurrentLine,2,";");
+             if Nom=="" then MessageBox("Il faut selectionnez  "+ Type +" pour supprimer!","erreur"); return ; end
+
+
+    QB=QuestionBox("  Voulez-vous vraiment Supprimer Le "+Type+" selectionner?","Attention:");
+    if QB==False then return; end
+
+    TempFullPathFileName = Admin_View_Temp_File;
+    TempFileHandle=FileOpen(TempFullPathFileName,"rt");
+
+    WFullPathFileName = WPath;
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    BackFullPathFileName=BackPath;
+
+
+    RFileHandle=FileOpen(Temp_Admin_View_Recycle_Code,"at");
+
+   scanfile(Temp_Admin_View_Recycle_Code);
+
+     //Append recycler File
+    CodeEvent=Fetch_Formule(Admin_View_CurrentLine,1,";");
+
+    Code=StrDelete(CodeEvent,1,LenPrefix);
+    if AlarmsTotalItems < 2 then
+        FileClose(RFileHandle);
+        FileDelete(Temp_Admin_View_Recycle_Code);
+    else
+    FileWriteLn(RFileHandle,Code);
+     FileClose(RFileHandle);
+    end
+
+    while (FileEof(TempFileHandle)==0)
+
+        Ligne=FileReadLn(TempFileHandle);
+
+        CodeLigne=Fetch_Formule(Ligne,1,";");
+
+        //MessageBox(Ligne,CodeLigne);
+
+
+            IF (CodeLigne!=CodeEvent) && (Ligne!="") then
+
+                FileWriteLn(WFileHandle,Ligne);
+
+            End
+    end
+
+
+     FileClose(WFileHandle);
+     FileClose(TempFileHandle);
+
+
+
+
+     //Swap Files
+      if (FileExist(BackFullPathFileName)) then
+             FileDelete(BackFullPathFileName);
+      end
+
+          FileCopy(TempFullPathFileName,BackFullPathFileName,false);
+
+          FileCopy(WFullPathFileName,TempFullPathFileName,false);
+
+          FileDelete(WFullPathFileName);
+
+
+
+            //Calcul New Page
+           CurrentPage=GetNumGateValue("EmailPageView",0);
+
+          AlarmsTotalItems=AlarmsTotalItems-1;
+
+          lastPage=AlarmsTotalItems/MaxRow;
+           If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then lastPage =  lastPage+1; end
+
+          SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+
+        //  MessageBox(CurrentPage,lastPage);
+
+       if CurrentPage>lastPage then
+        CurrentPage=lastPage;
+        end
+          // MessageBox(CurrentPage,lastPage);
+                  SetNumGateValue("EmailPageView",0,CurrentPage);
+          Admin_View_Display(CurrentPage,Type);
+
+                       SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+
+End
+////////////////////////////////////////////////////////////////////
+Function Void Admin_New_Ligne(String Type,String CodeNewAlarme)
+
+Bool QB;
+String FullPathFileName;
+int FileHandle;
+int CurrentPage;
+int AlarmsTotalItems;
+String Nom;
+
+
+    QB=QuestionBox("  Voulez-vous vraiment Ajouter Une nouvelle"+ Type+"?","Attention:");
+    if QB==False then return; end
+
+        FullPathFileName = Admin_View_Temp_File;
+    FileHandle=FileOpen(FullPathFileName,"at");
+     if (FileHandle==0) then
+       MessageBox("File "+Type+ " not Found","Error");
+       return;
+     end
+
+    AlarmsTotalItems=GetNumGateValue("AdminTotalItems",0);
+
+    AlarmsTotalItems=AlarmsTotalItems+1;
+
+
+          Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,CodeNewAlarme,1);
+
+
+            FileWriteLn(FileHandle,Admin_View_CurrentLine);
+
+            CurrentPage=AlarmsTotalItems/MaxRow;
+            If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+                FileClose(FileHandle);
+                //MessageBox(AlarmsTotalItems,"AlarmsTotalItems");
+         SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+        // MessageBox(CurrentPage,"Page");
+         SetNumGateValue("EmailPageView",0,CurrentPage);
+                      SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+//MessageBox(CurrentPage,AlarmsTotalItems);
+          Admin_View_Display(CurrentPage,Type);
+
+end
+/*****************************************************************************/
+///////////////////////////////////////////////////////////////////////////////
+function void Admin_View_Display(int Page , String Source )
+
+    String FullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EmailView;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+//MessageBox("1","");
+    Init_CurentLine();
+
+    /*if ( Page == 1 ) then RowHeader = true;   SetNumGateValue("EmailPageView",0,1);
+    Else
+    RowHeader = False;
+    end*/
+        //get total item if not set already
+
+//MessageBox("2","");
+   Highest_Code_Initialisation(Admin_View_Temp_File,Temp_Admin_View_Recycle_Code);
+  FullPathFileName = Admin_View_Temp_File;
+
+
+//MessageBox("3","");
+        scanfile(FullPathFileName);
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+    if (FileHandle==0) then   MessageBox(Admin_View_Temp_File+" file is missing","Error");  Return; end
+
+
+//MessageBox("4","");
+
+
+   //MessageBox(GetNumGateValue("AdminTotalItems",0),"Total Items");
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+//MessageBox(Row_Start,Row_End);
+//MessageBox("5","");
+    TextRow = FileReadLn(FileHandle); // Header
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+//MessageBox("6","");
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+            // if Fetch_Admin(TextRow,S,";");
+                          // SetDisplay_Rapport( TextRow,  EmailView );
+                      //  end
+         //if (TextRow != "" ) then
+              j = j+1;
+               //MessageBox(j,"j1");
+                EmailView = "ROW"+j;
+                    // For Display
+                    IF ( Source == "AllCompteur" ) Then
+                     SetDisplay_AllCompteur( TextRow , EmailView);
+                   End
+
+                   IF ( Source == "Alarme" ) Then
+                    SetDisplay_Alarme( TextRow,  EmailView );
+                   End//SetDisplay_Regulier
+
+                    IF ( Source == "Regulier" ) Then
+                    SetDisplay_Regulier( TextRow,  EmailView );
+                   End//SetDisplay_Regulier
+
+                   IF ( Source == "Email" ) Then
+                    SetDisplay_Email( TextRow,  EmailView );
+                   End//SetDisplay_Email
+                   IF ( Source == "EventEmail" ) Then
+                    SetDisplay_EventEmail( TextRow,  EmailView );
+                   End//SetDisplay_Email
+
+                   IF ( Source == "MailingList" ) Then
+                    //SetDispalay_MailingList( TextRow,  EmailView );
+                   End
+                   ///SetDispalay_MailingList
+                    IF ( Source == "DetailCompteur" ) Then
+                    SetDisplay_DetailCompteur( TextRow,  EmailView );
+                   End
+                     IF ( Source == "PBI" ) Then
+                    SetDisplay_PBI( TextRow,  EmailView );
+                   End
+
+                     IF ( Source == "Report" ) Then
+                          //  if Fetch_Admin(TextRow,22,";")!="T" then
+                                SetDisplay_Rapport( TextRow,  EmailView );
+
+                            //  else
+                            // j = j-1;
+                             //MessageBox(j,"j");
+                                // SommeR=SommeR+1;
+                               // MessageBox(Fetch_Admin(TextRow,22,";"),"");
+                            // end
+                    End
+
+                     IF ( Source == "Gateway" ) Then
+                        SetDisplay_Gateway_Table( TextRow,  EmailView );
+                     End
+
+
+                     IF ( Source == "Unite" ) Then
+                    SetDisplay_Unite_Table( TextRow,  EmailView );
+                   End
+                         IF ( Source == "Energy" ) Then
+                    SetDisplay_Energy_Table( TextRow,  EmailView );
+                   End
+                        IF ( Source == "Views" ) Then
+                    SetDisplay_Views_Table( TextRow,  EmailView );
+                   End
+                      IF ( Source == "Tableaux" ) Then
+                    SetDisplay_Tableaux( TextRow,  EmailView );
+                   End
+                           IF ( Source == "MasterPBI" ) Then
+                    SetDisplay_MasterPBI( TextRow,  EmailView );
+                   End
+                     IF ( Source == "User_Master" ) Then
+                    SetDisplay_User_Master( TextRow,  EmailView );
+                   End
+
+//MessageBox("8","");
+
+
+
+
+         //end // TextRow != ""
+
+     end //for display
+//MessageBox("7","");
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        MaxCol=10;
+        CleanEmptyRows(j+1,"ROW");
+      else
+        CleanEmptyRows(j+1,"ROW");
+
+     end
+//MessageBox("8","");
+
+
+
+end
+
+///////////////
+//////////////////////////////////////////////////////////////
+Function Void Init_CurentLine()
+
+
+        SetStrGateValue("AlarmeEventModifer",0,"");
+        SetStrGateValue("AlarmeEventModifer",1,"");
+        SetStrGateValue("AlarmeEventModifer",2,"");
+        SetStrGateValue("AlarmeEventModifer",3,"");
+        SetStrGateValue("AlarmeEventModifer",4,"");
+        SetStrGateValue("AlarmeEventModifer",5,"");
+        SetStrGateValue("AlarmeEventModifer",6,"");
+        SetStrGateValue("AlarmeEventModifer",7,"");
+        SetStrGateValue("AlarmeEventModifer",8,"");
+        SetStrGateValue("AlarmeEventModifer",9,"");
+        SetStrGateValue("AlarmeEventModifer",10,"");
+        SetStrGateValue("AlarmeEventModifer",11,"");
+        SetStrGateValue("AlarmeEventModifer",12,"");
+        SetStrGateValue("AlarmeEventModifer",13,"");
+        SetStrGateValue("AlarmeEventModifer",14,"");
+        SetStrGateValue("AlarmeEventModifer",15,"");
+        SetStrGateValue("AlarmeEventModifer",16,"");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+        SetStrGateValue("AlarmeEventModifer",18,"");
+        SetStrGateValue("AlarmeEventModifer",19,"");
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;";
+End
+
+////////////////////////////////
+Function void Admin_Commit(String BackFullPathFileName)
+
+bool Continue;
+int FileHand;
+String RFullPathFileName;
+String Temp_View_Recycle_Code;
+
+
+        SetNumGateValue("User_Privilege",0,2);
+
+           Continue = QuestionBox("  Voulez-vous enregistrer les nouvelles Modification ?","Attention:");
+          if (Continue == False) then return ; end
+
+          SetStrGateValue("AlarmeEventModifer",17,"En train de sauvegarder les modifications. Merci pour votre patience ...");
+         // ShowPoPUPs("InfoPopup");
+
+
+
+          if (FileExist(BackFullPathFileName)) then
+                FileDelete(BackFullPathFileName);
+          end
+        //MessageBox(Admin_View_Original_File,"Admin_View_Original_File");
+         //MessageBox(Admin_View_Temp_File,"Admin_View_Original_File");
+          Filecopy(Admin_View_Original_File,BackFullPathFileName,False);
+          Filecopy(Admin_View_Temp_File,Admin_View_Original_File,False);
+           // FileDelete(Admin_View_Temp_File);
+
+    FileCopy(Temp_Admin_View_Recycle_Code,Admin_View_Recycle_Code,False);
+    //scanfile(RFullPathFileName);
+     //FileDelete(Temp_Admin_View_Recycle_Code);
+    /* FileHand=FileOpen(Temp_Admin_View_Recycle_Code,"wt");
+      if (FileHand==0) then
+       MessageBox("File not Found","Error");
+       return;
+     end*/
+     FileClose(FileHand);
+
+                   SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+              Clean_Formulaire();
+
+
+            SetStrGateValue("AlarmeEventModifer",17,"Enregistrement avec Succées !.");
+
+End
+
+
+///////////////////////////////////////////////////
+function void Admin_modifier(String Path , String FileName )
+
+    String FullPathFileName;
+    String BackFullPathFileName;
+    string WFullPathFileName;
+
+    string RowName;
+    string TextRow;
+    string txt;
+    string EditRow;
+    String NomAlarme;
+
+    int FileHandle;
+    int WFileHandle;
+    int ReadRowPos;
+    int Row_Start;
+    int Row_End;
+    int save_pos ;
+    int Page ;
+    int j=0;
+    int Position_S ;
+
+    save_pos    = StrToInt(GetStrGateValue("AlarmeEventModifer",20));
+    Page        = GetNumGateValue("EmailPageView",0);
+    ReadRowPos  = 0;
+    BackFullPathFileName    = Path+"BACK_"+FileName;
+    FullPathFileName        = Admin_View_Temp_File;
+    WFullPathFileName       = Path+"W"+FileName;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    If ( FileHandle == 0 ) Then MessageBox(FullPathFileName,"Save_Alarme : File Not Found "); Return ; End
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+     Position_S  = (Page-1)*10+save_pos;
+
+
+     Row_Start   = (Page-1)*MaxRow+1;
+     Row_End     =  Page*MaxRow;
+
+     FileWriteLn(WFileHandle,FileReadLn(FileHandle));  // Header Line
+
+     While(FileEof(FileHandle)==0)
+
+       TextRow = FileReadLn(FileHandle);
+
+         if (TextRow != "" ) then
+
+               ReadRowPos = ReadRowPos+1;
+
+                   if (ReadRowPos == Position_S) then
+
+                        FileWriteLn(WFileHandle,Admin_View_CurrentLine);
+
+                        RowName = "ROW"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+                        SetStrGateValue(RowName,4,GetStrGateValue("AlarmeEventModifer",4));
+                        SetStrGateValue(RowName,5,GetStrGateValue("AlarmeEventModifer",5));
+                        SetStrGateValue(RowName,6,GetStrGateValue("AlarmeEventModifer",6));
+                        SetStrGateValue(RowName,7,GetStrGateValue("AlarmeEventModifer",7));
+                        SetStrGateValue(RowName,8,GetStrGateValue("AlarmeEventModifer",8));
+                        SetStrGateValue(RowName,9,GetStrGateValue("AlarmeEventModifer",9));
+                        SetStrGateValue(RowName,10,GetStrGateValue("AlarmeEventModifer",10));
+                        SetStrGateValue(RowName,11,GetStrGateValue("AlarmeEventModifer",11));
+                        SetStrGateValue(RowName,12,GetStrGateValue("AlarmeEventModifer",12));
+                        SetStrGateValue(RowName,13,GetStrGateValue("AlarmeEventModifer",13));
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+                        SetStrGateValue("AlarmeEventModifer",4,"");
+                        SetStrGateValue("AlarmeEventModifer",5,"");
+                        SetStrGateValue("AlarmeEventModifer",6,"");
+                        SetStrGateValue("AlarmeEventModifer",7,"");
+                        SetStrGateValue("AlarmeEventModifer",8,"");
+                        SetStrGateValue("AlarmeEventModifer",9,"");
+                        SetStrGateValue("AlarmeEventModifer",10,"");
+                        SetStrGateValue("AlarmeEventModifer",11,"");
+                        SetStrGateValue("AlarmeEventModifer",12,"");
+                        SetStrGateValue("AlarmeEventModifer",13,"");
+
+                            // change winlog alarm
+
+                   Else
+                        FileWriteLn(WFileHandle,TextRow);
+                   end // if (ReadRowPos== Position_S
+
+         end // TextRow != ""
+
+        SaveFlag=SaveFlag+1;
+        SetNumGateValue("Template_Control",0,0);
+        SetNumGateValue("E15min",0,1);
+
+     End // While
+
+    FileClose(FileHandle);
+    FileClose(WFileHandle);
+
+
+    if ( FileExist(BackFullPathFileName) == true ) then FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+
+    FileDelete(WFullPathFileName);
+
+    Confirme_Save=True;
+
+    Clean_Formulaire();
+     SetStrGateValue("AlarmeEventModifer",17,"Modification avec Succées !");
+
+
+    return;
+
+
+End // Function
+
+

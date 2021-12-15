@@ -1,0 +1,690 @@
+
+Global INT NBR_COM_STATUS = 0;
+Global String COM_FAILED = "";
+Global String COM_FAILED_NAME = "";
+
+Function void Calcule_MOY_Temperature()
+
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\AllTemperature.csv";
+    Int FileHandle=FileOpen(FullPathFileName,"rt");
+    String Line;
+    String Input;
+    String CCode;
+    String C_TrueNbr;
+    Int InputLength = 0;
+    InputLength = GetNumGateValue("NBR_PRFIX_OUTP",1);
+
+    //NBR_COM_STATUS = 0;
+    //COM_FAILED = "";
+
+    FileReadLn(FileHandle); // Header
+
+    While (FileEof(FileHandle) == 0)
+        Line = FileReadLn(FileHandle);
+        If ( Line != "" ) Then
+
+            CCode = Fetch_MOY(Line, 1, ";");
+            C_TrueNbr = StrDelete(CCode,1,InputLength);
+
+            Input = GetStrGateValue("PreFix_InPut",1) + C_TrueNbr;
+            //MessageBox(Input,"Input");
+
+            //MessageBox("Calcule_MOY","Go to ");
+            Calcule_MOY( Input );
+        End
+    End
+
+    FileClose(FileHandle);
+
+End
+
+Function void Calcule_MOY_Humidite()
+
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\AllHumidite.csv";
+    Int FileHandle=FileOpen(FullPathFileName,"rt");
+    String Line;
+    String Input;
+    String CCode;
+    String C_TrueNbr;
+    Int InputLength = 0;
+    InputLength = GetNumGateValue("NBR_PRFIX_OUTP",2);
+
+    //NBR_COM_STATUS = 0;
+    //COM_FAILED = "";
+
+    FileReadLn(FileHandle); // Header
+
+    While (FileEof(FileHandle) == 0)
+        Line = FileReadLn(FileHandle);
+        If ( Line != "" ) Then
+            CCode = Fetch_MOY(Line, 1, ";");
+            C_TrueNbr = StrDelete(CCode,1,InputLength);//
+            Input = GetStrGateValue("PreFix_InPut",2) + C_TrueNbr;
+            Calcule_MOY( Input );
+        End
+    End
+
+    FileClose(FileHandle);
+
+End
+
+Function void Calcule_MOY( String GateName )
+
+    //Int TotalSample = 0;
+    //Int INC = 0;
+    //Real Conformite = 0;
+    Real LIVE = 0;
+
+    IF ( GetNumGateCommunicationStatus(GateName,16) == True ) Then
+      LIVE = GetNumGateValue(GateName,16);
+
+      MessageBox("SET_MIN_AND_MAX","Go to ");
+        //////////////// SET MIN & MAX
+        SET_MIN_AND_MAX( GateName , LIVE);
+        //////////////// Calcule Moyenne
+        SetNumGateValue(GateName,101, GetNumGateValue(GateName,101)+ LIVE );
+        SetNumGateValue(GateName,105, GetNumGateValue(GateName,105)+1 );
+
+        SetNumGateValue(GateName,102, GetNumGateValue(GateName,102)+ LIVE );
+        SetNumGateValue(GateName,106, GetNumGateValue(GateName,106)+1 );
+
+        SetNumGateValue(GateName,103, GetNumGateValue(GateName,103)+ LIVE );
+        SetNumGateValue(GateName,107, GetNumGateValue(GateName,107)+1 );
+
+        SetNumGateValue(GateName,104, GetNumGateValue(GateName,104)+ LIVE );
+        SetNumGateValue(GateName,108, GetNumGateValue(GateName,108)+1 );
+        //////////////// Clacule Conformite
+        // J
+        /*TotalSample = GetNumGateValue(GateName,23) ;
+        INC = GetNumGateValue(GateName,12) ;
+        Conformite = (1-(INC/TotalSample)) * 100;
+        SetNumGateValue(GateName,44,Conformite);
+        // S
+        TotalSample = GetNumGateValue(GateName,24) ;
+        INC = GetNumGateValue(GateName,13) ;
+        Conformite = (1-(INC/TotalSample)) * 100;
+        SetNumGateValue(GateName,45,Conformite);
+        // M
+        TotalSample = GetNumGateValue(GateName,25) ;
+        INC = GetNumGateValue(GateName,14) ;
+        Conformite = (1-(INC/TotalSample)) * 100;
+        SetNumGateValue(GateName,46,Conformite);
+        // A
+        TotalSample = GetNumGateValue(GateName,26) ;
+        INC = GetNumGateValue(GateName,15) ;
+        Conformite = (1-(INC/TotalSample)) * 100;
+        SetNumGateValue(GateName,47,Conformite);*/
+     Else
+         ////Gate not sampled
+         NBR_COM_STATUS = NBR_COM_STATUS + 1 ;
+         COM_FAILED = GateName + ";" + COM_FAILED;
+        Calcule_Runtime_LOG(" GATE NOT SAMPLING : " + GateName );
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SET_MIN_AND_MAX( String GateName , REAL LIVE_VALUE)
+
+    Real MIN_J = GetNumGateValue(GateName,4);
+    Real MIN_S = GetNumGateValue(GateName,5);
+    Real MIN_M = GetNumGateValue(GateName,6);
+    Real MIN_A = GetNumGateValue(GateName,7);
+
+    Real MAX_J = GetNumGateValue(GateName,8);
+    Real MAX_S = GetNumGateValue(GateName,9);
+    Real MAX_M = GetNumGateValue(GateName,10);
+    Real MAX_A = GetNumGateValue(GateName,11);
+
+
+    IF ( LIVE_VALUE < MIN_J ) Then SetNumGateValue(GateName,4,LIVE_VALUE);  End
+    IF ( LIVE_VALUE < MIN_S ) Then SetNumGateValue(GateName,5,LIVE_VALUE);  End
+    IF ( LIVE_VALUE < MIN_M ) Then SetNumGateValue(GateName,6,LIVE_VALUE);  End
+    IF ( LIVE_VALUE < MIN_A ) Then SetNumGateValue(GateName,7,LIVE_VALUE);  End
+
+    IF ( LIVE_VALUE > MAX_J ) Then SetNumGateValue(GateName,8,LIVE_VALUE);  End
+    IF ( LIVE_VALUE > MAX_S ) Then SetNumGateValue(GateName,9,LIVE_VALUE);  End
+    IF ( LIVE_VALUE > MAX_M ) Then SetNumGateValue(GateName,10,LIVE_VALUE);  End
+    IF ( LIVE_VALUE > MAX_A ) Then SetNumGateValue(GateName,11,LIVE_VALUE);  End
+
+   MessageBox(GateName,LIVE_VALUE);
+end
+///////////////////////////////////////////////////////////////////////////////
+Function void Calcule_Conformite()
+
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\C1_KPI.csv";
+    Int FileHandle=FileOpen(FullPathFileName,"rt");
+    String Line;
+    String C_Code;
+    String Energy;
+    String Input;
+    String C_TrueNbr;
+    Int InputLength = 0;
+
+    Real KPI =0;
+    Int Nbr_Echant =0;
+    Int Nbr_ALR = 0;
+
+    InputLength = GetNumGateValue("NBR_PRFIX_OUTP",1);
+    FileReadLn(FileHandle);
+    While (FileEof(FileHandle) == 0)
+        Line = FileReadLn(FileHandle);
+
+        If ( Line != "" ) Then
+
+            //C_TrueNbr = StrDelete(Line,1,InputLength);//
+            //Input = GetStrGateValue("PreFix_InPut",1) + C_TrueNbr;
+            C_Code = Fetch_MOY(Line, 1, ";");
+            Energy = Fetch_MOY(Line, 3, ";");
+            Input = MOY_CompteurTrueNumber(C_Code,Energy);
+
+                //MessageBox(CmpGateExists(C_Code, 42),C_Code);
+            IF ( CmpGateExists(C_Code, 42) == True ) Then
+
+              Nbr_Echant = GetCmpGateValue(C_Code,42);
+
+              If (Nbr_Echant <= 0) Then
+                KPI = 100;
+              Else
+
+                Nbr_ALR    = GetCmpGateValue(C_Code,12);
+                KPI        = ( 1 - (Nbr_ALR / Nbr_Echant) ) * 100;
+                //MessageBox("Nbr_Echant: " + Nbr_Echant + " Nbr_ALR: " + Nbr_ALR , KPI +" // "+ C_Code);
+              End
+
+                SetNumGateValue(Input,34,KPI);
+                SetNumGateValue(Input,35,KPI);
+                SetNumGateValue(Input,36,KPI);
+                SetNumGateValue(Input,37,KPI);
+
+            End
+
+        End
+    End
+
+    FileClose(FileHandle);
+
+End
+
+
+function void Create_Compteur_TemperatureFILE()
+
+    String Sourcefile = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    String ResultFile = ENV_PATH + "\Files\AllCompteur\Temp_AllTemperature.csv";
+    Int NbrParameter = 2;
+    String Parameters = "Energie:Temperature;Description:Reel";
+    String Config_File;
+    Int FILEHandle;
+
+    ResultFile = ENV_PATH + "\Files\AllCompteur\AllTemperature.csv";
+
+    MOY_SearchInFileWithPS( Sourcefile , ResultFile , NbrParameter , Parameters );
+
+      /*MessageBox("Create_Compteur_TemperatureFILE","");
+     Sourcefile = ResultFile;
+     ResultFile = ENV_PATH + "\Files\AllCompteur\AllTemperature.csv";
+     Parameters = "Code Compteur";
+     //FileDelete(ResultFile);
+
+     Config_File = POWERSHELL_PATH_CONFIG+"GET_UNIQUE.txt";
+     FILEHandle = FileOpen(Config_File,"wt");
+     FileWriteLn(FILEHandle,Sourcefile);
+     FileWriteLn(FILEHandle,ResultFile);
+     FileWriteLn(FILEHandle,Parameters);
+     FileClose(FILEHandle);
+
+     //
+
+
+     ShellExec("UNIQUE Fields.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+        While (FileExist( ResultFile ) == False )
+         Sleep(500);
+        End
+
+    //FileDelete(Sourcefile);*/
+
+end
+
+function void Create_Compteur_HumiditeFILE()
+
+    String Sourcefile = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    String ResultFile = ENV_PATH + "\Files\AllCompteur\Temp_AllHumidite.csv";
+    Int NbrParameter = 2;
+    String Parameters = "Energie:Humidite;Description:Reel";
+    String Config_File;
+    Int FILEHandle;
+
+    ResultFile = ENV_PATH + "\Files\AllCompteur\AllHumidite.csv";
+
+    MOY_SearchInFileWithPS( Sourcefile , ResultFile , NbrParameter , Parameters );
+
+     /*MessageBox("Create_Compteur_HumiditeFILE","");
+     Sourcefile = ResultFile;
+     ResultFile = ENV_PATH + "\Files\AllCompteur\AllHumidite.csv";
+     Parameters = "Code Compteur";
+     //FileDelete(ResultFile);
+
+     Config_File = POWERSHELL_PATH_CONFIG+"GET_UNIQUE.txt";
+     FILEHandle = FileOpen(Config_File,"wt");
+     FileWriteLn(FILEHandle,Sourcefile);
+     FileWriteLn(FILEHandle,ResultFile);
+     FileWriteLn(FILEHandle,Parameters);
+     FileClose(FILEHandle);
+
+     //
+
+     ShellExec("UNIQUE Fields.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+        While (FileExist( ResultFile ) == False )
+         Sleep(500);
+        End
+
+    //FileDelete(Sourcefile);*/
+
+end
+
+function void Create_Conformite_CompteurFILE()
+
+    String Sourcefile = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    String ResultFile = ENV_PATH + "\Files\AllCompteur\C1_KPI.csv";
+    Int NbrParameter = 2;
+    String Parameters = "KPI:C1";
+    String Config_File;
+    Int FILEHandle;
+
+    MOY_SearchInFileWithPS( Sourcefile , ResultFile , NbrParameter , Parameters );
+
+     /*Sourcefile = ResultFile;
+     ResultFile = ENV_PATH + "\Files\AllCompteur\C1_KPI.csv";
+     Parameters = "Code Compteur";
+     FileDelete(ResultFile);
+
+     Config_File = "C:\Winlog\PowerShell\GET_UNIQUE.txt";
+     FILEHandle = FileOpen(Config_File,"wt");
+     FileWriteLn(FILEHandle,Sourcefile);
+     FileWriteLn(FILEHandle,ResultFile);
+     FileWriteLn(FILEHandle,Parameters);
+     FileClose(FILEHandle);
+
+     //
+
+     ShellExec("UNIQUE Fields.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");*/
+
+        /*While (FileExist( ResultFile ) == False )
+         Sleep(500);
+        End*/
+
+    //FileDelete(Sourcefile);
+
+end
+
+function string Fetch_MOY(string Ligne, int Col, string Seperator)
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+function string MOY_CompteurTrueNumber(string CCCode, String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+          While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CCCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+             Else
+             i = i +1;
+            End
+
+         End
+
+        if ( found == True ) then
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+
+        Else
+        Return "-1" ;
+        End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void PING_GATEWAYS()
+
+       String CONFIG_FILE = "C:\Winlog\PowerShell\COMS_CONFIG.txt";
+       String GATEWAY_FILE = GetProjectPath() + "\Winlog\Files\Config Compteur\Gateways.csv";
+       String OUTFILE = GetProjectPath() + "\Winlog\Settings\COMs\COMS_STATUS.csv";
+
+       String MASTER_LAYOUTREPORT = GetProjectPath() + "\Winlog\Files\DATAMODELFiles\Rapport\Layout_COMs.RTF";
+       String LAYOUTREPORT = GetProjectPath() + "\Reports\Report_2\Report_2.RTF";
+       String REPORT_OUTPATH = GetProjectPath() + "\Winlog\Settings\COMs\";
+       String ATTACHE;
+       Bool PS ;
+
+       IF (NBR_COM_STATUS == 0 ) Then
+        Return ;
+       End
+       // 1. Call PS
+       PS = PS_GATEWAY( CONFIG_FILE , GATEWAY_FILE , OUTFILE );
+      // 2. Creat user report
+         // Set variables
+            SetStrGateValue("ReportView",10, GetDateString("/",False) +"_"+ GetTimeString(":") ); // SET DATE in report header
+            SetStrGateValue("ReportView", 0, "Problemes de communication" ); // SET NOM EVENEMENT
+            SetStrGateValue("ReportView", 1, "Action URGENTE requise" ); // SET NOM EMAIL
+            SetStrGateValue("ReportView", 6, "Status de communication des passerelles et sondes" ); // SET NOM RAPPORT
+        // Copy layout du rapport
+         FileCopy(MASTER_LAYOUTREPORT,LAYOUTREPORT,False);
+
+         ReportCreate("Report_2");
+          //Copy report_2.pdf and rename
+         ATTACHE = REPORT_OUTPATH + "COMs_STATUS_"+ GetDateString("-",False) +"_"+ GetTimeString("") + ".PDF";
+         FileCopy("C:\Winlog\Rapport\Report_2.PDF",ATTACHE,False);
+      // 3. SEND MAIL
+
+        SEND_MAIL_GATEWAY(ATTACHE);
+End
+///////////////////////////////////////////////////////////////////////////////
+function Bool PS_GATEWAY(String CONFIG_FILE , String GATEWAY_FILE , String OUTFILE )
+
+    String PS_EXE_PATH  = GetProjectPath() + "\Winlog\PowerShell\";
+    String END_FILE     = GetProjectPath() + "\Winlog\Settings\COMs\COMsCHECK_END.txt";
+    Int CONFIG_FILEHANDLE;
+
+      // 1. Call Ping test Gateways in powershell
+        // 1.1 Create Config File
+            CONFIG_FILEHANDLE = FileOpen(CONFIG_FILE,"wt");
+             FileWriteLn(CONFIG_FILEHANDLE,GATEWAY_FILE);
+             FileWriteLn(CONFIG_FILEHANDLE,OUTFILE);
+            FileClose(CONFIG_FILEHANDLE);
+        // 1.2 delete end file
+        FileDelete(END_FILE);
+        // 1.3 call PS file
+        ShellExec("CHECK_COMS.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+        // 1.4 Wait end file
+        While ( FileExist(END_FILE) == False )
+         Sleep(1000);
+        End
+      // END 1
+
+      Return FileExist(END_FILE);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REPORT_GATEWAY()
+
+    Int CONFIG_FILEHANDLE;
+    String ReportLINE = "";
+    String FileLINE = "";
+    Int i;
+    String OUTFILE = GetProjectPath() + "\Winlog\Settings\COMs\COMS_STATUS.csv";
+
+       // 2.2 create report
+
+            ReportInsertTemplate("ReportHeader");
+            ReportInsertText(Eol());
+            ReportInsertText(StrOfChar(45,80)+Eol());
+            ReportInsertText("Etat de la communication des gatways :");
+            ReportInsertText(Eol());
+            ReportInsertText(StrOfChar(45,80)+Eol());
+
+                CONFIG_FILEHANDLE = FileOpen(OUTFILE,"rt");
+                 FileReadLn(CONFIG_FILEHANDLE); // Header
+                 ReportLINE = "";
+                  While (FileEof(CONFIG_FILEHANDLE) == 0)
+                   FileLINE = FileReadLn(CONFIG_FILEHANDLE);
+                   IF (FileLINE != "" ) Then
+                   ReportLINE = "  -> " +StrSubString( COM_Fetch(FileLINE,2,";") + StrOfChar(32,40) , 1 , 40 ) + StrOfChar(32,3)+
+                                StrSubString( COM_Fetch(FileLINE,3,";") + StrOfChar(32,15) , 1 , 15 ) + StrOfChar(32,3)+
+                                COM_Fetch(FileLINE,4,";") + Eol();
+
+                   ReportInsertText(ReportLINE);
+                   End
+                  End
+                FileClose(CONFIG_FILEHANDLE);
+
+            ReportInsertText(StrOfChar(45,80)+Eol());
+            ReportInsertText("Etat de la communication des sondes :");
+            ReportInsertText(Eol());
+            ReportInsertText(StrOfChar(45,80)+Eol());
+            ReportLINE = "";
+
+                    For i = 1 to NBR_COM_STATUS do
+                     ReportLINE = "  -> " +StrSubString( COM_Fetch(COM_FAILED,i,";") + StrOfChar(32,10) , 1 , 10 )
+                                 + StrOfChar(32,3)+ " Aucune Communication "+ Eol();
+                     ReportInsertText(ReportLINE);
+                    End
+            ReportInsertText(StrOfChar(45,80));
+      // END 2
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SEND_MAIL_GATEWAY( String ATTACH )
+
+    String SETTING_MAIL_FILE = GetProjectPath() + "\Winlog\Settings\COMs\URGENT_MailingList.txt";
+    Int CONFIG_FILEHANDLE;
+    String SMTP;    String PW;    String Subject;    String MAILTo;
+    String USER;    String From;    String Body;    String MAILCC;
+    String SETUP_FILE = GetProjectPath() + "\Winlog\Settings\MAIL_SETUP.txt" ;
+    String CONGIF_MAIL;
+    String Ritorno;
+    Bool SEND_OK;
+    String TO_LINE;
+    String BIZEYES_URGENT_MAIL = "engineering@bizeyes.net";
+    Subject = "Alerte: Système de surveillance CLC: Échec de transmission des capteurs";
+    Body  = "       Cher administrateur:" + Eol()+
+           "     Notre moniteur système a détecté qu'un ou plusieurs capteurs ne transmettent plus de mesures à la plateforme BIZEYES SCADA."+ Eol()+
+           "     Vous devez vous assurer que les passerelles sont branchées sur une prise électrique et qu'elles sont câblées sur votre LAN."+ Eol()+
+           "     Vous devez également vous assurer qu'aucun des câbles de communication entre les capteurs et les passerelles n'est rompu."+ Eol()+
+           "     Veuillez trouver un rapport détaillé du journal des erreurs de communication joint à cet e-mail."+ Eol()+
+           "     Veuillez contacter vos installateurs dès que possible si vous ne pouvez pas résoudre ces problèmes de communication."+ Eol()+ Eol()+
+           "     AGIR MAINTENANT !"+ Eol()+
+           "     Sincèrement votre,"+ Eol()+
+           "     L'équipe d'ingénierie de Bizeyes";
+
+    If( MAIL_SETUP_FLAG == false )Then
+        Event_Runtime_LOG( "Send MAIL : MAIL_SETUP_FLAG == " + MAIL_SETUP_FLAG );
+    end
+
+    //CONGIF_MAIL = GET_MAIL_SETUP_GATEWAY( SETUP_FILE );
+         // SMTP
+            //SMTP    = COM_Fetch( CONGIF_MAIL , 1 , ";");
+         // USER
+            //USER    = COM_Fetch( CONGIF_MAIL , 2 , ";");
+         // PW
+           // PW      = COM_Fetch( CONGIF_MAIL , 3 , ";");
+         // @from
+            //From    = COM_Fetch( CONGIF_MAIL , 4 , ";");
+    //////////////////////////////////////////////////////////////
+      CONFIG_FILEHANDLE = FileOpen(SETTING_MAIL_FILE,"rt");
+
+      MAILTo = "";
+
+      IF (CONFIG_FILEHANDLE == 0) Then
+        Event_Runtime_LOG( "Urgent SEND_MAIL_GATEWAY : KO -> TO LIST NOT FOUND" );
+        //Return ;
+      Else
+
+        While ( FileEof(CONFIG_FILEHANDLE) == 0)
+            TO_LINE = FileReadLn(CONFIG_FILEHANDLE);
+            IF (TO_LINE != "" ) Then
+                MAILTo = TO_LINE+","+MAILTo;
+            End
+        End
+        FileClose(CONFIG_FILEHANDLE);
+
+      End
+
+
+
+        MAILTo = BIZEYES_URGENT_MAIL+","+MAILTo;
+
+       Ritorno = SendMail(100000,
+                          MAIL_SMTP_SERVER,
+                          MAIL_USER,
+                          MAIL_SMTP_PW,
+                          MAIL_ADDRESS_FROM,
+                          MAILTo,     //MailTo
+                          MAILCC,     //CC
+                          Subject,    //Subject
+                          Body,       //BODY
+                          True,ATTACH);  //ATTACHEMENT
+
+      if (Ritorno == "") then
+       SEND_OK = True;
+       Event_Runtime_LOG( "Urgent SEND_MAIL_GATEWAY : OK" );
+      else
+       SEND_OK = False;
+       Event_Runtime_LOG( "Urgent SEND_MAIL_GATEWAY : KO -> " +  Ritorno);
+      end
+end
+//////////////////////////////////////////////////////////////////////////////
+function String GET_MAIL_SETUP_GATEWAY( String CRYTED_FILE )
+
+    Int FileHANDLE;
+
+    String UNCRYTED_FILE = GetProjectPath() + "\Winlog\Settings\EmailServer.txt";
+    String CONFIG_FILE = "C:\Winlog\PowerShell\CONFIG_UNCRYPT_SETUPMAIL.txt";
+    String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+    String PARAMETERS_UNCRYTING;
+    Int CHECK_FILE = 0; Int MAX_CHECKS_FILE = 20;
+    Bool Exist_Check = False;
+
+    String SMTP;
+    String USER;
+    String MAIL;
+    String PW_SMTP;
+
+    // 1. Convert file with Powershell
+
+    FileHANDLE = FileOpen( CONFIG_FILE , "wt" );
+        FileWriteLn(FileHANDLE,CRYTED_FILE);
+        FileWriteLn(FileHANDLE,UNCRYTED_FILE);
+    FileClose(FileHANDLE);
+
+     ShellExec("GET_AUTH_PARAMETER.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    // 2. Wait Creation
+     Exist_Check = False;
+     CHECK_FILE=0;
+    While ( Exist_Check == False )
+
+        IF ( (FileExist(UNCRYTED_FILE) == False) && CHECK_FILE < MAX_CHECKS_FILE ) Then
+            Exist_Check = False;
+         Else
+            Exist_Check = True;
+         End
+
+        Sleep(500);
+    End
+
+    IF ( FileExist(UNCRYTED_FILE) == False ) Then
+        Event_Runtime_LOG( "Error : Email setup File not Found" );
+        Return "";
+    End
+
+    // 3. Read Config File
+
+     FileHANDLE = FileOpen( UNCRYTED_FILE , "rt" );
+       FileReadLn(FileHANDLE); // Congif LINE
+       FileReadLn(FileHANDLE); // PATH file
+       SMTP     = FileReadLn(FileHANDLE); // SMTP
+       USER     = FileReadLn(FileHANDLE); // User
+       PW_SMTP  = FileReadLn(FileHANDLE); // PW_SMTP
+       MAIL     = FileReadLn(FileHANDLE); // MAIL
+       /*FileReadLn(FileHANDLE); // IMAP
+       FileReadLn(FileHANDLE); // PW_IMAP
+       FileReadLn(FileHANDLE); // MAIL TEST*/
+     FileClose(FileHANDLE);
+
+    // 4. Prepar Config String
+    PARAMETERS_UNCRYTING = "";
+     PARAMETERS_UNCRYTING = SMTP +";"+ USER +";"+ PW_SMTP +";"+ MAIL ;
+    // 5. Delete file
+     FileDelete(UNCRYTED_FILE);
+
+     Return PARAMETERS_UNCRYTING;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Calcule_Runtime_LOG( String NAME)
+
+    String FILENAME = GetProjectPath() + "\Winlog\EVENT_RUNTIME_LOG.txt";
+    Int FileHANDLE;
+    String WRITE_LINE = "";
+    FileHANDLE = FileOpen(FILENAME,"at");
+    WRITE_LINE = GetDateString("/",False) +"_"+ GetTimeString(":") +" : " +NAME;
+      FileWriteLn(FileHANDLE,WRITE_LINE);
+    FileClose(FileHANDLE);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function string COM_Fetch(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+
+     return V;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void MOY_SearchInFileWithPS( String INPUT_File , String OUTPUT_File , Int NBR_Parameters , String Parameters )
+
+    String FullPathFileName = "C:\Winlog\PowerShell\Query_CONFIG.txt";
+    Int FileHandle = FileOpen(FullPathFileName,"wt");
+
+    int i;
+    String P;
+
+    If ( FileExist( OUTPUT_File ) == True ) Then FileDelete(OUTPUT_File);  End
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Create Config File For Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+    FileWriteLn(FileHandle,INPUT_File);
+    FileWriteLn(FileHandle,OUTPUT_File);
+    FileWriteLn(FileHandle,NBR_Parameters);
+
+    For i = 1 to NBR_Parameters do
+        P = FetchBU(Parameters,i,";");
+        FileWriteLn(FileHandle,P);
+    End
+
+    FileClose(FileHandle);
+    ///////////////////////////////////////////////////////////////////////////
+    // Execute Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+
+      ShellExec("Query.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Waite Powershell Search Complete
+    ///////////////////////////////////////////////////////////////////////////
+        Sleep(500);
+        While (FileExist( OUTPUT_File ) == False )
+         Sleep(500);
+        End
+
+
+end

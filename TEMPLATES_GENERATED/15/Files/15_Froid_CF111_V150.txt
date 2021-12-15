@@ -1,0 +1,3 @@
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF1111;SMF ElMazeraa;Froid;CF111;Froid;4;*;*;M110;*;*;SMF-ElMazeraa;CAM1A+CEG1A;Process;*;*;Froid;*;*;CAM1A~+~CEG1A~;SMF ElMazeraa~+~SMF ElMazeraa~;;;0;SalleMachine Froid ElMazeraa;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF1112;SMF Ressuage3;Froid;CF111;Froid;4;*;*;M120;*;*;SMF Surgele;CEG1C;Process;*;*;Froid;*;*;CEG1C~;SMF Ressuage3~;;;0;SalleMachine Froid Ressuage3;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF1113;SMF Surgele;Froid;CF111;Froid;4;*;*;M130;*;*;SMF Ressuage3;CAM1C+CEG1B;Process;*;*;Froid;*;*;CAM1C~+~CEG1B~;SMF Surgele~+~SMF Surgele~;;;0;SalleMachine Froid Surgele;*

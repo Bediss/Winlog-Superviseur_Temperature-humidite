@@ -1,0 +1,75 @@
+Code Compteur;Le Compteur;Energie;Compteur Parent;Le Compteur Parent;Compteur_Level;PC_Production;PC_Distribution;PC_Consommation;Point de Production;Point de Distribution;Point de Consommation;Description;type;parent energie;Ratio;Unite;Master;COMs (Gate:PortTCP:Sortie:Channel:Device);Parse Formule;User Formule;Date Modify;Date Load;Nbr Error;Detailles Nom;Nom Ratio;Access_Group;KPI
+CTCA;CLC;Temperature;*;*;0;*;*;D1;*;*;CLC;F(CTCA);Company;*;*;*;*;*;F~(~CTCA~)~;F~(~CLC~)~;*;*;0;*;*;*;C1
+CTC2;Production;Temperature;CTCA;CLC;1;*;*;D2;*;*;Production;F(CTC2);Unite;*;*;*;*;*;F~(~CTC2~)~;F~(~Production~)~;*;*;0;*;*;*;C1
+CTC2A;Process_Pasto;Temperature;CTC2;Production;3;D64;*;D21;T°c  positive;*;Process_Pasto;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2B;Process_Sterilo;Temperature;CTC2;Production;3;D64;*;D22;T°c  positive;*;Process_Sterilo;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2C;Cond_UHT1_P1;Temperature;CTC2;Production;3;D64;*;D23;T°c  positive;*;Cond_UHT1_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2D;Cond_UHT1_P2;Temperature;CTC2;Production;3;D64;*;D24;T°c  positive;*;Cond_UHT1_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2E;Process_Lait_Fermente;Temperature;CTC2;Production;3;D64;*;D25;T°c  positive;*;Process_Lait_Fermente;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2F;Galdi;Temperature;CTC2;Production;2;*;*;D26;*;*;Galdi;F(CTC2F);Atelier;*;*;*;*;*;F~(~CTC2F~)~;F~(~Galdi~)~;;;0;;;;C1
+CTC21;Galdi_A;Temperature;CTC2F;Galdi;3;D64;*;D261;T°c  positive;*;Galdi_A;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC22;Galdi_B;Temperature;CTC2F;Galdi;3;D64;*;D262;T°c  positive;*;Galdi_B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2G;Beurrerie;Temperature;CTC2;Production;2;*;*;D27;*;*;Beurrerie;F(CTC2G);Atelier;*;*;*;*;*;F~(~CTC2G~)~;F~(~Beurrerie~)~;;;0;;;;C1
+CTC23;BER_Process;Temperature;CTC2G;Beurrerie;3;D64;*;D271;T°c  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC24;BER_Cond;Temperature;CTC2G;Beurrerie;3;D64;*;D272;T°c  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2H;CH_Chaud_P1;Temperature;CTC2;Production;3;D66;*;D28;T°c  chaude;*;CH_Chaud_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2I;CH_Froid_P1;Temperature;CTC2;Production;3;D64;*;D2A;T°c  positive;*;CH_Froid_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC2J;CH_Froid_P2;Temperature;CTC2;Production;3;D64;*;D2B;T°c  positive;*;CH_Froid_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC3;CH_F_Commerciale;Temperature;CTCA;CLC;1;*;*;D3;*;*;CH_F_Commerciale;F(CTC3);Unite;*;*;*;*;*;F~(~CTC3~)~;F~(~CH_F_Commerciale~)~;*;*;0;*;*;*;C1
+CTC31;CH1_F_Commerciale_P1;Temperature;CTC3;CH_F_Commerciale;3;D64;*;D31;T°c  positive;*;CH1_F_Commerciale_P1;Reel;Point de mesure;*;*;*;!~*;!~*;*;*;*;*;2;*;*;*;C1
+CTC32;CH2_F_Commerciale_P2;Temperature;CTC3;CH_F_Commerciale;3;D64;*;D32;T°c  positive;*;CH2_F_Commerciale_P2;Reel;Point de mesure;*;*;*;!~*;!~*;*;*;*;*;2;*;*;*;C1
+CTC4;Laboratoire;Temperature;CTCA;CLC;1;*;*;D4;*;*;Laboratoire;F(CTC4);Unite;*;*;*;*;*;F~(~CTC4~)~;F~(~Laboratoire~)~;*;*;0;*;*;*;C1
+CTC41;LAB_Bacterio;Temperature;CTC4;Laboratoire;2;*;*;D41;*;*;LAB_Bacterio;F(CTC41);Atelier;*;*;*;*;*;F~(~CTC41~)~;F~(~LAB_Bacterio~)~;*;*;0;*;*;*;C1
+CTC4A;BAC_E1;Temperature;CTC41;LAB_Bacterio;3;D66;*;D411;T°c  chaude;*;BAC_E1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4B;BAC_E2;Temperature;CTC41;LAB_Bacterio;3;D66;*;D412;T°c  chaude;*;BAC_E2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4C;BAC_E3;Temperature;CTC41;LAB_Bacterio;3;D66;*;D413;T°c  chaude;*;BAC_E3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4D;BAC_E4;Temperature;CTC41;LAB_Bacterio;3;D66;*;D414;T°c  chaude;*;BAC_E4;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4E;BAC_E5;Temperature;CTC41;LAB_Bacterio;3;D66;*;D415;T°c  chaude;*;BAC_E5;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4F;BAC_E6;Temperature;CTC41;LAB_Bacterio;3;D66;*;D416;T°c  chaude;*;BAC_E6;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4G;BAC_E7;Temperature;CTC41;LAB_Bacterio;3;D66;*;D417;T°c  chaude;*;BAC_E7;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4H;BAC_R1;Temperature;CTC41;LAB_Bacterio;3;D64;*;D418;T°c  positive;*;BAC_R1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4I;BAC_R2;Temperature;CTC41;LAB_Bacterio;3;D64;*;D419;T°c  positive;*;BAC_R2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4J;BAC_R3;Temperature;CTC41;LAB_Bacterio;3;D64;*;D41A;T°c  positive;*;BAC_R3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4K;BAC_MICROBIO;Temperature;CTC41;LAB_Bacterio;3;D64;*;D41B;T°c  positive;*;BAC_MICROBIO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC42;LAB_PhysicoChimique;Temperature;CTC4;Laboratoire;2;*;*;D42;*;*;LAB_PhysicoChimique;F(CTC42);Atelier;*;*;*;*;*;F~(~CTC42~)~;F~(~LAB_PhysicoChimique~)~;*;*;0;*;*;*;C1
+CTC4R;PHY_C1;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D421;T°c  negativre;*;PHY_C1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4L;PHY_C2;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D422;T°c  negativre;*;PHY_C2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4M;PHY_C3;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D423;T°c  negativre;*;PHY_C3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4N;PHY_C4;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D424;T°c  negativre;*;PHY_C4;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4O;PHY_C5;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D425;T°c  negativre;*;PHY_C5;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC4P;PHY_C6;Temperature;CTC42;LAB_PhysicoChimique;3;D65;*;D426;T°c  negativre;*;PHY_C6;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5;Salle_De_Fermentation;Temperature;CTCA;CLC;1;*;*;D5;*;*;Salle_De_Fermentation;F(CTC5);Unite;*;*;*;*;*;F~(~CTC5~)~;F~(~Salle_De_Fermentation~)~;*;*;0;*;*;*;C1
+CTC5A;FERMO_R1;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D51;T°c  negativre;*;FER_R1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5B;FERMO_R2;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D52;T°c  negativre;*;FER_R2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5C;FERMO_R3;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D53;T°c  negativre;*;FER_R3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5D;FERMO_R4;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D54;T°c  negativre;*;FER_R4;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5E;FERMO_R5;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D55;T°c  negativre;*;FER_R5;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5F;FERMO_R6;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D56;T°c  negativre;*;FER_R6;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5G;FERMO_C1;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D57;T°c  negativre;*;FER_C1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5H;FERMO_C2;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D58;T°c  negativre;*;FER_C2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC5I;FERMO_C3;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D59;T°c  negativre;*;FER_C3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CTC6;Matiere_Premiere_P1;Temperature;CTCA;CLC;3;D65;*;D6;T°c  negativre;*;Matiere_Premiere_P1;Reel;Point de mesure;*;*;*;!~*;!~*;*;*;*;*;2;*;*;*;C1
+CTC7;CH_CHAUD_LABO;Temperature;CTCA;CLC;3;D66;*;D7;T°c  chaude;*;CH_CHAUD_LABO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHCA;CLC;Humidite;*;*;0;*;*;D1;*;*;CLC;F(CHCA);Company;*;*;*;*;*;F~(~CHCA~)~;F~(~CLC~)~;;;0;;;;C1
+CHC1;Production;Humidite;CHCA;CLC;1;*;*;D2;*;*;Production;F(CHC1);Unite;*;*;*;*;*;F~(~CHC1~)~;F~(~Production~)~;;;0;;;;C1
+CHC1A;Process_Pasto;Humidite;CHC1;Production;3;D64;*;D21;T°c  positive;*;Process_Pasto;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1B;Process_Sterilo;Humidite;CHC1;Production;3;D64;*;D22;T°c  positive;*;Process_Sterilo;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1C;Cond_UHT1_P1;Humidite;CHC1;Production;3;D64;*;D23;T°c  positive;*;Cond_UHT1_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1D;Cond_UHT1_P2;Humidite;CHC1;Production;3;D64;*;D24;T°c  positive;*;Cond_UHT1_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1E;Process_Lait_Fermente;Humidite;CHC1;Production;3;D64;*;D25;T°c  positive;*;Process_Lait_Fermente;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1F;Galdi;Humidite;CHC1;Production;2;*;*;D26;*;*;Galdi;F(CHC1F);Atelier;*;*;*;*;*;F~(~CHC1F~)~;F~(~Galdi~)~;;;0;;;;C1
+CHC11;Galdi_A;Humidite;CHC1F;Galdi;3;D64;*;D261;T°c  positive;*;Galdi_A;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC12;Galdi_B;Humidite;CHC1F;Galdi;3;D64;*;D262;T°c  positive;*;Galdi_B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1G;Beurrerie;Humidite;CHC1;Production;2;*;*;D27;*;*;Beurrerie;F(CHC1G);Atelier;*;*;*;*;*;F~(~CHC1G~)~;F~(~Beurrerie~)~;;;0;;;;C1
+CHC13;BER_Process;Humidite;CHC1G;Beurrerie;3;D64;*;D271;T°c  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC14;BER_Cond;Humidite;CHC1G;Beurrerie;3;D64;*;D272;T°c  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1H;CH_Chaud_P1;Humidite;CHC1;Production;3;D64;*;D28;T°c  positive;*;CH_Chaud_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1I;CH_Froid_P1;Humidite;CHC1;Production;3;D64;*;D2A;T°c  positive;*;CH_Froid_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC1J;CH_Froid_P2;Humidite;CHC1;Production;3;D64;*;D2B;T°c  positive;*;CH_Froid_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC2;CH_F_Commerciale;Humidite;CHCA;CLC;1;*;*;D3;*;*;CH_F_Commerciale;F(CHC2);Unite;*;*;*;*;*;F~(~CHC2~)~;F~(~CH_F_Commerciale~)~;;;0;;;;C1
+CHC21;CH1_F_Commerciale_P1;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D31;T°c  positive;*;CH1_F_Commerciale_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC22;CH2_F_Commerciale_P2;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D32;T°c  positive;*;CH2_F_Commerciale_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC3;Matiere_Premiere_P1;Humidite;CHCA;CLC;3;D65;*;D6;T°c  negativre;*;Matiere_Premiere_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC5;CH_CHAUD_LABO;Humidite;CHCA;CLC;3;D66;*;D7;T°c  chaude;*;CH_CHAUD_LABO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+CHC4;Laboratoire;Humidite;CHCA;CLC;1;*;*;D4;*;*;Laboratoire;F(CHC4);Unite;*;*;*;*;*;F~(~CHC4~)~;F~(~Laboratoire~)~;;;0;;;;C1
+CHC41;BAC_MICROBIO;Humidite;CHC4;Laboratoire;3;D64;*;D41B;T°c  positive;*;BAC_MICROBIO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

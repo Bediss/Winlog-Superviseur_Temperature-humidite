@@ -1,0 +1,107 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 1000,275
+#Size: 320,135
+#BkColor: clWhite
+#Gates: 6
+  #STR: AlarmeEventModifer,12
+  #STR: AlarmeEventModifer,2
+  #STR: AlarmeEventModifer,17
+  #STR: AlarmeEventModifer,11
+  #STR: AlarmeEventModifer,13
+  #STR: AlarmeEventModifer,14
+#Style: Fixed
+#StayOnTop: 1
+#Object: Button
+  #ID: 0
+  #Pos: 10,100
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,FirstPortOK()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 159,100
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,10
+  #Size: 300,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: Tapez Le Premier Port du Gateway :
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Edit
+  #ID: 0
+  #Pos: 52,40
+  #Size: 80,25
+  #BkColor: clWindow
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 3
+  #NeedApply: 0
+  #Style: 1
+  #TabOrder: 2
+  #Access: 0
+#EndObj
+#Object: Edit
+  #ID: 0
+  #Pos: 162,40
+  #Size: 80,25
+  #BkColor: clWindow
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #NeedApply: 0
+  #Style: 1
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 132,40
+  #Size: 30,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,16,0001
+  #Label: :
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,70
+  #Size: 255,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clMaroon
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,Bouton_Select_List_Mesure()
+#EndObj

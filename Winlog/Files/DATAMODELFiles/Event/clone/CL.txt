@@ -1,0 +1,7 @@
+A23;CC11$28;F(CC11$0);E11$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27;Abattoir Electrique Sur-consommation jour;Abattoir Elec$Inc LIVE=F~(~Abattoir Elec$KWh J~)~>1500;Abattoir Elec$Inc LIVE;Abattoir Elec$Inc LIVE=F~(~Abattoir Elec$KWh J~)~;0
+A;CV11$28;F(CV11$0);V11$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm Abattoir Vapeur;Abattoir Vapeur$Inc LIVE=F~(~Abattoir Vapeur$KWh J~)~>1500;Abattoir Vapeur$Inc LIVE;Abattoir Vapeur$Inc LIVE=F~(~Abattoir Vapeur$KWh J~)~;0
+A;CF121$28;F(CF121$0);F121$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm Abattoir Froid;Abattoir Froid$Inc LIVE=F~(~Abattoir Froid$KWh J~)~>1500;Abattoir Froid$Inc LIVE;Abattoir Froid$Inc LIVE=F~(~Abattoir Froid$KWh J~)~;0
+A;CEBA1$28;F(CEBA1$0);HBA1$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm Abattoir EB;Abattoir EB$Inc LIVE=F~(~Abattoir EB$KWh J~)~>1500;Abattoir EB$Inc LIVE;Abattoir EB$Inc LIVE=F~(~Abattoir EB$KWh J~)~;0
+A;CETB1$28;F(CETB1$0);HTB1$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm CT11_Abattoir;CT11_Abattoir$Inc LIVE=F~(~CT11_Abattoir$KWh J~)~>1500;CT11_Abattoir$Inc LIVE;CT11_Abattoir$Inc LIVE=F~(~CT11_Abattoir$KWh J~)~;0
+A;CPT11$28;F(CPT11$0);T11$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm Abattoir T;Abattoir T$Inc LIVE=F~(~Abattoir T$KWh J~)~>1500;Abattoir T$Inc LIVE;Abattoir T$Inc LIVE=F~(~Abattoir T$KWh J~)~;0
+A;X11$28;F(X11$0);E1$28=F~(~CC11$0~)~;>;1500;10_MIN;22/11/2019_09:27; Alarm Abattoir;Abattoir$Inc LIVE=F~(~Abattoir$KWh J~)~>1500;Abattoir$Inc LIVE;Abattoir$Inc LIVE=F~(~Abattoir$KWh J~)~;0

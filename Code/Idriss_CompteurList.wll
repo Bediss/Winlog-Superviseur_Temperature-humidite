@@ -1,0 +1,1159 @@
+Global String Path_Display_Popup;
+Global String Operateur="";
+Global int LigneSelect=0;
+function void Bouton_BU_ListCompteur()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+Confirme_Save();
+PageOpen="CompteurList";
+
+
+int i;
+String GATE;
+  LenPrefix=2;
+    SetNumGateValue("Show_Temp_Pointer",0,1073742080);
+    SetStrGateValue("AlarmeEventModifer",1,"");
+    SetStrGateValue("AlarmeEventModifer",2,"");
+    SetStrGateValue("AlarmeEventModifer",3,"");
+    SetStrGateValue("AlarmeEventModifer",4,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+      SetStrGateValue("AlarmeEventModifer",17,"");
+      SetNumGateValue("PageView",2,1);
+         SetNumGateValue("PageView",1,1);
+       Path_File= REPORT_PATH_CL;
+
+    Position=16;
+        Operateur=";";
+          Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+         Admin_View_Temp_File=REPORT_PATH_CL+"Lists\Temp_CL.CSV";
+         Admin_View_Original_File=REPORT_PATH_CL+"Lists\CL.CSV";
+         Admin_View_Recycle_Code=REPORT_PATH_CL+"Lists\Recycler_CL_Code.txt";
+
+
+             Highest_Code_Initialisation(Admin_View_Original_File,Admin_View_Recycle_Code);
+              FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+       //Highest_Code2_Initialisation(Admin_View_Original_File,Admin_View_Recycle_Code);
+
+
+
+
+        for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            SetStrGateValue(GATE,0,"");
+            SetStrGateValue(GATE,1,"");
+        end
+
+   // PopUpBU();
+     ShowPage("CompteurList");
+FlagUses=False;
+
+end
+
+function void Delete_CompteurList()
+   String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+ bool Exist=False;
+  bool Exist2=False;
+ String GATE;
+ int i;
+ bool QB;
+ bool A;
+
+    String FullPathFileName = REPORT_PATH_CL+NameFile+".txt";
+    String BackPath=REPORT_PATH_CL+"Lists\BackCL.CSV";
+    String WPath=REPORT_PATH_CL+"Lists\WCL.CSV";
+
+    int FileHandle=FileOpen(FullPathFileName,"rt");
+
+    FileClose(FileHandle);
+A = FileExist(FullPathFileName);
+
+        if (FileExist(FullPathFileName))then
+  Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","PBI.CSV",ENV_PATH + "\Files\DATAMODELFiles\Power BI\",NameFile,7,0);
+
+   Exist2 = ExistingInFileWithPS( "C:\Winlog\PowerShell\","Reporting.CSV",ENV_PATH + "\Files\DATAMODELFiles\Rapport\",NameFile,16,0);
+
+   If Exist2 == True then
+        Exist=Exist2;
+   end
+    if Exist == False then
+            QB=QuestionBox("  Voulez-vous vraiment Supprimer La Compteur List selectionner?","Attention:");
+    //MessageBox(QB,"QB");
+        if QB==True then
+             FileDelete(FullPathFileName);
+             Delete_File_Liste("CompteurList",WPath,BackPath,NameFile);
+             SetStrGateValue("AlarmeEventModifer",2,"");
+             SetStrGateValue("AlarmeEventModifer",17,"La liste "+NameFile+" est supprimer avec succée");
+                   for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            //SetStrGateValue(GATE,0,"");
+            SetStrGateValue(GATE,1,"");
+                    end
+                 else return; end
+
+         else
+        SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer La liste "+NameFile);
+    end
+
+        end
+
+end
+
+
+function void Back_ListCompteur()
+
+Confirme_Save();
+PageOpen="CompteurList";
+
+
+int i;
+String GATE;
+//int currentPageSelected = GetNumGateValue("PageView",2);
+SetStrGateValue("AlarmeEventModifer",1,"");
+         SetStrGateValue("AlarmeEventModifer",3,"");
+    SetStrGateValue("AlarmeEventModifer",4,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+      SetStrGateValue("AlarmeEventModifer",17,"");
+     // SetNumGateValue("PageView",2,currentPageSelected);
+     Path_File=REPORT_PATH_CL;
+        for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            SetStrGateValue(GATE,0,"");
+          //  SetStrGateValue(GATE,1,"");
+        end
+
+   // PopUpBU();
+
+
+     ShowPage("CompteurList");
+     Bouton_Select_ListCompteur();
+
+
+end
+
+
+/////////////////////////////////////////////////
+
+function void ListCompteur_Master()
+
+Confirme_Save();
+PageOpen="CompteurList";
+
+
+int i;
+String GATE;
+
+    //SetStrGateValue("AlarmeEventModifer",1,"");
+    //SetStrGateValue("AlarmeEventModifer",2,"");
+  //int currentPageSelected = GetNumGateValue("PageView",2);
+
+         SetStrGateValue("AlarmeEventModifer",3,"");
+    SetStrGateValue("AlarmeEventModifer",4,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+      SetStrGateValue("AlarmeEventModifer",17,"");
+   //   SetNumGateValue("PageView",2,currentPageSelected);
+       Path_File=REPORT_PATH_CL;
+
+        for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            SetStrGateValue(GATE,0,"");
+            //SetStrGateValue(GATE,1,"");
+        end
+POPUP_Display_Source = "BU";
+    PopUpBU();
+     ShowPage("CompteurListMaster");
+
+
+end
+
+
+/////////////////////////////////////////////////////////
+Function Void NewListCompteur()
+String NameFile;
+String FullPathFileName;
+bool Exist;
+
+int TotalItem;
+int FileHandle;
+
+
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",20);
+    NameFile=FR_Speciale_CHar(NameFile);
+    If (NameFile=="") then //MessageBox("Nom de file est vide impossible de cree!!","Info");
+     SetStrGateValue("AlarmeEventModifer",17,"Selectionnez Un compteur SVP!!");
+    return ;end
+
+
+
+    FullPathFileName = REPORT_PATH_CL+NameFile+".txt";
+       Exist=UniqueNameFile(FullPathFileName);
+    IF Exist== False then
+    SetStrGateValue("AlarmeEventModifer",2,NameFile);
+    FileHandle=FileOpen(FullPathFileName,"wt");
+     LoadBouton_MailingList("ROW",1);
+     TotalItem=scanfile(FullPathFileName);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+     Display_C(1,FullPathFileName,Position,"ROW",1,";");
+
+     FileClose(FileHandle);
+      Confirme_Save=True;
+          ShowPoPUPs("");
+          End
+End
+////////////////////////////////////
+Function void save_CompteurList()
+
+
+String NameFile;
+String CLFullPathFileName;
+String WCLFullPathFileName;
+int CLFileHandle;
+int WCLFileHandle;
+String Code_CL;
+int privilege=0;
+String Ligne;
+bool Exist=False;
+String Path;
+int All=32767;
+int i=1;
+int j=0;
+Confirme_Save=False;
+  NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    if NameFile== "" then   SetStrGateValue("AlarmeEventModifer",17,"Selectionner ou crée une Liste pour l'Enregistrer");return ; end
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+if NameFile!= "" then
+   Path=REPORT_PATH_CL;
+    CLFullPathFileName=REPORT_PATH_CL+"Lists\CL.CSV";
+    CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+
+     While ( FileEof( CLFileHandle ) == 0)
+        Ligne=FileReadLn(CLFileHandle);
+        i=i+1;
+            if Fetch_Email(Ligne,2,";")== NameFile then
+                Exist=True;
+                j=i;
+            end
+     end
+     i=0;
+      FileClose(CLFileHandle);
+
+    if Exist==False then
+        CLFileHandle=FileOpen(CLFullPathFileName,"at");
+
+        privilege=Calcul_Privilege(NameFile,Path,All,15);
+        Code_CL=FetchCodeAdd(REPORT_PATH_CL+"Lists","CL");
+        FileWriteLn(CLFileHandle,Code_CL+";"+NameFile+";"+Path+";"+privilege+";Compteur List");
+        FileClose(CLFileHandle);
+
+       else
+             privilege=Calcul_Privilege(NameFile,Path,All,15);
+
+        WCLFullPathFileName=REPORT_PATH_CL+"Lists\WCL.CSV";
+        WCLFileHandle=FileOpen(WCLFullPathFileName,"wt");
+            CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+          While ( FileEof( CLFileHandle ) == 0)
+                Ligne=FileReadLn(CLFileHandle);
+                i=i+1;
+                if i==j-1 then
+                      Ligne=FR_Formule(Ligne,privilege,4);
+                      FileWriteLn(WCLFileHandle,Ligne);
+                  else
+                  if Ligne!="" then
+                    FileWriteLn(WCLFileHandle,Ligne);
+                   end
+                end
+          end
+                      FileClose(WCLFileHandle);
+                       FileClose(CLFileHandle);
+                         SetStrGateValue("AlarmeEventModifer",17,"Enregistrement avec Succee");
+              FileCopy(WCLFullPathFileName,CLFullPathFileName,false);
+              FileDelete(WCLFullPathFileName);
+
+    end
+end
+//MessageBox(FlagUses,"FlagUses");
+FlagUses=False;
+End
+//////////////////////////////////////
+Function int Calcul_Privilege(String NameFile,String Path,int All,int pos)
+String FullPathFileName;
+int FileHandle;
+int privilege;
+String AC;
+String Ligne;
+
+FullPathFileName = Path+NameFile+".txt";
+            FileHandle=FileOpen(FullPathFileName,"rt");
+                While ( FileEof( FileHandle ) == 0)
+                     Ligne=FileReadLn(FileHandle);
+                     AC=Fetch_Email(Ligne,pos,";");
+
+                     if AC!="*" then
+                        privilege=BitOr(privilege,StrToInt(AC));
+                     else
+
+                        privilege=BitOr(privilege,All);
+                     end
+                end
+
+        FileClose(FileHandle);
+ return privilege;
+end
+
+/////////////////////////////////////
+Function Void Bouton_NewListCompteur()
+    SetStrGateValue("AlarmeEventModifer",20,"");
+    ShowPoPUPs("POPUP_NewListCompteur");
+End
+///////////////////////////////////////////
+Function Void Bouton_Select_Querry()
+
+String LevelFullPathFileName;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String PCD="";
+String PCC="";
+String LigneT;
+int LevelFileHandle;
+int KOP;
+int Pos;
+int i;
+int Sp;
+int K;
+int j;
+    if GetStrGateValue("BU_Selected",0)=="" then
+        //MessageBox("Selectionnez Un compteur SVP!!","Important");
+          SetStrGateValue("AlarmeEventModifer",17,"Selectionnez Un compteur SVP!!");
+        return;
+    end
+     LevelFullPathFileName = ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+    LevelFileHandle=FileOpen(LevelFullPathFileName,"rt");
+     for j =0 to 6 do
+    SetDigGateValue("QuerrySelect",j,0);
+    end
+       LigneT=Select_BU();
+    CCode=Fetch_Formule(LigneT,8,";");
+
+
+    //Query Variable
+
+     Pos=GET_COMPTEUR(CCode);
+
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);//Code level
+
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+if CParent == "*" then
+     //   MessageBox("impossible d'applique cette formule","information");
+      SetStrGateValue("AlarmeEventModifer",17,"impossible d'applique cette formule");
+    else
+
+    //Query Display
+    CName=GetStrGateValue("Compteur_Name",Pos);
+    SetStrGateValue("ROW0",1,CName);//Compteur Name
+
+           Sp=StrToInt(CCodeL);
+
+            FileReadLn(LevelFileHandle);
+
+            for i =0 to Sp do
+                Ligne=FileReadLn(LevelFileHandle);
+
+                LName=Fetch_Alarm_search(Ligne,2,";");
+
+            end
+            SetStrGateValue("ROW0",2,LName);
+
+        K=GET_COMPTEUR(CParent);
+
+
+        CParentN=GetStrGateValue("Compteur_Name",K);
+
+    SetStrGateValue("ROW0",3,CParentN);//Compteur Parent name
+
+    SetStrGateValue("ROW0",4,CCodeE);//Compteur energy
+    PCP=GetStrGateValue("Compteur_NameP",Pos);
+    SetStrGateValue("ROW0",5,PCP);//Post Code Production
+    PCD=GetStrGateValue("Compteur_NameD",Pos);
+    SetStrGateValue("ROW0",6,PCD);//Post Code Distribution
+    PCC=GetStrGateValue("Compteur_NameC",Pos);
+    SetStrGateValue("ROW0",7,PCC);//Post Code Consommation
+    ShowPoPUPs("POPUPQueryListCompteur");
+    FileClose(LevelFileHandle);
+    End
+End
+/////////////////////////////
+Function Void Bouton_Selected_ListCompteur()
+
+    SetStrGateValue("PopUpList_Path",0,"");
+    //SetStrGateValue("PopUpList_Root",0,REPORT_PATH_CL);
+    POPUPList_Extension = ".txt";
+     Path_Display_Popup=REPORT_PATH_CL;
+    PopupList_MaxPAGES();
+
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Compteur Liste");
+    ShowPoPUPs("PopUp_List");
+    //ShowPoPUPs("POPUP_CompteurList");
+End
+
+
+//////////////////////////////////////////////////////////////////////////////
+Function Void Bouton_Select_ListCompteur()
+
+    SetStrGateValue("PopUpList_Path",0,"");
+    //SetStrGateValue("PopUpList_Root",0,"\Files\Display_Templates\CompteurList");
+    POPUPList_Extension = ".txt";
+     Path_Display_Popup=REPORT_PATH_CL;
+    PopupList_MaxPAGES();
+
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Compteur_ADD");
+    ShowPoPUPs("PopUp_List");
+    //ShowPoPUPs("POPUP_CompteurList");
+End
+///////////////////////////////////////////////////////////////////////////////
+Function Void Fill_Selected_List_Compteur()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+    pathNEWTO = Path_Display_Popup+NEWTO+".txt";
+    // LoadBouton_MailingList("ROW",1);
+     TotalItem=scanfile(pathNEWTO);
+
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+          SetNumGateValue("PageView",2,1);
+
+     Display_C(1,pathNEWTO,Position,"ROW",1,";");
+    end
+End
+
+//////////////////////////////
+Function Void Fill_Select_List_Compteur()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+    pathNEWTO = Path_Display_Popup+NEWTO+".txt";
+    //MessageBox(pathNEWTO,"1");
+     LoadBouton_MailingList("ROW",0);
+     TotalItem=scanfile(pathNEWTO);
+//MessageBox(TotalItem,"");
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+       SetNumGateValue("PageView",1,1);
+
+     Display_C(1,pathNEWTO,Position,"ROW",0,";");
+    end
+End
+
+////////////////////********************************////////////////////////////
+Function Void CheckQueryListCompteur()
+
+String FullPathFileName;
+int FileHandle;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String CodePos="";
+String NameFile="";
+String LigneT;
+String PathFileName;
+int TotalItem;
+int CurrentPage;
+int KOP;
+int Pos;
+    NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    PathFileName=Path_Display_Popup;
+    FullPathFileName = PathFileName+NameFile+".txt";
+
+
+    LigneT=Select_BU();
+
+    CCode=Fetch_Formule(LigneT,8,";");
+    CName=Fetch_Formule(LigneT,9,";");
+
+
+      Pos=GET_COMPTEUR(CCode);
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);
+
+
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+    CCodeP=GetStrGateValue("Compteur_PCP",Pos);//Code Compteur_PCP
+    CCodeD=GetStrGateValue("Compteur_PCD",Pos);//Code Compteur_PCD
+    CCodeC=GetStrGateValue("Compteur_PCC",Pos);//Code Compteur_PCC
+
+    if GetDigGateValue("QuerrySelect",0)==1 then
+             CParent=CCode;
+             CCode="*";
+           // MessageBox("f",CParent);
+      else
+                if GetDigGateValue("QuerrySelect",2)==0 then
+                    CParent="*";
+                else
+                    CCode="*";
+                    end
+
+    end
+
+     if GetDigGateValue("QuerrySelect",1)==0 then
+       CCodeL="*";
+
+    end
+
+
+     if GetDigGateValue("QuerrySelect",4)==0 then
+       CCodeP="*";
+    end
+     if GetDigGateValue("QuerrySelect",5)==0 then
+       CCodeD="*";
+    end
+     if GetDigGateValue("QuerrySelect",6)==0 then
+       CCodeC="*";
+    end
+
+
+    Query=ConstractQuerry(CCodeE,CParent,CCodeL,"*",CCodeP+"/"+CCodeD+"/"+CCodeC);
+    AddEnergy(PathFileName,NameFile,Query,CCodeE,CName);
+    TotalItem=scanfile(FullPathFileName);
+    SetNumGateValue("AdminTotalItems",2,TotalItem);
+    CurrentPage =  TotalItem/MaxRow;
+            If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+        SetNumGateValue("PageView",2,CurrentPage);
+    Regroupe_Compteur();
+    Display_C(CurrentPage,FullPathFileName,Position,"ROW",1,";");
+
+    end
+    /////////////////////////////////////
+
+Function Void AddEnergy(String PathFileName,String NameFile,String Query,String Energy,String CName)
+int FileHandle;
+int WFileHandle;
+int CurrentPage;
+String Ligne;
+int TotalItem;
+
+    FileHandle=FileOpen(PathFileName+NameFile+".txt","at");
+
+
+    FileWriteLn(FileHandle,"Query~"+";"+"Q~"+CName+";"+Energy+";"+Query+";;;;;;;;;;;;Query "+CName +" " +Energy);
+    FileClose(FileHandle);
+
+End
+//////////////////////////////**********************///////////////////////////
+Function Void AddToListCompteur()
+
+String CompteurToAdd;
+String NameFile;
+String FullPathFileName;
+int FileHandle;
+bool Exist=False;
+String Ligne;
+int CurrentPage;
+int TotalItem=0;
+String LignetoAdd;
+String LigneT;
+String Path;
+NameFile = GetStrGateValue("AlarmeEventModifer",2);
+    if NameFile=="" then // MessageBox("Selectionner ou creez une liste SVP","information");
+    SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste SVP!!");
+    return; end
+
+    LigneT=Select_BU();
+
+    LignetoAdd=Fetch_Formule(LigneT,8,";")+";"+//Code Compteur
+    Fetch_Formule(LigneT,9,";")+";"+//Name Compteur
+    Fetch_Formule(LigneT,10,";")+";"+//Energy
+    Fetch_Formule(LigneT,7,";")+";"+//CParent
+    Fetch_Formule(LigneT,17,";")+";;"+//Pa Name
+    Fetch_Formule(LigneT,14,";")+";"+//NAme Production
+    Fetch_Formule(LigneT,15,";")+";"+
+    Fetch_Formule(LigneT,16,";")+";"+
+    Fetch_Formule(LigneT,11,";")+";"+//Cproduction
+    Fetch_Formule(LigneT,12,";")+";"+
+    Fetch_Formule(LigneT,13,";")+";;"+
+    Fetch_Formule(LigneT,18,";")+";"+
+    Fetch_Formule(LigneT,19,";")+";"+
+    Fetch_Formule(LigneT,9,";")+" "+Fetch_Formule(LigneT,10,";");//Type Level
+
+
+        NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+    FullPathFileName = REPORT_PATH_CL;
+        Path=FullPathFileName+NameFile;
+    FileHandle=FileOpen(Path,"rt");
+     While ( FileEof( FileHandle ) == 0)
+        Ligne=FileReadLn(FileHandle);
+        if (Fetch_Formule(Ligne,1,";") == Fetch_Formule(LignetoAdd,1,";")) then Exist=True;  end
+     End
+
+    FileClose(FileHandle);
+     if Exist==True   then
+     //MessageBox("","Information");end
+     SetStrGateValue("AlarmeEventModifer",17,"Compteur Exist deja");
+     end
+ //MessageBox(Path,"Add Compteur");
+    if Exist==False && LignetoAdd !="" then
+     Confirme_Save=True;
+    FileHandle=FileOpen(Path,"at");
+
+
+
+        FileWriteLn(FileHandle,LignetoAdd);
+        FileClose(FileHandle);
+        TotalItem=GetNumGateValue("AdminTotalItems",2);
+        TotalItem=TotalItem+1;
+        //MessageBox(TotalItem,"TotalItem");
+        SetNumGateValue("AdminTotalItems",2,TotalItem);
+        CurrentPage =  TotalItem/MaxRow;
+        //MessageBox(CurrentPage,"CurrentPage");
+
+
+        If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+        // MessageBox(CurrentPage,"CurrentPage2");
+            SetNumGateValue("PageView",2,CurrentPage);
+            Regroupe_Compteur();
+            Display_C(CurrentPage,Path,Position,"ROW",1,Operateur);
+        End
+End
+///////////////////////////////////////////
+Function Void AddAllToCMPL()
+String EmailToAdd;
+String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+String NameFile_To=GetStrGateValue("AlarmeEventModifer",1);
+String FullPathFileName=REPORT_PATH_CL;
+int FileHandle;
+bool Exist=False;
+int RFileHandle;
+String Email;
+int CurrentPage;
+String NEWTO;
+int TotalItem=0;
+   TotalItem=GetNumGateValue("AdminTotalItems",2);
+ SetStrGateValue("AlarmeEventModifer",17,"");
+
+  if NameFile_To == "" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez une liste Source"); return; end
+
+
+     if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+    EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+
+
+
+    if Exist==False || EmailToAdd !="" then
+         Confirme_Save=True;
+         RFileHandle=FileOpen(FullPathFileName+NameFile_To+".txt","rt");
+       //  MessageBox(ENV_PATH+FullPathFileName+NameFile_To,"");
+         // MessageBox(ENV_PATH+FullPathFileName+NameFile,"");
+         FileHandle=FileOpen(FullPathFileName+NameFile+".txt","at");
+        if (RFileHandle==0) then
+                MessageBox("Fichier "+FullPathFileName+NameFile_To+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+        if (FileHandle==0) then
+                MessageBox("Fichier "+FullPathFileName+NameFile+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+
+         While ( FileEof( RFileHandle ) == 0)
+             EmailToAdd=FileReadLn(RFileHandle);
+             Exist=Verif_Exist(EmailToAdd,FullPathFileName,1,";");
+               //MessageBox(EmailToAdd,Exist);
+             if Exist==False then
+                FileWriteLn(FileHandle,EmailToAdd);
+
+                TotalItem=TotalItem+1;
+             end
+
+        end
+            SetNumGateValue("AdminTotalItems",2,TotalItem);
+            CurrentPage =  TotalItem/MaxRow;
+            If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+            SetNumGateValue("PageView",2,CurrentPage);
+                FileClose(FileHandle);
+                  FileClose(RFileHandle);
+            Display_D(CurrentPage,FullPathFileName+NameFile+".txt",Position,"ROW",1,";");
+
+         End
+
+
+//end
+End
+
+
+//////////////////////////////**********************///////////////////////////
+Function Void ListToListCompteur()
+String EmailToAdd;
+String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+String FullPathFileName=REPORT_PATH_CL;
+int FileHandle;
+bool Exist=False;
+String Email;
+int CurrentPage;
+String NEWTO;
+int TotalItem=0;
+int NumLigne=0;
+String Ligne="";
+int FileHandleA;
+int i=0;
+int Page=GetNumGateValue("PageView",1);
+String NameFileSource=GetStrGateValue("AlarmeEventModifer",1);
+ SetStrGateValue("AlarmeEventModifer",17,"");
+//MessageBox("1","");
+NumLigne=(Page-1)*10+ LigneSelect;
+//MessageBox(NumLigne,"NumLigne");
+
+     if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+    EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+
+    Exist=Verif_Exist(EmailToAdd,REPORT_PATH_CL,1,";");
+//MessageBox(EmailToAdd,"EmailToAdd");
+     //MessageBox(Email,EmailToAdd+"__"+Exist);
+              if Exist==True then
+       SetStrGateValue("AlarmeEventModifer",17,"Compteur Existe deja"); return;
+      End
+       FileHandleA=FileOpen(FullPathFileName+NameFileSource+".txt","rt");
+         While ( FileEof( FileHandleA ) == 0)
+            i=i+1;
+
+            Ligne=FileReadLn(FileHandleA);
+            //MessageBox(Ligne,i);
+            if i == NumLigne then
+
+                EmailToAdd=Ligne;
+           // MessageBox("EmailToAdd"+EmailToAdd,"i="+i);
+              end
+
+         end
+    //MessageBox("NumLigne="+NumLigne,"i="+i);
+   FileClose(FileHandleA);
+    if Exist==False || EmailToAdd !="" then
+           Confirme_Save=True;
+
+    FileHandle=FileOpen(FullPathFileName+NameFile+".txt","at");
+
+        if (FileHandle==0) then
+      MessageBox("Fichier "+FullPathFileName+NameFile+".txt"+" n'existe Pas","Erreur Add");  Return;
+    end
+
+        FileWriteLn(FileHandle,EmailToAdd);
+        TotalItem=GetNumGateValue("AdminTotalItems",2);
+        TotalItem=TotalItem+1;
+        SetNumGateValue("AdminTotalItems",2,TotalItem);
+        CurrentPage =  TotalItem/MaxRow;
+        If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+            SetNumGateValue("PageView",2,CurrentPage);
+                FileClose(FileHandle);
+            Display_D(CurrentPage,FullPathFileName+NameFile+".txt",Position,"ROW",1,";");
+         End
+
+
+//end
+End
+
+
+
+
+
+
+//////////////////////
+
+/////////////////////////////**********************////////////////////////////
+Function Void DeleteFromListCompteur()
+
+String CompteurToDelete;
+String NameFile;
+int TotalItem;
+String FullPathFileName;
+int CurrentPage;
+
+    CompteurToDelete=GetStrGateValue("AlarmeEventModifer",5);
+    NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+    if NameFile == "" then SetStrGateValue("AlarmeEventModifer",17,"Il faut selectionnez une fichier ou le cree avant"); return; end
+    if CompteurToDelete == "" then SetStrGateValue("AlarmeEventModifer",17,"Il faut selectionnez un Compteur pour le supprimer"); return; end
+
+
+    FullPathFileName = REPORT_PATH_CL;
+
+    Delete_C(FullPathFileName, NameFile,CompteurToDelete,Position,";");
+
+    TotalItem=scanfile(FullPathFileName+NameFile);
+    SetNumGateValue("AdminTotalItems",2,TotalItem);
+    CurrentPage =  TotalItem/MaxRow;
+    SetStrGateValue("AlarmeEventModifer",5,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+
+    If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+    SetNumGateValue("PageView",2,CurrentPage);
+
+    Display_C(CurrentPage,FullPathFileName+NameFile,Position,"ROW",1,";");
+     Confirme_Save=True;
+
+End
+///////////////////////////******************************************/////////////
+
+Function Void Regroupe_Compteur()
+
+String FullPathFileName;
+String LFullPathFileName;
+String WLFullPathFileName;
+String PathFileName;
+String NameFile;
+String Energy;
+String Ligne;
+String LEnergy;
+int FileHandle;
+int LFileHandle;
+int WLFileHandle;
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    FullPathFileName=ENV_PATH+"\Files\AllCompteur\Energy.CSV";
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    PathFileName=REPORT_PATH_CL;
+    LFullPathFileName = PathFileName+NameFile+".txt";
+    LFileHandle=FileOpen(LFullPathFileName,"rt");
+
+    WLFullPathFileName = PathFileName+"W"+NameFile+".txt";
+
+    WLFileHandle=FileOpen(WLFullPathFileName,"wt");
+
+       FileReadLn(FileHandle);
+        while ( FileEof( FileHandle ) == 0)
+            LEnergy=FileReadLn(FileHandle);
+            Energy=Fetch_Formule(LEnergy,2,";");
+
+           if Energy!="" &&  Energy!="*" then
+
+                FileSeek(LFileHandle,0,0);
+                while ( FileEof( LFileHandle ) == 0)
+                    Ligne=FileReadLn(LFileHandle);
+                        if( Fetch_Formule(Ligne,3,";")==Energy ) then
+                            FileWriteLn(WLFileHandle,Ligne);
+
+                        end
+                end
+           end
+
+         end
+
+    FileClose(FileHandle);
+    FileClose(LFileHandle);
+    FileClose(WLFileHandle);
+
+    FileCopy(WLFullPathFileName,LFullPathFileName,False);
+
+    FileDelete(WLFullPathFileName);
+
+
+
+
+
+End
+/*****************************************************************************/
+
+
+function void SelectedRowCompteur_1()
+String S;
+    S = GetStrGateValue("ROW1",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_2()
+String S;
+    S = GetStrGateValue("ROW2",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+      // DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_3()
+String S;
+    S = GetStrGateValue("ROW3",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+      // DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_4()
+String S;
+    S = GetStrGateValue("ROW4",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+      // DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_5()
+String S;
+    S = GetStrGateValue("ROW5",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+    //   DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_6()
+String S;
+    S = GetStrGateValue("ROW6",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+      // DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_7()
+String S;
+    S = GetStrGateValue("ROW7",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+     //  DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_8()
+String S;
+    S = GetStrGateValue("ROW8",1);
+    IF ( S != "" ) Then
+     SetStrGateValue("AlarmeEventModifer",5,S);
+   //  DeleteFromListCompteur();
+    End
+end
+function void SelectedRowCompteur_9()
+String S;
+    S = GetStrGateValue("ROW9",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+    //   DeleteFromListCompteur();
+
+    End
+end
+function void SelectedRowCompteur_10()
+String S;
+    S = GetStrGateValue("ROW10",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",5,S);
+    //  DeleteFromListCompteur();
+
+    End
+end
+////////////////////////
+
+
+
+
+
+function void SelectRowCompteur_1()
+String S;
+    S = GetStrGateValue("ROW1",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+       LigneSelect=1;
+    End
+end
+function void SelectRowCompteur_2()
+String S;
+    S = GetStrGateValue("ROW2",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+      LigneSelect=2;
+    End
+end
+function void SelectRowCompteur_3()
+String S;
+    S = GetStrGateValue("ROW3",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+     LigneSelect=3;
+    End
+end
+function void SelectRowCompteur_4()
+String S;
+    S = GetStrGateValue("ROW4",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+     LigneSelect=4;
+    End
+end
+function void SelectRowCompteur_5()
+String S;
+    S = GetStrGateValue("ROW5",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+    LigneSelect=5;
+    End
+end
+function void SelectRowCompteur_6()
+String S;
+    S = GetStrGateValue("ROW6",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+      LigneSelect=6;
+    End
+end
+function void SelectRowCompteur_7()
+String S;
+    S = GetStrGateValue("ROW7",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+     LigneSelect=7;
+    End
+end
+function void SelectRowCompteur_8()
+String S;
+    S = GetStrGateValue("ROW8",0);
+    IF ( S != "" ) Then
+     SetStrGateValue("AlarmeEventModifer",3,S);
+    LigneSelect=8;
+    End
+end
+function void SelectRowCompteur_9()
+String S;
+    S = GetStrGateValue("ROW9",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+    LigneSelect=9;
+
+    End
+end
+function void SelectRowCompteur_10()
+String S;
+    S = GetStrGateValue("ROW10",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",3,S);
+     LigneSelect=10;
+
+    END
+End
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListSubCompt()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+    FlagUses=True;
+int CurrentPage= GetNumGateValue("PageView",1);
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+
+     SetNumGateValue("PageView",1,CurrentPage);
+             NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_File+NEWTO+".txt";
+         Display_D(CurrentPage,pathNEWTO,Position,"ROW",0,";");
+        // MessageBox(CurrentPage,"");
+             end
+FlagUses=False;
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListFirstCompt()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+    FlagUses=True;
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     SetNumGateValue("PageView",1,1);
+           NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_File+NEWTO+".txt";
+     Display_D(1,pathNEWTO,Position,"ROW",0,";");
+    FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListEndCompt()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+    FlagUses=True;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+int MaxPage =  ReguliersTotalItems/MaxRow+1;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+     SetNumGateValue("PageView",1,MaxPage);
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_File+NEWTO+".txt";
+      Display_D(MaxPage,pathNEWTO,Position,"ROW",0,";");
+    FlagUses=False;
+end
+
+
+
+function void ViewListAddCompt()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+    FlagUses=True;
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+
+int MaxPage ;
+int CurrentPage = GetNumGateValue("PageView",1);
+bool Continue;
+String NEWTO;
+String pathNEWTO;
+String FileName;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+    End
+     SetNumGateValue("PageView",1,CurrentPage);
+
+             NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_File+NEWTO+".txt";
+          //MessageBox(pathNEWTO,CurrentPage);
+     Display_D(CurrentPage,pathNEWTO,Position,"ROW",0,";");
+     FlagUses=False;
+end
+

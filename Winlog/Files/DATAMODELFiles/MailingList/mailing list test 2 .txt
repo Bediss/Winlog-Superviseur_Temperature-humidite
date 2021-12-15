@@ -1,0 +1,6 @@
+bizeyes@yandex.com;16383
+test1@email.com;
+test2@email.com;16383
+55225522@sms.com;
+test3@email.com
+test3@sms.com;

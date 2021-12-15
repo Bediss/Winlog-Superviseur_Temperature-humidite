@@ -1,0 +1,343 @@
+#Version: 0x030222
+#Access: 0
+#Pos: 0,110
+#Size: 1350,40
+#BkColor: 226,226,226
+#Gates: 4
+  #STR: TemplatePath,0
+  #STR: OriginalColQuery,0
+  #STR: OriginalRowQuery,0
+  #NUM: Show_Temp_Pointer,0
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 17,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Cas-Incidents
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,BoutonAlarmes()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 260,5
+  #Size: 50,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Emails
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Email()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 340,5
+  #Size: 80,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Cas - Emails
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_EventEmail()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 450,5
+  #Size: 60,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Rapports
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,View_Rapport()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 545,5
+  #Size: 70,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Power BIs
+  #Align: 37
+  #Frame: 1
+  #Access: 16384
+  #NewOnClick: StartF,Bouton_PBI()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 135,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Cas-Reguliers
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,BoutonReguliers()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 755,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Mailing Listes
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_MailingList()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 875,5
+  #Size: 110,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Compteurs Listes
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_BU_ListCompteur()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1015,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Mesures Listes
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Button_MesureList()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1238,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Impr Rapport
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Report()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 645,5
+  #Size: 80,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Master PBIs
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_PBI_MASTER()
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,35
+  #Size: 1350,5
+  #BkColor: 226,226,226
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 17,0
+    #Size: 90,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741825
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 260,0
+    #Size: 50,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741828
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 340,0
+    #Size: 80,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741832
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 135,0
+    #Size: 90,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741826
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 450,0
+    #Size: 60,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741840
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 545,0
+    #Size: 70,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741856
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 645,0
+    #Size: 80,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741888
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 755,0
+    #Size: 90,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073741952
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 875,0
+    #Size: 110,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073742080
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 1015,0
+    #Size: 90,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,112,1073742336
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1125,5
+  #Size: 110,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: FactBook
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_FactBook()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1145,35
+  #Size: 70,2
+  #BkColor: clBlack
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Label: Label
+  #Align: 32
+  #Frame: 1
+  #Show: 3,112,1073743872
+  #Access: 0
+#EndObj

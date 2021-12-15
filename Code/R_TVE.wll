@@ -1,0 +1,958 @@
+Global Int REPORT_TABLEAU = 0;
+Global String GLOBAL_CHART_NAME;
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String SingleReport_Generator( String ReportLine , String EventAlarme_Name , string EmailName)
+
+    String Report_STR_Tableau;
+    String Report_Code;
+    String Report_Name;
+    String Report_Generated;
+    String FinalReportFullName;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    Bool Print_Report = False;
+
+    String ReportMaster;
+    String DefaultReportPath;
+
+    Report_Code  = FETCH_REPORT_GENERATOR(ReportLine,1,",");
+    Report_Name  = FETCH_REPORT_GENERATOR(ReportLine,2,",");
+    Report_STR_Tableau = FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+    ReportMaster      = FETCH_REPORT_GENERATOR(ReportLine,13,",");
+    DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+
+    If ( Report_STR_Tableau == "*" || Report_STR_Tableau == ""  ) Then
+        // Error Runlog
+        REPORT_Runtime_LOG(" Report Not generated : (Single) Tableau not defined " + Report_STR_Tableau);
+        Return "";
+     End
+
+
+     IF ( GetStrGateValue("Tableau_TVE",StrToInt(Report_STR_Tableau)) == "0" ) Then
+      // False ( print sreen Report )
+      Print_Report = PRINT_SINGLE( ReportLine , EventAlarme_Name , EmailName );
+
+     Else
+      // true ( dynamic Report )
+      Print_Report = PRINT_ADHOC( ReportLine ,  EventAlarme_Name , EmailName );
+     End
+
+     REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Print_Report);
+     IF (Print_Report == True) Then
+        // Constract Final User pdf name
+        HH = "00" + GetHour();
+        P = StrLen( HH ) -1;
+        HH = StrSubString( HH , P , 2 );
+
+        mm = "00" + GetMinute();
+        P = StrLen( mm ) -1;
+        mm = StrSubString( mm , P , 2 );
+
+        DD = "00" + GetDayOfMonth();
+        P = StrLen( DD ) -1;
+        DD = StrSubString( DD , P , 2 );
+
+        MM = "00" + GetMonth();
+        P = StrLen( MM ) -1;
+        MM = StrSubString( MM , P , 2 );
+
+        YYYY = "0000" + GetYear();
+        P = StrLen( YYYY ) -3;
+        YYYY = StrSubString( YYYY , P , 4);
+
+        Report_Name = Report_Name + "_"+YYYY+MM+DD+HH+mm +".Pdf";
+        Report_Name = REPORT_PATH_OUT + Report_Name;
+        Report_Generated = REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+
+        // Copy out master pdf file and rename to user pdf name
+        REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Report_Generated + " >> " + Report_Name );
+        FileCopy(DefaultReportPath,Report_Name,False);
+
+     Else
+        REPORT_Runtime_LOG(" Report Not generated : (Single) ReportCreate : " + Print_Report);
+        Report_Name = "";
+     End
+
+     //FileDelete(DefaultReportPath);
+     Return Report_Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String FACTBOOK_Generator(String FactBook_Code , String FactBook_Name , String Attache_Data , String EventAlarme_Name , string EmailName , Int FactBook_NBR)
+
+    String Report_STR_Tableau;
+    String Report_Code;
+    String Report_Name;
+    String Report_Generated;
+    String ReportLine;
+    String FinalReportFullName;
+    String FactBook_Path;
+    String FactBook_File;
+    String FactBook_OutFile;
+    String PSConfig_File;
+
+    Int    PsConfig_FileHandle;
+    int i;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    Bool Print_Report = False;
+
+    String IN_TIME = GetDateString("/",True) + " " + GetTimeString(":");
+    PSConfig_File = POWERSHELL_PATH_CONFIG +"Config_MergeFILE.txt";
+
+    FactBook_Path = REPORT_PATH_DEFAULT + FactBook_Code;
+    DirectoryCreate(FactBook_Path);
+
+    For i = 1 to FactBook_NBR do
+
+        ReportLine = FETCH_REPORT_GENERATOR(Attache_Data,i,":");
+        //Report_STR_Tableau = FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+        Report_Code  = FETCH_REPORT_GENERATOR(ReportLine,1,",");
+        Report_Name  = FETCH_REPORT_GENERATOR(ReportLine,2,",");
+        Report_STR_Tableau = FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+        //MessageBox(ReportLine,Report_STR_Tableau);
+
+
+        If ( Report_STR_Tableau == "*" || Report_STR_Tableau == ""  ) Then
+         REPORT_Runtime_LOG(" Report Not generated : (FactBook) Tableau not defined " + Report_STR_Tableau);
+         Report_Name = "";
+        End
+
+        //// Create FactBook directories
+
+        //// Constract Report Name
+
+
+        IF ( GetStrGateValue("Tableau_TVE",StrToInt(Report_STR_Tableau)) == "0" ) Then
+            // False ( print sreen Report )
+            Print_Report = PRINT_SINGLE( ReportLine , EventAlarme_Name , EmailName);
+        Else
+            // true ( dynamic Report )
+            Print_Report = PRINT_ADHOC( ReportLine ,  EventAlarme_Name , EmailName);
+        End
+
+        //REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Print_Report);
+
+        Report_Generated = REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+        FactBook_File      = FactBook_Path + "\" +Report_Code + ".Pdf";
+
+        FileCopy(Report_Generated,FactBook_File,False);
+        FileSetAttr(Report_Generated,0);
+        //MessageBox(FileDelete(Report_Generated),"");
+    End // For
+
+    //REPORT_Runtime_LOG(" Report : (FactBook) To MERGE " );
+    //// Merge Pdf report in one FactBook
+    FactBook_File = REPORT_PATH_DEFAULT + FactBook_Code + ".Pdf";
+    PsConfig_FileHandle = FileOpen(PSConfig_File,"wt");
+    FileWriteLn(PsConfig_FileHandle, FactBook_Path ); // PDFs location
+    FileWriteLn(PsConfig_FileHandle, FactBook_File ); // Final FactBook name
+    FileClose(PsConfig_FileHandle);
+
+     ShellExec("MergePDFs.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    Print_Report = False;
+        While ( Print_Report == False )
+            If (FileExist( FactBook_File ) == False ) Then      i = i+1;
+            Else    Print_Report = True;      End
+            IF ( i > 3 ) Then Print_Report = True; End
+            Sleep(1000);
+        End
+
+       IF (FileExist( FactBook_File ) == True) Then
+        // Constract Final User pdf name
+        HH = "00" + GetHour();
+        P = StrLen( HH ) -1;
+        HH = StrSubString( HH , P , 2 );
+
+        mm = "00" + GetMinute();
+        P = StrLen( mm ) -1;
+        mm = StrSubString( mm , P , 2 );
+
+        DD = "00" + GetDayOfMonth();
+        P = StrLen( DD ) -1;
+        DD = StrSubString( DD , P , 2 );
+
+        MM = "00" + GetMonth();
+        P = StrLen( MM ) -1;
+        MM = StrSubString( MM , P , 2 );
+
+        YYYY = "0000" + GetYear();
+        P = StrLen( YYYY ) -3;
+        YYYY = StrSubString( YYYY , P , 4);
+
+        Report_Name = FactBook_Name + "_"+YYYY+MM+DD+HH+mm +".Pdf";
+        Report_Name = REPORT_PATH_OUT + Report_Name;
+
+        FileCopy(FactBook_File,Report_Name,False);
+
+     Else
+        REPORT_Runtime_LOG(" Report Not generated : (Single) ReportCreate : " + Print_Report);
+        Report_Name = "";
+     End
+
+        //MessageBox(Report_Name,"Report_Name");
+     Return Report_Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////                                                                       ////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function Bool PRINT_SINGLE(string ReportLine , String EventAlarme_Name , string EmailName)
+
+    Int Local_TotalRow = 0; Int Local_TotalCol = 0;
+    Int Local_MAXRow = 10; Int Local_MAXCol = 6;
+    String USER_Report_Name = "";
+    String CreationDate;        String ReportLayout;        String Report_Chart;
+    String Report_Name;         String Report_OUT_Path;     String Report_Code;
+    String ReportMaster;        String Description_Report;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    String LayoutPath;
+    String Report_Directory_Config;
+    String ChartPATH;
+    String DefaultReportPath;
+
+    Bool Creationreport = False;
+
+    //// 0. Initialisation
+      REPORT_GENERATOR_OpenChart();
+    //// 1. Get Config data from report Line
+      CreationDate = GetDateString("/",true)+" " +GetTimeString(":");
+      Report_Code  = FETCH_REPORT_GENERATOR(ReportLine,1,",");
+      Report_Name  = FETCH_REPORT_GENERATOR(ReportLine,2,",");
+      ReportMaster = FETCH_REPORT_GENERATOR(ReportLine,13,",");
+      ReportLayout = FETCH_REPORT_GENERATOR(ReportLine,14,",");
+      Report_Chart = FETCH_REPORT_GENERATOR(ReportLine,15,",");
+    //// 2. Set Report Gates
+      SetStrGateValue("ReportView",0,EventAlarme_Name);
+      SetStrGateValue("ReportView",1,EmailName);
+      SetStrGateValue("ReportView",2,Local_TotalRow);
+      SetStrGateValue("ReportView",3,Local_TotalCol);
+      SetStrGateValue("ReportView",4,Local_MAXRow);
+      SetStrGateValue("ReportView",5,Local_MAXCol);
+      SetStrGateValue("ReportView",6,USER_Report_Name);
+      //SetStrGateValue("ReportView",9,Report_Chart);
+      GLOBAL_CHART_NAME = Report_Chart;
+      //GLOBAL_CHART_NAME = "";
+      SetStrGateValue("ReportView",10,CreationDate);
+    //// 3. Copy Report Layout
+      LayoutPath   = REPORT_PATH_LAYOUT_SOURCE + ReportLayout + ".RTF";
+      Report_Directory_Config = REPORT_PATH_LAYOUT_DESTINATION + ReportMaster+"\"+ ReportMaster +".RTF";
+      FileCopy(LayoutPath , Report_Directory_Config , False );
+    //// 4. Create default Report
+      DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+      If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+
+      ChartPATH = REPORT_PATH_CHART + Report_Chart;
+
+       IF ( FileExist( ChartPATH ) == True ) Then
+        REPORT_Runtime_LOG(" Report : (Single) Chart Found " + ChartPATH);
+         Creationreport = ReportCreate( ReportMaster ) ;
+       Else
+         Creationreport = False;
+         REPORT_Runtime_LOG(" Report Not generated : (Single) Chart not Found " + ChartPATH);
+       End
+
+       IF ( Creationreport == True && FileExist( DefaultReportPath ) == True ) Then
+        REPORT_Runtime_LOG(" Report : Copy " + DefaultReportPath +" >> "+ REPORT_PATH_DEFAULT + Report_Code + ".Pdf" );
+        FileCopy( DefaultReportPath , REPORT_PATH_DEFAULT + Report_Code + ".Pdf" , False );
+       End
+       Return Creationreport;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+/*function void InsertCharInReport()
+
+    MessageBox(GetStrGateValue("ReportView",9) , "Goto");
+    ReportInsertTemplateEx( GetStrGateValue("ReportView",9) );
+
+end*/
+///////////////////////////////////////////////////////////////////////////////
+function Bool PRINT_ADHOC(String ReportLine , String EventAlarme_Name , String EmailName)
+
+    Int Local_MAXRow = 10; Int Local_MAXCol = 6;
+    String CL_FilePath;
+    String ML_FilePath;
+    String CL_NBR_Energy;       String ML_NBR_Energy;
+    String CL_TempFilePATH;     String ML_TempFilePATH;
+    String CL_ENERGY;           String ML_ENERGY;
+
+    String Report_Code;     String Report_Name;     String ReportMaster;
+    String ReportLayout;    String Report_OUT_Path; String Description_Report;
+    String USER_Report_Name;
+    String FactBookDir;
+    String DefaultReportPath ;
+    String FACTBOOK_FILES = "";
+    String CreationDate;
+    String PSConfig_File ;
+    String Location;    String NomFinal;
+
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    String LayoutPath;
+    String Report_Directory_Config;
+    Int TotalEnergyIN_CL;   Int TotalEnergyIN_ML;
+    Int CL_ENERGY_TOTAL;    Int ML_ENERGY_TOTAL;
+    Int i;  Int FORLOOPEND =0;  Int ML_CL_StartFild =2;
+    Int Num_fild_ML_Found =0;
+    Int FACTBOOK_COUNTER = 0;
+    Int PsConfig_FileHandle;
+    Int MaxWait = 30;
+    Bool Creationreport =False;
+    Bool Copying = False;
+
+    PSConfig_File = POWERSHELL_PATH_CONFIG +"Config_MergeFILE.txt";
+    //// 0. Intitialisation
+      CL_FilePath = REPORT_PATH_CL + FETCH_REPORT_GENERATOR(ReportLine,16,",") + ".txt";
+      ML_FilePath = REPORT_PATH_ML + FETCH_REPORT_GENERATOR(ReportLine,17,",") + ".txt";
+
+      REPORT_TABLEAU = StrToInt( FETCH_REPORT_GENERATOR(ReportLine,3,",") );
+
+        If ( REPORT_TABLEAU == 0 ) then
+            PRINT_REPORT_Runtime_LOG(" Report Not generated : Warning Tableau" + REPORT_TABLEAU);
+            Return False;
+        End
+
+      Report_Code       = FETCH_REPORT_GENERATOR(ReportLine,1,",");
+
+      IF ( FileExist( CL_FilePath ) == False ) Then
+        REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC CL not Found " + CL_FilePath);
+        Return False;
+      End
+      IF ( FileExist( ML_FilePath ) == False ) Then
+        REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC ML not Found " + ML_FilePath);
+        Return False;
+      End
+
+    //// 1. create compteur listes + get nombre des listes
+
+      CL_TempFilePATH  = REPORT_GENERATOR_GET_COMPTEURLIST( CL_FilePath , Report_Code , REPORT_PATH_CLML_TEMP );
+      CL_NBR_Energy    = GetStrGateValue("ReportView",2);
+    //// 2. create compteur listes + get nombre des listes
+
+      ML_TempFilePATH  = REPORT_GENERATOR_GET_MEASURELIST(  ML_FilePath , Report_Code , REPORT_PATH_CLML_TEMP );
+      ML_NBR_Energy    = GetStrGateValue("ReportView",2);
+    ////
+    SetStrGateValue("ReportView",2,"");
+    SetStrGateValue("ReportView",3,"");
+    IF ( CL_NBR_Energy == "0" || ML_NBR_Energy == "0" ) Then
+     REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC Check CL File : "+CL_NBR_Energy+" and ML File : "+ML_NBR_Energy );
+     Return False;
+    End
+
+    REPORT_Runtime_LOG(" Report : PRINT_ADHOC Check CL File : "+CL_NBR_Energy+" and ML File : "+ML_NBR_Energy );
+
+      CreationDate = GetDateString("/",true)+" " +GetTimeString(":");
+
+      Report_Name       = FETCH_REPORT_GENERATOR(ReportLine,2,",");
+      ReportMaster      = FETCH_REPORT_GENERATOR(ReportLine,13,",");
+      ReportLayout      = FETCH_REPORT_GENERATOR(ReportLine,14,",");
+      FactBookDir       = REPORT_PATH_DEFAULT + Report_Code+"\";
+      DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+      NomFinal          =  REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+
+
+    //// 3. Set report gates
+      SetStrGateValue("ReportView",0,EventAlarme_Name);
+      SetStrGateValue("ReportView",1,EmailName);
+
+      SetStrGateValue("ReportView",4,Local_MAXRow);
+      SetStrGateValue("ReportView",5,Local_MAXCol);
+      SetStrGateValue("ReportView",6,USER_Report_Name);
+     //SetStrGateValue("ReportView",9,"");
+      GLOBAL_CHART_NAME = "";
+      SetStrGateValue("ReportView",10,CreationDate);
+    //// 3. Copy Report Layout
+      LayoutPath              = REPORT_PATH_LAYOUT_SOURCE + ReportLayout + ".RTF";
+      Report_Directory_Config = REPORT_PATH_LAYOUT_DESTINATION + ReportMaster+"\"+ ReportMaster +".RTF";
+      Copying = FileCopy(LayoutPath , Report_Directory_Config , False );
+
+
+    //// 4. Pour chaque liste Print ADHoc
+      TotalEnergyIN_CL = StrToInt( FETCH_REPORT_GENERATOR(CL_NBR_Energy,1,";") );
+      TotalEnergyIN_ML = StrToInt( FETCH_REPORT_GENERATOR(ML_NBR_Energy,1,";") );
+      FORLOOPEND = TotalEnergyIN_CL+1;
+      FACTBOOK_COUNTER = 1;
+
+      CL_ENERGY = FETCH_REPORT_GENERATOR(CL_NBR_Energy,1,";");
+      ML_ENERGY = FETCH_REPORT_GENERATOR(ML_NBR_Energy,1,";");
+
+    ///////////////////////////////////////////////////////////////////////////
+    IF ( CL_ENERGY == 1 && ML_ENERGY == 1) Then
+
+      REPORT_Runtime_LOG(" Report : One page " + CL_ENERGY + " || " + ML_ENERGY );
+
+      CL_ENERGY = FETCH_REPORT_GENERATOR(CL_NBR_Energy,2,";");
+      ML_ENERGY = FETCH_REPORT_GENERATOR(ML_NBR_Energy,2,";");
+
+      CL_ENERGY_TOTAL   = StrToInt( FETCH_REPORT_GENERATOR(CL_ENERGY,2,":") );
+      CL_ENERGY         = FETCH_REPORT_GENERATOR(CL_ENERGY,1,":");
+
+      ML_ENERGY_TOTAL  = StrToInt( FETCH_REPORT_GENERATOR(ML_ENERGY,2,":") );
+      ML_ENERGY        = FETCH_REPORT_GENERATOR(ML_ENERGY,1,":");
+
+     //SetStrGateValue("ReportView",2,ML_ENERGY_TOTAL);
+      //SetStrGateValue("ReportView",3,CL_ENERGY_TOTAL);
+      SetStrGateValue("ReportView",2, CL_ENERGY); // Capteur
+      SetStrGateValue("ReportView",3, PRINT_FETCH_REPORT_GENERATOR(ReportLine,8,",") ); // View
+      SetStrGateValue("ReportView",4, PRINT_FETCH_REPORT_GENERATOR(ReportLine,10,",") ); // Unite
+
+      R_TotalRow = CL_ENERGY_TOTAL;
+      R_TotalCol = ML_ENERGY_TOTAL;
+
+      R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+      R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+
+        If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+
+        If (FileExist( NomFinal ) == True) Then    FileDelete(NomFinal);    End
+        Creationreport = ReportCreate( ReportMaster ) ;
+
+        If ( Creationreport == true) Then
+          FileCopy( DefaultReportPath , NomFinal , False );
+
+        End
+
+        FileDelete(R_ColFullFileName);
+        FileDelete(R_RowFullFileName);
+
+
+
+     Return Creationreport;
+    ///////////////////////////////////////////////////////////////////////////
+    Else
+    ///////////////////////////////////////////////////////////////////////////
+
+     DirectoryCreate(FactBookDir);
+      REPORT_Runtime_LOG(" Report : Multipage " + CL_ENERGY + " || " + ML_ENERGY );
+
+     For i = ML_CL_StartFild to FORLOOPEND do
+
+      CL_ENERGY         = FETCH_REPORT_GENERATOR(CL_NBR_Energy,i,";");
+      CL_ENERGY_TOTAL   = StrToInt( FETCH_REPORT_GENERATOR(CL_ENERGY,2,":") );
+      CL_ENERGY         = FETCH_REPORT_GENERATOR(CL_ENERGY,1,":");
+
+      Num_fild_ML_Found = FOUND_ENERGY_CL_IN_ML( CL_ENERGY , ML_NBR_Energy , TotalEnergyIN_ML );
+      IF ( Num_fild_ML_Found >= ML_CL_StartFild ) Then
+
+       ML_ENERGY        = FETCH_REPORT_GENERATOR(ML_NBR_Energy,Num_fild_ML_Found,";");
+       ML_ENERGY_TOTAL  = StrToInt( FETCH_REPORT_GENERATOR(ML_ENERGY,2,":") );
+       ML_ENERGY        = FETCH_REPORT_GENERATOR(ML_ENERGY,1,":");
+       //// Set Glabal
+       //SetStrGateValue("ReportView",2,ML_ENERGY_TOTAL);
+       //SetStrGateValue("ReportView",3,CL_ENERGY_TOTAL);
+
+       R_TotalRow = CL_ENERGY_TOTAL;
+       R_TotalCol = ML_ENERGY_TOTAL;
+
+       R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+       R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+
+        SetStrGateValue("ReportView",2, CL_ENERGY); // Capteur
+        SetStrGateValue("ReportView",3, PRINT_FETCH_REPORT_GENERATOR(ReportLine,8,",") ); // View
+        SetStrGateValue("ReportView",4, PRINT_FETCH_REPORT_GENERATOR(ReportLine,10,",") ); // Unite
+
+
+        FACTBOOK_FILES = FactBookDir + Report_Code +"_"+FACTBOOK_COUNTER+".pdf";
+        REPORT_Runtime_LOG(" Report FACTBOOK_FILES : " + FACTBOOK_FILES );
+
+        If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+        Creationreport = ReportCreate( ReportMaster ) ;
+
+        If ( Creationreport == true) Then
+         FACTBOOK_COUNTER = FACTBOOK_COUNTER+1;
+         FileCopy(DefaultReportPath,FACTBOOK_FILES,False);
+         FileSetAttr(R_ColFullFileName,0);
+         FileSetAttr(R_RowFullFileName,0);
+         FileDelete(R_ColFullFileName);
+         FileDelete(R_RowFullFileName);
+         //FileDelete(DefaultReportPath);
+        End
+
+      Else
+        REPORT_Runtime_LOG(" CL Energy : " + CL_ENERGY + " not found in ML energy : "+ ML_ENERGY);
+        /*R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+        R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+        FileSetAttr(R_ColFullFileName,0);
+        FileSetAttr(R_RowFullFileName,0);
+        IF ( FileExist( R_ColFullFileName)==True ) Then FileDelete(R_ColFullFileName);     End
+        IF ( FileExist( R_ColFullFileName)==True ) Then FileDelete(R_ColFullFileName);     End*/
+      End
+
+    End // FOR
+
+    ///////////////////////////////////////////////////////////////////////////
+   End // IF CL_ENERGY == 1 || ML_ENERGY == 1
+    ///////////////////////////////////////////////////////////////////////////
+
+    //// 5. Copy default Report to final location and merge files if FACTBOOK_COUNTER > 1
+
+    //// 5 merge files if FACTBOOK_COUNTER > 1
+    IF ( FACTBOOK_COUNTER > 1 ) Then
+        //// Create Config File
+
+         PsConfig_FileHandle = FileOpen(PSConfig_File,"wt");
+         FileWriteLn(PsConfig_FileHandle, FactBookDir ); // PDFs location
+         FileWriteLn(PsConfig_FileHandle, NomFinal ); // Final FactBook name
+         FileClose(PsConfig_FileHandle);
+        //// Call PS exe
+        REPORT_Runtime_LOG(" Report CALL MergePDFs: " + POWERSHELL_PATH_EXECUTION );
+        ShellExec("MergePDFs.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+        //MessageBox(i,"i");
+        //// Waite Final Out-file
+        i = 0;
+        Creationreport = False;
+        Copying = False;
+        While ( Creationreport == False )
+
+            Copying = FileExist( NomFinal );
+            i = i+1;
+
+            If ( Copying == True || i > MaxWait ) Then
+              Creationreport = True;
+            Else
+             Creationreport = False;
+            End
+            //IF ( i > 3 ) Then Creationreport = True; End
+            Sleep(1000);
+        End
+
+        //MessageBox(NomFinal,"NomFinal");
+        IF ( FileExist( NomFinal ) == False) Then
+            REPORT_Runtime_LOG(" Report out ps MergePDFs not found : " + NomFinal );
+        End
+
+    End
+    //// 5.3 Copy default Report to final location
+
+    REPORT_Runtime_LOG(" Report CALL MergePDFs: End " + Copying );
+
+    //Report_OUT_Path =  REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+    //FileRename(DefaultReportPath,REPORT_PATH_DEFAULT + ReportMaster +"TEMP.Pdf");
+    FileSetAttr(DefaultReportPath,0);
+    FileDelete(DefaultReportPath);
+    FileRename(NomFinal,DefaultReportPath);
+    FileDelete(NomFinal);
+    /*While(FileExist(DefaultReportPath) == true)
+        FileDelete(DefaultReportPath);
+    end
+    IF (FileExist(DefaultReportPath) == true) Then
+        FileDelete(DefaultReportPath);
+        MessageBox(DefaultReportPath,"Deleting");
+    End*/
+
+    /*MessageBox(NomFinal,"NomFinal");
+    MessageBox(DefaultReportPath,"DefaultReportPath");
+        FileCopy( NomFinal , DefaultReportPath , False );
+        P=0;
+              While ( Creationreport == False )
+                Copying = FileExist(DefaultReportPath);
+                P=P+1;
+
+                If ( Copying == True || P > MaxWait ) Then
+                    Creationreport = True;
+                Else
+                    Creationreport = False;
+                End
+
+                Sleep(1000);
+              End
+    */
+     IF ( FileExist(DefaultReportPath) == False ) Then
+       REPORT_Runtime_LOG(" Report Not Found : " +  DefaultReportPath );
+       Creationreport = False;
+     Else
+        Creationreport = True;
+     End
+
+     ////FileDelete(REPORT_PATH_DEFAULT + ReportMaster +"TEMP.Pdf");
+
+     Return Creationreport;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String FindIF_CLML_Or_MLCL( String tableauCode , String CLFile, String MLFile)
+
+    String Mode;
+    String RowId = "R";
+    String ColId = "C";
+    String CLId  = "C";
+    String MLId  = "L";
+    String P1;
+    String P2;
+    String P11;
+    String P12;
+    String P21;
+    String P22;
+    String In_Row;
+    String In_Col;
+
+    Mode = GetStrGateValue("Tableau_VEPC",StrToInt(tableauCode));
+
+    MessageBox(Mode,tableauCode);
+
+    P1= FETCH_REPORT_GENERATOR(Mode,1,"/");
+        P11 = FETCH_REPORT_GENERATOR(P1,1,":");
+        P12 = FETCH_REPORT_GENERATOR(P1,2,":");
+    P2= FETCH_REPORT_GENERATOR(Mode,2,"/");
+        P21 = FETCH_REPORT_GENERATOR(P2,1,":");
+        P22 = FETCH_REPORT_GENERATOR(P2,2,":");
+
+    IF ( P11 == RowId && P21 == ColId )Then
+        In_Row = CLFile;
+        In_Col = MLFile;
+    Else
+        IF ( P11 == ColId && P21 == RowId )Then
+            In_Row = MLFile;
+            In_Col = CLFile;
+        Else
+            // Error
+            In_Row = "";
+            In_Col = "";
+        End
+    End
+
+    P1 = In_Row+";"+In_Col;
+
+    Return P1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String REPORT_GENERATOR_GET_COMPTEURLIST( String Compteur_List_Path , String REPORT_CODE , String OUT_Path )
+
+    string CFullPathFileName;   String  E_FullPathFileName;
+    int CFileHandle;            int     E_FileHandle;
+
+    String CompteurLigne;
+    String CompteurCode;
+    String CompteurName;
+    String CompteurQuery;
+    String ReturnedLINE = "";
+    String ENERGY;
+    String FINDQuery = "Query~";
+    Int TotalCompteur = 0;
+    Int QUERY_NBR = 0;
+    Int EnergyCounter = 0;
+    String ALLEnergy_nbr ="";
+    String Last_Energy = "";
+    Int CompteurCount = 0;
+
+    SetStrGateValue("ReportView",2, "0" );
+
+        CFileHandle = FileOpen(Compteur_List_Path,"rt");
+
+        If ( CFileHandle == 0 ) Then
+            REPORT_Runtime_LOG(" CL Not found : " + Compteur_List_Path);
+            Return "0" ;
+        End
+
+        While( FileEof(CFileHandle) == 0 )
+
+         CompteurLigne = FileReadLn(CFileHandle);
+
+           IF ( CompteurLigne != "" ) Then
+
+                CompteurCode = FETCH_REPORT_GENERATOR(CompteurLigne,1,";");
+                CompteurName = FETCH_REPORT_GENERATOR(CompteurLigne,2,";");
+                ENERGY = FETCH_REPORT_GENERATOR(CompteurLigne,3,";");
+                CompteurQuery = FETCH_REPORT_GENERATOR(CompteurLigne,4,";");
+
+                IF (Last_Energy == "" ) Then Last_Energy = ENERGY;  EnergyCounter = 1; End
+
+                IF ( Last_Energy != ENERGY ) Then
+                    ALLEnergy_nbr = ALLEnergy_nbr + Last_Energy + ":" +TotalCompteur +";";
+                    Last_Energy = ENERGY;
+                    EnergyCounter = EnergyCounter+1;
+                    TotalCompteur = 0;
+                End
+
+                If ( ENERGY != "*" ) Then
+
+                ///////////////////////////////////////////////////////////////
+                E_FullPathFileName = OUT_Path + REPORT_CODE +"_"+ ENERGY+"_RowList.txt";
+                E_FileHandle = FileOpen(E_FullPathFileName,"at");
+                ///////////////////////////////////////////////////////////////
+                    IF ( CompteurCode == FINDQuery ) Then
+
+                        QUERY_NBR = R_AnalyseQuerryCompteur( CompteurQuery , E_FileHandle , "TVE" , "" );
+                        //MessageBox(CompteurQuery,"CompteurQuery : " +QUERY_NBR);
+                        TotalCompteur = TotalCompteur+QUERY_NBR;
+                      Else
+                        FileWriteLn( E_FileHandle , CompteurCode +","+ CompteurName );
+                        TotalCompteur = TotalCompteur+1;
+                    End
+                ///////////////////////////////////////////////////////////////
+                FileClose(E_FileHandle);
+                ///////////////////////////////////////////////////////////////
+                End // ENERGY != "*"
+
+           Else //CompteurLigne == ""
+           ALLEnergy_nbr = ALLEnergy_nbr + ENERGY + ":" +TotalCompteur +";";
+           CompteurCount = CompteurCount + TotalCompteur;
+           End //CompteurLigne != ""
+
+           //MessageBox(ALLEnergy_nbr,"ALLEnergy_nbr");
+        End
+
+    FileClose(CFileHandle);
+    //REPORT_Runtime_LOG(" Report : (ADHoc) REPORT_GENERATOR_GET_COMPTEURLIST " +EnergyCounter + " >> " );
+    If (EnergyCounter == 0 || CompteurCount == 0 ) Then
+        ALLEnergy_nbr = "0";
+        REPORT_Runtime_LOG(" CL List : file is empty " + Compteur_List_Path );
+    Else
+        ALLEnergy_nbr = EnergyCounter + ";" + ALLEnergy_nbr;
+    End
+
+    E_FullPathFileName = OUT_Path + REPORT_CODE;
+
+        SetStrGateValue("ReportView",2, ALLEnergy_nbr );
+
+    Return E_FullPathFileName;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String REPORT_GENERATOR_GET_MEASURELIST( String Measure_List_Path , String REPORT_CODE , String OUT_Path )
+    String CFullPathFileName;   String E_FullPathFileName;
+    int CFileHandle;            Int E_FileHandle;
+    Int Totalmeasure =0;
+    String MeasureLigne;
+    String Measure_Energy;
+    String Last_Energy = "";
+    String ALLEnergy_nbr  ="";
+    Int EnergyCounter =0;
+    CFileHandle = FileOpen(Measure_List_Path,"rt");
+
+    SetStrGateValue("ReportView",2, "0" );
+
+        If ( CFileHandle == 0 ) Then
+            Event_Runtime_LOG(" ML Not found : " + Measure_List_Path);
+            Return "0" ;
+        End
+    While( FileEof(CFileHandle) == 0 )
+        MeasureLigne = FileReadLn(CFileHandle);
+        IF ( MeasureLigne != "" && MeasureLigne != "*") Then
+            Measure_Energy = FETCH_REPORT_GENERATOR(MeasureLigne,3,",");
+                ///////////////////////////////////////////////////////////////
+                E_FullPathFileName = OUT_Path + REPORT_CODE +"_"+ Measure_Energy+"_ColList.txt";
+                E_FileHandle = FileOpen(E_FullPathFileName,"at");
+                ///////////////////////////////////////////////////////////////
+            IF (Last_Energy == "") Then Last_Energy = Measure_Energy;  EnergyCounter = 1; End
+
+             IF ( Last_Energy != Measure_Energy ) Then
+              ALLEnergy_nbr = ALLEnergy_nbr + Last_Energy + ":" +Totalmeasure +";";
+              Last_Energy = Measure_Energy;
+              EnergyCounter = EnergyCounter+1;
+              Totalmeasure = 0;
+             End
+
+          Totalmeasure = Totalmeasure+1;
+          FileWriteLn( E_FileHandle , MeasureLigne);
+
+                ///////////////////////////////////////////////////////////////
+                FileClose(E_FileHandle);
+                ///////////////////////////////////////////////////////////////
+        Else //CompteurLigne == ""
+           ALLEnergy_nbr = ALLEnergy_nbr + Measure_Energy + ":" +Totalmeasure +";";
+        End // MeasureLigne != ""
+
+    End // While
+
+    FileClose(CFileHandle);
+ REPORT_Runtime_LOG(" Report : (ADHoc) REPORT_GENERATOR_GET_MEASURELIST " +EnergyCounter + " >> " );
+    If (EnergyCounter == 0) Then
+        ALLEnergy_nbr = "0";
+        REPORT_Runtime_LOG(" ML List : file is empty " + Measure_List_Path );
+    Else
+        ALLEnergy_nbr = EnergyCounter + ";" + ALLEnergy_nbr;
+    End
+
+    E_FullPathFileName = OUT_Path + REPORT_CODE;
+        SetStrGateValue("ReportView",2, ALLEnergy_nbr );
+
+    Return E_FullPathFileName;
+End
+///////////////////////////////////////////////////////////////////////////////
+////    fonction generique pour le rapport                                 ////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Function void REPORT_GENERATOR_OpenChart()
+   int dd = GetDayOfMonth();
+   int mm = GetMonth();
+   int yy = GetYear();
+   int hh = GetHour() +1;
+   int hh_24 = hh -24;
+   int timespan = GetNumGateValue("chart_time_span",0);
+
+   if ( timespan == 1) then // rolling 24heures
+    ChartSetTimeRange(dd,mm,yy,hh_24,0,0,dd,mm,yy,hh,0,0);
+    else
+
+    if ( timespan == 2) then // 00 to 23:59
+      ChartSetTimeRange(dd,mm,yy,0,0,0,dd,mm,yy,23,59,59);
+    end
+
+   end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+Function String Change_CHAR_REPORT_GENERATOR(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"&")+1;
+    MaxD=Occurence_operateur(Formule,"#")+1;
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"&");
+                TSimple=TSimple+blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+    if MaxD<1 then
+        TTSimple =TSimple;
+
+    Else
+
+        For i=1 to MaxD do
+            blob=FetchBlob(TSimple,i,"#");
+            TTSimple=TTSimple+blob;
+
+        end
+
+
+    end
+    return TTSimple;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+Function String Change_CHAR2_REPORT_GENERATOR(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"_")+1;
+
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"_");
+                TSimple=TSimple+" " +blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+
+    return TSimple;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function string FETCH_REPORT_GENERATOR(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+
+     return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int FOUND_ENERGY_CL_IN_ML( String CL_ENERGY , String ML_LINE , Int Total_ML_Energy )
+
+    String ML_EnergyANDNBR = "";
+    String ML_Energy = "";
+    //Int ML_NBR = 0;
+    Int i;
+    Int Start_Energy_NUM = 2;
+    Int ML_NUMFILD = 0;
+    Bool Exit = False;  Bool Found = False;
+
+    if ( Total_ML_Energy > 1 ) Then
+      i = Start_Energy_NUM;
+        While( Exit == False)
+
+         ML_EnergyANDNBR = FETCH_REPORT_GENERATOR( ML_LINE , i ,";" );
+         ML_Energy = FETCH_REPORT_GENERATOR( ML_EnergyANDNBR , 1 ,":" );
+         ///////////////////////////////////////////////////////////////
+          IF (CL_ENERGY == ML_Energy) Then
+            Found = True;
+            ML_NUMFILD = i;
+          Else
+            Found = False;
+          End
+         ///////////////////////////////////////////////////////////////
+          IF (Found == True) Then
+            Exit =True;
+          Else // Found == False
+            IF (i > Total_ML_Energy)Then
+              Exit =True;
+              ML_NUMFILD = 0;
+            End
+          End
+          ///////////////////////////////////////////////////////////////
+          //IF (Found == True) Then Exit =True    End
+          i=i+1;
+        End
+    Else
+        ML_EnergyANDNBR = FETCH_REPORT_GENERATOR( ML_LINE , Start_Energy_NUM ,";" );
+        ML_Energy = FETCH_REPORT_GENERATOR( ML_EnergyANDNBR , 1 ,":" );
+        IF (CL_ENERGY == ML_Energy) Then
+            //Return Start_Energy_NUM;
+            ML_NUMFILD = Start_Energy_NUM;
+        Else
+            //Return 0;
+            ML_NUMFILD = 0;
+        End
+    End
+
+    Return ML_NUMFILD;
+End
+///////////////////////////////////////////////////////////////////////////////
+function void REPORT_Runtime_LOG( String NAME)
+
+    String FILENAME = GetProjectPath() + "\Winlog\EVENT_RUNTIME_LOG.txt";
+    Int FileHANDLE;
+    String WRITE_LINE = "";
+    FileHANDLE = FileOpen(FILENAME,"at");
+    WRITE_LINE = GetDateString("/",False) +"_"+ GetTimeString(":") +" : " + NAME;
+      FileWriteLn(FileHANDLE,WRITE_LINE);
+    FileClose(FileHANDLE);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void TestMailing()
+
+int i;
+    For i = 1 to 200 do
+        Execute_Email("Event1", "EventMail54" , "Test"+i);
+        Sleep(10000);
+    end
+
+    MessageBox("End Sending Mail","TestMailing");
+
+end

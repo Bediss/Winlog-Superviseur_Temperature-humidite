@@ -1,0 +1,14 @@
+R3,ADHOC - CH F FCOMMERCIALE T + H,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,CH F COMMERCIALE,T + H,*,*,,Administrateur
+R4,ADHOC - PRODUCTION T + H,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,production ,T + H,*,*,,Administrateur
+R5,ADHOC - PRODUCTION H  H,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,PRODUCTION HUMIDITE,H,*,*,,Administrateur
+R9,ADHOC - PRODUCTION T T - LIVE,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,PRODUCTION TEMPERATURE,T - LIVE,*,*,,Administrateur
+R10,ADHOC - QUERY PROD H TYPE H,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,QUERY PROD H  TYPE,H,*,*,,Administrateur
+R12,ADHOC - QUERY PROD FILS T T,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,QUERY PROD FILS T,T,*,*,,Administrateur
+R13,ADHOC - QUERY FILS SALLE DE FERMITURE T T,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,QUERY FILS SALLE DE FERMITURE,T,*,*,,Administrateur
+DR2,Suivi conformite Tc Hebdomadaire CLC,14,Suivi conformite,Temperature,Temperature,S,Hebdomadaire,#&#&D1,#&#&CLC,CTCA,CLC,Layout_Chart_Report,Paysage,Chart_14_Temperature_S_CTCA_V150,*,*,*,14_Temperature_-_S_CTCA,Suivi conformite Temperature Hebdomadaire CLC,Developpeur
+R1,ADHOC - CH F FCOMMERCIALE H H ,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,CH F COMMERCIALE HUMIDITE ,H,*,*,,Administrateur
+R8,ADHOC - QUERY PROD PARENT T T - J,18,Ad Hoc,*,*,*,*,*,*,*,,Layout_Tabular_Portrait,Portrait,,QUERY PROD PARENT T,T - J ,*,*,,Administrateur
+DR3,Suivi conformite Tc Mensuel CLC,14,Suivi conformite,Temperature,Temperature,M,Mensuel,#&#&D1,#&#&CLC,CTCA,CLC,Layout_Chart_Report,Paysage,Chart_14_Temperature_M_CTCA_V150,*,*,*,14_Temperature_-_M_CTCA,Suivi conformite Temperature Mensuel CLC,Developpeur
+DR114,Synoptique T_RH Production,11,Synoptique temperature humidite,-,-,-,-,#&#&D2,#&#&Production,CTC2,Production,Layout_Chart_Report,Paysage,Chart_11_#&#&D2_V150,*,*,*,11_-_#&#&D2_-_-,Synoptique T_RH Production,Developpeur
+DR43,Suivi conformite HR Mensuel Production,14,Suivi conformite,Humidite,Humidite,M,Mensuel,#&#&D2,#&#&Production,CHC1,Production,Layout_Chart_Report,Paysage,Chart_14_Humidite_M_CHC1_V150,*,*,*,14_Humidite_-_M_CHC1,Suivi conformite Humidite Mensuel Production,Developpeur
+DR7,Suivi conformite Tc Mensuel Production,14,Suivi conformite,Temperature,Temperature,M,Mensuel,#&#&D2,#&#&Production,CTC2,Production,Layout_Chart_Report,Paysage,Chart_14_Temperature_M_CTC2_V150,*,*,*,14_Temperature_-_M_CTC2,Suivi conformite Temperature Mensuel Production,Developpeur

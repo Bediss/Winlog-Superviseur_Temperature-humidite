@@ -1,0 +1,11 @@
+Alarme_Code;Alarme_Name;AlarmeCondition_Interne;AlarmeCondition_Externe;Seuil;Description;Frequence ;Next Trigger
+AINTPUT_0;Name_ALR SurConsommation_J;INPUT,27/PINPUT,27;Consommation_J superieur au seuil;0;Name_ALR SurConsommation_J;J;
+AINTPUT_1;Name_ALR SurConsommation_S;INPUT,27/PINPUT,27;Consommation_S superieur au seuil;0;Name_ALR SurConsommation_S;S;
+AINTPUT_2;Name_ALR SurConsommation_M;INPUT,27/PINPUT,27;Consommation_M superieur au seuil;0;Name_ALR SurConsommation_M;M;
+AINTPUT_3;Name_ALR SurConsommation_A;INPUT,27/PINPUT,27;Consommation_A superieur au seuil;0;Name_ALR SurConsommation_A;A;
+AINTPUT_8;Name_ALR Inc_J;INPUT,27/PINPUT,27;Inc_J superieur au seuil;0;Name_ALR Inc_J;J;
+AINTPUT_9;Name_ALR Inc_S;INPUT,27/PINPUT,27;Inc_S superieur au seuil;0;Name_ALR Inc_S;S;
+AINTPUT_10;Name_ALR Inc_M;INPUT,27/PINPUT,27;Inc_M superieur au seuil;0;Name_ALR Inc_M;M;
+AINTPUT_11;Name_ALR Inc_A;INPUT,27/PINPUT,27;Inc_A superieur au seuil;0;Name_ALR Inc_A;A;
+AINTPUT_12;Name_ALR Tempareture;INPUT,27/PINPUT,27;Tempareture superieur au seuil;1;Name_ALR Tempareture;LIVE;
+AINTPUT_13;Name_ALR Pression;INPUT,27/PINPUT,27;Pression superieur au seuil;2;Name_ALR Pression;LIVE;

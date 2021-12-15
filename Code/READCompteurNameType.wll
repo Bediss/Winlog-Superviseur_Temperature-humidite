@@ -1,0 +1,285 @@
+Global     int Min_CC_Level;
+Global     int Max_CC_Level;
+
+function void READCompteurNameType()
+//*****************************************************************************
+// Reading Recover File
+//*****************************************************************************
+    int i;
+    int CC_Level;
+    Bool Empty = false;
+    int SystemMaxCompteur = GetNumGateValue("SystemMaxCompteur",0);
+    int FileHandle;  int num;
+    String Header;
+    num = 0;
+    string FullPathFileName;
+    string TextRow;
+    string Path0;
+    Bool Exit = false;
+    INITCOMPTEUR();
+    ScanCompteur_Level();
+
+   FullPathFileName = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+
+
+   for  CC_Level = Min_CC_Level to Max_CC_Level do
+
+
+//////////////////////////////////////////////////////////////
+
+        Empty = false;
+        FileHandle=FileOpen(FullPathFileName,"rt");
+
+
+        if (FileHandle==0) then
+        //MessageBox("File not Found","Error");
+        //return;
+        FileHandle=FileOpen(FullPathFileName,"wt");
+        Header = "Code Compteur;Le Compteur;Energie;Compteur Parent;Le Compteur Parent;Compteur_Level;PC_Production;PC_Distribution;PC_Consommation;Point de Production;Point de Distribution;Point de Consommation;Description;type;parent energie;Ratio;Unite;Master;COMs (Gate:PortTCP:Sortie:Channel:Device);Parse Formule;User Formule;Date Modify;Date Load;Nbr Error";
+        FileWriteLn(FileHandle,Header);
+        FileClose(FileHandle);
+        FileHandle=FileOpen(FullPathFileName,"rt");
+        end
+
+///////////////////////////////////////////////////////////////
+
+
+        FileReadLn(FileHandle);
+        //num = num+1; // Read All Compteur file Header
+
+      while(Exit == False)
+        TextRow=FileReadLn(FileHandle);
+
+                if ( StrSubString(TextRow,1,5) == ";;;;;") then Empty = true ; end
+
+           if ( Empty == False ) then
+             num = AnalyseLigneCompteur(TextRow, num , CC_Level);
+
+           end
+
+           if (FileEof(FileHandle)!=0 )then Exit =TRUE;    end
+           if (num >= SystemMaxCompteur )then Exit =TRUE;  end
+           if (Empty == True)then Exit =TRUE;              end
+
+      end
+
+
+
+     FileClose(FileHandle);
+
+   end // for CC_Level
+      if (num > SystemMaxCompteur) then
+     SetNumGateValue("MaxCompteur",0,SystemMaxCompteur);
+     else
+     SetNumGateValue("MaxCompteur",0,num);
+     end
+
+end
+
+
+               /////   AnalyseData() "CSV File"    /////
+ function int AnalyseLigneCompteur(string TextRow, int num ,int CC_Level)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+int i;      i=0;
+string V_CCOde;
+string V_Name;
+string V_Energy;
+string V_Parent;
+string V_Level;
+string V_PCP;
+string V_PCD;
+string V_PCC;
+string V_NameP;
+string V_NameD;
+string V_NameC;
+string V_Formule;
+string V_BU_Type;
+string V_Access;
+
+            P = StrPos(txt,";");
+            V_CCOde=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_Name=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V_Energy=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_Parent=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+             P = StrPos(txt,";");
+             txt=StrDelete(txt,1,P);
+
+
+            P = StrPos(txt,";");
+            V_Level=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_PCP=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V_PCD=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_PCC=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V_NameP=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_NameD=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V_NameC=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,";");
+                V_Formule=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V_BU_Type=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            For i = 1 to 12 do
+                P = StrPos(txt,";");
+                txt=StrDelete(txt,1,P);
+            End
+                P = StrPos(txt,";");
+                V_Access=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+            num = num+1;
+            SetStrGateValue("compteur_Code",num,V_CCOde);
+            SetStrGateValue("compteur_Name",num,V_Name);
+            SetStrGateValue("compteur_Energy",num,V_Energy);
+            SetStrGateValue("compteur_Parent",num,V_Parent);
+            SetStrGateValue("compteur_Level",num,V_Level);
+            SetStrGateValue("compteur_PCP",num,V_PCP);
+            SetStrGateValue("compteur_PCD",num,V_PCD);
+            SetStrGateValue("compteur_PCC",num,V_PCC);
+            SetStrGateValue("compteur_NameP",num,V_NameP);
+            SetStrGateValue("compteur_NameD",num,V_NameD);
+            SetStrGateValue("compteur_NameC",num,V_NameC);
+            SetStrGateValue("Compteur_Formule",num,V_Formule);
+            SetStrGateValue("Compteur_BU_Type",num,V_BU_Type);
+            SetStrGateValue("Compteur_Access",num,V_Access);
+
+            If ( StrGateExists("AAL_"+V_CCOde,0) == True) Then
+                SetStrGateValue("AAL_"+V_CCOde,0,"");
+            End
+            If ( NumGateExists("AAC_"+V_CCOde,0) == True) Then
+                SetNumGateValue("AAC_"+V_CCOde,0,0);
+            End
+
+          return num;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ScanCompteur_Level()
+    int i;
+    Bool Empty = false;
+    int SystemMaxCompteur = GetNumGateValue("SystemMaxCompteur",0);
+   int FileHandle;  int num;
+    num = 0;
+    int CC_Level;
+   string FullPathFileName;
+   string TextRow;
+   string Path0;
+   FullPathFileName = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+///////////////////////////////////////////////////////////////
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+   end
+//////////////////////////////////////////////////////////////
+    FileReadLn(FileHandle);
+     num = 1; // Read All Compteur file Header
+    Min_CC_Level = 0;
+    Max_CC_Level = 0;
+
+   while(FileEof(FileHandle)==0 && num < SystemMaxCompteur && Empty == false)
+
+    TextRow=FileReadLn(FileHandle);
+
+        if ( TextRow == "") then Empty = true ; end
+        if ( Empty == False ) then
+
+            num = num+1;
+            CC_Level = StrToInt(AnalyseLevel(TextRow));
+
+            if ( CC_Level > Max_CC_Level ) then Max_CC_Level = CC_Level; end
+
+            if ( Min_CC_Level == 0 ) then   Min_CC_Level = CC_Level;    else
+                if ( Min_CC_Level > CC_Level && CC_Level !=0 ) then Min_CC_Level = CC_Level;  end
+                end
+         end // end Empty False
+
+  end// end While
+
+     FileClose(FileHandle);
+     if (num > SystemMaxCompteur) then
+     SetNumGateValue("MaxCompteur",0,SystemMaxCompteur);
+     else
+     SetNumGateValue("MaxCompteur",0,num);
+     end
+end
+
+function string AnalyseLevel(string TextRow)
+    string txt = TextRow;
+    int P;
+    string V;
+
+            P = StrPos(txt,";");
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            V=StrSubString(txt,1,P-1);
+            return V;
+end
+
+function void INITCOMPTEUR()
+String EMPTY = "";
+int num;
+
+          For num = 1 to GetNumGateValue("SystemMaxCompteur",0) do
+            SetStrGateValue("compteur_Code",num,EMPTY);
+            SetStrGateValue("compteur_Name",num,EMPTY);
+            SetStrGateValue("compteur_Energy",num,EMPTY);
+            SetStrGateValue("compteur_Parent",num,EMPTY);
+            SetStrGateValue("compteur_Level",num,EMPTY);
+            SetStrGateValue("compteur_PCP",num,EMPTY);
+            SetStrGateValue("compteur_PCD",num,EMPTY);
+            SetStrGateValue("compteur_PCC",num,EMPTY);
+            SetStrGateValue("compteur_NameP",num,EMPTY);
+            SetStrGateValue("compteur_NameD",num,EMPTY);
+            SetStrGateValue("compteur_NameC",num,EMPTY);
+          End
+end

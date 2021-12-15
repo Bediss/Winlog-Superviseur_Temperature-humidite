@@ -1,0 +1,199 @@
+///////////////////////////////////////////////////////////////////////////////
+Global Bool   MAIL_SETUP_FLAG = False;
+Global String MAIL_SMTP_SERVER;
+Global String MAIL_USER;
+Global String MAIL_SMTP_PW;
+Global String MAIL_ADDRESS_FROM;
+Global String MAIL_IMAP_SERVER;
+Global String MAIL_IMPA_PW;
+Global String MAIL_TEST_ADDRESS;
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function Void GET_MAIL_SETUP()
+
+    String  ConfigFile = POWERSHELL_PATH_CONFIG + "CONFIG_UNCRYPT_SETUPMAIL.txt";
+    Int     CheckFile = 0;
+    Int     MaxCheckFile = 60;
+    Int     FileHandle;
+    Bool    Exist_Check = False;
+
+    // 1. Convert file with Powershell
+
+    FileHandle = FileOpen( ConfigFile , "wt" );
+        FileWriteLn(FileHandle, MAIL_SETUP_CRYTED_FILE );
+        FileWriteLn(FileHandle, MAIL_SETUP_UNCRYTED_FILE );
+    FileClose(FileHandle);
+
+     ShellExec("GET_AUTH_PARAMETER.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    // 2. Wait Creation
+     Exist_Check = False;
+     CheckFile=0;
+    While ( Exist_Check == False )
+
+        IF ( (FileExist( MAIL_SETUP_UNCRYTED_FILE ) == False) && CheckFile < MaxCheckFile ) Then
+            Exist_Check = False;
+         Else
+            Exist_Check = True;
+         End
+
+        Sleep(1000);
+
+    End
+
+    IF ( FileExist( MAIL_SETUP_UNCRYTED_FILE ) == False ) Then
+        Event_Runtime_LOG( "Error : Email setup File not Found" );
+        MAIL_SETUP_FLAG = False;
+        Return ;
+    Else
+        MAIL_SETUP_FLAG = True;
+    End
+
+    // 3. Read Config File
+
+      IF(MAIL_SETUP_FLAG == True) Then
+
+       FileHandle = FileOpen( MAIL_SETUP_UNCRYTED_FILE , "rt" );
+        //MessageBox(MAIL_SETUP_UNCRYTED_FILE,FileHandle);
+       FileReadLn(FileHandle); // Congif LINE
+       FileReadLn(FileHandle); // PATH file
+
+       MAIL_SMTP_SERVER = FileReadLn(FileHandle); // SMTP
+       MAIL_USER        = FileReadLn(FileHandle); // User
+       MAIL_SMTP_PW     = FileReadLn(FileHandle); // PW_SMTP
+       MAIL_ADDRESS_FROM= FileReadLn(FileHandle); // MAIL
+       MAIL_IMAP_SERVER = FileReadLn(FileHandle); // IMAP
+       MAIL_IMPA_PW     = FileReadLn(FileHandle); // PW_IMAP
+       MAIL_TEST_ADDRESS= FileReadLn(FileHandle); // @ Mail de test
+
+       FileClose(FileHandle);
+     end
+     FileDelete(MAIL_SETUP_UNCRYTED_FILE);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CONFIG_Button()
+    SetNumGateValue("Show_Temp_Pointer",0,536871040);
+    DISPLAY_MAIL_CONFIG();
+    ShowPage("CONFIG_MAIL_Display");
+end
+///////////////////////////////////////////////////////////////////////////////
+Function void SAVE_MAIL_CONFIG()
+    String ARGS = "";
+    String USER;
+    String MAIL;
+    String SMTP;
+    String PW_SMTP;
+    String IMAP;
+    String PW_IMAP;
+    String GATENAME = "AlarmeEventModifer";
+    String SUBJECT;
+    String BODY;
+    String TESTMAIL;
+    String RESULT_SENDMAIL ;
+    String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+    String PS_OUT_FILE = MAIL_SETUP_CRYTED_FILE ;
+    String Config_FILE = "C:\Winlog\PowerShell\ConfigMAIL_SETUP.txt" ;
+    Int ConfigFilehandle;
+    //Int HANDEL;
+
+    //1. GET Parameter INSERTED From GATES
+     USER = GetStrGateValue(GATENAME,1);
+     MAIL = GetStrGateValue(GATENAME,2);
+     SMTP = GetStrGateValue(GATENAME,3);
+     PW_SMTP = GetStrGateValue(GATENAME,4);
+     IMAP = GetStrGateValue(GATENAME,5);
+     PW_IMAP = GetStrGateValue(GATENAME,6);
+     TESTMAIL = GetStrGateValue(GATENAME,7);
+
+     SetStrGateValue(GATENAME,8 , "Vérification en cours, attendez s'il vous plaît" );
+
+     If ( USER == "" || MAIL == "" || SMTP == "" || PW_SMTP == "" || TESTMAIL == "" ) Then
+          SetStrGateValue(GATENAME,8, "Veuillez remplir tous les champs" );
+        Return ;
+     End
+
+    //2. TEST PARMETERS Via send TEst Email
+    SUBJECT = "Test configuration serveur E-mail";
+    BODY = "Test réussi"  + Eol() + "BIZEYES REAL TIME MONITORING SYSTEM ";
+
+    RESULT_SENDMAIL = SendMail(10000,
+                       SMTP,
+                       USER,
+                       PW_SMTP,
+                       USER,
+                       TESTMAIL,       //MailTo
+                       "",             //CC
+                       SUBJECT,        //Subject
+                       BODY,           //BODY
+                       false , "");    //ATTACHEMENT
+
+     //MessageBox(RESULT_SENDMAIL,"RESULT_SENDMAIL");
+     IF ( RESULT_SENDMAIL == "") Then
+
+        SetStrGateValue(GATENAME,8 , "Test terminé avec succès " );
+        MAIL_SMTP_SERVER = SMTP;
+        MAIL_USER = USER;
+        MAIL_SMTP_PW = PW_SMTP;
+        MAIL_ADDRESS_FROM = USER;
+      Else // MAIL ECHECs
+        SetStrGateValue(GATENAME,8, "Echecs : " + RESULT_SENDMAIL);
+        Return ;
+     End
+
+
+        //MessageBox(ARGS,"ARGS");
+        //MessageBox(Config_FILE,"Config_FILE");
+        //3. CONCAT IN ONE String
+            ARGS = "1;3;" + PS_OUT_FILE +";"+ SMTP +";"+ USER +";"+ PW_SMTP +";"+ MAIL;
+        //4. CALL PowerShell To Crypt Password and Creat Config Mail file
+        ConfigFilehandle = FileOpen(Config_FILE,"wt");
+        FileWriteLn(ConfigFilehandle,ARGS);
+        FileClose(ConfigFilehandle);
+
+          ConfigFilehandle = ShellExec("MAIL_AUTH.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void DISPLAY_MAIL_CONFIG()
+
+    //String PS_OUT_FILE = GetProjectPath() + "\Winlog\Settings\MAIL_SETUP.txt" ;
+    String PS_OUT_FILE = MAIL_SETUP_CRYTED_FILE;
+    Int FILEHandle;
+    String GATENAME = "AlarmeEventModifer";
+
+
+    IF ( FileExist(PS_OUT_FILE) == False ) Then
+        SetStrGateValue(GATENAME,8 , "Aucune configuration trouvée" );
+        Return ;
+    ELSE
+
+     FILEHandle = FileOpen(PS_OUT_FILE,"rt");
+     IF (FILEHandle == 0) Then SetStrGateValue(GATENAME,8 , "Aucune configuration trouvée" );
+     Return;  End
+
+     SetStrGateValue(GATENAME,8 , "" );
+
+        FileReadLn(FILEHandle); // Config LINE
+        FileReadLn(FILEHandle); // PATH file LINE
+
+        SetStrGateValue(GATENAME,3,FileReadLn(FILEHandle)); // SMTP
+
+        SetStrGateValue(GATENAME,1,FileReadLn(FILEHandle)); // USER
+
+        FileReadLn(FILEHandle);
+        SetStrGateValue(GATENAME,4,""); // PW SMTP
+
+        SetStrGateValue(GATENAME,2,FileReadLn(FILEHandle)); // MAIL
+
+        SetStrGateValue(GATENAME,5,FileReadLn(FILEHandle)); // IMAP
+
+        SetStrGateValue(GATENAME,6,""); // PW_IMAP
+
+        SetStrGateValue(GATENAME,7,""); // MAIL TEST
+
+
+      FileClose(FILEHandle);
+
+    end
+
+end

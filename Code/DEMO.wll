@@ -1,0 +1,200 @@
+function void DEMO()
+//#startup
+    real T1 = 0;
+    real T2 = 2*3.14159 / 3;
+    real T3 = 3.14159/3;
+    real span1 = 10;
+    real span2 = 20;
+    real span3 = 15;
+    real init1 = 150;
+    real init2 = 170;
+    real init3 = 190;
+    real init4 = 200;
+    real init5 = 220;
+    real init6 = 200;
+    real init7 = 180;
+    real init8 = 150;
+    real factor = 5;
+    real factor2 = 5;
+    real factor3 = 5;
+    real factor4 = 5;
+    real factor5 = 5;
+    real factor6 = 5;
+    Int i = 0;
+    Int K = 0;
+    String P_FixEnergy;
+    String CompteurTrueNumber;
+    String INPUTCODE;
+    Int VAL;
+    int ListCons = 0;
+    Bool CTN_OK = False;
+
+    //MessageBox("Debut Demonstration","Information");
+
+    While(WindowIsOpen())
+    i = 0;
+
+     While ( i <= GetNumGateValue("MaxCompteur",0))
+        i = i + 1;
+
+      If ( GetStrGateValue("Compteur_Formule",i) == "Reel" ) Then
+
+            For K = 1 to GetNumGateValue("EnergyMax",0) do
+           //While (CTN_OK == False)
+
+                IF ( GetStrGateValue("Compteur_Energy",i) == GetStrGateValue("Energy_Name",K)) then
+                    P_FixEnergy = GetStrGateValue("PreFix_InPut",K);
+                    CompteurTrueNumber = StrDelete(GetStrGateValue("Compteur_Code",i),1,GetNumGateValue("NBR_PRFIX_OUTP",K));
+                    CTN_OK = True;
+                End
+
+            End
+
+         INPUTCODE = P_FixEnergy+CompteurTrueNumber;
+
+
+            If ( GetStrGateValue("Compteur_Energy",i) == "Gaz" || GetStrGateValue("Compteur_Energy",i) == "Eau Brute" || GetStrGateValue("Compteur_Energy",i) == "Eau" ||
+                 GetStrGateValue("Compteur_Energy",i) == "Eau Forage" || GetStrGateValue("Compteur_Energy",i) == "Eau Traite" || GetStrGateValue("Compteur_Energy",i) == "Eau Sonede"
+                 || GetStrGateValue("Compteur_Energy",i) == "Eau Rejet" ) Then
+
+                 ListCons = 24;
+                 SetNumGateValue(INPUTCODE,ListCons,GetNumGateValue(INPUTCODE,ListCons)+0.125);
+            End
+
+
+
+           If ( GetStrGateValue("Compteur_Energy",i) == "Electrique" ) Then
+             If ( INPUTCODE != "E1P111" && INPUTCODE != "E1P112") Then
+              ListCons = 24;
+              SetNumGateValue(INPUTCODE,ListCons,GetNumGateValue(INPUTCODE,ListCons)+0.025);
+              Demo_Electrique(INPUTCODE);
+             End
+           End
+
+
+
+           If (  GetStrGateValue("Compteur_Energy",i) == "Air Comprime" ) Then
+                 ListCons = 25;
+                 SetNumGateValue(INPUTCODE,ListCons,GetNumGateValue(INPUTCODE,ListCons)+0.115);
+
+                 Simulation_POWER(INPUTCODE,12,T1, 40,factor, span3); // DEMO Pression
+           End
+
+
+
+          If ( GetStrGateValue("Compteur_Energy",i) == "Vapeur" || GetStrGateValue("Compteur_Energy",i) == "Froid (+)  Eau Glycolee" ||
+            GetStrGateValue("Compteur_Energy",i) == "Froid" || GetStrGateValue("Compteur_Energy",i) == "Froid (-)  Ammoniac" ) Then
+            ListCons = 26;
+
+            SetNumGateValue(INPUTCODE,ListCons,GetNumGateValue(INPUTCODE,ListCons)+0.135);
+            If ( INPUTCODE != "V1O1" && INPUTCODE != "V1O5") Then
+                Simulation_POWER(INPUTCODE,12,T1, 40,factor, span1);// DEMO Temperature
+                Simulation_POWER(INPUTCODE,13,T3, 40,factor, span2);// DEMO Pression
+            End
+          End
+
+
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Tonnage" ) Then
+            ListCons = 0;
+            SetNumGateValue(INPUTCODE,ListCons,GetNumGateValue(INPUTCODE,ListCons)+0.2);
+         End
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Temperature" ) Then
+            ListCons = 16;
+            //IF (GetStrGateValue("Compteur_Code",i) != "CTC5" && GetStrGateValue("Compteur_Code",i) != "CTC6") Then
+             SetNumGateValue(INPUTCODE,ListCons,Rand(15));
+            //End
+         End
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Humidite" ) Then
+            ListCons = 16;
+            VAL = Rand(90);
+            IF ( VAL > 40 ) Then  SetNumGateValue(INPUTCODE,ListCons,VAL);    End
+         End
+
+
+      End//If Compteur == Reel
+
+
+        T1 = T1 + ((2 * 3.14159) / 40);
+        if T1 > (2 * 3.14159) then T1 = 0; End
+
+        T2 = T2 + ((2 * 3.14159) / 40);
+        if T2 > (2 * 3.14159) then T2 = 0; End
+
+        T3 = T3 + ((2 * 3.14159) / 40);
+        if T3 > (2 * 3.14159) then T3 = 0; End
+
+
+         //End
+
+       End//Tout les compteur
+Sleep(2000);
+    end// Windows is open
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Demo_Electrique(String Compteur)
+    int Inc;
+    int Random ;
+
+    real T1 = 0;
+    real T2 = 2*3.14159 / 3;
+    real T3 = 3.14159/3;
+    real span1 = 10;
+    real span2 = 20;
+    real span3 = 15;
+    real init1 = 150;
+    real init2 = 170;
+    real init3 = 190;
+    real init4 = 200;
+    real init5 = 220;
+    real init6 = 200;
+    real init7 = 180;
+    real init8 = 150;
+    real factor = 5;
+
+
+    // DEMO TENSION V
+    Random = Rand(250);
+    if ( Random > 190 ) then
+        SetNumGateValue(Compteur,12,Random);
+        SetNumGateValue(Compteur,13,Random);
+        SetNumGateValue(Compteur,14,Random);
+
+    end
+    ////////////////////
+
+    // DEMO TENSION U
+    Random = Rand(400);
+    if ( Random > 200 ) then
+        SetNumGateValue(Compteur,15,Random);
+        SetNumGateValue(Compteur,16,Random);
+        SetNumGateValue(Compteur,17,Random);
+
+    end
+    ////////////////////
+
+    // DEMO TENSION I
+    Random = Rand(700);
+    if ( Random > 100 ) then
+        SetNumGateValue(Compteur,18,Random);
+        SetNumGateValue(Compteur,19,Random);
+        SetNumGateValue(Compteur,20,Random);
+
+    end
+    ////////////////////
+
+    // DEMO TENSION P
+        Simulation_POWER(Compteur,21,T1, 40,factor, span1);
+        Simulation_POWER(Compteur,22,T2, 40,factor, span2);
+        Simulation_POWER(Compteur,23,T3, 40,factor, span3);
+    ////////////////////
+
+end
+///////////////////////////////////////////////////////////////////////////////
+Function void Simulation_POWER(string gateid,int nid,real T, real init,real factor, real span)
+    //SetNumGateValue(gateid, nid, init + factor * (((init * (5*Sin(T))) / init)) + span * ((init * ((50 - Rand(100)) / 100)) / init));
+    SetNumGateValue(gateid, nid, init + factor * (((init * (4*Sin(T))) / init)) + span * ((init * ((50 - Rand(100)) / 100)) / init));
+End

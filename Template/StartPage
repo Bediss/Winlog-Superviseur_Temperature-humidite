@@ -1,0 +1,10 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,70
+#Size: 1350,610
+#BkColor: 235,240,239
+#Gates: 2
+  #NUM: PageAlarmeEventView,0
+  #STR: Business_unit,0
+#Style: FixedNoBorder
+#StayOnTop: 0

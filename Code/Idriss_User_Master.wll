@@ -1,0 +1,713 @@
+function void Bouton_User_MASTER()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+//InitialiseAdminTemplate();
+
+
+Confirme_Save();
+PageOpen="User_Master";
+        LenPrefix=2;
+        SetNumGateValue("Show_Temp_Pointer",0,536870920);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+
+                  SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+  Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+        Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\Users\Temp_User_Master.CSV";
+        Admin_View_Original_File=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+        Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Users\Recycler_User_Master_Code.txt";
+           FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+        Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+
+    ShowPage("Display_Master_User");
+
+        Admin_View_Display(1 , "User_Master");
+
+FlagUses=False;
+
+end
+
+////////////////////////////////////////////////////////
+function void NameUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("User_Name");
+End
+
+
+function void FillNameUser()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+
+////////////////////////////////////////////////
+
+function void EmailUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",2));
+    ShowPoPUPs("User_Email");
+End
+
+
+function void FillEmailUser()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",2,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,4);
+
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+
+////////////////////////////////////////////////
+
+function void FaxUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",5));
+    ShowPoPUPs("User_Fax");
+End
+
+
+function void FillFaxUser()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",5,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,7);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+////////////////////////////////////////////////
+
+
+function void FonctionUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",7));
+    ShowPoPUPs("User_Fonction");
+End
+
+
+function void FillFonctionUser()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",7,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,10);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+////////////////////////////////////////////////
+
+
+function void SMSUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",3));
+    ShowPoPUPs("User_SMS");
+End
+
+
+function void FillSMSUser()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",3,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,5);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    end
+end
+
+////////////////////////////////////////////////
+
+
+function void TelUserBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",4));
+    ShowPoPUPs("User_Tel");
+End
+
+
+function void FillTelUser()
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+    // if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",4,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,6);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+   // end
+end
+
+
+function string Fetch_User_Master(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+
+
+function String FR_User_Master(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+/////////////////////////////////////////////////////////////////////////////////////
+function void SetDisplay_User_Master( String Line , String GateName)
+
+                SetStrGateValue(GateName,0,Fetch_User_Master(Line,2, ";"));
+                SetStrGateValue(GateName,1,Fetch_User_Master(Line,3, ";"));
+                SetStrGateValue(GateName,2,Fetch_User_Master(Line,4, ";"));
+                SetStrGateValue(GateName,3,Fetch_User_Master(Line,5, ";"));
+                SetStrGateValue(GateName,4,Fetch_User_Master(Line,6, ";"));
+                SetStrGateValue(GateName,5,Fetch_User_Master(Line,7, ";"));
+                SetStrGateValue(GateName,6,Fetch_User_Master(Line,9, ";"));
+                SetStrGateValue(GateName,7,Fetch_User_Master(Line,10, ";"));
+
+end
+/////////////////////////////////////////////////////////////////
+function Void Popup_Pseudo()
+ String PS_OUT_FILE = "C:\Winlog\PowerShell\File_Out_Crypted.txt";
+ int FileHANDLE;
+ String OK;
+    AP_Groupes();
+    SetNumGateValue("Remote_Access",0,0);
+    SetStrGateValue("Pseudo",0,GetStrGateValue("AlarmeEventModifer",1));
+
+
+    ShowPoPUPs("Popup_Pseudo");
+    SetNumGateValue("AP_Value",0,StrToInt(Fetch_User_Master(Admin_View_CurrentLine,8, ";")));
+                                FileHANDLE = FileOpen( PS_OUT_FILE , "wt" );
+                        FileWriteLn(FileHANDLE,"2");
+                        FileWriteLn(FileHANDLE,PS_OUT_FILE);
+                        FileWriteLn(FileHANDLE,GetStrGateValue("AlarmeEventModifer",1));
+                        FileWriteLn(FileHANDLE,Fetch_User_Master(Admin_View_CurrentLine,11, ";"));
+                        FileWriteLn(FileHANDLE,Fetch_User_Master(Admin_View_CurrentLine,8, ";"));
+                        FileWriteLn(FileHANDLE,Fetch_User_Master(Admin_View_CurrentLine,12, ";"));
+                        FileClose(FileHANDLE);
+                        //MessageBox(User+"_"+Password,Privilege+"_"+Remote);
+
+                        OK=GET_CRYPTED_SETUP(PS_OUT_FILE);
+                         SetStrGateValue("Password",0,Fetch_User_Master(OK,2,";"));
+                         //MessageBox(Fetch_User_Master(OK,2,";"),"");
+
+end
+
+
+/////////////////////////////////
+Function void DeleteUserIfExiste(String Pseudo)
+
+   int P=UserFindFirst();
+   int R;
+
+   bool Found;
+
+   if UserNameFound(P)!="" then Found=true; else Found=false;end
+
+   While(Found==true || R != 0)
+
+       //MessageBox(UserNameFound(P),UserGroupsFound(P));
+
+       if Pseudo == UserNameFound(P) then
+          R =RemoveUser(Pseudo);
+        end
+
+       Found=UserFindNext(P);
+
+   end
+
+   UserFindClose(P);
+
+end
+/////////////////////////
+
+
+function Void Confirmer_Pseudo()
+int RES;
+int P;
+String Pseudo=GetStrGateValue("Pseudo",0);
+String Password=GetStrGateValue("Password",0);
+String EmailSender="";
+String Email_Body="";
+bool MailStatut;
+bool RemoteAccess=False;
+int Privilege= GetNumGateValue("AP_Value",0);
+int RemoteN;
+bool Exist=False;
+//SetStrGateValue("AlarmeEventModifer",30,"Attendez un peut de temps svp");
+
+//ShowPoPUPs("InfoPopupUser");
+Exist = UniqueName(ENV_PATH+"\Files\DATAMODELFiles\Users\","User_Master.CSV",Pseudo ,3);
+
+    if Pseudo!="admin" && Exist==False then
+        DeleteUserIfExiste(Pseudo);
+    end
+
+//MessageBox(Pseudo,Password);
+RemoteN=GetNumGateValue("Remote_Access",0);
+//MessageBox(RemoteN,"RemoteN");
+if RemoteN==1 then
+RemoteAccess=True;
+//MessageBox(RemoteAccess,"Remote_Access");
+end
+
+RES=AddUser(Pseudo,Password,Privilege,False,RemoteAccess);
+
+//MessageBox(RES,"Remote_Access");
+    if RES==0 then
+      SetStrGateValue("AlarmeEventModifer",17,"Configuration du Compte utilisateur en cour !... Attendez SVP!");
+ShowPoPUPs("InfoPopup");
+
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Pseudo,3);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Privilege,8);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,RemoteN,12);
+          // MessageBox(Admin_View_CurrentLine,RemoteN);
+        SetStrGateValue("AlarmeEventModifer",1,Pseudo);
+             EmailSender=Fetch_Formule(Admin_View_CurrentLine,4,";");
+              Crypto_File(Pseudo,Password,Privilege,RemoteN);
+
+         if EmailSender !="" then
+
+            Email_Body="Cher collègue,"+Eol()+"Vos identifiants de connexion pour CLC REAL TIME MONITOR sont inclus ci-dessous:"+Eol()
+                        +"USER    :"+ Pseudo +Eol()+"PASSWORD:"+Password+Eol()+"Veuillez les conserver dans un endroit sûr."+Eol()+
+                        "Cordialement,"+Eol()+"Administrateur de systèmes";
+
+
+
+
+            MailStatut=AdminSendEMail(EmailSender,"","CLC Real Time Monitoring : Vos identifiants d'accès", Email_Body);
+             ShowPoPUPs("");
+             If ( MailStatut == True ) Then
+                MessageBox("Les nouvelles informations de connexion ont été créées avec succès. Un e-mail a été envoyé à l'utilisateur :" + Pseudo,"Information");
+             Else
+                MessageBox("Les nouvelles informations de connexion ont été créées avec succès. Un e-mail n'a pas pu être envoyé à l'utilisateur :" + Pseudo,"Information");
+             End
+         end
+            //ShowPoPUPs("");
+
+            //MessageBox(MailStatut,EmailSender);
+//ShowPoPUPs("");
+TPageCloseByName("Popup_Pseudo");
+
+
+   else
+
+        if RES==1 then
+            SetStrGateValue("AlarmeEventModifer",17,"Il faut saisir un pseudo");
+        end
+   else
+
+        if RES ==2 then
+            SetStrGateValue("AlarmeEventModifer",17,"Taille du Pseudo est trop long");
+        end
+    else
+        if RES ==3 then
+            SetStrGateValue("AlarmeEventModifer",17,"Il faut saisir un mot de passe");
+        end
+else
+        if RES ==4 then
+            SetStrGateValue("AlarmeEventModifer",17,"Taille du mot de passe est trop long ");
+        end
+else
+
+            SetStrGateValue("AlarmeEventModifer",17,"Pseudo utiliser deja");
+        end
+       // MessageBox(GetNumGateValue("AP_Value",0),"");
+
+
+                          if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+end
+///////////////////////
+//Function SelectGroup()
+
+//end
+function Void Popup_User_BU()
+    POPUP_Display_Source = "BU";
+    POPUP_Start();
+    ShowPoPUPsNoClose("UNIT_User_BU");
+
+
+end
+
+//////////////////////////////////////////
+
+function void User_NA_User()
+
+    String Ligne;
+    String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",9);
+
+    SetStrGateValue("AlarmeEventModifer",6,"*");
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("UNIT_User_BU");
+
+End
+
+////////////////////////////////////////////////////////////////////////////////
+function void Select_Unite_User()
+
+    String Ligne;
+    //String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+
+       Ligne=Select_BU();
+
+    if GetStrGateValue("BU_Selected",0)=="" then
+
+        Name="*";
+    else
+        Name=Fetch_Formule(Ligne,9,";");
+    end
+
+
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Name,9);
+
+    SetStrGateValue("AlarmeEventModifer",6,Name);
+                     if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("UNIT_User_BU");
+End
+
+////////////////////////////////////////////////////////////////////////
+
+Function Void Master_User_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Users\Back_User_Master.CSV";
+Admin_Commit(BackFullPathFileName);
+
+
+End
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Function Void Delete_User_Master()
+
+String PathC=Admin_View_Temp_File;
+String WPath=ENV_PATH+"\Files\DATAMODELFiles\Users\WTemp_User_Master.CSV";
+String BackPath=ENV_PATH+"\Files\DATAMODELFiles\Users\Back_Temp_User_Master.CSV";
+String User=Fetch_User_Master(Admin_View_CurrentLine,3,";");
+
+int K=RemoveUser(User);
+
+
+Admin_Delete("User_Master",WPath,BackPath);
+    Confirme_Save=True;
+
+End
+
+
+/*****************************************************************************/
+Function Void Add_New_User_Master()
+
+String PathC=ENV_PATH+"\Files\DATAMODELFiles\Users\";
+String Prefix="UM";
+String CodeNewPBI;
+
+    CodeNewPBI=FetchCodeAdd(PathC,Prefix);
+
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",2),4);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",3),5);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",4),6);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",5),7);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",7),10);
+
+        if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le ' NOM DE L'UTILISATEUR' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+        if Fetch_Formule(Admin_View_CurrentLine,4,";")=="" then  MessageBox("Veuillez saisir une valeur pour 'L'EMAIL DE L'UTILISATEUR' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+       // if Fetch_Formule(Admin_View_CurrentLine,3,";")=="" then  MessageBox("Veuillez saisir une valeur pour ' LOGIN' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+
+    Admin_New_Ligne("User_Master",CodeNewPBI);
+        Confirme_Save=True;
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////////////////
+function void View_User_Add()
+
+int  AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  AlarmsTotalItems/MaxRow;
+
+    If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+        if (CurrentPage >= MaxPage) then
+        CurrentPage = MaxPage;
+        else
+        CurrentPage = CurrentPage+1;
+        end
+
+    SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"User_Master");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_User_Sub()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage,"User_Master");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_User_First()
+bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+     SetNumGateValue("EmailPageView",0,1);
+     Admin_View_Display(1,"User_Master");
+end
+
+//////////////////////////////////////////////////////////////////////////////
+function void View_User_End()
+bool Continue;
+int  AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage;
+
+
+    MaxPage =  AlarmsTotalItems/MaxRow;
+
+    If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"User_Master");
+end
+////////////////////////////////////////////////
+//*****************************************************************************
+//                      Send Mail demo procedure
+//*****************************************************************************
+Function Bool AdminSendEMail( string Email_TO, String Email_CC, string Email_Subject, string Email_Body )
+
+   string Ritorno;
+   String AttachementPath ;
+   String Directory;
+   string FullPathFileName;
+   int FileHandle;
+   string CreatedFileName;
+   int DAY      = GetDayOfMonth();
+   int MONTH    = GetMonth();
+   int YEAR     = GetYear();
+   int Hour    = GetHour();
+   int Min     = GetMinute();
+   string SDAY;     string SMONTH;    string SYEAR; string SMin;     string SHour;
+   string HostSMTPServer;
+   String UserName;
+   String Password;
+   string AddressFrom;
+   //string EA = Email_Attach;
+   int P; int i;
+   String FULL_ATTACHFILE;
+   Bool SEND_OK = False;
+   String CONGIF_MAIL;
+
+    If( MAIL_SETUP_FLAG == false )Then
+        Event_Runtime_LOG( "Send MAIL : MAIL_SETUP_FLAG == " + MAIL_SETUP_FLAG );
+    end
+
+           Ritorno = SendMail(100000,
+                     MAIL_SMTP_SERVER,
+                     MAIL_USER,
+                     MAIL_SMTP_PW,
+                     MAIL_ADDRESS_FROM,
+                     Email_TO,             //MailTo
+                     Email_CC,             //CC
+                     Email_Subject,        //Subject
+                     Email_Body,           //BODY
+                     SEND_OK ,
+                     "");   //ATTACHEMENT
+
+
+
+      if (Ritorno == "") then
+       SEND_OK = True;
+       Event_Runtime_LOG( "AdminSendEMail : OK" );
+      else
+
+       SEND_OK = False;
+       Event_Runtime_LOG( "AdminSendEMail : KO  " +  Ritorno);
+      end
+
+      Return SEND_OK;
+end
+///////////////////////////////////////////////////////////////////////////////
+/*function String ADMIN_GET_MAIL_SETUP( String CRYTED_FILE )
+
+    Int FileHANDLE;
+
+    String UNCRYTED_FILE = GetProjectPath()+ "\Winlog\Settings\EmailServer.txt";
+    String CONFIG_FILE = "C:\Winlog\PowerShell\CONFIG_UNCRYPT_SETUPMAIL.txt";
+    String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+    String PARAMETERS_UNCRYTING;
+    Int CHECK_FILE = 0; Int MAX_CHECKS_FILE = 60;
+    Bool Exist_Check = False;
+
+    String SMTP;
+    String USER;
+    String MAIL;
+    String PW_SMTP;
+
+    // 1. Convert file with Powershell
+
+    FileHANDLE = FileOpen( CONFIG_FILE , "wt" );
+        FileWriteLn(FileHANDLE,CRYTED_FILE);
+        FileWriteLn(FileHANDLE,UNCRYTED_FILE);
+    FileClose(FileHANDLE);
+
+     ShellExec("GET_AUTH_PARAMETER.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    // 2. Wait Creation
+     Exist_Check = False;
+     CHECK_FILE=0;
+       //MessageBox("Debut","Exist_Check");
+    While ((FileExist(UNCRYTED_FILE) == False))
+        Sleep(1000);
+    End
+    //MessageBox("Fin","Exist_Check");
+    IF ( FileExist(UNCRYTED_FILE) == False ) Then
+        Event_Runtime_LOG( "Error : Email setup File not Found" );
+        Return "";
+    End
+
+    // 3. Read Config File
+
+     FileHANDLE = FileOpen( UNCRYTED_FILE , "rt" );
+       FileReadLn(FileHANDLE); // Congif LINE
+       FileReadLn(FileHANDLE); // PATH file
+       SMTP     = FileReadLn(FileHANDLE); // SMTP
+       USER     = FileReadLn(FileHANDLE); // User
+       PW_SMTP  = FileReadLn(FileHANDLE); // PW_SMTP
+       MAIL     = FileReadLn(FileHANDLE); // MAIL
+       /*FileReadLn(FileHANDLE); // IMAP
+       FileReadLn(FileHANDLE); // PW_IMAP
+       FileReadLn(FileHANDLE); // MAIL TEST
+     FileClose(FileHANDLE);
+
+    // 4. Prepar Config String
+    PARAMETERS_UNCRYTING = "";
+     PARAMETERS_UNCRYTING = SMTP +";"+ USER +";"+ PW_SMTP +";"+ MAIL ;
+    // 5. Delete file
+     FileDelete(UNCRYTED_FILE);
+
+     Return PARAMETERS_UNCRYTING;
+
+end*/

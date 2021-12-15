@@ -1,0 +1,153 @@
+function String Fetch_Master_Compteur(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_MASTER_list( String Energy)
+
+      Bool Exist = False;
+      Bool EnergyFound = False;
+      String TextRow;
+      String ListLabel;
+      string CE;
+      Int P;
+      EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+      Int FileHandle=FileOpen(EVM_LIST_FILE,"wt");
+
+      String LabelFullPathFileName =ENV_PATH+"\Files\Config Compteur\Energy Masters.csv";
+
+      Int LabelFileHandle=FileOpen(LabelFullPathFileName,"rt");
+      if (LabelFileHandle==0) then  MessageBox("File not Found","Error");   return; end
+
+
+      EVM_Max_Items=0;
+
+
+      While( Exist == False )
+
+       TextRow=FileReadLn(LabelFileHandle);
+       CE=Fetch_Master_Compteur(TextRow,1,";");
+        if ( Energy ==CE  ) then
+
+         ListLabel =Fetch_Master_Compteur(TextRow,2,";")+":"+Fetch_Master_Compteur(TextRow,3,";");
+         FileWriteLn(FileHandle,ListLabel);
+         EVM_Max_Items=EVM_Max_Items+1;
+         EnergyFound = True;
+        End
+
+        If (FileEof(LabelFileHandle)!=0) Then Exist = True; End
+
+      End
+
+           FileClose(LabelFileHandle);//master/
+           FileClose(FileHandle);//list/
+           If ( EnergyFound == true ) Then
+           return "OK";
+           Else
+           return "*";
+           End
+end
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+function void MASTER_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+
+    End
+end
+function void MASTER_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_9()
+String S;
+    S = GetStrGateValue("EmailView9",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+function void MASTER_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",1);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",8,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,18);
+      TPageCloseByName("MASTER_SELECTOR");
+    End
+end
+///////////////////////////////////////////////////////////////////////////////

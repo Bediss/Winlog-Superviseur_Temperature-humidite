@@ -1,0 +1,11 @@
+Code;Prefix;Nom;EPVC;TVE (1=Enable/0=Disable);Query C:Energy,C.Parent,C.Level,PCP,PCD,PCC,EnergyParent;Security_Group;;Energy;Post Code;View;Compteur
+10;BE;Bilan Énergetique;0/C/1/0;0;C:!=#,*,<=4,*,*,!=#,==#;*;;0;C;1;0
+11;SE;Synoptique Par Energie;1/C/1/0;0;*;*;;0;0;0;0
+12;SU;Synoptique Par Unité;0/C/1/0;0;*;*;;0;C;1;0
+13;BM;Bilan Matiere;1/0/1/0;0;;*;;1;0;1;0
+14;PE;Partage d'une energies;1/0/1/1;0;C:!=#,!=#,*,*,*,*,*;3;;1;0;0;1
+15;CM;Compteur Mosaique;1/0/0/1;0;C:!=#,!=#,*,*,*,*,*;*;;1;0;0;1
+16;RC;Releve Compteur;0/0/0/1;1;;*;;0;0;0;1
+17;ATC;Analyse technique du compteur;0/0/0/1;0;;*;;0;0;0;1
+18;TC;Tableau des compteurs;0/0/0/0;1;;*;;0;0;0;0
+

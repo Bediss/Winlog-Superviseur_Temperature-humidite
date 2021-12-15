@@ -1,0 +1,1007 @@
+/////////////////////////////////////////////////////////////////////////////
+/************************Principale*****************************************/
+/////////////////////////////////////////////////////////////////////////////
+Global String NEXT_T_LIST = GetProjectPath() + "\TEMPLATES_GENERATED\Synotique\Next_T_LIST.txt";
+Global String BackTemplate_DESK;
+Global String BackTemplate_WEB;
+
+Global String SYNOPTIQUE_FILE_Code = GetProjectPath() +"\TEMPLATES_GENERATED\Synotique\Synoptique_ShowPages_V"+ GetStrGateValue("Version",0) +".Wll";
+
+FUNCTION void Synoptique_Generator()
+
+    String DeskFullPathFileName;
+    String WebFullPathFileName;
+    String ListFullPathFileName;
+    int WFileHandle;
+    int DFileHandle;
+    int ListFileHandle;
+    String Ligne;
+    String FullPath;
+    int Handle;
+    String CurrPath;
+    String CurrFile;
+    String Name;
+    String OriginalTemplate;
+    String OriginalTemplateB;
+    String Part2;
+    String Part3;
+    String NewName;
+    String gate;
+    String AddV;
+    String PV;
+    String View;
+    String Part1;
+    int i;
+
+    String WorkDir = GetProjectPath() + "\TEMPLATES_GENERATED\Synotique\Source";
+    String Filter = "*.txt";
+    String OutFile_FullPath = GetProjectPath() + "\TEMPLATES_GENERATED\Synotique\Synoptique_SourceList.txt";
+    String Message;
+    String ViewName;
+    String MeasureViewLigne;
+    String LEVEL = 7 ;
+    Int MaxBu;
+
+    IF ( FileExist(NEXT_T_LIST) == True ) Then FileDelete(NEXT_T_LIST);    End
+
+    Create_PS_ListOfFiles( WorkDir, Filter, OutFile_FullPath );
+
+    //ShellExec("ListOfFiles.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+    Message = PS_XCopy_Wait( OutFile_FullPath );
+
+    If ( Message == "" ) Then MessageBox("Synoptique_SourceList is Empty ",""); Return;  End
+
+    DeskFullPathFileName = SYNOPTIQUE_FILE_Code;
+    //IF ( FileExist(DeskFullPathFileName) == True ) Then FileDelete( DeskFullPathFileName ); End
+    IF ( FileExist(DeskFullPathFileName) == True ) Then
+        //FileDelete( OutFile_FullPath );
+        ListFileHandle = FileOpen(DeskFullPathFileName,"wt");
+        FileWriteLn(ListFileHandle,"///////////////// " + GetDateString("/",True) +"_"+ GetTimeString(":") );
+        FileClose(ListFileHandle);
+    End
+
+    DeskFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\Header";//\TEMPLATES_GENERATED\Synotique\Source
+    WebFullPathFileName  = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\HeaderDesk";
+
+    ListFullPathFileName = OutFile_FullPath;
+    ListFileHandle = FileOpen(ListFullPathFileName,"rt");
+
+    IF ( ListFileHandle == 0 ) Then MessageBox("Synoptique_SourceList.txt","File Not Found"); Return;  End
+
+    // Read Directory /////////////////////////////////////////////////////////
+    /*CurrPath=GetProjectPath()+"\tempweb\Source\";
+    FullPath = CurrPath + "*.txt";
+    Handle =FileFindFirstEx(FullPath);
+
+       while (FileFindNextEx(Handle)!=false)
+        CurrFile=FileNameFoundEx(Handle);*/
+    ///////////////////////////////////////////////////////////////////////////
+    //Read File List //////////////////////////////////////////////////////////
+
+     //MaxBu = 259;
+     MaxBu = Create_BU_File_ByLEVEL( 0 , LEVEL );
+
+    While ( FileEof(ListFileHandle) == 0 )
+
+     CurrFile = FileReadLn( ListFileHandle );
+
+    //MessageBox( "*"+ CurrFile +"*" ,"CurrFile");
+    ///////////////////////////////////////////////////////////////////////////
+
+          If ( CurrFile != "" ) then
+            Name=CurrFile;
+
+
+
+
+
+            Part1=SG_Fetch(Name,1,"_");
+            Part2=SG_Fetch(Name,2,"_");
+            Part3=SG_Fetch(Name,3,"_");
+            PV=SG_Fetch(Name,4,"_");
+            PV=SG_Fetch(PV,1,".");
+
+            for i =0 to 4 do
+
+             View = GetStrGateValue("ReportViewNames",i);
+             ViewName = GetStrGateValue("ViewNames",i);
+
+
+              If (Part1=="11") then  NewName = Part1 + "_" + Part2 + "_" + Part3 + "_" + View;   End
+              If (Part1=="12") then
+                PV=SG_Fetch(Name,3,"_");
+                PV=SG_Fetch(PV,1,".");
+                NewName = Part1 + "_" + Part2 + "_" + View;
+              End
+
+                //If ( View != PV ) Then
+
+                    NewName = NewName + "_V"+GetStrGateValue("Version",0);
+                    MeasureViewLigne =   Get_MODIF_Ligne( View );
+                    OriginalTemplate = Build_Template_Synoptique( Ligne ,"DESK",NewName);
+                    CreateSynoptiques_DESK(OriginalTemplate,Name,View,PV ,MeasureViewLigne, NewName , MaxBu , i);
+                    OriginalTemplate =Build_Template_Synoptique( Ligne,"WEB",NewName);
+                    CreateSynoptiques_WEB(OriginalTemplate,Name,View,PV,MeasureViewLigne, NewName , MaxBu, i );
+
+                //End // View != PV
+            end // For
+
+          end// CurrFile!= ""
+
+    end // While
+
+
+        Create_Template_17( );
+
+
+MessageBox("End Synoptique_Generator","INFO");
+
+END
+
+/////////////////////////////////////////////////////////////////////////////
+/**************************Web or Desk*******************************/
+/////////////////////////////////////////////////////////////////////////////
+
+Function  String Build_Template_Synoptique(String Ligne, String Type,String Name)
+
+    String CurrPath;
+
+    IF ( Type == "DESK" ) Then   CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\Synotique\Templates\";   End
+    IF ( Type == "WEB" )  Then   CurrPath = GetProjectPath() + "\TEMPLATES_GENERATED\Synotique\WebTemplates\"; End
+
+    return CurrPath+Name;
+
+end
+/////////////////////////////////////////////////////////////////////////////
+/*************************ajout body DESk************************************/
+/////////////////////////////////////////////////////////////////////////////
+
+function Void CreateSynoptiques_DESK( String Template , String SourceName , String View , String PreviousView , string MeasureViewLigne , String NewName , Int MaxBu , Int VIEW_NBR)
+
+    String SRCFullPathFileName;
+    String FullPathFileName;
+    String Ligne;
+
+    int SRCFileHandle;
+    int FileHandle;
+    String ClickSearch = "OnClick:";
+
+    String PATH_SEARCH = "  #Label: Path";
+    String PATH_REPLACE = "";
+    String PATH_LABEL = "  #Label: ";
+
+    String CLOSECLICK = "  #NewOnClick: Close";
+
+    int P5;
+    int P4;
+    String A;
+    String B;
+    String TemplateCalled;
+    String GATEPART;
+
+    String PATH_TABLEAU;
+    String PATH_ENERGY;
+    String PATH_BU;
+    String PATH_VIEW;
+    String PATH_PDV;
+
+    String LIST_TABLEAU;
+
+            PATH_TABLEAU =  SG_Fetch(SourceName,1,"_");
+            LIST_TABLEAU = PATH_TABLEAU;
+
+            IF ( PATH_TABLEAU == "11") Then
+                PATH_ENERGY  =  SG_Fetch(SourceName,2,"_");
+                PATH_BU      =  SG_Fetch(SourceName,3,"_");
+                //MessageBox(SourceName,PATH_BU);
+                PATH_BU      =  GET_BUName( PATH_BU , MaxBu);
+                //MessageBox(PATH_BU,MaxBu);
+                PATH_VIEW    =  GetStrGateValue("ViewNames",VIEW_NBR);
+                PATH_PDV     =  GetStrGateValue("PDV_Name",1);//Consommation
+            End
+
+            IF ( PATH_TABLEAU == "12") Then
+                PATH_ENERGY  = "";
+                PATH_BU      =  SG_Fetch(SourceName,2,"_");
+                PATH_BU      =  GET_BUName( PATH_BU , MaxBu);
+                PATH_VIEW    =  GetStrGateValue("ViewNames",VIEW_NBR);
+                PATH_PDV     =  GetStrGateValue("PDV_Name",1);//Consommation
+            End
+
+              //MessageBox(SourceName,PATH_BU);
+
+            PATH_TABLEAU =  GetStrGateValue("TableauNames",StrToInt(PATH_TABLEAU));
+
+
+
+
+    PATH_REPLACE = PATH_TABLEAU + " | " + PATH_VIEW + " | " + PATH_ENERGY + " | " + PATH_PDV + " | " + PATH_BU;
+
+    SRCFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\HeaderDesk" ;
+
+    FileCopy(SRCFullPathFileName,Template,False);
+
+    SRCFullPathFileName=GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\"+SourceName;
+    SRCFileHandle = FileOpen(SRCFullPathFileName,"rt");
+
+    if (SRCFileHandle==0) then MessageBox(SRCFullPathFileName,"nooooo");  end
+
+    FullPathFileName = Template;
+
+
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+        //A = "_"+PreviousView;
+        //B = "_"+View;
+        //Ligne=SG_F_AND_R(Ligne,A,B);
+
+    while(FileEof(SRCFileHandle)==0)
+        //i=i+1;
+
+        Ligne = FileReadLn(SRCFileHandle);
+        P4 = StrPos(Ligne,"  #CMP:");
+        //P5 = StrPos(Ligne,"  #EVN:");
+
+        IF( P4!=0 )then
+            Ligne = Synoptique_Get_List( MeasureViewLigne , Ligne );
+            //MessageBox(Ligne,View);
+        end
+
+        //If (Type == "WEB" && i > 5) Then  Ligne = WEB_HEADER(Ligne,View , PreviousView ,i ,FileHandle);    end
+
+        Ligne=SG_F_AND_R(Ligne,PATH_SEARCH,PATH_LABEL + PATH_REPLACE);
+
+
+        IF ( StrPos( Ligne, ClickSearch ) != 0 && Ligne != CLOSECLICK) Then
+            GATEPART = SG_Fetch(Ligne,1,":");
+            TemplateCalled = SG_Fetch(Ligne,2,":");
+
+            TemplateCalled = Create_CallFunction( TemplateCalled , View , PreviousView, "DESK" , NewName, PATH_REPLACE );
+            Ligne = GATEPART + ":"+ TemplateCalled;
+            //MessageBox(Ligne,SourceName);
+        End
+
+        FileWriteLn(FileHandle,Ligne);
+    end
+
+    FileClose(FileHandle);
+    FileClose(SRCFileHandle);
+
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+/***************************Ajout body web*************************************/
+/////////////////////////////////////////////////////////////////////////////
+function Void CreateSynoptiques_WEB( String Template , String SourceName , String View , String PreviousView , string MeasureViewLigne, String NewName , int MaxBu, int VIEW_NBR)
+
+    String SRCFullPathFileName;
+    String FullPathFileName;
+    String Ligne;
+    String gate;
+    String part1;
+    String part2;
+
+    int SRCFileHandle;
+    int FileHandle;
+    String PATH_SEARCH = "  #Label: Path";
+    String PATH_REPLACE = "  #Label: ";
+    int i=0;
+    int P;
+    int P1;
+    int P2;
+    int nbrG;
+    String pos;
+    int Len;
+    int npos;
+    int P3;
+    int P4 =0;
+    int P5 =0;
+    String A;
+    String B;
+    Int DESK_HeaderRows = 6;
+
+    String PATH_TABLEAU;
+    String PATH_ENERGY;
+    String PATH_BU;
+    String PATH_VIEW;
+    String PATH_PDV;
+    Int GATENumber = 0;
+
+    Bool Eliminete_Line = False;
+    String NOTONCLICK = "  #NewOnClick: Close";
+    String MAX_GATE = "#Gates:";
+    String DESK_HEADER1 = "#Style: FixedNoBorder";
+    String DESK_HEADER2 = "#StayOnTop: 0";
+    String ClickSearch = "OnClick:";
+    String GATEPART;
+    String TemplateCalled;
+    Bool SetMAX_GATE = False;
+
+    String LIST_TABLEAU;
+
+            PATH_TABLEAU =  SG_Fetch(SourceName,1,"_");
+            LIST_TABLEAU = PATH_TABLEAU;
+
+            IF ( PATH_TABLEAU == "11") Then
+                PATH_ENERGY  =  SG_Fetch(SourceName,2,"_");
+                PATH_BU      =  SG_Fetch(SourceName,3,"_");
+                PATH_BU      =  GET_BUName( PATH_BU , MaxBu);
+                PATH_VIEW    =  GetStrGateValue("ViewNames",VIEW_NBR);
+                PATH_PDV     =  GetStrGateValue("PDV_Name",1);//Consommation
+            End
+
+            IF ( PATH_TABLEAU == "12") Then
+                PATH_ENERGY  =  "";
+                PATH_BU      =  SG_Fetch(SourceName,2,"_");
+                PATH_BU      =  GET_BUName( PATH_BU , MaxBu);
+                PATH_VIEW    =  GetStrGateValue("ViewNames",VIEW_NBR);
+                PATH_PDV     =  GetStrGateValue("PDV_Name",1);//Consommation
+            End
+
+            PATH_TABLEAU =  GetStrGateValue("TableauNames",StrToInt(PATH_TABLEAU));
+
+
+    PATH_REPLACE = PATH_REPLACE + PATH_TABLEAU + " | " + PATH_VIEW + " | " + PATH_ENERGY + " | " + PATH_PDV + " | " + PATH_BU;
+
+
+    SRCFullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\HeaderWeb" ;
+
+     FileCopy(SRCFullPathFileName,Template,False);
+
+    SRCFullPathFileName=GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\" + SourceName;
+    SRCFileHandle = FileOpen(SRCFullPathFileName,"rt");
+    if (SRCFileHandle==0) then MessageBox(SRCFullPathFileName,"nooooo");  end
+
+    //FullPathFileName = "C:\ProgramData\Winlog Pro 3\Projects\Energy_Supervisor_DEMO_V46\TEMPLATES_GENERATED\Synotique\WebTemplates\TEmp;
+    FullPathFileName = Template;
+    FileHandle = FileOpen(FullPathFileName,"at");
+
+    //MessageBox(Template,FileHandle);
+    IF ( FileHandle == 0) Then MessageBox(Template,"3"); End
+
+    While(FileEof(SRCFileHandle)==0)
+        Ligne = FileReadLn(SRCFileHandle);
+
+           i=i+1;
+
+           //i= NUM_Ligne;
+
+    IF( i <= 5  )then
+         Eliminete_Line = True;
+    Else
+        IF( Ligne == DESK_HEADER1 || Ligne == DESK_HEADER2 )then
+          Eliminete_Line = True;
+        Else
+            IF(  Ligne == NOTONCLICK )then
+                Eliminete_Line = True;
+            Else
+                Eliminete_Line = False;
+            End
+        End
+    End
+
+     /*If (Eliminete_Line == True) Then
+        MessageBox(NOTONCLICK,i);
+     End*/
+
+      If( Eliminete_Line == False )then
+
+            //////////////////////////////////
+
+            P = StrPos(Ligne,MAX_GATE);
+             IF( P > 0 )then
+
+                gate=SG_Fetch(Ligne,2,":");
+                nbrG=StrToInt(gate)+1;
+                gate=IntToStr(nbrG);
+                Ligne=MAX_GATE+gate;
+                SetMAX_GATE = True;
+             Else
+                SetMAX_GATE = False;
+             end
+            /////////////////////////////////
+
+                P4 = StrPos(Ligne,"  #CMP: ");
+                // P5 = StrPos(Ligne,"  #EVN:");
+              IF( P4!=0 )then Ligne = Synoptique_Get_List( MeasureViewLigne , Ligne );  end
+
+                P1 = StrPos(Ligne,"  #Pos: ");
+                P2 = StrPos(Ligne,",");
+
+              If(P1!=0)then
+
+                part1=StrSubString(Ligne,1,P2);
+
+                Len=StrLen(Ligne);
+                pos=StrSubString(Ligne,P2+1,Len);
+                P1 = StrPos(Ligne,"  #Pos: ");
+
+                npos=StrToInt(pos)+145;
+                pos=IntToStr(npos);
+
+                Ligne=part1+pos;
+
+             End
+
+
+            ///////////////////////////////
+                P3 = StrPos(Ligne,"#PBkBmp:");
+
+              IF(P3!=0)then
+                part1=SG_Fetch(Ligne,1,":");
+                pos=SG_Fetch(Ligne,2,",");
+                npos=StrToInt(pos)+145;
+                pos=IntToStr(npos);
+                part2=SG_Fetch(Ligne,3,",");
+                Ligne = "#PBkBmp: 0," + pos+","+part2+","+SG_Fetch(Ligne,4,",")+","+SG_Fetch(Ligne,5,",");
+              End
+            ///////////////////////////////
+              P3 = StrPos(Ligne,"#Gate:");
+
+              IF(P3!=0)then
+                part1=SG_Fetch(Ligne,1,":");
+                part2=SG_Fetch(Ligne,2,":");
+                part2 = StrDelete(part2,1,1);
+                GATENumber = StrToInt( part2 )+1;
+                //MessageBox(part2,GATENumber);
+                Ligne= part1 +": " +GATENumber;
+              End
+            ///////////////////////////////
+              P3 = StrPos(Ligne,"#On:");
+
+              IF(P3!=0)then
+                part1=SG_Fetch(Ligne,1,":");
+                part2=SG_Fetch(Ligne,2,":");
+                part2 = StrDelete(part2,1,1);
+                pos = SG_Fetch(part2,1,",");
+                npos=StrToInt(pos)+1;
+
+                Ligne= part1 +": " +npos+","+ SG_Fetch(part2,2,",") +","+ SG_Fetch(part2,3,",");
+              End
+              //////////////////////////////
+             //  #On: 13,6,1
+            //A="_"+PreviousView;
+            //B="_"+View;
+            //Ligne=SG_F_AND_R(Ligne,A,B);
+
+
+            IF ( StrPos( Ligne, ClickSearch ) != 0 && Ligne != NOTONCLICK) Then
+            GATEPART = SG_Fetch(Ligne,1,":");
+            TemplateCalled = SG_Fetch(Ligne,2,":");
+
+            TemplateCalled = Create_CallFunction( TemplateCalled , View , PreviousView, "WEB", NewName , PATH_REPLACE);
+            Ligne = GATEPART + ": Template,"+ TemplateCalled;
+            //MessageBox(Ligne,SourceName);
+            End
+
+            Ligne=SG_F_AND_R(Ligne,PATH_SEARCH,PATH_REPLACE);
+
+            FileWriteLn(FileHandle,Ligne);
+
+            IF ( SetMAX_GATE == True ) then  FileWriteLn(FileHandle,"  #STR: Business_unit,0"); End
+
+      End // If i > 5
+
+
+    End // While
+    FileClose(SRCFileHandle);
+
+    //MessageBox(FileHandle,"FileHandle");
+
+    Synoptique_AddwebTitle( FileHandle );
+    FileWriteLn(FileHandle,"#EndObj");
+
+    FileClose(FileHandle);
+
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+/**********************ajout header web******************************************/
+/////////////////////////////////////////////////////////////////////////////
+/*
+function void Addheader(String NewName,String gate,String View)
+
+    String FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\Header1";
+    String Ligne;
+    int P;
+    int ngate;
+    String part1;
+    String part2;
+    String pos;
+    int P1;
+    ngate=StrToInt(gate);
+    ngate=ngate-1;
+    gate=IntToStr(ngate);
+
+     int FileHandle = FileOpen(FullPathFileName,"rt");
+
+    string NewFullPathFileName  = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\WebTemplates\"+NewName;
+    int NewFileHandle = FileOpen(NewFullPathFileName,"at");
+
+    if (FileHandle==0) then MessageBox("Header File not Found","Error");  return; end
+
+    while(FileEof(FileHandle)==0)
+
+        Ligne = FileReadLn(FileHandle);
+
+        P = StrPos(Ligne,"#Gate:");
+        P1 = StrPos(Ligne,"View");
+        //MessageBox(Ligne,"");
+        if(Ligne!="")then
+            if(P!=0)then
+                part1 = SG_Fetch(Ligne,1,":");
+                Ligne = part1+": "+gate;
+
+            end
+            if(P1!=0)then
+                part1 = SG_Fetch(Ligne,1,":");
+                Ligne = part1 + ": "+View;
+            end
+
+            FileWriteLn(NewFileHandle,Ligne);
+        end
+
+
+   end
+FileClose(FileHandle);
+FileClose(NewFileHandle);
+
+end*/
+/////////////////////////////////////////////////////////////////////////////
+/****************************Add Header web************************************/
+/////////////////////////////////////////////////////////////////////////////
+/*
+Function String ListModif(String Ligne,String View)
+
+
+FullPathFileName = GetProjectPath()+"\tempweb\Source\EnegyList.CSV";
+FileHandle = FileOpen(FullPathFileName,"rt");
+
+if (FileHandle==0) then MessageBox("File not Found","Error");  return; end
+
+  LE=FileReadLn(FileHandle);
+    while(FileEof(FileHandle)==0)
+    Ligne=FileReadLn(FileHandle);
+
+    if(View==SG_Fetch(Ligne,1,";"))then
+
+
+       while (LE=="|")
+       Col=SG_Fetch(LE,i,";");
+
+        P=StrPos(C
+
+
+
+end*/
+
+
+/////////////////////////////////////////////////////////////////////////////
+/****************************Add Header web************************************/
+/////////////////////////////////////////////////////////////////////////////
+/*
+Function String ListLecture(String View)
+    String FullPathFileName;
+    int FileHandle;
+    String Ligne;
+    String V;
+
+    FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\EnegyList.CSV";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+    if (FileHandle==0) then MessageBox(FullPathFileName,"Energy File not Found");  return ""; end
+
+    Ligne=FileReadLn(FileHandle);
+    while(FileEof(FileHandle)==0)
+        Ligne=FileReadLn(FileHandle);
+
+        if(View==SG_Fetch(Ligne,1,";"))then
+
+            V=SG_Fetch(Ligne,2,";");
+        end
+
+    end
+    FileClose(FileHandle);
+    return V;
+end
+*/
+/////////////////////////////////////////////////////////////////////////////
+/****************************Add Header web************************************/
+/////////////////////////////////////////////////////////////////////////////
+Function String Get_MODIF_Ligne(String View)
+
+    String FullPathFileName;
+    String LigneM;
+    String col;
+    String prefix;
+    String Part1;
+    int FileHandle;
+    String L;
+
+    int P;
+    int i;
+    int j;
+
+    FullPathFileName = GetProjectPath()+"\TEMPLATES_GENERATED\Synotique\Source\EnegyList.csv";
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+
+
+    if (FileHandle == 0) then MessageBox(FullPathFileName,"ListMODIF File Not Found");  return ""; end
+
+    LigneM=FileReadLn(FileHandle);
+    while(FileEof(FileHandle)==0)
+        LigneM=FileReadLn(FileHandle);
+        if(View==SG_Fetch(LigneM,1,";"))then
+         Part1 = LigneM;
+        end
+    end
+
+    FileClose(FileHandle);
+
+    Return Part1;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function string SG_Fetch(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     //If (V == "*") then V="#"; end
+     return V;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function string SG_F_AND_R(string Ligne,string search, string replace)
+    int P = 0;
+    string Txt = Ligne;
+    string V = Ligne;
+    String Partie1;
+    String Partie2;
+    P = StrPos(Txt,search);
+
+    if ( P == 0 ) then return V;
+      else
+
+       Partie1 = StrSubString(Txt,1,P-1);
+       Txt = StrDelete(Txt,1,P-1);
+       P = StrPos(Txt,",");
+
+        IF (P == 0) then Partie2 = "";
+        Else   Partie2 = StrDelete(Txt,1,P-1); End
+
+       V = Partie1 + replace + Partie2;
+    end
+
+    return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Synoptique_Get_List( String  MeasureViewLigne , String TemplateLigne )
+
+    Bool Exit = False;
+    String Col;
+    String prefix;
+    string Part1;
+    String L;
+    string FinalLigne;
+    Int MaxCol = 22;
+
+    int j=0;
+    int P=0;
+          // for j =0 to 22 do
+
+       While( Exit == False )
+        j=j+1;
+            Col=SG_Fetch(MeasureViewLigne,j,";");
+            prefix=SG_Fetch(Col,1,":");
+
+            P=StrPos(TemplateLigne,prefix);
+            //MessageBox(prefix,P);
+                if(P!=0)then
+                   L=SG_Fetch(Col,2,":");
+                   IF ( L == "#" ) Then MessageBox(MeasureViewLigne,prefix+" "+ Col);   End
+                   Part1=SG_Fetch(TemplateLigne,1,",");
+                   FinalLigne = Part1 + "," + L;
+                end
+
+          if ( j > MaxCol ) Then Exit = True;   End
+
+       End
+
+       Return FinalLigne ;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Create_CallFunction( String TemplateCalled , String View , String  PreviousView , String From , String Synoptique_Name , String PATH_REPLACE )
+
+   // MessageBox(TemplateCalled,View);
+   String TemplateName;
+   String TemplateFunct = " StartF,";
+   String Functname = "";
+   String Function_Header = "";
+   String NewTemplateName;
+   String Char;
+   String RETURNEDVALUE = TemplateCalled;
+   string A;
+   String B;
+   int i;
+   Int Len;
+   Bool FunctionFound = False;
+
+   IF (  SG_Fetch( TemplateCalled ,1 , "," ) == " Template"  ) Then
+    TemplateName = SG_Fetch( TemplateCalled ,2 , "," );
+    //NewTemplateName = TemplateName;
+
+
+    // Function Name
+     Len = StrLen( TemplateName );
+
+      For i = 1 to Len do
+       Char = StrSubString(TemplateName,i,1);
+        If ( Char == "#" ) Then
+        Char = "35";
+        Else
+            If ( Char == "&" ) Then
+            Char = "38";
+            End
+        End
+       Functname = Functname + Char ;
+
+      end
+    ////////////////
+    // Replace View
+        A = "_"+PreviousView;
+        B = "_"+View;
+        //MessageBox(Functname,A+"/"+B);
+        Functname = SG_F_AND_R( Functname , A , B );
+        //MessageBox(Functname,"Functname");
+        //MessageBox(TemplateName,"NewTemplateName Befor");
+        NewTemplateName = SG_F_AND_R( TemplateName , A , B );
+       //MessageBox("PreviousView = " + PreviousView , " View = " +View);
+    ////////////////
+
+    IF ( StrPos(NewTemplateName,"_V"+GetStrGateValue("Version",0)) == 0 ) Then
+        NewTemplateName = NewTemplateName + "_V"+GetStrGateValue("Version",0);
+    ENd
+    Functname = "SY_FC_" + Functname + "()" ;
+
+    Function_Header = "Function void " + Functname ;
+
+    RETURNEDVALUE = TemplateFunct + Functname;
+    FunctionFound = FindFunction( Functname , SYNOPTIQUE_FILE_Code) ;
+
+    If (FunctionFound == False ) Then
+     Synoptique_CreateFunction( Function_Header , NewTemplateName, SYNOPTIQUE_FILE_Code , PATH_REPLACE);
+     ///Create Template 17 Liste
+     //MessageBox(TemplateCalled,"");
+     Create_T17_List( Synoptique_Name ,  NewTemplateName , PATH_REPLACE );
+    End
+
+        IF ( From == "WEB" ) Then
+        Return NewTemplateName;
+        Else
+        Return RETURNEDVALUE;
+        End
+   Else
+    Return NewTemplateName;
+   End
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Synoptique_CreateFunction( String Function_Header, String TemplateName , String FullPathFileName , String PATH_REPLACE)
+
+    //String FullPathFileName = GetProjectPath() +"\TEMPLATES_GENERATED\Synotique\Synoptique_ShowPages_V"+ GetStrGateValue("Version",0) +".Wll";
+    Int FileHandle ;
+
+    String L1 = Function_Header;
+    String L2 = "    ShowPage(" + CharToStr(34) + TemplateName + CharToStr(34) + ");";
+    String L3 = "    CreatePATH(" + CharToStr(34) + PATH_REPLACE + CharToStr(34) + ");";
+    String L4 = "End";
+    String L5 = "/////////////////////////////////////////////////////////////////////";
+
+
+    //IF ( FileExist(TemplateName) == True )  Then
+        FileHandle = FileOpen(FullPathFileName,"at");
+
+        FileWriteLn(FileHandle,L1);
+        FileWriteLn(FileHandle,L2);
+        //FileWriteLn(FileHandle,L3);
+        FileWriteLn(FileHandle,L4);
+        FileWriteLn(FileHandle,L5);
+
+        FileClose(FileHandle);
+    //END
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool FindFunction( String InFunction , String FullPathFileName)
+
+    //String FullPathFileName = GetProjectPath() +"\TEMPLATES_GENERATED\Synotique\Synoptique_ShowPages_V"+ GetStrGateValue("Version",0) +".Wll";
+    Int FileHandle = FileOpen(FullPathFileName,"rt");
+    String Ligne;
+    Bool Found = False;
+    Bool Exist = False;
+    If ( FileHandle == 0 ) Then Return Found; End
+    While ( Exist == False )
+    Ligne = FileReadLn(FileHandle);
+        If ( StrPos(Ligne,InFunction) != 0 ) Then
+        Found = True;
+        End
+
+        If ( FileEof(FileHandle) != 0 ) Then Exist = True;  End
+        If ( Found == True ) Then Exist = True;  End
+    end
+
+    FileClose(FileHandle);
+
+    Return Found;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Synoptique_AddwebTitle( Int FileHandle )
+
+    //String FullPathFileName = TempalteName;
+    //Int FileHandle = FileOpen(FullPathFileName,"at");
+    String WFullPathFileName = GetProjectPath() +"\TEMPLATES_GENERATED\Synotique\Source\HeaderTitle";
+    Int WFileHandle = FileOpen(WFullPathFileName,"rt");
+    String Ligne;
+
+    If ( WFileHandle == 0 ) Then MessageBox(WFullPathFileName,"File Not Found"); Return ; End
+
+    While ( FileEof(WFileHandle) == 0  )
+      Ligne = FileReadLn(WFileHandle);
+        If ( Ligne != "" ) Then
+        //MessageBox(Ligne,"Ligne");
+            FileWriteLn(FileHandle,Ligne);
+        End
+    End
+
+    //FileClose(FileHandle);
+    FileClose(WFileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_BUName( String BU_Code , Int MaxBu)
+
+    int i;
+    String Ligne;
+    String ReadCode;
+    String BUName = "";
+    //String FullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\BU_List.txt";
+    String FullPathFileName = GetProjectPath() + "\files\WebTemplates\Source\"+ S1_MEATDATA_FILE +".txt";
+    Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+    If (FileHandle == 0) Then return ""; End
+
+    for i = 1 to MaxBu do
+        Ligne = FileReadLn(FileHandle);
+
+        IF (Ligne != "") Then
+        //ReadCode
+
+
+            If ( SG_Fetch( Ligne ,1 , ";" ) == SG_Fetch( BU_Code ,3 , "&" ) ) Then
+                //MessageBox(SG_Fetch( Ligne ,1 , ";" ),SG_Fetch( BU_Code ,3 , "&" ));
+                BUName = SG_Fetch( Ligne ,2 , ";" );
+
+                i= MaxBu+1;
+
+            End
+
+        End
+    end
+
+    FileClose(FileHandle);
+    //MessageBox(BUName,BU_Code);
+    Return BUName;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_T17_List( String Synoptique_Name ,  String NEXT_T , String PATH_REPLACE )
+
+    String FILE_FULL_PATH = NEXT_T_LIST;
+    Int FileHandle;
+    String LIGNE;
+    String TemplateName;
+    String Functname = "";
+    String Full_Functname = "";
+    String Char;
+    Int Len;    int i;
+    Bool FunctionFound;
+
+    FileHandle = FileOpen(FILE_FULL_PATH,"at");
+    TemplateName = Synoptique_Name;
+    Len = StrLen( TemplateName );
+
+      For i = 1 to Len do
+       Char = StrSubString(TemplateName,i,1);
+        If ( Char == "#" ) Then
+        Char = "35";
+        Else
+            If ( Char == "&" ) Then
+            Char = "38";
+            End
+        End
+       Functname = Functname + Char ;
+
+      end
+
+      Functname = "SY_FC_" + Functname + "()" ;
+      Full_Functname = "Function void " + Functname;
+      FunctionFound = FindFunction( Full_Functname , SYNOPTIQUE_FILE_Code ) ;
+
+      If (FunctionFound == False ) Then
+        Synoptique_CreateFunction( Full_Functname , Synoptique_Name , SYNOPTIQUE_FILE_Code , PATH_REPLACE);
+      End
+        LIGNE =  NEXT_T + ";" + Synoptique_Name + ";" + Functname + ";" + PATH_REPLACE;
+        FileWriteLn(FileHandle,LIGNE);
+
+    FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_Template_17( )
+
+    Int FileHandle = FileOpen(NEXT_T_LIST,"rt");
+    String LIGNE;
+    String FULLTemplateName;
+    String TemplateCODE;
+    String CompteurCode;    Int CompteurNUMBER;
+    String AllCmpteur_LIGNE;
+    String TEMPLATE = "17";
+
+
+    IF ( FileHandle == 0 ) Then
+        MessageBox(NEXT_T_LIST,"T17_List NOT FOUND");
+        Return;
+    End
+
+    While ( FileEof(FileHandle) == 0 )
+
+        LIGNE = FileReadLn( FileHandle );
+        FULLTemplateName = SG_Fetch( LIGNE ,1, ";" );
+        TemplateCODE     = SG_Fetch( FULLTemplateName ,1, "_" );
+
+        IF ( TemplateCODE == TEMPLATE ) Then
+            CompteurCode = SG_Fetch( FULLTemplateName ,2, "_" );
+            CompteurNUMBER = GET_COMPTEUR( CompteurCode );
+            IF ( CompteurNUMBER != 0 ) Then
+                AllCmpteur_LIGNE = GetStrGateValue("Compteur_Code",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_Name",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_Energy",CompteurNUMBER) + ";;;" +
+                                   GetStrGateValue("Compteur_PCP",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_PCD",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_PCD",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_NameP",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_NameD",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_NameC",CompteurNUMBER) + ";" +
+                                   GetStrGateValue("Compteur_Formule",CompteurNUMBER);
+
+                BackTemplate_DESK = SG_Fetch( LIGNE ,3, ";" );
+                BackTemplate_WEB  = SG_Fetch( LIGNE ,2, ";" );
+                Create_Templates16_17( AllCmpteur_LIGNE , TEMPLATE );
+
+             End // CompteurNUMBER != 0
+
+        End // TemplateCODE == TEMPLATE
+
+    End // While
+
+    FileClose(FileHandle);
+
+end

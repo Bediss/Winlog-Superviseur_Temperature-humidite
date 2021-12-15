@@ -1,0 +1,227 @@
+#Version: 0x03021e
+#Name: Clone Filtre Setting
+#Access: 0
+#Pos: 500,300
+#Size: 330,219
+#BkColor: clWhite
+#Gates: 16
+  #DIG: QuerrySelect,0
+  #DIG: QuerrySelect,1
+  #DIG: QuerrySelect,2
+  #DIG: QuerrySelect,3
+  #DIG: QuerrySelect,4
+  #DIG: QuerrySelect,5
+  #DIG: QuerrySelect,6
+  #DIG: QuerrySelect,7
+  #STR: ROW0,1
+  #STR: ROW0,2
+  #STR: ROW0,3
+  #STR: ROW0,4
+  #STR: ROW0,5
+  #STR: ROW0,6
+  #STR: ROW0,7
+  #STR: alarmeEventModifer,30
+#Style: Fixed
+#StayOnTop: 1
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,5
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Fils Compteur
+  #NeedApply: 0
+  #OnMask: 0,0001,0001
+  #TabOrder: 0
+  #Access: 0
+  #Enabled: 2,6,0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,30
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Type
+  #NeedApply: 0
+  #OnMask: 1,0001,0001
+  #TabOrder: 1
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,55
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Parent 
+  #NeedApply: 0
+  #OnMask: 2,0001,0001
+  #TabOrder: 2
+  #Access: 0
+  #Enabled: 0,6,0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,80
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Capteur
+  #NeedApply: 0
+  #OnMask: 3,0001,0001
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,135
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Type Locale
+  #NeedApply: 0
+  #OnMask: 4,0001,0001
+  #TabOrder: 4
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 10,160
+  #Size: 125,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Locale
+  #NeedApply: 0
+  #OnMask: 6,0001,0001
+  #TabOrder: 5
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,110
+  #Size: 85,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: Grid
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,190
+  #Size: 155,25
+  #Cursor: 0
+  #Label: Cloner Objective
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 6
+  #Access: 0
+  #OnClick: StartF,CheckQueryObjective()
+  #OnClick: Close
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 165,190
+  #Size: 155,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 7
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,5
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 8
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,30
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 9
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,55
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 10
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,80
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 11
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,135
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 12
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 140,160
+  #Size: 180,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 14
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+#EndObj

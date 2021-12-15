@@ -1,0 +1,1 @@
+C;0;*;*;*;*;*;CTCA;CLC;Temperature;*;*;CLC;*;*;D1;;Company;*;

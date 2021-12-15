@@ -1,0 +1,42 @@
+3,[T°c ]^A,Temperature,0
+7,T°c min^A,Temperature,0
+11,T°c max^A,Temperature,0
+15,Inc^A,Temperature,0
+21,[T°c ]^A-1,Temperature,0
+25,T°c min^A-1,Temperature,0
+29,T°c max^A-1,Temperature,0
+33,Inc^A-1,Temperature,0
+37,C %^A,Temperature,0
+42,C %^A-1,Temperature,0
+0,[T°c ]^J,Temperature,0
+4,T°c min^J,Temperature,0
+8,T°c Max^J,Temperature,0
+12,Inc^J,Temperature,0
+18,[T°c ]^J-1,Temperature,0
+22,T°c min^J-1,Temperature,0
+26,T°c Max^J-1,Temperature,0
+30,Inc^J-1,Temperature,0
+34,C %^J,Temperature,0
+38,C %^J-1,Temperature,0
+16,T°c ^LIVE,Temperature,0
+17,Inc LIVE,Temperature,0
+2,[T°c ]^M,Temperature,0
+6,T°c min^M,Temperature,0
+10,T°c max^M,Temperature,0
+14,Inc^M,Temperature,0
+20,[T°c ]^M-1,Temperature,0
+24,T°c min^M-1,Temperature,0
+28,T°c max^M-1,Temperature,0
+32,Inc^M-1,Temperature,0
+36,C %^M,Temperature,0
+40,C %^M-1,Temperature,0
+1,[T°c ]^S,Temperature,0
+5,T°c min^S,Temperature,0
+9,T°c max^S,Temperature,0
+13,Inc^S,Temperature,0
+19,[T°c ]^S-1,Temperature,0
+23,T°c min^S-1,Temperature,0
+27,T°c max^S-1,Temperature,0
+31,Inc^S-1,Temperature,0
+35,C %^S,Temperature,0
+39,C %^S-1,Temperature,0

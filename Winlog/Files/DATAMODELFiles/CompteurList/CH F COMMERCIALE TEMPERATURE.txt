@@ -1,0 +1,3 @@
+CTC3;CH_F_Commerciale;Temperature;CTCA;CLC;;*;*;D3;*;*;CH_F_Commerciale;;Unite;*;CH_F_Commerciale Temperature
+CTC31;CH1_F_Commerciale_P1;Temperature;CTC3;CH_F_Commerciale;;D64;*;D31;T°c  positive;*;CH1_F_Commerciale_P1;;Point de mesure;*;CH1_F_Commerciale_P1 Temperature
+CTC32;CH2_F_Commerciale_P2;Temperature;CTC3;CH_F_Commerciale;;D64;*;D32;T°c  positive;*;CH2_F_Commerciale_P2;;Point de mesure;*;CH2_F_Commerciale_P2 Temperature

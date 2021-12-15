@@ -1,0 +1,2998 @@
+Global Bool Update_History_Flag = False;
+Global String EMAIL_TRIGGER = "";
+Global String EVENT_FORMULA_TAG="";
+Global String EXECUTE_ALARMELINE = "";
+
+function void ListenAlarme_Event()
+
+#startup
+Sleep(30000);//0.5 min to start
+//InitialiseGates_Event();
+    //int Frequence = GetNumGateValue("ReportingListenF",0);
+    //int live = GetDigGateValue("LiveReporting",0);
+    //int STARTTIME_S;
+    int CURRENTTIME_S;
+    INT StartUPDATE;
+    int EndUPDATE;
+    int CURRENTTIME;
+    bool Go = false;
+    //Frequence =60;// en seconde
+    int FrequenceEVENT = 120;
+    int FrequenceUPDATE_FILE = 900; // en seconde
+    int LISTEN_Frequence = 60000; // 1min en milliseconde
+    int GATEWAY_Frequence = 3600; // Heure seconde
+    Int Laps_TIME_EVENT;    int STARTTIME_EVENT;
+    Int Laps_TIME_UPDATE;   int STARTTIME_UPDATE;
+    Int Laps_TIME_GATEWAY;  int STARTTIME_GATEWAY;
+    //Int Laps_TIME;
+    Event_Runtime_LOG( " Start ListenAlarme_Event");
+    GET_SystemEvents();
+
+
+
+    STARTTIME_EVENT = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),GetSecond());
+    STARTTIME_UPDATE = STARTTIME_EVENT;
+    STARTTIME_GATEWAY = STARTTIME_EVENT;
+
+    //Event_Runtime_LOG( " Start ListenAlarme_Event 1");
+    While(WindowIsOpen())
+
+
+        CURRENTTIME_S = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),GetSecond());
+
+        Laps_TIME_EVENT  = CURRENTTIME_S - STARTTIME_EVENT ;
+        Laps_TIME_UPDATE = CURRENTTIME_S - STARTTIME_UPDATE ;
+        Laps_TIME_GATEWAY = CURRENTTIME_S - STARTTIME_GATEWAY ;
+            ///////////////////////////////////////////////////////////////////
+            //Event_Runtime_LOG( " Start Calcule");
+            CALCULATOR();
+            ///////////////////////////////////////////////////////////////////
+            //ListenHistory();
+            ///////////////////////////////////////////////////////////////////
+            if ( Laps_TIME_EVENT >= FrequenceEVENT ) then
+
+               Restart_Ok = False;
+                    ALARME_LISTEN();
+               Restart_Ok = True;
+               sleep(100);
+
+               Restart_Ok = False;
+                    EVENT_LISTEN();
+               STARTTIME_EVENT = CURRENTTIME_S;
+               Restart_Ok = True;
+
+               //STARTTIME_EVENT = CURRENTTIME_S;
+            end
+            ///////////////////////////////////////////////////////////////////
+            if ( Laps_TIME_UPDATE >= FrequenceUPDATE_FILE ) then
+               //UpdateInPeriode("DAILY");
+               STARTTIME_UPDATE = CURRENTTIME_S;
+            End
+            ///////////////////////////////////////////////////////////////////
+            If ( Laps_TIME_GATEWAY >= GATEWAY_Frequence ) then
+              //PING_GATEWAYS();
+              STARTTIME_GATEWAY = CURRENTTIME_S;
+            End
+            ///////////////////////////////////////////////////////////////////
+        Sleep(LISTEN_Frequence);
+    end
+
+    Event_Runtime_LOG( " EXIT ListenAlarme_Event");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Fetch_Alarm_search(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Fetch_Event_Search(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+//*****************************************************************************
+//          Trigger
+//*****************************************************************************
+function Bool Check_Trigger(String Trigger , String Event_Alarme_Name)
+
+    String TR_Date;
+    String TR_Time;
+    String TR_Hour;
+    String TR_Minute;
+    Int TR_Date_Time_To_sec = 0;
+    Int Crru_Date_Time_To_sec = 0;
+    Int P;
+    String DD;  String MM;  String YYYY;
+    Int Offset_Minute = 60;
+
+    String Current_Date;
+    Bool Status = False;
+
+    TR_Date = Fetch_ALARME(Trigger , 1 , "_");
+    TR_Time = Fetch_ALARME(Trigger , 2 , "_");
+    TR_Hour = Fetch_ALARME(TR_Time , 1 , ":");
+    TR_Minute = Fetch_ALARME(TR_Time , 2 , ":");
+    //Current_Date = GetDateString("/",True);
+
+    DD = Fetch_ALARME(TR_Date , 1 , "/");
+    MM = Fetch_ALARME(TR_Date , 2 , "/");
+    YYYY=Fetch_ALARME(TR_Date , 3 , "/");
+
+    TR_Date_Time_To_sec = DateTimeToSeconds(StrToInt( DD ),
+                                            StrToInt( MM ),
+                                            StrToInt( YYYY ),
+                                            StrToInt( TR_Hour ),
+                                            StrToInt( TR_Minute ),0);
+
+    Crru_Date_Time_To_sec = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),0);
+
+    IF ( Crru_Date_Time_To_sec >= TR_Date_Time_To_sec ) Then
+        Status = True;
+        // RUNTIME_LOG
+        Event_Runtime_LOG( " CHECK : " + Event_Alarme_Name  + " AWAKE");
+    Else
+       Status = False;
+    End
+
+
+
+    Return Status;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Update_NextTrigger(String Trigger , String Periodicity)
+
+    String TR_Date;
+    String TR_Time;
+    Int TR_DAY;
+    Int TR_MONTH;
+    Int TR_YEAR;
+    Int TR_HOUR;
+    Int TR_MINUTE;
+
+    Int ONE_DAY     = 86400; // 24 hours
+    Int ONE_MONTH   = 2592000 ; // 30 day = 86400*30
+    Int ONE_HOUR    = 3600;
+    Int ONE_MINUTE  = 60;
+    int P;
+    String HH;  String mm;  String DD;  String MM;  String YYYY;
+    Int Periode;
+    Int Frequence;
+
+    Int TR_SECONDE;
+    Int NEXT_TR;
+    String NEXT_TRIGGER;
+
+
+    TR_Date = Fetch_ALARME(Trigger , 1 , "_");
+    TR_Time = Fetch_ALARME(Trigger , 2 , "_");
+
+    TR_DAY =    StrToInt(Fetch_ALARME(TR_Date , 1 , "/"));
+    TR_MONTH =  StrToInt(Fetch_ALARME(TR_Date , 2 , "/"));
+    TR_YEAR =   StrToInt(Fetch_ALARME(TR_Date , 3 , "/"));
+
+    TR_HOUR =   StrToInt(Fetch_ALARME(TR_Time , 1 , ":"));
+    TR_MINUTE = StrToInt(Fetch_ALARME(TR_Time , 2 , ":"));
+
+    Frequence = StrToInt(Fetch_ALARME(Periodicity , 1 , "_"));
+
+    //TR_SECONDE = DateTimeToSeconds(TR_DAY,TR_MONTH,TR_YEAR,TR_HOUR,TR_MINUTE,0);
+     TR_SECONDE = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),0);
+
+    IF ( Fetch_ALARME(Periodicity , 2 , "_") == "Min" ) Then  Periode = ONE_MINUTE ; End
+
+    IF ( Fetch_ALARME(Periodicity , 2 , "_") == "Heure" ) Then
+        TR_SECONDE = DateTimeToSeconds(GetDayOfMonth() , GetMonth() , GetYear() , TR_HOUR , TR_MINUTE,0);
+        Periode = ONE_HOUR ;
+    End
+
+    IF ( Fetch_ALARME(Periodicity , 2 , "_") == "Jour" ) Then
+        TR_SECONDE = DateTimeToSeconds( TR_DAY , GetMonth() , GetYear() , TR_HOUR , TR_MINUTE ,0);
+        Periode = ONE_DAY ;
+    End
+
+    IF ( Fetch_ALARME(Periodicity , 2 , "_") == "Mois" ) Then
+        TR_SECONDE = DateTimeToSeconds( TR_DAY , GetMonth() , GetYear() , TR_HOUR , TR_MINUTE ,0);
+        Periode = ONE_MONTH ;
+    End
+
+        NEXT_TR = TR_SECONDE + (Periode * Frequence); // 24 hours
+
+    HH = "00" + GetHourFromSeconds(NEXT_TR);
+    P = StrLen(HH ) -1;
+    HH = StrSubString( HH , P , 2 );
+
+    mm = "00" + GetMinuteFromSeconds(NEXT_TR);
+    P = StrLen(mm ) -1;
+    mm = StrSubString( mm , P , 2 );
+
+    DD = "00" + GetDayFromSeconds(NEXT_TR);
+    P = StrLen(DD ) -1;
+    DD = StrSubString( DD , P , 2 );
+
+    MM = "00" + GetMonthFromSeconds(NEXT_TR);
+    P = StrLen(MM ) -1;
+    MM = StrSubString( MM , P , 2 );
+
+    YYYY = "0000" + GetYearFromSeconds(NEXT_TR);
+    P = StrLen(YYYY ) -3;
+    YYYY = StrSubString( YYYY , P , 4);
+
+
+
+    NEXT_TRIGGER =  DD + "/"+
+                    MM + "/"+
+                    YYYY + "_"+
+                    HH + ":"+
+                    mm;
+
+    Return NEXT_TRIGGER;
+
+end
+//*****************************************************************************
+//          ALARME_LISTEN()
+//*****************************************************************************
+function void EVENT_LISTEN()
+
+    String  FullPathFileName;
+    int     FileHandle;
+    String  WFullPathFileName;
+    int     WFileHandle;
+    string TextRow;
+
+    String Event_Code ="";
+    String Event_Name ="";
+    String Event_NEXTCHECK ="";
+    String Event_CHECK_Freq ="";
+    String Event_NEW_CHECK ="";
+    String Event_LINE ="";
+    String Event_NEW_LINE ="";
+    String Event_WAKED_UP_CODE ;
+    String Event_WAKED_UP_NAME ;
+    Int    NBR_Event_WAKED_UP ;
+    Bool Check = false;
+    Int i;
+    String TriggerEmail = "";
+
+     FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Event\Reporting_F_Regulier.csv";
+     FileHandle=FileOpen(FullPathFileName,"rt");
+     if (FileHandle==0) then  MessageBox("Reporting_F_Regulier" , "File not Found");   Return; end
+
+     WFullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Event\TReporting_F_Regulier.csv";
+     WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+     //FileReadLn(FileHandle); // Header line
+     Event_WAKED_UP_CODE = "" ;
+     Event_WAKED_UP_NAME = "" ;
+     EMAIL_TRIGGER = "";
+     NBR_Event_WAKED_UP = 0;
+     While(FileEof(FileHandle)==0)
+
+          Event_LINE=FileReadLn(FileHandle);
+          Event_Code = Fetch_Event_Search(Event_LINE , 1 , ";");
+
+          If ( Event_Code != "" ) Then
+
+            Event_Name = Fetch_Event_Search(Event_LINE , 2 , ";");
+            Event_CHECK_Freq= Fetch_Event_Search(Event_LINE , 3 , ";");
+            Event_NEXTCHECK = Fetch_Event_Search(Event_LINE , 4 , ";");
+            Check = Check_Trigger(Event_NEXTCHECK , Event_Name);
+
+            IF ( Check == TRUE ) THEN
+                /////// Event Action
+                NBR_Event_WAKED_UP = NBR_Event_WAKED_UP + 1;
+                Event_WAKED_UP_CODE = Event_Code + ";" + Event_WAKED_UP_CODE ;
+                Event_WAKED_UP_NAME = Event_Name + ";" + Event_WAKED_UP_NAME ;
+                EMAIL_TRIGGER = Event_NEXTCHECK + ";" + EMAIL_TRIGGER;
+                ////////////////////
+                // Update Next Check
+                Event_NEW_CHECK = Update_NextTrigger( Event_NEXTCHECK , Event_CHECK_Freq );
+                Check = Check_Trigger(Event_NEW_CHECK , Event_Name);
+
+                    While ( Check == True )
+                      Event_NEW_CHECK = Update_NextTrigger( Event_NEW_CHECK , Event_CHECK_Freq );
+                      Check = Check_Trigger(Event_NEW_CHECK , Event_Name);
+                    End
+
+                Event_NEW_LINE = FR_Alarme_Executer( Event_LINE , Event_NEW_CHECK , 4 );
+                FileWriteLn(WFileHandle,Event_NEW_LINE);
+                ////////////////////
+            Else
+                FileWriteLn(WFileHandle,Event_LINE);
+            End
+
+          End
+
+     end
+
+     FileClose(FileHandle);
+     FileClose(WFileHandle);
+
+     FileCopy(WFullPathFileName,FullPathFileName,false);
+
+     FileDelete(WFullPathFileName);
+
+     //MessageBox(Event_WAKED_UP_CODE +Eol()+Event_WAKED_UP_NAME +Eol()+  EMAIL_TRIGGER,NBR_Event_WAKED_UP);
+
+       If ( NBR_Event_WAKED_UP > 0 ) Then
+
+         For i = 1 to NBR_Event_WAKED_UP do
+           Event_Code = Fetch_Event_Search( Event_WAKED_UP_CODE , i, ";");
+           Event_Name = Fetch_Event_Search( Event_WAKED_UP_NAME , i, ";");
+
+           TriggerEmail = Fetch_Event_Search( EMAIL_TRIGGER , i, ";");
+           //MessageBox(Event_Code +": " +Event_Name, TriggerEmail +" i= "+i);
+           //TriggerEmail = TriggerEmail;
+           GetEMailList( Event_Code );
+           Execute_Email( Event_Code , Event_Name , TriggerEmail );
+
+        End
+
+       End
+
+       // SWAP Files
+end
+
+//*****************************************************************************
+//         awake()
+//*****************************************************************************
+/*function bool awake(string EventName)
+
+    int Period =    GetNumGateValue(EventName,0);
+    int Year    =   GetNumGateValue(EventName,1);
+    int Month   =   GetNumGateValue(EventName,2);
+    int Day     =   GetNumGateValue(EventName,3);
+
+
+
+    int D = GetDayOfMonth();
+    int M = GetMonth();
+    int Y = GetYear();
+    int maxd;
+    int i;
+
+   // MONTHLY
+   if (Period == 3) then
+        if (Y  > Year) then Year = Y; end
+
+            if( M == Month ) then
+                if (D >= Day) then
+                     if (Month == 12) then
+                        Year = Y + 1 ;
+                        Month = 1;
+                       else
+                        Month = M + 1;
+                    end
+                     SetNumGateValue(EventName,1,Year);
+                     SetNumGateValue(EventName,2,Month);
+                     SetNumGateValue(EventName,3,Day);
+
+                     return true;
+                end
+            end
+
+   end //3
+
+  // Yearly
+   if (Period == 4) then
+
+
+
+        if  (Y  == Year) then
+
+            if( M == Month ) then
+                if (D == Day) then
+
+                        Year = Y + 1 ;
+                     SetNumGateValue(EventName,1,Year);
+                     SetNumGateValue(EventName,2,Month);
+                     SetNumGateValue(EventName,3,Day);
+                         return true;
+
+                end
+            end
+       end
+   end //4
+
+
+      // Daily
+   if (Period == 1) then
+        if (Y  > Year) then Year = Y;
+          if( M > Month ) then Month = M; end
+        end
+
+
+                if (D == Day) then
+
+                     maxd = GetNDAY(Year,Month);
+
+                     if (Day == maxd) then
+                       Day = 1;
+                        If (Month == 12) then
+                            Month =1;
+                            Year = Y + 1 ;
+                          Else Month = M + 1;
+                        end
+
+                      else Day = D + 1;
+
+                     end
+
+                     SetNumGateValue(EventName,1,Year);
+                     SetNumGateValue(EventName,2,Month);
+                     SetNumGateValue(EventName,3,Day);
+                  return true;
+              end
+              return false;
+
+    end   // 1
+
+       // Weekly
+   if (Period == 2) then
+
+        if (Y  > Year) then Year = Y;
+          if( M > Month ) then Month = M; end
+        end
+
+    maxd = GetNDAY(Year,Month);
+    IF (D == Day) then
+
+          if( (D+7) > maxd )then
+                Day = (D+7-maxd);
+                  if (Month == 12 )then Month =1; Year = Year + 1;
+                   else Month = Month + 1;
+                  end
+             else
+              Day = D + 7;
+          end
+          i=i+1;
+                     SetNumGateValue(EventName,1,Year);
+                     SetNumGateValue(EventName,2,Month);
+                     SetNumGateValue(EventName,3,Day);
+       return true;
+      end //2
+    end
+
+
+
+
+    return false;
+end*/
+function bool awake(string EventName)
+
+    Int Crru_Date_Time_To_sec;
+    Int TR_Date_Time_To_sec;
+    Bool AWAKE = False;
+    int Period =    GetNumGateValue(EventName,0);
+    Int Referece_TIME = 0;
+    Int NEXT_UPDATE = 0;
+
+    Int TR_Day   = GetNumGateValue(EventName,3);
+    Int TR_Month = GetNumGateValue(EventName,2);
+    Int TR_Year  = GetNumGateValue(EventName,1);
+    Int TR_Hour  = GetNumGateValue("Update_Chrono",1);
+    Int TR_Min   = GetNumGateValue("Update_Chrono",2);
+    Int ONE_DAY     = 86400; // 24 hours
+     // MessageBox(EventName +"//"+ Period , TR_Day +"/"+ TR_Month +"/"+ TR_Year);
+
+     Crru_Date_Time_To_sec = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),0);
+
+     TR_Date_Time_To_sec   = DateTimeToSeconds( TR_Day,
+                                                TR_Month,
+                                                TR_Year,
+                                                TR_Hour,
+                                                TR_Min,0);
+
+    AWAKE = False;
+    IF ( Crru_Date_Time_To_sec >= TR_Date_Time_To_sec ) Then
+      AWAKE = True;
+      //////////Update
+        IF (Period == 4) then
+         Referece_TIME = DateTimeToSeconds( TR_Day , TR_Month , GetYear() , TR_Hour , TR_Min ,0);
+         NEXT_UPDATE   = DateTimeToSeconds( TR_Day , TR_Month , GetYear() +1 , TR_Hour , TR_Min ,0);
+         Else
+
+         IF (Period == 3) then
+          Referece_TIME = DateTimeToSeconds( TR_Day , GetMonth() , GetYear() , TR_Hour , TR_Min ,0);
+          TR_Month = GetMonth()+1;
+          NEXT_UPDATE   = DateTimeToSeconds( TR_Day , TR_Month , GetYear() , TR_Hour , TR_Min ,0);
+          Else
+
+          IF (Period == 2) then
+           Referece_TIME = DateTimeToSeconds( GetDayOfMonth() , GetMonth() , GetYear() , TR_Hour , TR_Min ,0);
+           //TR_Day = GetDayOfMonth() + 7;
+           NEXT_UPDATE = DateTimeToSeconds( TR_Day , GetMonth() , GetYear() , TR_Hour , TR_Min ,0);
+           NEXT_UPDATE =  NEXT_UPDATE + (7*ONE_DAY);
+           Else
+
+           IF (Period == 1) then
+            Referece_TIME = DateTimeToSeconds( GetDayOfMonth() , GetMonth() , GetYear() , TR_Hour , TR_Min ,0);
+            //TR_Day = GetDayOfMonth() + 1;
+            NEXT_UPDATE = DateTimeToSeconds( TR_Day , GetMonth() , GetYear() , TR_Hour , TR_Min ,0);
+            NEXT_UPDATE =  NEXT_UPDATE + ONE_DAY;
+           End// Period == 1 Daily
+
+          End//Period == 2  Weekly
+
+         End//Period == 3  Monthly
+
+        End//Period == 4  Yearly
+
+
+       SetNumGateValue(EventName,3,GetDayFromSeconds(NEXT_UPDATE)); // UPdate Next Check DAY
+       SetNumGateValue(EventName,2,GetMonthFromSeconds(NEXT_UPDATE));// UPdate Next Check Month
+       SetNumGateValue(EventName,1,GetYearFromSeconds(NEXT_UPDATE));// UPdate Next Check Year
+       //MessageBox(EventName +"//"+ Period , GetNumGateValue(EventName,3) +"/"+ GetNumGateValue(EventName,2) +"/"+ GetNumGateValue(EventName,1));
+        ////////////////
+    End
+
+     Return AWAKE;
+End
+//*****************************************************************************
+//          GetNDayofMonth
+//*****************************************************************************
+function int GetNDAY( int Year, int Month)
+
+    if ( Month == 1) then return 31; end
+
+    if ( Month == 2) then
+     if (Mod(Year,4) == 0 ) then return 29;
+     else  return 28; end end
+
+    if ( Month == 3) then return 31; end
+    if ( Month == 4) then return 30; end
+    if ( Month == 5) then return 31; end
+    if ( Month == 6) then return 30; end
+    if ( Month == 7) then return 31; end
+    if ( Month == 8) then return 31; end
+    if ( Month == 9) then return 30;  end
+    if ( Month == 10) then return 31;  end
+    if ( Month == 11) then return 30;  end
+    if ( Month == 12) then return 31;  end
+
+end
+//*****************************************************************************
+//          GetEMailCode(EventCode)
+//*****************************************************************************
+function void GetEMailList( string EventCode)
+    String FullPathFileName;
+    String WFullPathFileName;
+    int FileHandle;
+    int WFileHandle;
+    string TextRow;
+    int Pos; int i;
+    string EMAIL_CODE;
+    string LINEEVENTCODE;
+    bool FOUND = false;
+    bool empty = false;
+
+     FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\EventEMail\EventEMail.csv";
+     WFullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\EventEMail\TempReporting\SendEmailList.txt";
+
+
+
+     FileHandle=FileOpen(FullPathFileName,"rt");
+       if (FileHandle==0) then
+         MessageBox("File EventEMail or SendEmailList not Found","Error");
+         return;
+       end
+     WFileHandle = FileOpen(WFullPathFileName,"wt");
+
+      TextRow=FileReadLn(FileHandle);//header
+
+     while(FileEof(FileHandle)==0 && empty == false)
+
+          TextRow=FileReadLn(FileHandle);
+          if ( TextRow ==  "") then   empty = true ;
+            else
+
+               LINEEVENTCODE = Fetch_Event_Search(TextRow , 7 , ";");
+
+              EMAIL_CODE = Fetch_Event_Search(TextRow , 8 , ";");
+
+               if ( LINEEVENTCODE == EventCode ) then FOUND = true; end
+
+               if ( FOUND == true) then
+
+                   // RUNTIME_LOG
+                   Event_Runtime_LOG( "GetEMailList : " + LINEEVENTCODE +" to " +EMAIL_CODE );
+
+                   FileWriteLn(WFileHandle,EMAIL_CODE);
+                   FOUND = False;
+               end
+          end
+      end
+      FileClose(FileHandle);
+      FileClose(WFileHandle);
+
+end
+//*****************************************************************************
+//      Execute_Email()
+//*****************************************************************************
+function String Execute_Email(string EventAlarme_Name,string EventAlarme_REALNAME , String TriggerEmail)
+
+    String FullPathFileName;
+    int FileHandle;
+    string TextRow;
+    int Pos; int i;
+    string EMAIL_PARAMETERS = "";
+    string FILE_EMAILCODE = "";
+    bool Empty = false;
+     FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\EventEMail\TempReporting\SendEmailList.txt";
+     FileHandle=FileOpen(FullPathFileName,"rt");
+       if (FileHandle==0) then
+         MessageBox("File SendEmailList not Found","Error");
+         return;
+       end
+
+     while(FileEof(FileHandle)==0 && Empty == false)
+
+        TextRow = FileReadLn(FileHandle);
+
+          if (TextRow == "" ) then Empty=true;
+          else  Empty =false;
+          end
+
+            if (Empty==false)then
+             Email_ToExecute(TextRow,EventAlarme_REALNAME , TriggerEmail);
+
+            end
+
+     end
+
+      FileClose(FileHandle);
+
+end
+//*****************************************************************************
+//      Email_ToExecute(Email_Code)
+//*****************************************************************************
+function Void Email_ToExecute(string Email_Code , string EventAlarme_REALNAME , String TriggerEmail)
+
+    String FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\EMail\EMail.csv";
+    int FileHandle =FileOpen(FullPathFileName,"rt");
+    string TextRow;
+    string FileEmail_Code;
+    bool Empty = false;
+    int P;
+    string txt;
+    String NAME;
+    string CODE;
+    String DESCRIPTION;
+    string EMAILTO;
+    string EMAILCC;
+    string SUBJECT;
+    string BODY;
+    string ATTACHEMENT;
+
+    String ATTACHEMENT_DEFINER;
+    String ATTACHEMENT_NAME;
+    String ATTACHEMENT_CODE;
+    Int ATTACHEMENT_NBR = 0;
+
+    string TO_INTERNEL;
+    string CC_INTERNEL;
+    String BODY_FullPathFileName = ENV_PATH + "\DeskTopBI\Masters\PBI_Publish.txt" ;
+    Int    BODY_FileHandle;
+    String BODY_LIGNE;
+    Bool Found_MAIL = false;
+    Bool Email_OK = False;
+
+         if (FileHandle==0) then
+          MessageBox("File PBI_Publish not Found","Error");
+          return;
+         end
+
+
+       Found_MAIL = False;
+       While( FileEof(FileHandle)==0 )
+          TextRow = FileReadLn(FileHandle);
+
+            If (TextRow != "" || TextRow != "*") then
+
+              FileEmail_Code =  Fetch_ALARME( TextRow , 1 , ";");
+
+              If ( FileEmail_Code == Email_Code ) then
+
+               Found_MAIL = True;
+
+                NAME        = Fetch_ALARME( TextRow , 2 , ";");
+
+                EMAILTO     = Fetch_ALARME( TextRow , 3 , ";");
+
+                EMAILCC     = Fetch_ALARME( TextRow , 4 , ";");
+
+                SUBJECT     = Fetch_ALARME( TextRow , 5 , ";");
+
+                BODY        = Fetch_ALARME( TextRow , 6 , ";");
+
+                ATTACHEMENT = Fetch_ALARME( TextRow , 7 , ";");
+
+                TO_INTERNEL = Fetch_ALARME( TextRow , 9 , ";");
+
+                CC_INTERNEL = Fetch_ALARME( TextRow , 10 , ";");
+
+                ATTACHEMENT_DEFINER = Fetch_ALARME( ATTACHEMENT , 1 , ":");
+                ATTACHEMENT_CODE    = Fetch_ALARME( ATTACHEMENT , 2 , ":");
+                ATTACHEMENT_NAME    = Fetch_ALARME( ATTACHEMENT , 3 , ":");
+                ATTACHEMENT_NBR     = StrToInt( Fetch_ALARME( ATTACHEMENT , 4 , ":") );
+
+                // RUNTIME_LOG
+                //Event_Runtime_LOG( "Start send Email "+EventAlarme_REALNAME + " to "+  NAME);
+
+                //SUBJECT = EventAlarme_REALNAME + " : " + SUBJECT;
+
+                BODY = EventAlarme_REALNAME +Eol()+
+                       EVENT_FORMULA_TAG + Eol() +
+                       TriggerEmail+ Eol() +
+                       GetDateString("/",False) +"_"+ GetTimeString(":")+ Eol()  +  BODY;
+
+                ///////////////////////////////////////////////////////////////
+                    IF (ATTACHEMENT_DEFINER == "R") Then
+
+                       ATTACHEMENT = SingleReport_Generator( Fetch_ALARME( TextRow , 11 , ";") , EventAlarme_REALNAME , NAME );
+
+                    End
+                ///////////////////////////////////////////////////////////////
+
+                ///////////////////////////////////////////////////////////////
+                    IF (ATTACHEMENT_DEFINER == "FB") Then
+
+                       ATTACHEMENT = FACTBOOK_Generator( ATTACHEMENT_CODE,ATTACHEMENT_NAME, Fetch_ALARME( TextRow , 11 , ";") , EventAlarme_REALNAME , NAME , ATTACHEMENT_NBR);
+
+                    End
+                ///////////////////////////////////////////////////////////////
+
+                ///////////////////////////////////////////////////////////////
+                //MessageBox(ATTACHEMENT_DEFINER,"ATTACHEMENT_DEFINER");
+                   IF (ATTACHEMENT_DEFINER == "PBI") Then
+
+                    BODY_FileHandle =FileOpen(BODY_FullPathFileName,"rt");
+
+                    While ( FileEof(BODY_FileHandle)==0  )
+                        BODY_LIGNE = FileReadLn(BODY_FileHandle);
+                        BODY = BODY + Eol() + BODY_LIGNE;
+                    end
+
+                    FileClose(BODY_FileHandle);
+                    //MessageBox(ATTACHEMENT_CODE,"ATTACHEMENT_CODE");
+                    ATTACHEMENT = PBI_TableauViewEnergy( ATTACHEMENT_CODE );
+
+                    //MessageBox(ATTACHEMENT,FileExist(ATTACHEMENT));
+
+                   End
+
+                ///////////////////////////////////////////////////////////////
+
+                        IF ( FileExist(ATTACHEMENT) == True ) Then
+                            Event_Runtime_LOG( "Create Attache : "+ATTACHEMENT);
+                        Else
+                            Event_Runtime_LOG( "Attache NOT created : "+ATTACHEMENT);
+                        End
+
+                       Email_OK = SendEMail( TO_INTERNEL,CC_INTERNEL,SUBJECT,BODY,ATTACHEMENT,ATTACHEMENT_DEFINER);
+
+                       EVENT_FORMULA_TAG = "";
+
+              End //  FileEmail_Code == Email_Code
+
+            End //  TextRow != "" || TextRow != "*"
+
+       End // While
+                //***********************************
+       FileClose(FileHandle);
+
+        IF ( Found_MAIL == False) Then
+           // RUNTIME_LOG
+           Event_Runtime_LOG( " MAIL NOT Exist : " + FileEmail_Code  + " != " + Email_Code );
+        End
+
+
+
+end
+//*****************************************************************************
+//                      Send Mail demo procedure
+//*****************************************************************************
+Function Bool SendEMail( string Email_TO, String Email_CC, string Email_Subject, string Email_Body, string Email_Attach , String Report_Type)
+
+   string Ritorno;
+   String AttachementPath ;
+   String Directory;
+   string FullPathFileName;
+   int FileHandle;
+   string CreatedFileName;
+   int DAY      = GetDayOfMonth();
+   int MONTH    = GetMonth();
+   int YEAR     = GetYear();
+   int Hour    = GetHour();
+   int Min     = GetMinute();
+   string SDAY;     string SMONTH;    string SYEAR; string SMin;     string SHour;
+   string HostSMTPServer;
+   String UserName;
+   String Password;
+   string AddressFrom;
+   string EA = Email_Attach;
+   int P; int i;
+   String FULL_ATTACHFILE;
+   Bool SEND_OK = False;
+   String CONGIF_MAIL = "" ;
+   Bool ATTACH_EXIST = False;
+   //String SETUP_FILE = GetProjectPath() + "\Winlog\Settings\MAIL_SETUP.txt" ;
+
+    //AttachementPath = GetReportPATH( Email_Attach);
+    //FULL_ATTACHFILE = AttachementPath;
+
+    If( MAIL_SETUP_FLAG == false )Then
+        Event_Runtime_LOG( "Send MAIL : MAIL_SETUP_FLAG == " + MAIL_SETUP_FLAG );
+    end
+    ATTACH_EXIST = FileExist( Email_Attach );
+
+    //MessageBox(MAIL_SMTP_SERVER +"//"+MAIL_SMTP_PW,MAIL_ADDRESS_FROM);
+           Ritorno = SendMail(100000,
+                     MAIL_SMTP_SERVER,
+                     MAIL_USER,
+                     MAIL_SMTP_PW,
+                     MAIL_ADDRESS_FROM,
+                     Email_TO,             //MailTo
+                     Email_CC,             //CC
+                     Email_Subject,        //Subject
+                     Email_Body,           //BODY
+                     ATTACH_EXIST,
+                     Email_Attach);   //ATTACHEMENT
+      if (Ritorno == "") then
+       SEND_OK = True;
+       Event_Runtime_LOG( "Send MAIL : OK" );
+      else
+       SEND_OK = False;
+       Event_Runtime_LOG( "Send MAIL : KO  " +  Ritorno);
+      end
+        //MessageBox(Ritorno, "Ritorno");
+      Return SEND_OK;
+end
+//*****************************************************************************
+// Reading Recover File
+//*****************************************************************************
+function void InitialiseGates_Event()
+   int FileHandle;
+   string FullPathFileName = ENV_PATH +  "\Settings\INITIALGATES.txt";
+   string TextRow;
+   Bool Empty = false;
+///////////////////////////////////////////////////////////////
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File not Found","Error");  return;  end
+//////////////////////////////////////////////////////////////
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 && Empty == false)
+
+    TextRow = FileReadLn(FileHandle);
+      if ( TextRow == "") then Empty = true;
+      else
+         if (StrSubString(TextRow,1,2) != "/*") then
+          Analyse_InitialiseGates_Event(TextRow);
+         end
+      end
+
+   end
+     FileClose(FileHandle);
+end
+
+
+               /////   AnalyseData() "CSV File"    /////
+ function void Analyse_InitialiseGates_Event(string TextRow)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+String GATETYPE;
+String GATENAME;
+String GATEID;
+String GATEVALUE;
+
+            P = StrPos(txt,";");
+            GATETYPE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATENAME=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEID=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEVALUE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            if ( GATETYPE == "Num" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+            else
+                if ( GATETYPE == "Real" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToReal(GATEVALUE));
+                else
+                    if ( GATETYPE == "Dig" ) then
+                    SetDigGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+                    else
+                        if ( GATETYPE == "Str" ) then
+                        SetStrGateValue(GATENAME,StrToInt(GATEID),GATEVALUE);
+                        end
+                    end
+                end
+            end
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void ListenHistory()
+    Bool AwakeD = False;
+    Bool AwakeW = False;
+    Bool AwakeM = False;
+    Bool AwakeY = False;
+
+
+          AwakeD = awake("EDaily_H_Update");
+
+          While ( AwakeD == True )
+            AwakeD = awake("EDaily_H_Update");
+            IF ( AwakeD == False ) Then UpdateHistory("DAILY"); End
+            SET_SystemEvents();
+            GET_SystemEvents();
+            // RUNTIME_LOG
+            Event_Runtime_LOG( "AwakeD : Update DAILY" );
+          End
+
+          AwakeW = awake("EWeek_H_Update");
+
+          While ( AwakeW == True )
+            AwakeW = awake("EWeek_H_Update");
+            IF ( AwakeW == False ) Then UpdateHistory("WEEKLY"); End
+            SET_SystemEvents();
+            GET_SystemEvents();
+            // RUNTIME_LOG
+            Event_Runtime_LOG( "AwakeW : Update WEEKLY" );
+          End
+
+          AwakeM = awake("EMonth_H_Update");
+
+          While ( AwakeM == True )
+            AwakeM = awake("EMonth_H_Update");
+            IF ( AwakeM == False ) Then UpdateHistory("MONTHLY"); End
+            SET_SystemEvents();
+            GET_SystemEvents();
+            // RUNTIME_LOG
+            Event_Runtime_LOG( "AwakeM : Update MONTHLY" );
+          End
+
+          AwakeY = awake("EYear_H_Update");
+
+          While ( AwakeY == True )
+            AwakeY = awake("EYear_H_Update");
+            IF ( AwakeY == False ) Then UpdateHistory("YEARLY"); End
+            SET_SystemEvents();
+            GET_SystemEvents();
+            // RUNTIME_LOG
+            Event_Runtime_LOG( "AwakeY : Update YEARLY" );
+          End
+
+end
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+function void UpdateHistory(string PERIOD)
+
+string Path;
+string GATESTYPE;
+int CC ;
+int CCMax = GetNumGateValue("MaxCompteur",0);
+string CCCode;
+
+  if ( PERIOD == "DAILY")then
+      Path =ENV_PATH +  "\Data\1 HISTORY\J_H\" ;
+      GATESTYPE = "J";
+    else
+      if ( PERIOD == "WEEKLY" ) then
+          Path =ENV_PATH +  "\Data\1 HISTORY\W_H\";
+          GATESTYPE = "W";
+        else
+            if ( PERIOD == "MONTHLY") then
+              Path =ENV_PATH +  "\Data\1 HISTORY\M_H\";
+              GATESTYPE = "M";
+             else
+                 if ( PERIOD == "YEARLY" ) then
+                  Path =ENV_PATH +  "\Data\1 HISTORY\A_H\";
+                  GATESTYPE = "A";
+                 end
+          end
+     end
+ end
+
+ CCMax = GetNumGateValue("MaxCompteur",0);
+
+    for CC = 1 to CCMax do
+
+        CCCode = GetStrGateValue("Compteur_Code",CC);
+        CCUpdateHistory_File(CCCode , CC,Path,GATESTYPE);
+        CCUpdateHistory_Gates(CCCode , CC,Path,GATESTYPE);
+    end
+    Init_MIN_MAX_MOY( GATESTYPE);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+function void Init_MIN_MAX_MOY( STRING GATESTYPE)
+
+    Int i = 0;  Int K = 0;
+    String P_FixEnergy;
+    String CompteurTrueNumber;
+    String INPUTCODE;
+    Int LIST_NBR_SAMPLING;
+    Int LIST_TOTAL_SAMPLING;
+    Int LIST_MIN;
+    Int LIST_MAX;
+
+    IF ( GATESTYPE == "J" ) Then
+    LIST_NBR_SAMPLING = 101;
+    LIST_TOTAL_SAMPLING = 105;
+    LIST_MIN = 4;
+    LIST_MAX = 8;
+        Else
+        IF (GATESTYPE == "W") Then
+         LIST_NBR_SAMPLING = 102;
+         LIST_TOTAL_SAMPLING = 106;
+         LIST_MIN = 5;
+         LIST_MAX = 9;
+            Else
+            IF (GATESTYPE == "M") Then
+              LIST_NBR_SAMPLING = 103;
+              LIST_TOTAL_SAMPLING = 107;
+              LIST_MIN = 6;
+              LIST_MAX = 10;
+                Else
+                IF (GATESTYPE == "A") Then
+                    LIST_NBR_SAMPLING = 103;
+                    LIST_TOTAL_SAMPLING = 108;
+                    LIST_MIN = 7;
+                    LIST_MAX = 11;
+                End
+            End
+        End
+     End
+
+    For i = 1 to GetNumGateValue("MaxCompteur",0) do
+
+     For K = 1 to GetNumGateValue("EnergyMax",0) do
+      IF ( GetStrGateValue("Compteur_Energy",i) == GetStrGateValue("Energy_Name",K)) then
+       P_FixEnergy = GetStrGateValue("PreFix_InPut",K);
+       CompteurTrueNumber = StrDelete(GetStrGateValue("Compteur_Code",i),1,GetNumGateValue("NBR_PRFIX_OUTP",K));
+      End
+     End
+
+
+     INPUTCODE = P_FixEnergy+CompteurTrueNumber;
+
+      If ( GetStrGateValue("Compteur_Energy",i) == "Temperature" ) Then
+        // Initailise Sampling Nbr
+
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        // Initialise Total
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,LIST_MIN,1000);
+        SetNumGateValue(INPUTCODE,LIST_MIN,1000);
+        SetNumGateValue(INPUTCODE,LIST_MIN,1000);
+        SetNumGateValue(INPUTCODE,LIST_MIN,1000);
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,LIST_MAX,-1000);
+        SetNumGateValue(INPUTCODE,LIST_MAX,-1000);
+        SetNumGateValue(INPUTCODE,LIST_MAX,-1000);
+        SetNumGateValue(INPUTCODE,LIST_MAX,-1000);
+      End
+
+      If ( GetStrGateValue("Compteur_Energy",i) == "Humidite" ) Then
+        // Initailise Sampling Nbr
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_NBR_SAMPLING,0);
+        // Initialise Total
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+        SetNumGateValue(INPUTCODE,LIST_TOTAL_SAMPLING,0);
+
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,LIST_MIN,100);
+        SetNumGateValue(INPUTCODE,LIST_MIN,100);
+        SetNumGateValue(INPUTCODE,LIST_MIN,100);
+        SetNumGateValue(INPUTCODE,LIST_MIN,100);
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,LIST_MAX,0);
+        SetNumGateValue(INPUTCODE,LIST_MAX,0);
+        SetNumGateValue(INPUTCODE,LIST_MAX,0);
+        SetNumGateValue(INPUTCODE,LIST_MAX,0);
+      End
+
+
+
+
+    End
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void UpdateInPeriode(string PERIOD)
+
+string Path;
+string GATESTYPE;
+int CC ;
+int CCMax = GetNumGateValue("MaxCompteur",0);
+string CCCode;
+
+      Path =ENV_PATH +  "\Data\1 HISTORY\J_H\" ;
+      GATESTYPE = "J";
+ CCMax = GetNumGateValue("MaxCompteur",0);
+
+    for CC = 1 to CCMax do
+
+        CCCode = GetStrGateValue("Compteur_Code",CC);
+        CCUpdateHistory_File(CCCode , CC,Path,GATESTYPE);
+
+    end
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void CCUpdateHistory_File( string CCCode , int CC,string Path, string GATESTYPE)
+
+bool efound = false;
+Bool Objectif = False;
+string CCFileName;
+int FileHandle;
+int Maxcol; int i;int maxenergy;
+int col;
+string CompteurTrueNumber;
+string listln;
+string ysrdy;
+String PathUpdate;
+int ListNumber;
+int LastNumber;
+int List_Update;  int List_insert;
+string EnergyInitial;
+string L;
+String Objectif_Gate;
+  string Row =  GetMonth()+"/"+ GetDayOfMonth()+"/"+GetYear()+";"+GetStrGateValue("Compteur_Energy", CC )+";"+CCCode ;
+string update_GATES_FileName;
+int update_GATES_FileHandle;
+string ystrdy_GATES_FileName;
+int ystrdy_GATES_FileHandle;
+
+//Write to History file
+
+          efound = false;
+          i=0;
+          maxenergy = GetNumGateValue("EnergyMax",0);
+         // Etablir type d energy du compteur
+         While ( efound == false && i< maxenergy)
+           i = i+1;
+            if ( GetStrGateValue("Compteur_Energy", CC ) == GetStrGateValue("Energy_Name",i)) then
+                efound = true;
+                EnergyInitial = GetStrGateValue("PreFix_InPut",i);
+            end
+         end
+
+         if (efound == False || i> maxenergy) then
+         return; end
+
+         if (GetStrGateValue("Compteur_Energy", CC ) == "") then
+           return;
+         end
+
+
+         PathUpdate = ENV_PATH +  "\Data\1 HISTORY\1-UPDATEGATES\";
+          update_GATES_FileName = PathUpdate + GetStrGateValue("Compteur_Energy", CC ) + "_" +GATESTYPE+ ".txt";
+          update_GATES_FileHandle = FileOpen(update_GATES_FileName,"rt");
+        if ( update_GATES_FileHandle == 0) then return; end
+
+
+        efound = true;
+        i=0;
+        While( FileEof(update_GATES_FileHandle)==0 && efound == true)
+                listln = FileReadLn(update_GATES_FileHandle);
+                i= i +1;
+               if (listln == "" )then efound = false; End
+
+               If (efound == True && StrSubString(listln,1,2) == "O:") Then Objectif = True; End
+
+                If (efound == True && Objectif == False )Then
+
+                    ListNumber = StrToInt(listln);
+
+                    if (CmpGateExists(CCCode,ListNumber) == true ) then
+
+                        Row = Row +";"+ GetCmpGateValue(CCCode,ListNumber);
+                        if ( Mod(i,2) != 0) then
+                         List_insert = ListNumber;
+                         //Else
+                            /*If (CompteurTrueNumber(CCCode,GetStrGateValue("Compteur_Energy", CC )) != "-1") then
+                            Objectif_Gate = CompteurTrueNumber(CCCode,GetStrGateValue("Compteur_Energy", CC ));
+                             if ( NumGateExists(Objectif_Gate,ListNumber) == true ) then
+
+                                SetNumGateValue(Objectif_Gate,ListNumber,GetCmpGateValue(CCCode,List_insert));
+                             End
+                            End*/
+
+                        End
+                    else
+                        Row = Row +";"+"";
+                    end
+
+                end
+
+                If (Objectif == True )Then
+                  Objectif_Gate = "O" + CompteurTrueNumber(CCCode,GetStrGateValue("Compteur_Energy", CC ));
+                  listln = StrDelete(listln,1,2);
+                  ListNumber = StrToInt(listln);
+
+                   if ( NumGateExists(Objectif_Gate,ListNumber) == true ) then
+                        Row = Row +";"+ GetNumGateValue(Objectif_Gate,ListNumber);
+                    else
+                        Row = Row +";"+"";
+                    end
+
+                 Objectif = false;
+                End
+
+        end
+
+
+        FileClose(update_GATES_FileHandle);
+
+
+        Row = Row +";"+ GetTimeString(":");
+
+        CCFileName = Path + GetStrGateValue("Compteur_Energy", CC )+".csv" ;
+        If ( FileExist( CCFileName ) == False )Then
+          FileCopy( Path + "Source\" + GetStrGateValue("Compteur_Energy", CC )+".csv" ,CCFileName,False);
+        End
+
+        FileHandle = FileOpen(CCFileName,"at");
+
+        FileWriteLn(FileHandle,Row);
+        FileClose(FileHandle);
+End
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// Set History Gates  THIS FOR LAST READING INTITIALISATION J-1 W-1 M-1 Y-1
+//HISTORY UPDATE LJ LW,LM LY
+//////////////////////////////////////////////////////////////////////////////////////////////////
+function void CCUpdateHistory_Gates( string CCCode , int CC,string Path, string GATESTYPE)
+
+
+bool efound = false;
+Bool Objectif = False;
+string CCFileName;
+int FileHandle;
+int Maxcol; int i;int maxenergy;
+int col;
+string CompteurTrueNumber;
+string listln;
+string ysrdy;
+String PathUpdate;
+int ListNumber;
+int LastNumber;
+int List_Update;  int List_insert;
+string EnergyInitial;
+string L;
+String Objectif_Gate;
+  string Row =  GetMonth()+"/"+ GetDayOfMonth()+"/"+GetYear()+";"+GetStrGateValue("Compteur_Energy", CC )+";"+CCCode ;
+string update_GATES_FileName;
+int update_GATES_FileHandle;
+string ystrdy_GATES_FileName;
+int ystrdy_GATES_FileHandle;
+String UPDATE_LastVIEW = "L";
+String RAZ_VIEW = "R";
+String RAZ_Calculated = "C";
+String UPDATE ;
+
+// Set History Gates  THIS FOR LAST READING INTITIALISATION J-1 W-1 M-1 Y-1
+//NOT HISTORY UPDATE LJ LW,LM LY
+
+        CompteurTrueNumber = CompteurTrueNumber(CCCode, GetStrGateValue("Compteur_Energy", CC ));
+        if ( CompteurTrueNumber == "-1") then return; end
+
+          ysrdy=CompteurTrueNumber+"_"+GATESTYPE+"-1";
+          PathUpdate = ENV_PATH +  "\Data\1 HISTORY\1-UPDATEGATES\";
+
+          ystrdy_GATES_FileName = PathUpdate + GetStrGateValue("Compteur_Energy", CC ) + "_J-1.txt";
+
+          ystrdy_GATES_FileHandle = FileOpen(ystrdy_GATES_FileName,"rt");
+
+        if ( ystrdy_GATES_FileHandle == 0) then return; end
+
+        //update ystrdy gates
+        i=0;
+
+        efound = true;
+
+        While( FileEof( ystrdy_GATES_FileHandle)==0 && efound == true)
+
+             listln = FileReadLn(ystrdy_GATES_FileHandle);
+              //MessageBox(listln,"listln");
+                if (listln !="" )then
+                 UPDATE = Fetch_Alarm_search(listln, 1 , ",");
+
+                 IF ( UPDATE == UPDATE_LastVIEW ) Then
+                  ListNumber = StrToInt( Fetch_Alarm_search(listln, 2 , ",") );
+                  LastNumber = StrToInt( Fetch_Alarm_search(listln, 3 , ",") );
+
+                  //Update LJ LW LM LA
+
+                     if (NumGateExists(CompteurTrueNumber,ListNumber) == true) then
+
+                       //MessageBox( GetNumGateValue(CompteurTrueNumber,ListNumber ) ,ListNumber );
+
+                       SetNumGateValue(CompteurTrueNumber,ListNumber,GetCmpGateValue(CCCode,LastNumber));
+
+                       //MessageBox( GetNumGateValue(CompteurTrueNumber,ListNumber ) ,ListNumber );
+
+                     end
+                 End
+
+                 IF ( UPDATE == RAZ_VIEW ) Then
+                  ListNumber = StrToInt( Fetch_Alarm_search(listln, 2 , ",") );
+                  LastNumber = StrToInt( Fetch_Alarm_search(listln, 3 , ",") );
+                   //Update J-1 W-1 M-1 A-1
+                       if (NumGateExists(ysrdy,ListNumber) == true ) then
+
+                        IF ( GetStrGateValue("Compteur_Formule",CC) == "Reel" ) Then
+                          SetNumGateValue(ysrdy,ListNumber,GetNumGateValue(CompteurTrueNumber,LastNumber));
+                         //Else
+                          //SetNumGateValue(CompteurTrueNumber,17,0);
+                        End
+
+                       end
+                 End
+                 IF ( UPDATE == RAZ_Calculated ) Then
+                  ListNumber = StrToInt( Fetch_Alarm_search(listln, 2 , ",") );
+                  LastNumber = StrToInt( Fetch_Alarm_search(listln, 3 , ",") );
+
+                   if (GetStrGateValue("Compteur_Formule",CC) != "Reel"  ) then
+
+                    if (NumGateExists(CompteurTrueNumber,ListNumber) == true ) then
+                    //MessageBox(CompteurTrueNumber + "//"+ ListNumber,LastNumber);
+                    SetNumGateValue(CompteurTrueNumber,ListNumber,LastNumber);
+                    End
+
+                   End
+
+                 End
+               end
+
+
+        end
+
+        FileClose(ystrdy_GATES_FileHandle);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function string CompteurTrueNumber(string CCCode, String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+          While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CCCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+             Else
+             i = i +1;
+            End
+
+         End
+
+        if ( found == True ) then
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+
+        Else
+        Return "-1" ;
+        End
+end
+///////////////////////////////////////////////////////////////////////////////
+///////
+///////////////////////////////////////////////////////////////////////////////
+function void BUILD_ALARME()
+
+    string CODE_BLOB;
+    String FullPathFileName;
+    int FileHandle;
+
+    String HEADER_FullPathFileName;
+    int HEADER_FileHandle;
+
+    String LOGFullPathFileName;
+    int LOGFileHandle;
+    int i;
+    String CurrLigne;
+    Bool Empty_Flag = False;
+    Bool Exist = False;
+    int IF_COUNTER;
+    String ParsedFormule;
+    HEADER_FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Create_ALARME\AlarmeList.txt";
+                            Check_ALAME();
+                            FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Alarme_F_Reporting"+GetYear()+GetMonth()+GetDayOfMonth()+GetHour()+GetMinute()+".csv";
+                            FileCopy(ENV_PATH +  "\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv",FullPathFileName,False);
+                            FileCopy(ENV_PATH +  "\Files\DATAMODELFiles\Event\TEMP_Alarme_F_Reporting.csv",ENV_PATH +  "\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv",False);
+      IF ( FileExist( HEADER_FullPathFileName ) == True ) Then FileDelete( HEADER_FullPathFileName ); End
+     String PROG_FullPathFileName =  ENV_PATH +  "\Files\DATAMODELFiles\Event\Create_ALARME\Alarme_EXECUTION_V"+ GetStrGateValue("Version",0) +".wll";
+     Int PROG_FileHandle = FileOpen(PROG_FullPathFileName,"wt");
+
+    FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if (FileHandle==0) then   MessageBox(FullPathFileName,"File Not found");  Return; end
+
+    LOGFullPathFileName = ENV_PATH +  "\BuildLOG.txt";
+    LOGFileHandle = FileOpen(LOGFullPathFileName,"at");
+
+    FileWriteLn(LOGFileHandle,"********** Start BUILD_ALARME : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+    CurrLigne = FileReadLn(FileHandle); // Header
+
+     While( FileEof(FileHandle)==0 && Empty_Flag == False)
+
+        CurrLigne = FileReadLn(FileHandle);
+        ParsedFormule = Fetch_Alarm_search(CurrLigne, 4, ";");
+
+        IF (Fetch_Alarm_search(CurrLigne, 1, ";") == "" ) Then
+            Empty_Flag = True;
+         Else
+            Empty_Flag = False;
+        End
+
+
+        IF (Empty_Flag == False && StrSubString(ParsedFormule,1,2) != "!~" ) Then
+
+            Formule_ALARME(Fetch_Alarm_search(CurrLigne, 1, ";")  , CurrLigne, PROG_FileHandle );
+
+        End
+
+
+     End
+
+     //////////////////////////// Listen Alarme Header
+
+     HEADER_FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Create_ALARME\LISTEN_ALARME_HEADER.txt";
+     HEADER_FileHandle =  FileOpen(HEADER_FullPathFileName,"rt");
+
+     If ( HEADER_FileHandle == 0) Then MessageBox(HEADER_FullPathFileName,"HEADER_FullPathFileName"); End
+
+     While( FileEof(HEADER_FileHandle)==0  )
+        CurrLigne = FileReadLn(HEADER_FileHandle);
+        FileWriteLn(PROG_FileHandle,CurrLigne);
+
+     End
+
+     FileClose(HEADER_FileHandle);
+
+     /////////////////////////////////////////////////
+
+     //////////////////////////// ALARME LIST
+
+     HEADER_FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Create_ALARME\AlarmeList.txt";
+     IF ( FileExist(HEADER_FullPathFileName) == True ) Then
+
+        HEADER_FileHandle =  FileOpen(HEADER_FullPathFileName,"rt");
+
+        If ( HEADER_FileHandle != 0) Then // MessageBox(HEADER_FullPathFileName,"HEADER_FullPathFileName"); End
+
+        IF_COUNTER = 0;
+        Exist = False;
+
+        While( Exist == False  )
+
+            CurrLigne = FileReadLn(HEADER_FileHandle);
+
+            IF ( FileEof(HEADER_FileHandle)!=0 || CurrLigne == "" ) then Exist = TRUE;
+            Else Exist = False;
+            End
+
+            IF ( Exist == False )Then
+
+                IF (IF_COUNTER > 0 ) Then
+                FileWriteLn(PROG_FileHandle,StrOfChar(9,IF_COUNTER) +"  Else");
+                End
+
+                CODE_BLOB = StrOfChar(9,IF_COUNTER) + "  IF ( ALARME_CODE == "+CharToStr(34)+ CurrLigne +CharToStr(34)+" ) THEN  " + CurrLigne +"( ALARME_NAME , ALARME_OBJECTIF , ALARME_OPERATEUR );";
+                IF_COUNTER = IF_COUNTER+1;
+                FileWriteLn(PROG_FileHandle,CODE_BLOB);
+
+            End // Exist
+
+        End // While
+
+        End
+
+     End
+
+
+        for i = 1 to IF_COUNTER do
+            FileWriteLn(PROG_FileHandle, StrOfChar( 9,IF_COUNTER -i ) + " End // IF NUM = " + i);
+        end
+
+        FileWriteLn(PROG_FileHandle,"       End // IF !=EMPTY");
+        FileWriteLn(PROG_FileHandle,"     End // WHILE");
+        FileWriteLn(PROG_FileHandle,"    SAVE_PLUS( GetProjectPath() + " + CharToStr(34) +  "\Winlog\Files\DATAMODELFiles\Event\" + CharToStr(34) + " , " + CharToStr(34) + "Alarme_F_Reporting.csv"
+                                         + CharToStr(34) +", ALARME_AWAKE_LIST_FullPathFileName );");
+        FileWriteLn(PROG_FileHandle,"  FileClose(ALARME_AWAKE_LIST_FileHandle);");
+        FileWriteLn(PROG_FileHandle,"End // FUNCTION");
+
+     FileClose(HEADER_FileHandle);
+     /////////////////////////////////////////////////
+
+     FileWriteLn(LOGFileHandle,"**********  End BUILD_ALARME : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+     FileClose(FileHandle);
+     FileClose(LOGFileHandle);
+     FileClose(PROG_FileHandle);
+
+     //FileCopy(PROG_FullPathFileName,GetProjectPath() + "\Code\Alarme_EXECUTION_V"+ GetStrGateValue("Version",0) +".wll",False);
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3
+///////////////////////////////////////////////////////////////////////////////
+function void Formule_ALARME(String ALARME_CODE , String ALARME_LIGNE, Int PROG_FileHandle)
+    String List_Ligne;
+    String Formule_Ligne;
+    String FullPathFileName;
+    string Log;
+    String INPUT;
+    String API;
+    string INPUT_CODE;
+    string Formule;
+    String COMPTEUR_CODE;
+
+    Int Log_FileHandle;
+    String LogFullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Create_ALARME\AlarmeList.txt";
+    Log_FileHandle = FileOpen(LogFullPathFileName,"at");
+
+
+
+    FileWriteLn(PROG_FileHandle," // Start "+ ALARME_CODE);
+    COMPTEUR_CODE = Fetch_Alarm_search(ALARME_LIGNE,2,";");
+    COMPTEUR_CODE = Fetch_Alarm_search(COMPTEUR_CODE,1,"$");
+    Log = Header_Decleration_ALARME( PROG_FileHandle,ALARME_CODE, COMPTEUR_CODE );
+    FileWriteLn(Log_FileHandle,Log);
+
+    ALARME_Formule_Ligne(PROG_FileHandle,ALARME_LIGNE);
+
+     FileWriteLn(PROG_FileHandle,"END");
+     FileWriteLn(PROG_FileHandle," // END "+ ALARME_CODE);
+     FileWriteLn(PROG_FileHandle,Eol());
+
+
+    FileClose(Log_FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.1
+///////////////////////////////////////////////////////////////////////////////
+function String Header_Decleration_ALARME(Int WFileHandle, String ALARME_CODE , String COMPTEUR_CODE)
+    String Ligne;
+
+  Ligne = "function void " + ALARME_CODE + "( String ALARME_NAME , String ALARME_OBJECTIF , String ALARME_OPERATEUR)";
+  FileWriteLn(WFileHandle,Ligne);
+
+  FileWriteLn(WFileHandle,"      Real RESULTAT; ");
+  FileWriteLn(WFileHandle,"      String STR_OBJECTIF; ");
+  FileWriteLn(WFileHandle,"      Real REAL_OBJECTIF;");
+  FileWriteLn(WFileHandle,"      String Condition;");
+  FileWriteLn(WFileHandle,"      String TriggerEmail;");
+  FileWriteLn(WFileHandle,"      String AlarmeCode = " + CharToStr(34) + ALARME_CODE + CharToStr(34) +";");
+
+  FileWriteLn(WFileHandle,"      String CompteurCode = " + CharToStr(34) + COMPTEUR_CODE + CharToStr(34) +";");
+
+  FileWriteLn(WFileHandle,"     If ( STR_OBJECTIF == "+CharToStr(34)+"NA"+CharToStr(34)+" ) Then Return ; End");
+  FileWriteLn(WFileHandle,"     REAL_OBJECTIF = StrToReal(ALARME_OBJECTIF);");
+  FileWriteLn(WFileHandle,"     RESULTAT = GetCmpGateValue(CompteurCode,0);");
+
+  return  ALARME_CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.2
+///////////////////////////////////////////////////////////////////////////////
+
+function void ALARME_Formule_Ligne(Int WFileHandle, String ALARME_LIGNE)
+
+
+  String BUILDLOGFileName;
+  Int BUILDLOGFileHandle;
+  String Ligne;
+  Int i;
+  String P_FixEnergy;
+  String INPUT_CODE;
+  String API;
+  String CompteurTrueNumber;
+  String Formule = "" ;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")"; String Equal = "=";
+
+  String F_SQRT = "Sqrt"; String F_SIN = "Sin"; String F_COS = "Cos";   String F_TAN = "Tan";
+  String F_ABS = "Abs"; String F_ARCSIN = "ArcSin"; String F_ARCCOS = "ArcCos";   String F_ARCTAN = "ArcTan";
+  String F_EXP = "Exp"; String F_LOG = "Log"; String F_ROUND = "Round";   String F_POW = "Pow"; String F_MOD = "Mod";
+  String F_FILS = "F"; String F_INC = "I";
+  int Pos;
+  String ListFlag = "";
+  String CompteurFlag;
+  String RESULT_BLOB;
+  String FORMULE_BLOB;
+  String IF_BLOB;
+
+  String CCR_COMPTEUR;
+  String CCR_LIST;
+  String ALARME_OPERATEUR;
+  String ALARME_OBJECTIF;
+  String ALARME_CODE;
+  String MasterCompteurList;
+  Int Div_POS;
+  Int TF = 0;
+  Int F = 0;
+  Int NestedFlag = 0;
+  Int MAX_Div = 10;
+  Bool INC_Flag = False;
+  //String CCR_LIST_NAME;
+
+  String ALARME_ParsedFormule = Fetch_Alarm_search(ALARME_LIGNE,4,";");
+  String COMPTEUR_CODE = Fetch_Alarm_search(ALARME_LIGNE,2,";");
+    String INPUT;
+
+
+    //CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    Formula_STR_TO_FILE( ALARME_ParsedFormule,COMPTEUR_CODE, "ALARME");
+
+  ////////////////////////////////////////////////////////////////////////////
+  String FullPathFileName =  ENV_PATH +  "\Files\AllCompteur\Calcule\FORMULES.txt";
+  Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+  API = "GetCmpGateValue("+CharToStr(34);
+
+  Ligne = FileReadLn(FileHandle);
+  CCR_COMPTEUR = Fetch_Alarm_search(Ligne,1,"$");
+  MasterCompteurList = Fetch_Alarm_search(Ligne,1,"=");
+  CCR_LIST = Fetch_Alarm_search(MasterCompteurList,2,"$");
+
+        /* While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CCCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+             Else
+             i = i +1;
+            End
+
+         End
+
+    CCR_LIST_NAME = GETLISTLABAL(GetStrGateValue("Compteur_Energy",i),StrToInt(CCR_LIST))*/
+
+  FORMULE_BLOB = "RESULTAT = ";
+
+  RESULT_BLOB = "SetNumGateValue("+CharToStr(34)+CCR_COMPTEUR+CharToStr(34)+","+CCR_LIST+","+
+                                  "GetNumGateValue("+CharToStr(34)+CCR_COMPTEUR+CharToStr(34)+","+CCR_LIST+") + 1 );";
+
+  INPUT = CCR_COMPTEUR;
+  Ligne = FileReadLn(FileHandle); // =
+
+
+
+            While(FileEof(FileHandle)==0)//Formule File
+             Ligne = FileReadLn(FileHandle);
+
+
+                if ( Ligne != "") then
+
+
+                Div_POS = StrPos(Ligne,":");
+
+                 IF ( Div_POS > 0 ) Then
+
+                  TF = StrToInt( StrSubString(Ligne,1,Div_POS-1) );
+
+                  IF ( F == 0 ) Then
+                    F = TF;
+                  Else
+                   IF ( TF < F ) Then
+                        IF ( NestedFlag > 0 ) Then NestedFlag = NestedFlag -1; Else NestedFlag = 1; End
+                         IF ( F <= MAX_Div ) Then
+                          Write_IF_Expression( F , WFileHandle , NestedFlag );
+                          F = TF ;
+                         Else
+                          FileWriteLn(BUILDLOGFileHandle,"Error Calculatrice : Formule_Ligne : If Conditions == " + F);
+                         End
+                   End
+                   IF ( TF > F ) Then
+                        F = TF ;
+                        NestedFlag = NestedFlag +1;
+                   End
+                  End
+
+                Else // Div_POS == 0
+
+                         IF (Ligne == Open || Ligne == Add || Ligne == Sub || Ligne == Div || Ligne == Mult || Ligne == Close || Ligne == Equal ||
+                             Ligne == F_SQRT || Ligne == F_SIN || Ligne == F_COS || Ligne == F_TAN || Ligne == F_ABS || Ligne == F_ARCSIN ||
+                             Ligne == F_ARCCOS || Ligne == F_ARCTAN || Ligne == F_EXP || Ligne == F_LOG || Ligne == F_ROUND || Ligne == F_POW ||
+                             Ligne == F_MOD || Ligne == F_FILS || Ligne == F_INC) Then
+
+                             IF (Ligne == F_INC )Then INC_Flag = True;  End
+                         FORMULE_BLOB = FORMULE_BLOB + Ligne ;
+                         IF ( F > 0 ) Then Construct_IF_Part( F , Ligne ) ; End
+
+                         Else
+                        // Compteur Found
+                            If ( StrSubString(Ligne,1,1) != "#" ) then
+
+
+
+                                   CCR_COMPTEUR = Fetch_Alarm_search(Ligne,1,"$");
+                                   MasterCompteurList = Fetch_Alarm_search(Ligne,1,"=");
+                                   CCR_LIST = Fetch_Alarm_search(MasterCompteurList,2,"$");
+                                    //MessageBox(Ligne,INC_Flag);
+                                   If ( INC_Flag == True ) Then
+                                    FORMULE_BLOB = FORMULE_BLOB +CharToStr(34) +  CCR_COMPTEUR + CharToStr(34)+","+ " EXECUTE_ALARMELINE " ;
+                                    INC_Flag = False;
+                                   Else
+                                    FORMULE_BLOB = FORMULE_BLOB + API + CCR_COMPTEUR + CharToStr(34)+","+CCR_LIST+")" ;
+                                   End
+
+                                   IF ( F > 0 ) Then Construct_IF_Part( F , API + CCR_COMPTEUR + CharToStr(34)+","+CCR_LIST+")" ) ; End
+
+
+                             Else//Ligne == Num
+
+                             FORMULE_BLOB = FORMULE_BLOB + StrDelete(Ligne,1,1);
+                             IF ( F > 0 ) Then Construct_IF_Part( F ,  StrDelete(Ligne,1,1) ) ; End
+
+
+                          End //Ligne == Num
+                      End//Ligne == Operateur
+                    //End//Ligne == Compteur
+                 End // Div_POS > 0
+                End//Ligne != ""
+            End//Formule File
+
+
+
+        ALARME_OPERATEUR = Fetch_Alarm_search(ALARME_LIGNE,5,";");
+        ALARME_OBJECTIF = Fetch_Alarm_search(ALARME_LIGNE,6,";");
+        ALARME_CODE = Fetch_Alarm_search(ALARME_LIGNE,1,";");
+
+        IF_BLOB = "   If ( RESULTAT " +ALARME_OPERATEUR+ " REAL_OBJECTIF ) THEN  ";
+
+
+         FileWriteLn(WFileHandle,FORMULE_BLOB  + ";");
+
+
+         FileWriteLn(WFileHandle,"      SetNumGateValue("+CharToStr(34)+INPUT+CharToStr(34)+",42,"+
+                                        "GetNumGateValue("+CharToStr(34)+INPUT+CharToStr(34)+",42) + 1 );");
+
+         FileWriteLn(WFileHandle,IF_BLOB);
+         FileWriteLn(WFileHandle,RESULT_BLOB);
+         FileWriteLn(WFileHandle,"      Condition = RESULTAT +"+CharToStr(34)+" "+CharToStr(34)+
+                                              "+ ALARME_OPERATEUR +"+CharToStr(34)+" "+CharToStr(34)+ "+REAL_OBJECTIF;");
+         FileWriteLn(WFileHandle,"      Listen_ADD_TO_AAL(CompteurCode , AlarmeCode , Condition );");
+
+          FileWriteLn(WFileHandle,"     GetEMailList(" +CharToStr(34)+ ALARME_CODE +CharToStr(34)+ ");");
+
+          FileWriteLn(WFileHandle,"     TriggerEmail = "+ "RESULTAT +"+CharToStr(34)+" "+CharToStr(34)+
+                                        "+ ALARME_OPERATEUR+"+CharToStr(34)+" "+CharToStr(34)+"+REAL_OBJECTIF" +";");
+
+          FileWriteLn(WFileHandle,"     Execute_Email("+CharToStr(34)+ ALARME_CODE +CharToStr(34)+ ",ALARME_NAME,TriggerEmail);");
+         FileWriteLn(WFileHandle,"     Else");
+         FileWriteLn(WFileHandle,"      Listen_DELETE_FROM_AAL(CompteurCode , AlarmeCode );");
+
+
+
+         FileWriteLn(WFileHandle,"END");
+
+   FileClose(FileHandle);
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+///////
+///////////////////////////////////////////////////////////////////////////////
+function void Check_ALAME()
+
+    String FullPathFileName;
+    int FileHandle;
+
+    String TEMPFullPathFileName;
+    int TEMPFileHandle;
+
+    String LOGFullPathFileName;
+    int LOGFileHandle;
+
+    String CurrLigne;
+    String Formule;
+    Bool Check_Energy = False;
+    Int Check_BU = 0;
+    String Check_Parent = "";
+    Bool Check_Level = False;
+    String  Check_Formule = "";
+    Bool Empty_Flag = False;
+
+    String NEWLigne;
+    Int TotalItems = 0;
+
+    Int NBR_Error = 0;
+
+
+    FullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+    if (FileHandle==0) then
+            FileHandle=FileOpen(FullPathFileName,"wt");
+            FileWriteLn(FileHandle,"Alarme_Code;Compteur Incident;Formule;Parsed_Formule;Operateur;Objectif;Frequence;Next Check;U_Alarme_Name;Description;U_Compteur;U_Formule;Nbr Error");
+            FileClose(FileHandle);
+            FileHandle=FileOpen(FullPathFileName,"rt");
+    end
+
+        TEMPFullPathFileName = ENV_PATH +  "\Files\DATAMODELFiles\Event\TEMP_Alarme_F_Reporting.csv";
+        TEMPFileHandle = FileOpen(TEMPFullPathFileName,"wt");
+
+    LOGFullPathFileName = ENV_PATH +  "\BuildLOG.txt";
+    LOGFileHandle = FileOpen(LOGFullPathFileName,"at");
+
+    FileWriteLn(LOGFileHandle,"********** Start ALARME Data Model Check : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+    CurrLigne = FileReadLn(FileHandle); // Header
+    FileWriteLn(TEMPFileHandle,CurrLigne);
+
+
+     While( FileEof(FileHandle)==0 && Empty_Flag == False)
+
+        CurrLigne = FileReadLn(FileHandle);
+
+        IF (Fetch_Alarm_search(CurrLigne, 1, ";") == "") Then
+            Empty_Flag = True;
+         Else
+            Empty_Flag = False;
+        End
+
+
+        IF (Empty_Flag == False) Then
+
+        TotalItems = TotalItems + 1;
+
+        CurrLigne = FR_CHECK(CurrLigne,0,13);// Reset Error counter to 0
+
+          CurrLigne = Parse_Formule_Alarme( CurrLigne , LOGFileHandle );
+
+
+           FileWriteLn(TEMPFileHandle,CurrLigne);
+
+        End
+
+
+     End
+
+     SetNumGateValue("AdminTotalItems",0,TotalItems);
+
+     FileWriteLn(LOGFileHandle,"**********  End AllComteur Data Model Check : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+     FileClose(FileHandle);
+     FileClose(TEMPFileHandle);
+     FileClose(LOGFileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////
+///////////////////////////////////////////////////////////////////////////////
+function String Parse_Formule_Alarme(  String Ligne , Int BUILD_FileHandle )
+  Int LenghtLigne;
+  String Char ="";
+  String P_CHAR = "";
+  String CString = "";
+  String Code_Compteur = "";
+  String WFullPathFileName;
+  Int WFileHandle;
+  String Querry;
+  Int OPEN_Count = 0;
+  Int CLOSE_Count = 0;
+  String Parse_Formule = "";
+  String User_Formule = "";
+  String Return_CHAR = "~";
+
+  String Formule = Fetch_Alarm_search( Ligne, 3, ";");
+  String Compteur = Fetch_Alarm_search( Ligne, 2, ";");
+  String Name = Fetch_Alarm_search( Ligne, 11, ";");
+
+  Int i;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")";
+  String NUM1 = "1"; String NUM2 = "2"; String NUM3 = "3"; String NUM4 = "4";
+  String NUM5 = "5"; String NUM6 = "6"; String NUM7 = "7"; String NUM8 = "8";
+  String NUM9 = "9"; String NUM0 = "0"; String NUMVirgule = ","; String NUMPoint = ".";
+
+  String F_SQRT = "Sqrt"; String F_SIN = "Sin"; String F_COS = "Cos";   String F_TAN = "Tan";
+  String F_ABS = "Abs"; String F_ARCSIN = "ArcSin"; String F_ARCCOS = "ArcCos";   String F_ARCTAN = "ArcTan";
+  String F_EXP = "Exp"; String F_LOG = "Log"; String F_ROUND = "Round";   String F_POW = "Pow"; String F_MOD = "Mod";
+
+  String F_FILS = "F";  String F_INC = "I";
+
+  int Flag_Virgule = 0;
+
+  Bool Flag_Fils = False;
+  Bool Operateur = False;
+  Int NormalOperateur_Flag = 0;
+
+  Int COMPTEUR_N_EXIST =0;
+  Int Total_ErrorNbr = StrToInt(Fetch_Alarm_search( Ligne, 24, ";"));
+
+  Bool Constant_Flag = True;
+  Int Constant = 1;
+  String ce;
+  String ALARME_INPUTCODE;
+  String UserCompteur;
+
+        If( Formule == "Reel" ) Then Return Ligne; End
+        If( Formule == "*" ) Then
+            Parse_Formule = Formule+"~";
+            User_Formule =  Formule+"~";
+            Ligne = FR_CHECK(Ligne,Parse_Formule,20);
+            Ligne = FR_CHECK(Ligne,User_Formule,21);
+            Ligne = FR_CHECK(Ligne,Total_ErrorNbr,24);
+
+         Return Ligne;
+        End
+
+        LenghtLigne = StrLen(Formule);
+
+         ALARME_INPUTCODE = AlarmeEvent_CompteurExist(Compteur);
+
+          If (ALARME_INPUTCODE == "*" ) Then
+            Parse_Formule = "#0" + Return_CHAR + "=" + Return_CHAR;
+            User_Formule  = "#0" + Return_CHAR + "=" + Return_CHAR ;
+          Else
+            Parse_Formule = Fetch_Alarm_search(ALARME_INPUTCODE, 2, "/") +  "=" ;
+            User_Formule  = Fetch_Alarm_search(ALARME_INPUTCODE, 1, "/") + "=" ;
+            UserCompteur = Fetch_Alarm_search(ALARME_INPUTCODE, 1, "/") ;
+          End
+
+        For i= 1 to LenghtLigne do
+
+        P_CHAR = Char ;
+        Char = StrSubString(Formule,i,1);
+
+                    ////////////////////////test des Operateurs //////////////////////////////
+
+                IF ( Char == Open || Char == Add || Char == Sub || Char == Div || Char == Mult || Char == Close ) Then
+
+                 Operateur = True;
+
+                  Else
+                      Operateur = False;
+                      NormalOperateur_Flag = 0;
+                      IF (Char != " ") Then
+                       CString = CString + Char;
+                       //////////// start Test constant
+                       If ( Char == NUM1 || Char == NUM2 || Char == NUM3 || Char == NUM4 || Char == NUM5 ||
+                            Char == NUM6 || Char == NUM7 || Char == NUM8 || Char == NUM9 || Char == NUM0 ||
+                            Char == NUMVirgule || Char == NUMPoint ) Then
+
+                           Constant_Flag = True;
+
+                            If ( Char == NUMVirgule) then
+                             Char =".";
+                            End
+
+                            If ( Char == NUMPoint) then
+                             Flag_Virgule = Flag_Virgule +1;
+                            End
+
+                         Else
+                           Constant_Flag = False;
+                           Constant = 0;
+                       End
+                      ///////////////////end constant/////////////////////////
+
+                     End //char != " "
+                 End // char == operateur
+
+
+
+                IF (Operateur == true ) then
+                  IF (Char == Open ) then
+                    NormalOperateur_Flag = 0;
+                    OPEN_Count = OPEN_Count+1;
+
+
+                    IF ( CString == F_SQRT || CString == F_SIN || CString == F_COS || CString == F_TAN || CString == F_ABS || CString == F_ARCSIN ||
+                         CString == F_ARCCOS || CString == F_ARCTAN || CString == F_EXP || CString == F_LOG || CString == F_ROUND || CString == F_POW ||
+                         CString == F_MOD || CString == F_FILS || CString == F_INC) Then
+
+                         Parse_Formule = Parse_Formule + CString + Return_CHAR + Open + Return_CHAR;
+                         User_Formule = User_Formule + CString + Return_CHAR + Open + Return_CHAR;
+                    Else
+
+                         IF ( CString == ""  ) then
+                           Parse_Formule = Parse_Formule + Open + Return_CHAR;
+                           User_Formule = User_Formule + Open + Return_CHAR;
+
+                         Else
+
+                            IF ( Constant == 1 ) then
+
+                                FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                Parse_Formule = Parse_Formule + "#" + CString + Return_CHAR + Open + Return_CHAR;
+                                User_Formule = User_Formule + "#" + CString + Return_CHAR + Open + Return_CHAR;
+                            Else
+                               ce = CompteurExist( CString );
+                                   IF ( ce == "*" ) then
+                                       FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                       COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                       Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Open + Return_CHAR;
+                                       User_Formule = User_Formule + "#0"+ Return_CHAR  + Open+ Return_CHAR ;
+                                   Else
+
+                                       FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                       COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                       Parse_Formule = Parse_Formule + "#" + CString  + Return_CHAR + Open + Return_CHAR;
+                                       User_Formule = User_Formule + "#" + ce  + Return_CHAR  + Open+ Return_CHAR ;
+                                   End // ce == "*"
+                            End //  Constant == 1
+                         End //CString == ""
+                    End //CString == Operateur
+
+                         CString = "";
+                         Flag_Virgule = 0;
+                         Constant = 1;
+                  Else
+
+                     IF (Char == Close ) Then// )
+                      CLOSE_Count = CLOSE_Count+1;
+                      NormalOperateur_Flag = 0;
+
+
+                         //// Close      )
+                         IF ( CString == ""  ) then
+
+                            IF ( P_CHAR == Open ) Then
+                                FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " +"NO Compteur No Number Found");
+                                COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                User_Formule = User_Formule + "#0" +Return_CHAR + Close + Return_CHAR;
+                            Else
+                                If (CLOSE_Count != OPEN_Count) Then
+                                  FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " +"Number open brackets ="+OPEN_Count+" != Number close brackets = "+CLOSE_Count );
+                                  COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                  Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                  User_Formule = User_Formule + "#0" + Return_CHAR + Close +Return_CHAR;
+                                Else
+
+
+                                 Parse_Formule = Parse_Formule + Close + Return_CHAR ;
+                                 User_Formule = User_Formule + Close + Return_CHAR ;
+                               End //CLOSE_Count != OPEN_Count
+                            End //P_CHAR == Open
+
+
+
+
+                         Else
+                            IF ( Constant == 1 ) then
+
+                                IF ( Flag_Virgule <= 1) then
+                                    Parse_Formule = Parse_Formule + "#"+ CString + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + "#"+ CString + Return_CHAR + Close + Return_CHAR;
+
+                                    CString = "";
+                                    Constant = 1;
+                                    Flag_Virgule = 0;
+
+                                 Else
+
+
+                                    FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  too many Virgule" );
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                                 End
+
+                            Else
+                                  // c'est un Compteur
+
+                               ce = Alarme_CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 Else
+
+                                   Parse_Formule = Parse_Formule + CString + Return_CHAR + Close + Return_CHAR;
+                                   User_Formule = User_Formule + ce + Return_CHAR + Close + Return_CHAR;
+
+                                   CString = "";
+                                   Flag_Virgule = 0;
+                                   Constant = 1;
+                                 End
+
+                            End////  constante
+
+                        End// CString != ""
+
+
+                      Else
+                      //Normal Operateur
+                      NormalOperateur_Flag = NormalOperateur_Flag+1;
+                        If ( NormalOperateur_Flag > 1 ) Then
+
+                        FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  too many Operateur" + Char );
+                        COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+
+
+                        Else
+
+
+                        IF ( CString == "" ) then
+
+
+                                    Parse_Formule = Parse_Formule + Char + Return_CHAR;
+                                    User_Formule = User_Formule + Char + Return_CHAR;
+
+
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                        Else
+
+                            IF ( Constant == 1 ) then
+
+                               IF ( Flag_Virgule <= 1) then
+                                  // c'est un numero #5214 Constant
+
+
+                                    Parse_Formule = Parse_Formule + "#"+ CString + Return_CHAR +Char + Return_CHAR;
+                                    User_Formule = User_Formule + "#"+ CString + Return_CHAR + Char +Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                              Else
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  too many Virgule" );
+
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR;
+                                    User_Formule = User_Formule + "#0" + Return_CHAR;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                              End
+
+                            Else
+                                  // c'est un Compteur
+
+                                  ce = Alarme_CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR+ Char + Return_CHAR;
+                                    User_Formule = User_Formule +"#0"+ Return_CHAR + Char + Return_CHAR;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 Else
+
+                                   Parse_Formule = Parse_Formule + CString + Return_CHAR + Char + Return_CHAR;
+                                   User_Formule = User_Formule + ce + Return_CHAR + Char + Return_CHAR;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 End
+
+
+                            End////  constante
+                        End // CString != ""
+
+
+                        End // NormalOperateur_Flag < 1
+
+                     End // )
+                   End //(
+
+                End // Operateur
+
+           /////////////////////////////////////////////////////////////////////////////
+                        If ( i == LenghtLigne ) then
+                          If ( CString != "" ) then
+                            IF ( Constant == 1) then
+                                  // c'est un numero #5214 Constant
+                               IF ( Flag_Virgule <= 1) then
+
+
+                                 Parse_Formule = Parse_Formule +"#"+ CString + Return_CHAR;
+                                 User_Formule = User_Formule +"#"+ CString  + Return_CHAR ;
+                                 CString = "";
+                                 Flag_Virgule = 0;
+
+                               Else
+                                 COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                 FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  too many Virgule" );
+
+
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR;
+                                    User_Formule = User_Formule +"#0" + Return_CHAR;
+
+                                 Flag_Virgule = 0;
+                               End
+
+                            Else
+                                  // c'est un Compteur
+                                  Constant =1;
+                               ce = Alarme_CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+
+                                 Else
+
+                                   Parse_Formule = Parse_Formule + CString+Return_CHAR;
+                                   User_Formule = User_Formule + ce + Return_CHAR ;
+
+                                 End
+
+
+
+
+                            End////  constante
+                          End // CString != ""
+
+                        End
+
+        END// FOR
+
+        IF ( OPEN_Count != CLOSE_Count ) Then
+          FileWriteLn(BUILD_FileHandle,"Error Check_ALAME : Parse_Formule_Alarme("+Compteur+")  " + "!= Open and Close () OPEN = " + OPEN_Count + " Close = " + CLOSE_Count);
+          COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+        End
+    Total_ErrorNbr = Total_ErrorNbr + COMPTEUR_N_EXIST;
+
+    If (COMPTEUR_N_EXIST != 0) Then
+      Parse_Formule = "!~"+Parse_Formule;
+      User_Formule = "!~"+User_Formule;
+    End
+
+
+    Ligne = FR_CHECK(Ligne,Parse_Formule,4);
+    Ligne = FR_CHECK(Ligne,User_Formule,12);
+    Ligne = FR_CHECK(Ligne,UserCompteur,11);
+    Ligne = FR_CHECK(Ligne,Total_ErrorNbr,13);
+
+
+    Return Ligne;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function String AlarmeEvent_CompteurExist( String CompteurCode)
+Int CompteurMax;
+Int i;
+String ALARME_GATES;
+Bool Found = False;
+String Code;
+String LIST;
+ i = StrPos(CompteurCode,"$");
+ int j;
+Code = StrSubString(CompteurCode,1,i-1);
+LIST = StrSubString(CompteurCode,i+1,StrLen(CompteurCode));
+Int MaxEnergy =14;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+String Energy;
+
+    for i = 1 to CompteurMax do
+        if ( Code == GetStrGateValue("Compteur_Code",i)) then
+            ALARME_GATES = GET_InputCode( Code, GetStrGateValue("Compteur_Energy",i) );
+            Energy = GetStrGateValue("Compteur_Energy",i);
+
+            IF ( NumGateExists(ALARME_GATES,StrToInt(LIST)) == True) Then
+                Found = true ;
+
+                   for j = 1 to MaxEnergy do
+                     If (Energy == GetStrGateValue("Energy_Name",j) ) Then
+                        If ( LIST ==  GetStrGateValue("Energy_LIVEInc_List",j)) Then
+                            return GetStrGateValue("Compteur_Name",i)+"$"+GETLISTLABAL(Energy,StrToInt(LIST)) +"/"+  ALARME_GATES+"$"+LIST;
+                        Else
+                            return GetStrGateValue("Compteur_Name",i)+"$"+GETLISTLABAL(Energy, StrToInt( GetStrGateValue("Energy_LIVEInc_List",j))) +"/"+  ALARME_GATES+"$"+LIST;
+                        End // if List
+                     End // If Energy
+                   End//For
+
+            End
+
+        end
+    end
+
+   IF ( Found == False ) Then
+      Return "*";
+   End
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function String Alarme_CompteurExist( String CompteurCode)
+Int CompteurMax;
+Int i;
+Bool Found = False;
+
+String Code;
+String LIST;
+
+ i = StrPos(CompteurCode,"$");
+Code = StrSubString(CompteurCode,1,i-1);
+LIST = StrSubString(CompteurCode,i+1,StrLen(CompteurCode));
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    IF ( CmpGateExists(Code,StrToInt(LIST)) == True ) Then
+        for i = 1 to CompteurMax do
+
+            if ( Code == GetStrGateValue("Compteur_Code",i) ) then
+
+               Return GetStrGateValue("Compteur_Name",i)+"$"+ GETLISTLABAL(GetStrGateValue("Compteur_Energy",i),StrToInt(LIST));
+
+            End
+
+        end
+   end
+
+   IF ( Found == False ) Then
+    Return "*" ;
+   End
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function String GETLISTLABAL(String Energy, Int listNmbr)
+    String LabelFullPathFileName;
+    Int LabelFileHandle;
+    Bool EnergyFound = False;
+    String TextRow;
+    String LABEL;
+    Int LABEL_OFFCET = 2;
+
+
+
+           LabelFullPathFileName =ENV_PATH +  "\Files\AllCompteur\EnergyMeasureView.csv";
+           LabelFileHandle=FileOpen(LabelFullPathFileName,"rt");
+
+            if (LabelFileHandle==0) then  MessageBox("File not Found","Error");   return; end
+
+           While(EnergyFound == False && FileEof(LabelFileHandle)==0)
+             TextRow=FileReadLn(LabelFileHandle);
+                If (TextRow != "" ) then
+                  if ( Fetch_Alarm_search(TextRow, 1, ";") == Energy ) then
+                    LABEL = Fetch_Alarm_search(TextRow, listNmbr+LABEL_OFFCET , ";");
+                    EnergyFound = True;
+                   End
+                End
+
+            end
+           FileClose(LabelFileHandle);
+
+
+           IF ( EnergyFound == True ) Then
+            Return LABEL;
+           Else
+            Return "*";
+           End
+
+
+end
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String Get_Objective( String Objectif )
+
+    Int Pos = 0;
+    String OBJECTIF_GATE;
+    String Gate;
+    String List;
+    String Value;
+
+
+    Pos = StrPos(Objectif,":");
+    IF ( Pos == 0 ) Then  Return Objectif; End
+
+    OBJECTIF_GATE = Fetch_Alarme_Execution(Objectif,2, ":" );
+    Gate = Fetch_Alarme_Execution( OBJECTIF_GATE, 1, "$" );
+    List = Fetch_Alarme_Execution( OBJECTIF_GATE, 2, "$" );
+
+
+
+    Gate = Get_Objective_Gate( Gate );
+
+    IF ( NumGateExists( Gate , StrToInt(List) ) == True ) Then
+     Value = GetNumGateValue( Gate , StrToInt(List) );
+     Return Value;
+    Else
+     Return "NA";
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Get_Objective_Gate( String CompteurCode)
+
+    int i;
+    Int Energy_Number;
+    Int CompteurMax = GetNumGateValue("MaxCompteur",0);
+    String Gate;
+
+    for i = 1 to CompteurMax do
+
+        If (GetStrGateValue("Compteur_Code",i) == CompteurCode ) Then
+            Gate = "O" + Listen_CompteurTrueNumber( CompteurCode , GetStrGateValue("Compteur_Energy",i) );
+            Return Gate;
+        End
+
+    end
+
+    Return "NA";
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function string Listen_CompteurTrueNumber(string CCCode, String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+          While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CCCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+             Else
+             i = i +1;
+            End
+
+         End
+
+        if ( found == True ) then
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+
+        Else
+        Return "-1" ;
+        End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Listen_ADD_TO_AAL( String CompteurCode, String AlarmeCode, String AlarmeCondition)
+
+    String List = "";
+    Int Pos = 0;
+    String HISTORY_FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Event\Alarme_History\";
+    Int    HISTORY_FileHandle;
+    String History_Line="";
+    Int Active_Alarme_Counter;
+    String HeaderLine = "Compteur_Code;Alarme_Code;Time;AlarmeCondition";
+    Bool Found = False;
+
+
+    List = GetStrGateValue("AAL_"+CompteurCode,0);
+    Pos = StrPos(List,AlarmeCode);
+
+    IF ( Pos == 0 ) Then
+        List = List + AlarmeCode +"/";
+
+        SetStrGateValue("AAL_"+CompteurCode,0,List);
+    End
+
+
+
+        HISTORY_FullPathFileName = HISTORY_FullPathFileName + CompteurCode + ".CSV";
+
+        If ( FileExist(HISTORY_FullPathFileName) == False ) Then
+            Found = True;
+        End
+
+        HISTORY_FileHandle = FileOpen(HISTORY_FullPathFileName,"at");
+
+        If ( Found == True ) Then FileWriteLn(HISTORY_FileHandle,HeaderLine); End
+
+        History_Line = CompteurCode + ";" + AlarmeCode + ";" + GetDateString("/",True) + "_" + GetTimeString(":") + ";" + AlarmeCondition ;
+        FileWriteLn(HISTORY_FileHandle,History_Line);
+        FileClose(HISTORY_FileHandle);
+
+        Active_Alarme_Counter = Listen_Occurence_operateur(List,"/");
+        SetNumGateValue("AAC_"+CompteurCode,0,Active_Alarme_Counter);
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Listen_DELETE_FROM_AAL( String CompteurCode, String AlarmeCode )
+
+    String List = "";
+    Int Pos = 0;
+    String NEWLIST;
+    Int Active_Alarme_Counter;
+
+
+    List = GetStrGateValue("AAL_"+CompteurCode,0);
+    Pos = StrPos(List,AlarmeCode);
+    IF ( Pos != 0 ) Then
+
+        NEWLIST = Listen_DELETE_ITEM(List, AlarmeCode , "" ,  "/" );
+        SetStrGateValue("AAL_"+CompteurCode,0,NEWLIST);
+
+        Active_Alarme_Counter = Listen_Occurence_operateur(NEWLIST,"/");
+        SetNumGateValue("AAC_"+CompteurCode,0,Active_Alarme_Counter);
+
+
+    End
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function string Listen_DELETE_ITEM(string Ligne,string search, string replace, String Separator)
+    int P = 0;
+    string Txt = Ligne;
+    string V = Ligne;
+    String Partie1;
+    String Partie2;
+
+
+    P = StrPos(Txt,search);
+    if ( P == 0 ) then return V;
+      else
+
+       Partie1 = StrSubString(Txt,1,P-1);
+       Txt = StrDelete(Txt,1,P-1);
+       P = StrPos(Txt,Separator);
+
+        IF (P == 0) then Partie2 = "";
+        Else   Partie2 = StrDelete(Txt,1,P); End
+
+       V = Partie1 + replace + Partie2;
+
+    end
+
+    return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+Function int Listen_Occurence_operateur(String STR,String op)
+
+    int compteur = 0;
+    int i;
+    int L;
+
+    L=strlen(STR);
+
+    for i =1 to L do
+        if( StrSubString(STR,i,1)==op)then
+            compteur=compteur+1;
+        end
+    end
+
+    return compteur;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function void SAVE_PLUS( String PATH , String FileNAME, String ListFILE )
+
+    String Original_FullPathFileName;
+    String List_FullPathFileName;
+    Int Original_FileHandle;
+    Int List_FileHandle;
+
+    String List_Ligne;
+    String ReadLigne;
+    String WriteLigne;
+    String New_Ligne;
+    String Pointer;
+    Int PTR;
+    Bool Exist = False;
+    Int HEADER_CHAR_NBR = 2;
+    Int LENGTH;
+
+//////////////////////////////// 1 . Copy File ////////////////////////////////
+    // Check Original File Exist or not
+
+    ///////////////////////////////////
+
+    Original_FullPathFileName = PATH + FileNAME;
+
+    FileCopy(Original_FullPathFileName,PATH + "BACK_" + FileNAME,False);
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////// 2 . Open File && List File //////////////////////////
+    Original_FileHandle = FileOpen( Original_FullPathFileName ,"r+");
+    If (Original_FileHandle == 0) then MessageBox(Original_FullPathFileName,"File not Found"); Return; end
+
+    List_FileHandle = FileOpen( ListFILE ,"r");
+    If (List_FileHandle == 0) then MessageBox(ListFILE,"File not Found"); Return; end
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////// 3 . Write Lignes  ///////////////////////////////
+    While ( FileEof( List_FileHandle )== 0 )
+
+        List_Ligne = FileReadLn( List_FileHandle );
+        IF (List_Ligne != "") Then
+
+         Pointer = Fetch_Alarme_Execution(List_Ligne , 1 , "@");
+         New_Ligne = Fetch_Alarme_Execution(List_Ligne , 2 , "@");
+          PTR = StrToInt(Pointer);
+          PTR = PTR - HEADER_CHAR_NBR - StrLen(New_Ligne);
+
+
+           FileSeek(Original_FileHandle,PTR,0);
+           FileWrite(Original_FileHandle,New_Ligne,StrLen(New_Ligne));
+          //End
+
+        End
+    end
+
+///////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////// 4. Close File  /////////////////////////////////
+    FileClose(Original_FileHandle);
+    FileClose(List_FileHandle);
+///////////////////////////////////////////////////////////////////////////////
+end
+function String Fetch_Alarme_Execution(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+function String FR_Alarme_Executer(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void GET_SystemEvents()
+
+    String FullPathFileName = GetProjectPath() + "\Winlog\Data\1 HISTORY\INIT_SystemEvents.txt";
+    Int FileHandle;
+    String LINE ="";
+    String GATETYPE;
+    String GATENAME;
+    String GATEID;
+    String GATEVALUE;
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    IF ( FileHandle == 0 ) Then MessageBox(FullPathFileName,"File Not Found"); Return; End
+
+    While (FileEof(FileHandle) == 0)
+     LINE = FileReadLn(FileHandle);
+
+      IF (LINE != "" && StrSubString(LINE,1,2) != "/*") Then
+
+         GATETYPE = Fetch_Event_Search(LINE , 1 , ";");
+         GATENAME = Fetch_Event_Search(LINE , 2 , ";");
+         GATEID = Fetch_Event_Search(LINE , 3 , ";");
+         GATEVALUE = Fetch_Event_Search(LINE , 4 , ";");
+
+            if ( GATETYPE == "Num" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+            else
+                if ( GATETYPE == "Real" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToReal(GATEVALUE));
+                else
+                    if ( GATETYPE == "Dig" ) then
+                    SetDigGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+                    else
+                        if ( GATETYPE == "Str" ) then
+                        SetStrGateValue(GATENAME,StrToInt(GATEID),GATEVALUE);
+                        end
+                    end
+                end
+            end
+      End
+    End
+
+    FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SET_SystemEvents()
+
+    String FullPathFileName = GetProjectPath() + "\Winlog\Data\1 HISTORY\W_INIT_SystemEvents.txt";
+    Int FileHandle;
+    String Original_FullPathFileName = GetProjectPath() + "\Winlog\Data\1 HISTORY\INIT_SystemEvents.txt";
+
+    String L1 = "Num;EYear_H_Update;1;" + GetNumGateValue("EYear_H_Update",1);
+    String L2 = "Num;EYear_H_Update;2;" + GetNumGateValue("EYear_H_Update",2);
+    String L3 = "Num;EYear_H_Update;3;" + GetNumGateValue("EYear_H_Update",3);
+
+    String L4 = "Num;EMonth_H_Update;1;" + GetNumGateValue("EMonth_H_Update",1);
+    String L5 = "Num;EMonth_H_Update;2;" + GetNumGateValue("EMonth_H_Update",2);
+    String L6 = "Num;EMonth_H_Update;3;" + GetNumGateValue("EMonth_H_Update",3);
+
+    String L7 = "Num;EWeek_H_Update;1;" + GetNumGateValue("EWeek_H_Update",1);
+    String L8 = "Num;EWeek_H_Update;2;" + GetNumGateValue("EWeek_H_Update",2);
+    String L9 = "Num;EWeek_H_Update;3;" + GetNumGateValue("EWeek_H_Update",3);
+
+    String L10 = "Num;EDaily_H_Update;1;" + GetNumGateValue("EDaily_H_Update",1);
+    String L11 = "Num;EDaily_H_Update;2;" + GetNumGateValue("EDaily_H_Update",2);
+    String L12 = "Num;EDaily_H_Update;3;" + GetNumGateValue("EDaily_H_Update",3);
+
+    String L13 = "Num;Update_Chrono;1;" + GetNumGateValue("Update_Chrono",1);
+    String L14 = "Num;Update_Chrono;2;" + GetNumGateValue("Update_Chrono",2);
+    String L15 = "Num;Update_Chrono;3;" + GetNumGateValue("Update_Chrono",3);
+
+    String L16 = "Num;Update_Chrono;4;" + GetNumGateValue("Update_Chrono",4);
+    String L17 = "Num;Update_Chrono;5;" + GetNumGateValue("Update_Chrono",5);
+    String L18 = "Num;Update_Chrono;6;" + GetNumGateValue("Update_Chrono",6);
+
+    String LA = "/****** Start date UpdateHistoryYearly  PERIOD/YYYY/MM/DD ****/;;;";
+    String LB = "/****** Start date UpdateHistoryMonthly  PERIOD/YYYY/MM/DD ****/;;;";
+    String LC = "/****** Start date UpdateHistoryWeekly  PERIOD/YYYY/MM/DD ****/;;;";
+    String LD = "/****** Start date UpdateHistoryDaily  PERIOD/YYYY/MM/DD ****/;;;";
+    String LE = "/****** Start date UpdateHistoryWeekly  PERIOD/YYYY/MM/DD ****/;;;";
+    String LF = "/****** Start date UpdateHistoryDaily  PERIOD/YYYY/MM/DD ****/;;;";
+
+
+    FileHandle = FileOpen(FullPathFileName,"wt");
+
+        FileWriteLn(FileHandle,LA);
+
+        FileWriteLn(FileHandle,L1);
+        FileWriteLn(FileHandle,L2);
+        FileWriteLn(FileHandle,L3);
+
+        FileWriteLn(FileHandle,LB);
+
+        FileWriteLn(FileHandle,L4);
+        FileWriteLn(FileHandle,L5);
+        FileWriteLn(FileHandle,L6);
+
+        FileWriteLn(FileHandle,LC);
+
+        FileWriteLn(FileHandle,L7);
+        FileWriteLn(FileHandle,L8);
+        FileWriteLn(FileHandle,L9);
+
+        FileWriteLn(FileHandle,LD);
+
+        FileWriteLn(FileHandle,L10);
+        FileWriteLn(FileHandle,L11);
+        FileWriteLn(FileHandle,L12);
+
+        FileWriteLn(FileHandle,LE);
+
+        FileWriteLn(FileHandle,L13);
+        FileWriteLn(FileHandle,L14);
+        FileWriteLn(FileHandle,L15);
+
+        FileWriteLn(FileHandle,LF);
+
+        FileWriteLn(FileHandle,L16);
+        FileWriteLn(FileHandle,L17);
+        FileWriteLn(FileHandle,L18);
+
+    FileClose(FileHandle);
+
+    FileCopy(FullPathFileName,Original_FullPathFileName,False);
+    FileDelete(FullPathFileName);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_ALARME(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Event_Runtime_LOG( String NAME)
+
+    String FILENAME = GetProjectPath() + "\Winlog\EVENT_RUNTIME_LOG.txt";
+    Int FileHANDLE;
+    String WRITE_LINE = "";
+    FileHANDLE = FileOpen(FILENAME,"at");
+    WRITE_LINE = GetDateString("/",False) +"_"+ GetTimeString(":") +" : " +NAME;
+      FileWriteLn(FileHANDLE,WRITE_LINE);
+    FileClose(FileHANDLE);
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int I( String CompteurCode , String ALARME_LINE )
+
+    String FullFilePathName = GetProjectPath() + "\Winlog\Files\DATAMODELFiles\Event\Alarme_History\"
+                              + CompteurCode + ".csv";
+
+    Int FileHandle;
+    String Line = ALARME_LINE;
+    int INC_Counter = 0;
+    //int YYYY;   int MM;     int DD;     int HH;     int mm;
+    Int START_DATE_SEC;  Int END_DATE_SEC;  Int CURR_DATE_SEC;
+    String DATETIME_RECORD = "";
+    String End_Date;
+    String Start_Date;
+    String Periode;
+    Int Periode_SEC=0;  String Periode_UNIT;    Int Periode_VALUE;
+    Int ONE_DAY     = 86400; // 24 hours
+    Int ONE_MONTH   = 2592000 ; // 30 day = 86400*30
+    Int ONE_HOUR    = 3600;
+    Int ONE_MINUTE  = 60;
+int i;
+    IF ( FileExist(FullFilePathName) == false ) Then
+        Event_Runtime_LOG( "File Not found : " + FullFilePathName);
+        Return 0;
+    End
+
+   //MessageBox(FullFilePathName,"");
+
+    FileHandle = FileOpen(FullFilePathName,"rt");
+
+    IF ( FileHandle > 0) Then
+
+        INC_Counter = 0;
+
+        End_Date = Fetch_ALARME(Line , 8 , ";");
+        Periode  = Fetch_ALARME(Line , 7 , ";");
+        Periode_VALUE = StrToInt( Fetch_ALARME(Periode , 1 , "_") );
+        Periode_UNIT =  Fetch_ALARME(Periode , 2 , "_");
+        END_DATE_SEC = GETDATETIME_SEC( End_Date );
+
+
+        //MessageBox(End_Date,Periode);
+
+        IF ( Periode_UNIT == "Min" )    Then   START_DATE_SEC = END_DATE_SEC - (Periode_VALUE*ONE_MINUTE);  End
+        IF ( Periode_UNIT == "Heure" )  Then   START_DATE_SEC = END_DATE_SEC - (Periode_VALUE*ONE_HOUR);    End
+        IF ( Periode_UNIT == "Jour" )   Then   START_DATE_SEC = END_DATE_SEC - (Periode_VALUE*ONE_DAY);     End
+        IF ( Periode_UNIT == "Mois" )   Then   START_DATE_SEC = END_DATE_SEC - (Periode_VALUE*ONE_MONTH);   End
+
+        Start_Date = GetDayFromSeconds(START_DATE_SEC) +"/"+
+                     GetMonthFromSeconds(START_DATE_SEC) +"/"+
+                     GetYearFromSeconds(START_DATE_SEC) +"_"+
+                     GetHourFromSeconds(START_DATE_SEC) + ":"+
+                     GetMinuteFromSeconds(START_DATE_SEC) +":"+
+                     GetSecondFromSeconds(START_DATE_SEC);
+
+        INC_Counter = PS_CountINC( FullFilePathName ,  Start_Date , End_Date );
+
+    End
+    FileClose(FileHandle);
+    Return INC_Counter;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int PS_CountINC( String FileName , String StartDATE , String EndDATE )
+
+    String ConfigFile = "C:\Winlog\PowerShell\Search_In_file_With_Date.txt";
+    String ResultFile = "C:\Winlog\PowerShell\Result_Search_In_file_With_Date.txt";
+    String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+    int CountINC = 0;
+    Int FileHandle;
+
+    //1. delate result file if exist
+     If ( FileExist(ResultFile) == true ) then FileDelete(ResultFile); End
+    //2. creat config file
+      FileHandle = FileOpen(ConfigFile,"wt");
+       FileWriteLn(FileHandle,FileName);
+       FileWriteLn(FileHandle,StartDATE);
+       FileWriteLn(FileHandle,EndDATE);
+      FileClose(FileHandle);
+    //3. call PS
+      ShellExec("Search_In_file_With_DATE.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+    //4. wait result file
+        While ( FileExist(ResultFile) == False )
+          Sleep(500);
+        End
+    //5. read result
+      FileHandle = FileOpen(ResultFile,"rt");
+        CountINC = StrToInt( FileReadLn(FileHandle) );
+      FileClose(FileHandle);
+
+      Return CountINC;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int GETDATETIME_SEC( String DATETIME)
+    // Date in formate DD/MM/YYYY_HH:mm
+    int YYYY;   int MM;     int DD;     int HH;     int mm;
+    Int DATETIME_SEC = 0;
+    String DATE;    String TIME;
+
+    DATE = Fetch_ALARME(DATETIME , 1 , "_");
+    TIME = Fetch_ALARME(DATETIME , 2 , "_");
+
+    DD =    StrToInt(Fetch_ALARME(DATE , 1 , "/"));
+    MM =    StrToInt(Fetch_ALARME(DATE , 2 , "/"));
+    YYYY =  StrToInt(Fetch_ALARME(DATE , 3 , "/"));
+
+    HH = StrToInt(Fetch_ALARME(TIME , 1 , ":"));
+    mm = StrToInt(Fetch_ALARME(TIME , 2 , ":"));
+
+    DATETIME_SEC = DateTimeToSeconds(DD , MM , YYYY , HH , mm ,0);
+
+    Return DATETIME_SEC;
+
+end
+
+

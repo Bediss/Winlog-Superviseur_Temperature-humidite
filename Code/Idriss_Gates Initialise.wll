@@ -1,0 +1,260 @@
+function void Read_Tableau_BU()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\AllCompteur\Unite.csv";
+   string TextRow;
+   int List=0;
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Unite not Found","Error");  return;  end
+
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( TextRow != "") then
+
+
+                List=List+1;
+
+                SetStrGateValue("Code_BU",List,Fetch(TextRow,1));
+
+                SetStrGateValue("Name_BU",List,Fetch(TextRow, 2));
+
+                SetStrGateValue("Code_Parent_BU",List,Fetch(TextRow,3));
+
+                SetStrGateValue("Name_Parent_BU",List,Fetch(TextRow,4));
+
+                SetStrGateValue("Level_Code_BU",List,Fetch(TextRow,5));
+
+                SetStrGateValue("Acces_Privilege_BU",List,Fetch(TextRow,8));
+
+
+        end
+   end
+
+    SetNumGateValue("Max_BU",0,List);
+     FileClose(FileHandle);
+end
+
+///////////////////////////////////////////////////////////
+function void Read_Tableau_Energy()
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+   string TextRow;
+   int List=0;
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Energy not Found","Error");  return;  end
+
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( TextRow != "") then
+
+            if (Fetch(TextRow, 1) != "" ) then
+
+               List=List+1;
+
+
+                SetStrGateValue("PreFix_OutPut",List,Fetch(TextRow,4));
+                SetStrGateValue("Energy_LIVEInc_List",List,Fetch(TextRow,11));
+                SetStrGateValue("PreFix_InPut",List,Fetch(TextRow,5));
+                SetStrGateValue("Energy_Name",List,Fetch(TextRow,2));
+                SetNumGateValue("NBR_PRFIX_OUTP",List,StrToInt(Fetch(TextRow,6)));
+                SetNumGateValue("NBR_PRFIX_INP",List,StrToInt(Fetch(TextRow,7)));
+                SetStrGateValue("Parent_Energy",List,Fetch(TextRow,3));
+                SetNumGateValue("Energy_Acces",List,StrToInt(Fetch(TextRow,10)));
+                SetNumGateValue("NBR_List_Energy",List,StrToInt(Fetch(TextRow,8)));
+
+
+
+            end
+        end
+        end
+        SetNumGateValue("MaxEnergy",0,List);
+     FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////
+function void Read_Tableau_Views()
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\AllCompteur\Views.csv";
+   string TextRow;
+   int List=0;
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Views not Found","Error");  return;  end
+    FileReadLn(FileHandle);// Read file Header
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( TextRow != "") then
+            if (Fetch(TextRow, 1)!="" ) then
+
+
+
+
+                SetStrGateValue("ViewNames",List,Fetch(TextRow,2));
+                  //MessageBox(GetStrGateValue("ViewNames",List),"");
+                SetStrGateValue("ViewPeriodicity",List,Fetch(TextRow,4));
+                SetStrGateValue("ReportViewNames",List,Fetch(TextRow,3));
+                SetNumGateValue("Access_Views",List,StrToInt(Fetch(TextRow,5)));
+                 List=List+1;
+
+            end
+        end
+   end
+   SetNumGateValue("MaxView",1,List);
+
+     FileClose(FileHandle);
+end///////////////////////////////////////////////////////////
+
+function void Read_Tableau_Tableaux()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\Display_Templates\Tableaux.csv";
+   string TextRow;
+   int List=0;
+   int i=0;
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Tableaux not Found","Error");  return;  end
+
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( TextRow != "") then
+
+            if (StrToInt(Fetch(TextRow, 1)) > 2 ) then
+               //List=List+1;
+               List = StrToInt( Fetch(TextRow,1) );
+               i=i+1;
+
+               // SetStrGateValue("Tableau_VEPC",List,Fetch(TextRow,1));
+                SetStrGateValue("TableauNames",List,Fetch(TextRow,3));
+                SetNumGateValue("Access_Tableaux",List,StrToInt(Fetch(TextRow,7)));
+            end
+        end
+   end
+   SetNumGateValue("MaxTableau",0,i);
+     FileClose(FileHandle);
+end
+
+
+
+
+//////////////////////////////////////////////////////////////////
+//intitialisation objective//
+
+function void intialise_Objective()
+
+    String GATE="";
+    String FullFileNameEnergy =  ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    int FilehandleEn = FileOpen(FullFileNameEnergy,"rt");
+    String Path;
+    String FileToSearch ;
+    String CurrFile;
+    String Energy;
+    int Handle;
+
+    //MessageBox("1","-");
+
+    if (FilehandleEn==0) then
+         MessageBox("File Energy not Found","Error");
+     return;
+    end
+  // MessageBox("3","-");
+    Energy =Fetch_Inisialise(FileReadLn(FilehandleEn),2,";");
+    while(FileEof(FilehandleEn)==0)
+        Energy =Fetch_Inisialise(FileReadLn(FilehandleEn),2,";");
+
+        //MessageBox("2","-");
+
+        if (Energy != 0) then
+
+            Path = ENV_PATH+"\Data\Objective\"+Energy+"\*.txt";
+
+
+            Handle=FileFindFirstEx(Path);
+           //   MessageBox(Handle,"");
+               //MessageBox(Path,"");
+
+            if Handle != 0 then
+
+                CurrFile = FileNameFoundEx(Handle);
+               // MessageBox(CurrFile,"555566");
+                 // MessageBox("5","-");
+               intial_Gates_Obj(CurrFile , Energy);
+
+
+            while (FileFindNextEx(Handle) != false)
+                CurrFile = FileNameFoundEx(Handle);
+                  //  MessageBox(CurrFile,"5555");
+                    intial_Gates_Obj(CurrFile , Energy);
+            end
+        end
+          //MessageBox("6","-");
+       // FileFindCloseEx(Handle);
+   end
+end
+//GATE = Objective_Gates(CompteurCode);
+end
+////////////////////////////
+function string Fetch_Inisialise(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+Function void intial_Gates_Obj(String NameFile , String Energy )
+
+    String CCMP = Fetch_Inisialise(NameFile,1,"_");
+     // MessageBox(CCMP,0);
+    String GATE;
+    String FullFileName = ENV_PATH+"\Data\Objective\"+Energy+"\"+NameFile;
+
+    String Ligne;
+    String Num="";
+    String Val="";
+     int FileHandle;
+  //MessageBox(FullFileName,GATE);
+
+    if CmpGateExists(CCMP,0)==True then
+     GATE= Objective_Gates(CCMP);
+        FileHandle = FileOpen(FullFileName,"rt");
+        while(FileEof(FileHandle)==0)
+
+            Ligne = FileReadLn(FileHandle);
+           // MessageBox(Ligne,"");
+
+            if Ligne != "" then
+                Num = Fetch_Inisialise(Ligne,1,";");
+                Val = Fetch_Inisialise(Ligne,3,";");
+                //Messagebox(GATE +"//"+StrToInt(Val),StrToInt(Num)+"//"+NumGateExists(GATE,StrToInt(Num)));
+                SetNumGateValue(GATE,StrToInt(Num),StrToInt(Val));
+
+           end
+          end
+
+       End
+     FileClose(FileHandle);
+end
+

@@ -1,0 +1,6 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CF;Ecart P/C Elec;Electrique;CC0;VMZ Electrique;0;*;*;*;*;*;*;CCD-CCE;Company;*;*;VMZ;*;*;CCD~-~CCE~;VMZ Prod Elec~-~VMZ Conso Elec~;;;0;Ecart Production/Consommation Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CG;Ecart P/D Elec;Electrique;CC0;VMZ Electrique;1;*;*;*;*;*;*;CCD-CCI;Site;*;*;VMZ;*;*;CCD~-~CCI~;VMZ Prod Elec~-~VMZ Dist Elec~;;;0;Ecart Production/Distribution Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CH;Ecart D/C Elec;Electrique;CC0;VMZ Electrique;1;*;*;*;*;*;*;CCI-CCE;Site;*;*;VMZ;*;*;CCI~-~CCE~;VMZ Dist Elec~-~VMZ Conso Elec~;;;0;Ecart Distribution/Consommation Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CI;VMZ Dist Elec;Electrique;CC0;VMZ Electrique;1;*;V100;*;*;VMZ;*;Reel;Site;*;*;VMZ;!~*;!~*;;;;;2;VMZ Distribution Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CE;VMZ Conso Elec;Electrique;CC0;VMZ Electrique;1;*;*;V100;*;*;VMZ;F(CCE);Site;*;CPT0;VMZ;*;*;F~(~CCE~)~;F~(~VMZ Conso Elec~)~;;;0;VMZ Consomation Electrique;VMZ Tonnage
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低CD;VMZ Prod Elec;Electrique;CC0;VMZ Electrique;1;V100;*;*;VMZ;*;*;F(CCD);Site;*;*;VMZ;*;*;F~(~CCD~)~;F~(~VMZ Prod Elec~)~;;;0;VMZ Production Electrique;*

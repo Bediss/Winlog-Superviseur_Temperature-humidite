@@ -1,0 +1,5 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K1;Coproduit TR4;Electrique;CC1K;PosteTR4;5;S200;M190;M152B;STEG;PosteTR4;CoProduit TR4;F(CC1K1);Atelier;*;*;CoProduit;*;*;F~(~CC1K1~)~;F~(~Coproduit TR4~)~;;;0;Coproduit TR4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K2;PetFood TR4;Electrique;CC1K;PosteTR4;5;S200;M190;M242;STEG;PosteTR4;PetFood TR4;F(CC1K2);Atelier;*;*;PetFood;*;*;F~(~CC1K2~)~;F~(~PetFood TR4~)~;;;0;PetFood TR4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1U;Eau TR4;Electrique;CC1K;PosteTR4;5;S200;M190;MB09;STEG;PosteTR4;Eau TR4;F(CC1U);Atelier;*;*;Eau;*;*;F~(~CC1U~)~;F~(~Eau TR4~)~;;;0;Eau TR4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K3;Abattoir TR4;Electrique;CC1K;PosteTR4;5;S200;M190;M21K;STEG;PosteTR4;ECHAUDOIRE;F(CC1K3);Atelier;*;*;Abattoir;*;*;F~(~CC1K3~)~;F~(~Abattoir TR4~)~;;;0;Abattoir TR4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1Q5;EXT MPF 18+19B;Electrique;CC1K;PosteTR4;5;S200;M190;MA06;STEG;PosteTR4;Salles Machines;Reel;Atelier;*;*;Froid;!~*;!~*;;;;;2;EXT MPF 18 BIS + 19 BIS;*

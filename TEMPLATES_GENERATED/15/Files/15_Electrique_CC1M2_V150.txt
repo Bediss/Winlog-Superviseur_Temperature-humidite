@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M21;GRP (-) compres;Electrique;CC1M2;SMF Surgele TR6;6;S200;M1B0;MA09F;STEG;PosteTR6;GRP (-) compres;Reel;SubAtelier;*;*;Froid;!~*;!~*;;;;;2;groupe negatif compresseur;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M22;GRP (+) compres;Electrique;CC1M2;SMF Surgele TR6;6;S200;M1B0;MA09G;STEG;PosteTR6;GRP (+) compres;Reel;SubAtelier;*;*;Froid;!~*;!~*;;;;;2;groupe positif compresseur;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M23;GRP (+2)compres;Electrique;CC1M2;SMF Surgele TR6;6;S200;M1B0;MA09H;STEG;PosteTR6;GRP(+)2 compres;Reel;SubAtelier;*;*;Froid;!~*;!~*;;;;;2;groupe positif 2 compresseur;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M24;SKID NEGATIF;Electrique;CC1M2;SMF Surgele TR6;6;S200;M1B0;MA09I;STEG;PosteTR6;SKID NEGATIF;Reel;SubAtelier;*;*;Froid;!~*;!~*;;;;;3;SKID NEGATIF;*

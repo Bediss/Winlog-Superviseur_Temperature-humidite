@@ -1,0 +1,1054 @@
+    Global String Source_STEP1;
+    Global String Source_STEP2;
+    Global String Source_STEP3;
+    Global String Source_STEP4;
+    Global String Source_STEP5;
+
+    Global String S1_SUBFIX = "Site";
+    Global String S2_SUBFIX = "Unite";
+    Global String S3_SUBFIX = "Tableau";
+    Global String S4_SUBFIX = "Energy";
+    Global String S5_SUBFIX = "View";
+
+    Global String S1_SHOW_USER = "Choisissez votre site ci-dessous:";
+    Global String S2_SHOW_USER = "Choisissez votre Unite ci-dessous:";
+    Global String S3_SHOW_USER = "Choisissez votre Tableau ci-dessous:";
+    Global String S4_SHOW_USER = "Choisissez votre Energie ci-dessous:";
+    Global String S5_SHOW_USER = "Choisissez votre Periodicité ci-dessous:";
+
+    Global String S1_Template;
+    Global String S2_Template;
+    Global String S3_Template;
+    Global String S4_Template;
+    Global String S5_Template;
+
+    Global String S1_Change_Flag = "S";
+    Global String S2_Change_Flag = "D";
+    Global String S3_Change_Flag = "S";
+    Global String S4_Change_Flag = "D";
+    Global String S5_Change_Flag = "D";
+
+    Global Int MAX_BUTTONS = 20;
+    Global Int MAX_CHAR_NAV_NAME = 24;
+    Global String Prefix = "¤ ";
+    Global String Postfix = ".";
+
+    Global String STEP1_Flag = "PlaceHolder~1";
+    Global String STEP2_Flag = "PlaceHolder~2";
+    Global String STEP3_Flag = "PlaceHolder~3";
+    Global String STEP4_Flag = "PlaceHolder~4";
+    Global String STEP5_Flag = "PlaceHolder~5";
+
+    Global String S1_MEATDATA_FILE = "BU~1";
+    Global String S2_MEATDATA_FILE = "BU~2";
+    Global String S3_MEATDATA_FILE = "Tableau";
+    Global String S4_MEATDATA_FILE = "Energy";
+    Global String S5_MEATDATA_FILE = "View";
+
+    Global String SELECTION = "Sélectionnez ci-dessous :";
+    Global String C_SELECTION = "Votre sélection :";
+    Global String NAV_STEP = "STEP";
+    Global String NAV_SELCTION = "Selection";
+    Global String ACCESS_DEV = "16384"; //ACCESS_DEV
+    Global String MODE;
+    Global String ALL = "Tout ";
+        ///////// il faut cree le Master Header
+        ///////// Ajouter le source file data au globaux
+
+    Global String NAV_PATH ;
+    Global String NAV_FILE_Code = GetProjectPath() +"\files\WebTemplates\NAV_ShowPages_V"+ GetStrGateValue("Version",0) +".Wll";
+    Global Bool FINAL_LINK = False;
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void WEB_NAVIGATOR_5STEPs()
+
+    //String PATH = GetProjectPath()+"\files\WebTemplates\Templates\";
+
+    //String Version = "_V" + GetStrGateValue("Version",0);
+    String Version = "";
+
+    Int i1; Int i2; Int i3; Int i4; Int i5;
+
+    Int MAX_STEP1; Int MAX_STEP2; Int MAX_STEP3; Int MAX_STEP4; Int MAX_STEP5;
+    Int CMAX_STEP1; Int CMAX_STEP2; Int CMAX_STEP3; Int CMAX_STEP4; Int CMAX_STEP5;
+
+    int OFFSET_STEP1; int OFFSET_STEP2; int OFFSET_STEP3; int OFFSET_STEP4; int OFFSET_STEP5;
+
+    String S1_LIST;  String S2_LIST;  String S3_LIST;  String S4_LIST;  String S5_LIST;
+
+    String S1_Template;  String S2_Template;  String S3_Template;  String S4_Template;  String S5_Template;
+
+    String S1S2;    String S1S2S3;  String S1S2S3S4;  String S1S2S3S4S5;
+
+    Bool S1_OK = False; Bool S2_OK = False; Bool S3_OK = False; Bool S4_OK = False; Bool S5_OK = False;
+
+    String S1_CODE; String S1_NAME; String S1_ACCESS;
+    String S2_CODE; String S2_NAME; String S2_ACCESS;
+    String S3_CODE; String S3_NAME; String S3_ACCESS;
+    String S4_CODE; String S4_NAME; String S4_ACCESS;
+    String S5_CODE; String S5_NAME; String S5_ACCESS;
+
+    String FinalLink = "";
+
+    If (MODE == "W") Then NAV_PATH = GetProjectPath()+"\files\WebTemplates\Templates\";  End
+    If (MODE == "D") Then NAV_PATH = GetProjectPath()+"\files\WebTemplates\DESK_NAV\";  End
+
+    IF ( FileExist(NAV_FILE_Code) == True ) then FileDelete(NAV_FILE_Code); End
+
+    ////////////////// Initialtion STEP 1//////////////////////////////////////
+    MAX_STEP1 = INITIALSATION_STEP1();
+    CMAX_STEP1 = MAX_STEP1;
+    S1_Template = NAV_PATH + S1_SUBFIX;
+//CMAX_STEP1 = 1;
+    ///////////////////////////////////////////////////////////////////////////
+    For i1=1 To CMAX_STEP1 do
+    ///////////////////////////////////////////////////////////////////////////
+     S1_LIST = Get_ListLIGNE_STEP( i1 , Source_STEP1 );
+
+     S1_CODE = Fetch_NAV(S1_LIST,1,";");
+     S1_NAME = Fetch_NAV(S1_LIST,2,";");
+     S1_ACCESS = Fetch_NAV(S1_LIST,3,";");
+
+     S1S2 = i1 + "_" + S2_SUBFIX + Version;
+     Modif_Templates_5STEPs( S1_Template , S1_NAME , S1S2 , "","","","",1,S1_ACCESS,"");
+
+     IF ( S1_LIST == "" ) Then
+      CMAX_STEP2 = 0; CMAX_STEP3 = 0; CMAX_STEP4 = 0; CMAX_STEP5 = 0; S1_OK = False;
+     Else
+      S1_OK = True;
+     End
+
+        ////////////////// Initialtion STEP 2//////////////////////////////////
+
+        IF ( S2_Change_Flag == "D" || (S2_Change_Flag == "S" && i1 == 1) ) Then
+            MAX_STEP2 = INITIALSATION_STEP2(S1_CODE,S1_NAME,S1_ACCESS);
+        End
+
+        If (S1_OK == True) Then  CMAX_STEP2 = MAX_STEP2;
+        Else CMAX_STEP2 = 0;
+        ///CMAX_STEP3 = 0; CMAX_STEP4 = 0; CMAX_STEP5 = 0;
+        End
+
+        Create_Templates(S2_SUBFIX,S1S2);
+        S2_Template = NAV_PATH + S1S2;
+//CMAX_STEP2 = 1;
+        ///////////////////////////////////////////////////////////////////////
+        For i2=1 To CMAX_STEP2 do
+        ///////////////////////////////////////////////////////////////////////
+            S2_LIST = Get_ListLIGNE_STEP( i2 , Source_STEP2 );
+
+            S2_CODE = Fetch_NAV(S2_LIST,1,";");
+            S2_NAME = Fetch_NAV(S2_LIST,2,";");
+            S2_ACCESS = Fetch_NAV(S2_LIST,3,";");
+
+            S1S2S3 = i1 + "_" + i2 + "_" + S3_SUBFIX + Version;
+            S2_ACCESS = BitAnd( StrToInt(S2_ACCESS) , StrToInt(S1_ACCESS) );
+            Modif_Templates_5STEPs( S2_Template , S2_NAME , S1S2S3 , S1_NAME ,"","","", 2 , S2_ACCESS,"" );
+
+            ////////////////// Initialtion STEP 3//////////////////////////////
+            IF ( S3_Change_Flag == "D" || (S3_Change_Flag == "S" && i1 == 1) ) Then
+              MAX_STEP3 = INITIALSATION_STEP3();
+              CMAX_STEP3 = MAX_STEP3;
+            End
+
+            Create_Templates(S3_SUBFIX,S1S2S3);
+
+            S3_Template = NAV_PATH + S1S2S3;
+//CMAX_STEP3 = 0;
+            ///////////////////////////////////////////////////////////////////
+            For i3=1 To CMAX_STEP3 do
+            ///////////////////////////////////////////////////////////////////
+                S3_LIST = Get_ListLIGNE_STEP( i3 , Source_STEP3 );
+
+                S3_CODE = Fetch_NAV(S3_LIST,1,";");
+                S3_NAME = Fetch_NAV(S3_LIST,2,";");
+                S3_ACCESS = Fetch_NAV(S3_LIST,3,";");
+
+                S1S2S3S4 = i1 + "_" + i2 + "_" + i3 +"_" + S4_SUBFIX + Version;
+
+                S3_ACCESS = BitAnd( StrToInt(S2_ACCESS) , StrToInt(S3_ACCESS) );
+
+                Modif_Templates_5STEPs( S3_Template , S3_NAME , S1S2S3S4 , S1_NAME ,S2_NAME,"","", 3 , S3_ACCESS,S3_CODE);
+
+                ////////////////// Initialtion STEP 4//////////////////////////
+                IF ( S4_Change_Flag == "D" || (S4_Change_Flag == "S" && i1 == 1) ) Then
+                    MAX_STEP4 = INITIALSATION_STEP4(S3_CODE);
+                    CMAX_STEP4 = MAX_STEP4;
+                End
+
+                Create_Templates(S4_SUBFIX,S1S2S3S4);
+
+                 S4_Template = NAV_PATH + S1S2S3S4;
+//CMAX_STEP4 = 1;
+                ///////////////////////////////////////////////////////////////
+                For i4=1 To CMAX_STEP4 do
+                ///////////////////////////////////////////////////////////////
+
+                    S4_LIST = Get_ListLIGNE_STEP( i4 , Source_STEP4 );
+
+                    S4_CODE = Fetch_NAV(S4_LIST,1,";");
+                    S4_NAME = Fetch_NAV(S4_LIST,2,";");
+                    S4_ACCESS = Fetch_NAV(S4_LIST,3,";");
+
+                    S1S2S3S4S5 = i1 + "_" + i2 + "_" + i3 +"_" + i4 + "_"  + S5_SUBFIX + Version;
+
+                    S4_ACCESS = BitAnd( StrToInt(S3_ACCESS) , StrToInt(S4_ACCESS) );
+
+                    Modif_Templates_5STEPs( S4_Template ,  S4_NAME , S1S2S3S4S5 , S1_NAME ,S2_NAME,S3_NAME,"",  4 , S4_ACCESS,S3_CODE );
+
+                    ////////////////// Initialtion STEP 5//////////////////////
+                     IF ( S5_Change_Flag == "D" || (S5_Change_Flag == "S" && i1 == 1) ) Then
+                        MAX_STEP5 = INITIALSATION_STEP5(S3_CODE);
+                        CMAX_STEP5 = MAX_STEP5;
+                     End
+
+                    Create_Templates(S5_SUBFIX,S1S2S3S4S5);
+
+                    S5_Template = NAV_PATH + S1S2S3S4S5;
+//CMAX_STEP5 = 0;
+                    ///////////////////////////////////////////////////////////
+                    For i5=1 To CMAX_STEP5 do
+                    ///////////////////////////////////////////////////////////
+                        S5_LIST = Get_ListLIGNE_STEP( i5 , Source_STEP5 );
+
+                        S5_CODE = Fetch_NAV(S5_LIST,1,";");
+                        S5_NAME = Fetch_NAV(S5_LIST,2,";");
+                        S5_ACCESS = Fetch_NAV(S5_LIST,3,";");
+
+                        S5_ACCESS = BitAnd( StrToInt(S5_ACCESS) , StrToInt(S4_ACCESS) );
+                        FINAL_LINK = True;
+                        FinalLink = GET_FINAL_LINK();
+                       Modif_Templates_5STEPs( S5_Template ,  S5_NAME , FinalLink , S1_NAME ,S2_NAME,S3_NAME,S4_NAME, 5 , S5_ACCESS ,S3_CODE);
+                        FINAL_LINK = False;
+                    ///////////////////////////////////////////////////////////
+                    End //STEP5
+                ///////////////////////////////////////////////////////////////
+                End //STEP4
+            ///////////////////////////////////////////////////////////////////
+            End //STEP3
+        ///////////////////////////////////////////////////////////////////////
+        End // STEP2
+    ///////////////////////////////////////////////////////////////////////////
+    End // STEP1
+
+    //MessageBox("End","");
+
+end
+/*****************************************************************************/
+function Int INITIALSATION_STEP1()
+
+    Int MAX_STEP1;
+    Int SiteLEVEL_MIN = 0;
+    Int SiteLEVEL_MAX = 2;
+
+     MAX_STEP1 = Create_BU_File_ByLEVEL( SiteLEVEL_MIN , SiteLEVEL_MAX );
+     Source_STEP1 = SiteList( MAX_STEP1 );
+
+     Return MAX_STEP1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int INITIALSATION_STEP2( String CODE, String NAME, String ACCESS)
+
+    Int MAX_STEP2;
+    Int SiteLEVEL_MAX = 3;
+
+     MAX_STEP2 = Create_BU_File_ByPCODE( CODE , SiteLEVEL_MAX );
+     Source_STEP2 = BUList( MAX_STEP2 );
+     //MessageBox(Source_STEP2,"");
+     Return MAX_STEP2;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int INITIALSATION_STEP3()
+
+    Int MAX_STEP3;
+
+    MAX_STEP3 = Create_TableauList();
+    Source_STEP3 = Site(MAX_STEP3);
+
+    Return MAX_STEP3;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int INITIALSATION_STEP4(String TABLEAU)
+
+    Int MAX_STEP4;
+
+    MAX_STEP4 = Create_EnergyList(TABLEAU);
+    //MessageBox(MAX_STEP4,"MAX_STEP4");
+    Source_STEP4 = EnergyList(MAX_STEP4);
+    Return MAX_STEP4;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int INITIALSATION_STEP5(String TABLEAU)
+
+    Int MAX_STEP5;
+
+    MAX_STEP5 = Create_ViewList(TABLEAU);
+    Source_STEP5 = ViewList(MAX_STEP5);
+    Return MAX_STEP5;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CHECK_STEP1()
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CHECK_STEP2( String CODE, String NAME, String ACCESS )
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CHECK_STEP3()
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CHECK_STEP4()
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool CHECK_STEP5()
+
+end
+/*****************************************************************************/
+function String Get_ListLIGNE_STEP( Int i , String Source)
+
+    String NAME = "";
+    String ACCESS = "";
+    String CODE = "";
+    Int SOURCE_FileHandle;
+    int COUNTER ;
+    String LIGNE;
+    int NUM_NAME;
+    Int NUM_ACCESS;
+    Int NUM_OCCU;
+    String Numbers;
+    Int CODE_NUMBER;
+    Int NAME_NUMBER;
+    Int ACCESS_NUMBER;
+    String NAV_GATE;
+
+    String SourceType = Fetch_NAV(Source,1,"#");
+    String SourceValue = Fetch_NAV(Source,2,"#");
+
+    IF ( SourceType == "GATE" ) Then
+        NAME = GetStrGateValue(SourceValue+"_NAME",i);
+        ACCESS = GetStrGateValue(SourceValue +"_ACCESS",i);
+        NAV_GATE = "NAV_" + SourceValue;
+    Else
+
+        If ( SourceType == "FILE" ) Then
+
+         SOURCE_FileHandle = FileOpen(SourceValue,"rt");
+
+         LIGNE =FileReadLn(SOURCE_FileHandle);
+           Numbers = NAME_ACCESS_NUMBERS(LIGNE);
+            CODE_NUMBER = StrToInt( Fetch_NAV(Numbers,1,";") );
+            NAME_NUMBER = StrToInt( Fetch_NAV(Numbers,2,";") );
+            ACCESS_NUMBER = StrToInt( Fetch_NAV(Numbers,3,";") );
+
+          For COUNTER=1 to i do
+           LIGNE =FileReadLn(SOURCE_FileHandle);
+           CODE = Fetch_NAV(LIGNE,CODE_NUMBER,";");
+           NAME  = Fetch_NAV(LIGNE,NAME_NUMBER,";");
+           ACCESS = Fetch_NAV(LIGNE,ACCESS_NUMBER,";");
+
+          End
+
+         FileClose(SOURCE_FileHandle);
+
+        End
+
+         COUNTER = NAV_Occurence( SourceValue , "\" ) + 1 ;
+
+          NAV_GATE = Fetch_NAV(SourceValue,COUNTER,"\") ;
+          COUNTER = StrPos(NAV_GATE,".");
+          NAV_GATE = StrSubString(NAV_GATE,1,COUNTER-1);
+          COUNTER =  StrPos(NAV_GATE,"~");
+          NAV_GATE = "NAV_" + StrSubString(NAV_GATE,1,COUNTER-1);
+
+    End
+
+
+
+    IF ( CODE != "*" ) Then SetStrGateValue(NAV_GATE,0,LIGNE);
+    //Else    SetStrGateValue(NAV_GATE,0,"");
+    End
+
+     LIGNE = CODE + ";" + NAME + ";" + ACCESS;
+
+    Return LIGNE;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+function String Fetch_NAV(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String NAME_ACCESS_NUMBERS( String LIGNE )
+
+    Int Total;
+    int i;
+    Total = NAV_Occurence(LIGNE,";") +1;
+
+    Int NAME_NUMBER = 0;
+    Int ACCESS_NUMBER = 0;
+    Int CODE_NUMBER = 0;
+
+    for i =1 to Total do
+      IF ( Fetch_NAV(LIGNE,i,";") == "CODE") Then
+      CODE_NUMBER = i;
+      Else
+        IF ( Fetch_NAV(LIGNE,i,";") == "NAME") Then
+         NAME_NUMBER = i;
+        Else
+            IF ( Fetch_NAV(LIGNE,i,";") == "ACCESS") Then
+            ACCESS_NUMBER = i;
+            End
+        End
+      End
+    end
+
+
+    Return CODE_NUMBER + ";" + NAME_NUMBER + ";" + ACCESS_NUMBER;
+end
+///////////////////////////////////////////////////////////////////////////////
+Function int NAV_Occurence(String STR,String op)
+
+    int compteur = 0;
+    int i;
+    int L;
+
+    L=strlen(STR);
+
+    for i =1 to L do
+        if( StrSubString(STR,i,1)==op)then
+            compteur=compteur+1;
+        end
+    end
+
+    return compteur;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Modif_Templates_5STEPs(String TemplateName, String ModifLigne , String Lien, String S1_NAME , String S2_NAME , String S3_NAME, String S4_NAME , int CurrentSTEP, String ACCESS_VALUE ,String TBALEAU_CODE)
+
+    //String FullPathFileName = GetProjectPath()+"\files\WebTemplates\Templates\"+TemplateName;
+    String FullPathFileName = TemplateName;
+    String WFullPathFileName = TemplateName+"W";
+    Int SourceFileHandle;
+    Int WFileHandle;
+    String ReadLigne;
+    String NewLigne;
+    String LienPath;
+    Bool Do_ONCLICK = True;
+    int POS1;
+    Int POS2;
+
+    String BUILD_FullPathFileName;
+    Int BUILD_FileHandle;
+
+     BUILD_FullPathFileName = ENV_PATH + "\BUILD_LOG.txt";
+     BUILD_FileHandle=FileOpen(BUILD_FullPathFileName,"at");
+    //Bool Label9999 = False;
+
+    //String Flag_Tableaux = "Flag_Tableaux";
+    //String Flag_BU = "Flag_Unite";
+    //String Flag_Energy = "Flag_Energy";
+    //String STEP1_Flag = "STEP1_PH";
+    //String STEP2_Flag = "STEP2_PH";
+    //String STEP3_Flag = "STEP3_PH";
+    //String STEP4_Flag = "STEP4_PH";
+    //String STEP4_Flag = "STEP5_PH";
+    String Button = "#Object: Button";
+    String ACCESS = "     #Access: ";
+    String CLICK ;
+    String DESK_CLICK  = "     #OnClick: StartF,";
+    String WEB_CLICK   = "     #OnClick: Template,";
+
+    String  L9="    #Label:  ";
+    String  ID="  #ID: 9696";
+    String  SiZE9696="  #Size: 305,";
+    Int NewH9696 =22;
+    Int MaxLabelAllowed = 20;
+    String PH;
+    String PlaceHolder = "PlaceHolder~";
+    Int PH_NUMBER;
+    String PATH_REPLACE;
+    Int WITHOUT_Prefix;
+    String S1_PATH_NAME;
+    String S2_PATH_NAME;
+    String S3_PATH_NAME;
+    String S4_PATH_NAME;
+    String S5_PATH_NAME;
+
+    String LOGFullPathFileName = GetProjectPath()+"\files\WebTemplates\LOG.txt";
+    Int LOGFileHandle;
+
+    //If ( ModifLigne == "" ) Then return; End
+
+    IF ( MODE == "D" ) Then
+
+
+        WITHOUT_Prefix = StrLen(Prefix) + 1;
+
+            S1_PATH_NAME = StrSubString(S1_NAME,WITHOUT_Prefix, StrLen( S1_NAME ) );
+            S2_PATH_NAME = StrSubString(S2_NAME,WITHOUT_Prefix, StrLen( S2_NAME ) );
+            S3_PATH_NAME = StrSubString(S3_NAME,WITHOUT_Prefix, StrLen( S3_NAME ) );
+            S4_PATH_NAME = StrSubString(S4_NAME,WITHOUT_Prefix, StrLen( S4_NAME ) );
+            S5_PATH_NAME = StrSubString(ModifLigne,WITHOUT_Prefix, StrLen( ModifLigne ) );
+
+            PATH_REPLACE = Fetch_NAV(S1_PATH_NAME,1,Postfix) + " | " +
+                       Fetch_NAV(S2_PATH_NAME,1,Postfix) + " | " +
+                       Fetch_NAV(S3_PATH_NAME,1,Postfix) + " | " +
+                       Fetch_NAV(S4_PATH_NAME,1,Postfix) + " | " +
+                       Fetch_NAV(S5_PATH_NAME,1,Postfix);
+
+      IF (StrPos(TemplateName,S5_SUBFIX) > 0 ) Then //S5_SUBFIX
+
+        If ( Lien != "-999" ) Then
+            Lien = GET_DESK_LINK( Lien , PATH_REPLACE );
+            CLICK = DESK_CLICK;
+            Do_ONCLICK = True;
+        Else
+            Do_ONCLICK = False;
+        End
+
+      Else
+        Lien = GET_DESK_LINK( Lien , PATH_REPLACE );
+        CLICK = DESK_CLICK;
+      End
+
+    End
+
+    IF ( MODE == "W" ) Then
+        CLICK = WEB_CLICK;
+        LienPath = GetProjectPath()+"\WebTemplate\"+Lien;
+
+    IF (StrPos(TemplateName,S5_SUBFIX) > 0 ) Then //S5_SUBFIX
+
+        //MessageBox(LienPath,"");
+        Do_ONCLICK = FileExist(LienPath);
+
+        IF (Do_ONCLICK == False ) Then
+
+          FileWriteLn(BUILD_FileHandle," Web_Navigator : Modif_Templates "TemplateName +"  "+ Lien + "Doesn't Exist");
+        //Else
+          //FileWriteLn(BUILD_FileHandle," Web_Navigator : Modif_Templates "TemplateName +"  "+ Lien + " >>>>>>>Exist");
+          //MessageBox(Lien,"ok");
+        End
+    End
+
+    End
+
+    SourceFileHandle=FileOpen(FullPathFileName,"rt");
+    IF (SourceFileHandle==0) then
+      //MessageBox(FullPathFileName,"File Not Found");
+      //FileWriteLn(LOGFileHandle,FullPathFileName+" File Not Found");
+      FileClose(LOGFileHandle);
+      return;
+    end
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    IF ( WFileHandle == 0) Then MessageBox(WFullPathFileName,WFileHandle);  End
+
+
+    PH = SET_USER_CHOICE( CurrentSTEP , S1_NAME , S2_NAME , S3_NAME , S4_NAME );
+
+
+    While( FileEof(SourceFileHandle) == 0 )
+
+      ReadLigne = FileReadLn(SourceFileHandle);
+
+         POS2 =  StrPos(ReadLigne,ModifLigne);
+
+         IF ( POS2 > 0) Then
+
+            FileWriteLn(WFileHandle,ReadLigne);//Label
+            FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//Font
+            FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//TabOrder
+            FileReadLn(SourceFileHandle);
+
+            IF (Do_ONCLICK == True) Then
+                FileWriteLn(WFileHandle,ACCESS + ACCESS_VALUE);//ACCESS
+                FileWriteLn(WFileHandle,CLICK + Lien);//CLICK
+            Else
+                FileWriteLn(WFileHandle,ACCESS + ACCESS_DEV);//ACCESS
+            End
+
+            FileWriteLn(WFileHandle,FileReadLn(SourceFileHandle));//end Object
+
+
+        Else
+
+            If ( StrPos(ReadLigne,PlaceHolder) > 0  ) Then
+                PH_NUMBER = StrToInt( Fetch_NAV(ReadLigne,2,"~") );
+                ///////////////////////////////////////////////////////////////
+                IF (PH_NUMBER < CurrentSTEP) Then
+                    FileWriteLn(WFileHandle,L9 + Fetch_NAV(PH,PH_NUMBER,";") );
+                 Else
+                    FileWriteLn(WFileHandle,L9 );
+                End
+                ///////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////
+            Else
+
+                If ( StrPos(ReadLigne,NAV_SELCTION) > 0  ) Then
+
+                    PH_NUMBER = StrToInt( Fetch_NAV(ReadLigne,2,"~") );
+                    ///////////////////////////////////////////////////////////
+                    IF (PH_NUMBER == CurrentSTEP) Then
+                        FileWriteLn(WFileHandle,L9 + SELECTION );
+                    Else
+                        IF (PH_NUMBER > CurrentSTEP) Then
+                            FileWriteLn(WFileHandle,L9 );
+                         Else   FileWriteLn(WFileHandle,L9 + C_SELECTION );
+                        End
+                    End
+                    ///////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////
+                Else
+                    If ( StrPos(ReadLigne,NAV_STEP) > 0  ) Then
+                        PH_NUMBER = StrToInt( Fetch_NAV(ReadLigne,2,"~") );
+                        //IF (PH_NUMBER <= CurrentSTEP) Then
+                        ///////////////////////////////////////////////////////
+                        If ( PH_NUMBER == 1) Then  FileWriteLn(WFileHandle,L9 +"(" +PH_NUMBER+ ")"+ S1_SUBFIX );   End
+                        If ( PH_NUMBER == 2) Then  FileWriteLn(WFileHandle,L9 +"(" +PH_NUMBER+ ")"+ S2_SUBFIX );   End
+                        If ( PH_NUMBER == 3) Then  FileWriteLn(WFileHandle,L9 +"(" +PH_NUMBER+ ")"+ S3_SUBFIX );   End
+                        If ( PH_NUMBER == 4) Then  FileWriteLn(WFileHandle,L9 +"(" +PH_NUMBER+ ")"+ S4_SUBFIX );   End
+                        If ( PH_NUMBER == 5) Then  FileWriteLn(WFileHandle,L9 +"(" +PH_NUMBER+ ")"+ S5_SUBFIX );   End
+                        ///////////////////////////////////////////////////////
+                        //Else    FileWriteLn(WFileHandle,L9 );
+                        //End
+                    Else
+
+                        FileWriteLn(WFileHandle,ReadLigne);
+
+                    End // NAV_STEP
+
+                End // NAV_SELCTION
+
+            End // PlaceHolder
+
+        End // POS1
+
+    End // end While
+
+    FileClose(WFileHandle);
+    FileClose(BUILD_FileHandle);
+    FileClose(SourceFileHandle);
+    FileClose(LOGFileHandle);
+
+    //FileCopy(FullPathFileName,GetProjectPath()+"\files\WebTemplates\Templates\New_"+TemplateName,false);
+    If (FileDelete(FullPathFileName) == True) Then
+        FileRename(WFullPathFileName,FullPathFileName);
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_FINAL_LINK()
+
+    String BU       = GetStrGateValue("NAV_BU",0) ;
+    String Tableau  = GetStrGateValue("NAV_Tableau",0) ;
+    String Energy   = GetStrGateValue("NAV_Energy",0) ;
+    String View     = GetStrGateValue("NAV_View",0) ;
+
+
+    String BU_CODE;
+    String BU_NAME;
+    String BU_ACCESS;
+    String Tableau_CODE;
+    String Tableau_NAME;
+    String Tableau_ACCESS;
+    String Energy_CODE;
+    String Energy_NAME;
+    String Energy_ACCESS;
+    String View_CODE;
+    String View_NAME;
+    String View_ACCESS;
+
+    string VEPCT ;
+
+    //String VEPCT_Code;
+    string V;
+    string E;
+    string P;
+    string C;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    string PCP;     string PCD;     string PCC;
+    Int i;
+    Int CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    String CompteurQuery;
+    String CompteurFullPATH = GetProjectPath() + "\files\WebTemplates\NAV_COMPTEUR.txt";
+    Int FileHandle;
+    String TemplatesPATH = GetProjectPath() + "\Template\";
+    String T_FullPathName;
+
+
+     Tableau_CODE = Fetch_NAV(Tableau,1,";");
+     Tableau_NAME = Fetch_NAV(Tableau,2,";");
+     Tableau_ACCESS = Fetch_NAV(Tableau,3,";");
+
+    If (Tableau_CODE == "18") Then Return "";  End
+
+     CurrTABLEAU = StrToInt(Tableau_CODE);
+     IF ( StrGateExists("Tableau_VEPC",CurrTABLEAU) == False ) Then
+        MessageBox(Tableau_CODE,CurrTABLEAU);
+        return  "-999";
+     End
+    VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+
+        IF ( StrPos(VEPCT,"/") == 0 ) Then
+          Read_Tableau();
+          VEPCT = GetStrGateValue("Tableau_VEPC",CurrTABLEAU);
+        End
+
+         IF ( StrPos(VEPCT,"/") == 0 ) Then MessageBox("Reset tableaux Failed","Information");  End
+
+    Name = Tableau_CODE ;
+
+
+///////////////////////////////////////////////////////////////////////////////
+    IF ( Tableau_CODE != "17" )Then
+    E   =StrSubString(VEPCT,1,1);
+    if ( E == "1" ) then
+        Energy_CODE = Fetch_NAV(Energy,1,";");
+        Energy_NAME = Fetch_NAV(Energy,4,";"); //SHORTNAME
+        Energy_ACCESS = Fetch_NAV(Energy,3,";");
+
+        IF ( Energy_CODE != "*" ) Then
+        Name = Name + "_" + Energy_NAME;
+        End
+    end
+    End
+///////////////////////////////////////////////////////////////////////////////
+    P   =StrSubString(VEPCT,3,1);
+    if ( P != "0" ) then
+
+        BU_CODE = Fetch_NAV(BU,1,";");
+        BU_NAME = Fetch_NAV(BU,2,";");
+        BU_ACCESS = Fetch_NAV(BU,3,";");
+
+        //POS = StrPos(PostCode,"/");
+        //PCP = StrSubString(PostCode,1,POS-1);
+        //If ( PCP == "*" ) Then PCP = "#"; End
+        //PostCode = StrDelete(PostCode,1,POS);
+
+        //POS = StrPos(PostCode,"/");
+        //PCD = StrSubString(PostCode,1,POS-1);
+        //If ( PCD == "*" ) Then PCD = "#"; End
+        //PCC = StrDelete(PostCode,1,POS);
+
+        //If ( PCC == "*" ) Then PCC = "#"; End
+        //If ( P == "C" && PCC != "#" ) Then
+        //Cpc = "" +PCC;
+        Name = Name + "_"+"#&#&" +BU_CODE;
+        //end
+
+   End
+///////////////////////////////////////////////////////////////////////////////
+    V   =StrSubString(VEPCT,5,1);
+    if ( V == "1" ) then
+        View_CODE = Fetch_NAV(View,1,";");
+        View_NAME = Fetch_NAV(View,4,";");  //SHORTNAME
+        View_ACCESS = Fetch_NAV(View,3,";");
+
+        IF ( View_CODE != "*" ) Then
+        Name = Name+"_"+ View_NAME;
+        End
+    end
+///////////////////////////////////////////////////////////////////////////////
+    C   =StrSubString(VEPCT,7,1);
+    if ( C == "1" ) then
+
+       Energy_NAME = Fetch_NAV(Energy,4,";");
+       BU_CODE = Fetch_NAV(BU,1,";");
+        FileHandle = FileOpen(CompteurFullPATH,"wt");
+        CompteurQuery =  Energy_NAME + ",*,*,*," + "*/*/" + BU_CODE ; //C:E,Cp,Cl,Cn/,PCP/PCD/PCC
+        //CompteurQuery = ConstractQuerry( Energy_NAME , "*" , "*" , "*" ,"*/*/"+BU_CODE );
+
+        i = AnalyseQuerryCompteur( CompteurQuery, FileHandle , "TVE" , "");
+        FileClose(FileHandle);
+
+        FileHandle = FileOpen(CompteurFullPATH,"rt");
+        C = FileReadLn(FileHandle);
+
+        C = Fetch_NAV(C,1,",");
+        FileClose(FileHandle);
+
+        Name = Name+"_"+ C ;
+    end
+///////////////////////////////////////////////////////////////////////////////
+    //T   =StrSubString(VEPCT,9,1);
+    //If ( T == "1" ) then GOTO_TVE = True;
+    //Else GOTO_TVE = False;
+    //end
+///////////////////////////////////////////////////////////////////////////////
+    //MessageBox(V+"/"+E+"/"+P+"/"+C,T);
+
+    Name = Name+"_V"+GetStrGateValue("Version",0);
+    T_FullPathName = TemplatesPATH + CurrTABLEAU +"\" + Name;
+    IF ( FileExist( T_FullPathName ) == True ) Then
+        //MessageBox(T_FullPathName,"Exist");
+        Return Name ;
+    Else
+        /*IF (Tableau_CODE == "17") Then
+        MessageBox(T_FullPathName,"NOT Exist");
+        End*/
+        return  "-999";
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_DESK_LINK( String TemplateName , String PATH_REPLACE )
+
+    String Functname = "";
+    String Full_Functname = "";
+    String Char;
+    Int Len;    int i;
+    Bool FunctionFound;
+
+
+    Len = StrLen( TemplateName );
+
+    For i = 1 to Len do
+
+       Char = StrSubString(TemplateName,i,1);
+       If ( Char != " " && Char != "(" && Char != ")" && Char != "-" && Char != "+" ) Then
+
+        If ( Char == "#" ) Then
+        Char = "35";
+        Else
+            If ( Char == "&" ) Then
+            Char = "38";
+            End
+        End
+
+       Functname = Functname + Char ;
+       End
+
+    end
+
+      Functname = "NAV_FC_" + Functname + "()" ;
+      Full_Functname = "Function void " + Functname;
+      FunctionFound = FindFunction( Full_Functname , NAV_FILE_Code ) ;
+
+      If (FunctionFound == False ) Then
+        NAVIGUATEUR_CreateFunction( Full_Functname , TemplateName , NAV_FILE_Code , PATH_REPLACE );
+      End
+
+      Return Functname;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String SET_USER_CHOICE( Int Step , String S1_N , String S2_N , String S3_N , String S4_N )
+
+    Int i;  Int J = Step-1;
+    String PH = "";
+    String NAME;
+    String CSTEP;
+
+
+    For i =1 to J do
+        IF ( i == 1 ) Then
+         NAME = S1_N;
+         CSTEP = S2_SHOW_USER;
+         Else
+            IF ( i == 2 ) Then
+                NAME = S2_N;
+                CSTEP = S3_SHOW_USER;
+                Else
+                    IF ( i == 3 ) Then
+                        NAME = S3_N;
+                        CSTEP = S4_SHOW_USER;
+                        Else
+                            IF ( i == 4 ) Then
+                                NAME = S4_N;
+                                CSTEP = S5_SHOW_USER;
+                            End
+                    End // 3
+            End //2
+        End //1
+
+
+        PH = PH + NAME + ";";
+
+    End
+
+    PH = PH + CSTEP ;
+
+    Return PH;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void NAVIGUATEUR_CreateFunction( String Function_Header, String TemplateName , String FullPathFileName , String PATH_REPLACE)
+    //String FullPathFileName = GetProjectPath() +"\TEMPLATES_GENERATED\Synotique\Synoptique_ShowPages_V"+ GetStrGateValue("Version",0) +".Wll";
+    Int FileHandle ;
+
+    String L1 = Function_Header;
+    String L2 = "    ShowPage( " + CharToStr(34) + TemplateName + CharToStr(34) + " );";
+    String L3 = "    SET_PATH( " ;
+    String L4 = "    SetStrGateValue( ";
+    String L5 = "End";
+    String L6 = "/////////////////////////////////////////////////////////////////////";
+    string PARAMETERS;  string TAG;
+
+    // get parameter string
+    PARAMETERS = GET_PARAMETERS_NAVIGUATEUR();
+
+    // get lcd tag
+    TAG = GET_LCDTAGS_NAVIGUATEUR();
+
+    //write function
+
+    L3 = L3 + PARAMETERS + " );";
+
+    L4 = L4 +CharToStr(34)+ "LABEL_LIVE" +CharToStr(34)+ " ,0, " +CharToStr(34)+ TAG + CharToStr(34)+" );";
+
+        FileHandle = FileOpen(FullPathFileName,"at");
+
+        FileWriteLn(FileHandle,L1);
+        FileWriteLn(FileHandle,L2);
+        IF ( FINAL_LINK == True ) Then
+            FileWriteLn(FileHandle,L3);
+            FileWriteLn(FileHandle,L4);
+        End
+        FileWriteLn(FileHandle,L5);
+        FileWriteLn(FileHandle,L6);
+
+        FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_PARAMETERS_NAVIGUATEUR()
+
+    String BU       = GetStrGateValue("NAV_BU",0) ;
+    String Tableau  = GetStrGateValue("NAV_Tableau",0) ;
+    String Energy   = GetStrGateValue("NAV_Energy",0) ;
+    String View     = GetStrGateValue("NAV_View",0) ;
+
+
+    String Tableau_CODE;
+    String Tableau_NAME;
+    String Tableau_ACCESS;
+
+    String Energy_CODE;
+    String Energy_NAME;
+    String Energy_ACCESS;
+
+    String View_CODE;
+    String View_NAME;
+    String View_ACCESS;
+
+    String BU_CODE;
+    String BU_NAME;
+    String BU_ACCESS;
+
+    String COMPTEUR_CODE;
+    String C;
+    String OutString;
+    String CompteurFullPATH = GetProjectPath() + "\files\WebTemplates\NAV_COMPTEUR.txt";
+    Int FileHandle;
+    String CompteurQuery;
+
+
+     Tableau_CODE = Fetch_NAV(Tableau,1,";");
+     Tableau_NAME = Fetch_NAV(Tableau,2,";");  //SHORTNAME
+     Tableau_ACCESS = Fetch_NAV(Tableau,3,";");
+
+     Energy_CODE = Fetch_NAV(Energy,1,";");
+     Energy_NAME = Fetch_NAV(Energy,4,";"); //SHORTNAME
+     Energy_ACCESS = Fetch_NAV(Energy,3,";");
+
+     View_CODE = Fetch_NAV(View,1,";");
+     View_NAME = Fetch_NAV(View,4,";");  //SHORTNAME
+     View_ACCESS = Fetch_NAV(View,3,";");
+
+     BU_CODE = Fetch_NAV(BU,1,";");
+     BU_NAME = Fetch_NAV(BU,2,";");  //SHORTNAME
+     BU_ACCESS = Fetch_NAV(BU,3,";");
+
+     BU_NAME = StrDelete(BU_NAME,1,2);
+     BU_NAME = Fetch_NAV(BU_NAME,1,".");
+
+
+        FileHandle = FileOpen(CompteurFullPATH,"wt");
+        CompteurQuery =  Energy_NAME + ",*,*,*," + "*/*/" + BU_CODE ; //C:E,Cp,Cl,Cn/,PCP/PCD/PCC
+        //CompteurQuery = ConstractQuerry( Energy_NAME , "*" , "*" , "*" ,"*/*/"+BU_CODE );
+
+        AnalyseQuerryCompteur( CompteurQuery, FileHandle , "TVE" , "");
+        FileClose(FileHandle);
+
+        FileHandle = FileOpen(CompteurFullPATH,"rt");
+        C = FileReadLn(FileHandle);
+
+        COMPTEUR_CODE = Fetch_NAV(C,1,",");
+        //COMPTEUR_NAME = Fetch_NAV(C,1,",");
+        FileClose(FileHandle);
+
+        OutString  = Tableau_CODE + " , " +
+                     View_CODE + " , " +
+                     Energy_CODE + " , " +
+                     CharToStr(34) + "*/*/"+BU_NAME + CharToStr(34) + " , " +
+                     CharToStr(34) + "*/*/"+BU_CODE + CharToStr(34) + " , " +
+                     CharToStr(34) + COMPTEUR_CODE + CharToStr(34) ;
+
+          //MessageBox(OutString,"OutString");
+        Return OutString;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_LCDTAGS_NAVIGUATEUR()
+
+    String Energy   = GetStrGateValue("NAV_Energy",0) ;
+    String Energy_CODE;
+    String Energy_NAME;
+    String Energy_ACCESS;
+    String READ_CODE;
+    String TAG="";
+    String FullPATH = GetProjectPath() + "\Winlog\Files\AllCompteur\Energy.CSV";
+    Int FileHandle;
+    String LINE;
+
+     Energy_CODE = Fetch_NAV(Energy,1,";");
+     Energy_NAME = Fetch_NAV(Energy,4,";"); //SHORTNAME
+     Energy_ACCESS = Fetch_NAV(Energy,3,";");
+
+     FileHandle = FileOpen(FullPATH,"rt");
+     IF (FileHandle != 0) Then
+     FileReadLn(FileHandle);
+       While ( FileEof(FileHandle) == 0)
+        LINE = FileReadLn(FileHandle);
+        IF (LINE!="") Then
+            READ_CODE = Fetch_NAV(LINE,1,";");
+            IF ( READ_CODE == Energy_CODE ) Then TAG = Fetch_NAV(LINE,12,";"); End
+        End
+       End
+     End
+     FileClose(FileHandle);
+
+     Return TAG;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void TESTWEV_NAV()
+
+    String Start_NAV;
+    String End_NAV;
+
+    Start_NAV = GetTimeString(":");
+    MODE = "W";
+    WEB_NAVIGATOR_5STEPs();
+    MODE = "D";
+    WEB_NAVIGATOR_5STEPs();
+    End_NAV = GetTimeString(":");
+    MessageBox(Start_NAV + Eol() + End_NAV,"");
+end

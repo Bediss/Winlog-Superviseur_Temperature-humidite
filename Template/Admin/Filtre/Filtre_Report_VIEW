@@ -1,0 +1,254 @@
+#Version: 0x03021d
+#Name: View Selector
+#Access: 0
+#Pos: 500,275
+#Size: 170,311
+#BkColor: clWhite
+#Gates: 13
+  #STR: EmailView1,0
+  #STR: EmailView2,0
+  #STR: EmailView3,0
+  #STR: EmailView4,0
+  #STR: EmailView5,0
+  #STR: EmailView6,0
+  #STR: EmailView7,0
+  #STR: EmailView8,0
+  #STR: EmailView9,0
+  #STR: EmailView10,0
+  #NUM: PageAllCommpteurView,0
+  #STR: BU_Energy,0
+  #STR: AlarmeEventModifer,30
+#Style: Fixed
+#StayOnTop: 1
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_1()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,30
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_2()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,55
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_3()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,80
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 3
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_4()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,105
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 4
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_5()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,130
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 5
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_6()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,155
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 6
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_7()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,180
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 7
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_8()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,205
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 8
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_9()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,230
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 9
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Report_View_Filtre_10()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 130,255
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Label: >>
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,View_End()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 100,255
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Label: >
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,View_Add()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 70,255
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 10
+  #Label: %.d
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 40,255
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Label: <
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,View_Sub()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,255
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Label: <<
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,View_First()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,280
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: Close
+#EndObj

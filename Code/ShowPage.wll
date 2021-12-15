@@ -1,0 +1,1709 @@
+
+function void ShowPage(string TemplateName)
+
+    Int TID =0;
+
+         TPageCloseByName(GetStrGateValue("OpenTemplateID",0));
+
+         TPageOpen(TemplateName);
+
+         SetStrGateValue("OpenTemplateID",0,TemplateName);
+
+End
+
+function void ShowPoPUPs(string TemplateName)
+
+    Int TID =0;
+
+
+         TPageCloseByName(GetStrGateValue("OpenPOPUPID",0));
+         TID = TPageOpen(TemplateName);
+         SetStrGateValue("OpenPOPUPID",0,TemplateName);
+
+End
+function void ShowPoPUPsNoClose(string TemplateName)
+
+    Int TID =0;
+
+         TID = TPageOpen(TemplateName);
+         SetStrGateValue("OpenPOPUPID",0,TemplateName);
+
+
+End
+function void ShowPath(string TemplateName)
+
+    Int TID;
+         TPageCloseByName(GetStrGateValue("OpenPATHID",0));
+         TID = TPageOpen(TemplateName);
+         SetStrGateValue("OpenPATHID",0,TemplateName);
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function void NAVIGUATOR()
+    ShowPage( "Site" );
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Tableaux()
+
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\Display_Templates\Tableaux.csv";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    Tableaux_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_TABLEAUX" );
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function void Tableaux_Display( Int Page)
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String TABLEAUXLIST;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+	//MessageBox(EVM_LIST_FILE,TextRow);
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    TextRow = FileReadLn(FileHandle);//header
+	
+    For i = Row_Start to Row_End do
+
+         TextRow = FileReadLn(FileHandle);
+		 //MessageBox(TextRow,TextRow);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+                TABLEAUXLIST = FetchBU(TextRow,3,";");
+              /*  if PageOpen=="Report" then
+                    if TABLEAUXLIST=="Ad Hoc" then
+                        SetStrGateValue(EVM,0,TABLEAUXLIST);
+                        TABLEAUXLIST = FetchBU(TextRow,1,";");
+
+                        SetStrGateValue(EVM,1,TABLEAUXLIST);
+                    end
+                else*/
+                    SetStrGateValue(EVM,0,TABLEAUXLIST);
+                        TABLEAUXLIST = FetchBU(TextRow,1,";");
+
+                        SetStrGateValue(EVM,1,TABLEAUXLIST);
+               // end
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+////////////////////
+function void Level_Display( Int Page)
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String TABLEAUXLIST;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+    //TextRow = FileReadLn(FileHandle); // Header
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    TextRow = FileReadLn(FileHandle);//header
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+                TABLEAUXLIST = FetchBU(TextRow,1,";");
+
+                SetStrGateValue(EVM,1,TABLEAUXLIST);
+                TABLEAUXLIST = FetchBU(TextRow,2,";");
+
+                SetStrGateValue(EVM,0,TABLEAUXLIST);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Tableaux_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     Tableaux_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Tableaux_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    Tableaux_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Tableaux_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    Tableaux_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Tableaux_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     Tableaux_Display(MaxPage);
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Tableaux_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView1",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView2",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView3",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView4",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView5",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView6",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView7",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView8",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_9()
+String S;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView9",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+function void Tableaux_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView10",1)));
+      TPageCloseByName("Select_TABLEAUX");
+      SelectTableau();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Report_Tableaux()
+
+    // Display
+      if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\Display_Templates\Tableaux.csv";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    Tableaux_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+
+    TPageOpen("Select_Report_TABLEAUX");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Report_Tableaux_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView1",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView2",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView3",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView4",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView5",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView6",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView7",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView8",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_9()
+String S;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView9",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Tableaux_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView10",1)));
+      SELECT_T_E_V_REPORT();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Energy()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_ENERGY" );
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Energy_BU()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    TPageOpen("Select_ENERGY_BU");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Energy_Display( Int Page )
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String ENERGYLIST;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+        SetStrGateValue("EmailView6",1,"");
+        SetStrGateValue("EmailView7",1,"");
+        SetStrGateValue("EmailView8",1,"");
+        SetStrGateValue("EmailView9",1,"");
+        SetStrGateValue("EmailView10",1,"");
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+    //TextRow = FileReadLn(FileHandle); // Header
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    TextRow = FileReadLn(FileHandle);//header
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+                ENERGYLIST = FetchBU(TextRow,2,";");
+                 SetStrGateValue(EVM,0,ENERGYLIST);
+                ENERGYLIST = FetchBU(TextRow,1,";");
+                SetStrGateValue(EVM,1,ENERGYLIST);
+
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Energy_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     Energy_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Energy_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    Energy_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Energy_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    Energy_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void Energy_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     Energy_Display(MaxPage);
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Energy_SelectRow_1()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_2()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_3()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_4()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_5()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_6()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_7()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_8()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_9()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+function void Energy_SelectRow_10()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY");
+        SelectEnergy();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Energy_BU_SelectRow_1()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        //MessageBox("Energy_BU_SelectRow_1","");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_2()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        //MessageBox("Energy_BU_SelectRow_2","");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_3()
+String S;
+int EnergyNumber;
+S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_4()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_5()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_6()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_7()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_8()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_9()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+function void Energy_BU_SelectRow_10()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_ENERGY_BU");
+        SelectEnergy_BU();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int GetEnergy_Code( String Energy)
+
+    Int MaxEnergy = GetNumGateValue("EnergyMax",0);
+    Int EnrgyNumber = -1;
+    int i;
+	//MessageBox(Energy,"Energy");
+    for i = 1 to MaxEnergy do
+        If ( GetStrGateValue("Energy_Name",i) == Energy ) Then
+            EnrgyNumber = i;
+            i = MaxEnergy+1;
+        End
+    end
+
+    Return EnrgyNumber;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Report_Energy()
+
+    // Display
+          if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    TPageOpen("Select_Report_ENERGY");
+
+end
+function void Report_Energy_SelectRow_1()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView1",0);
+
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_2()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_3()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_4()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_5()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_6()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_7()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_8()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_9()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+            SetNumGateValue("SelectEnergie",0,EnergyNumber);
+            TPageCloseByName("Select_Report_ENERGY");
+            SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_Energy_SelectRow_10()
+String S;
+int EnergyNumber;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+        EnergyNumber = GetEnergy_Code( S );
+
+        If ( EnergyNumber == -1 ) Then  MessageBox("Energy : " + S + "Has No Valid code","Error"); Return;  End
+
+        SetNumGateValue("SelectEnergie",0,EnergyNumber);
+        TPageCloseByName("Select_Report_ENERGY");
+        SELECT_T_E_V_REPORT();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_View()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Views.csv";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_VIEW" );
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void View_Display( Int Page)
+
+    //String FullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String TABLEAUXLIST;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView6",0,"");
+        SetStrGateValue("EmailView7",0,"");
+        SetStrGateValue("EmailView8",0,"");
+        SetStrGateValue("EmailView9",0,"");
+        SetStrGateValue("EmailView10",0,"");
+
+        SetStrGateValue("EmailView1",2,"");
+        SetStrGateValue("EmailView2",2,"");
+        SetStrGateValue("EmailView3",2,"");
+        SetStrGateValue("EmailView4",2,"");
+        SetStrGateValue("EmailView5",2,"");
+        SetStrGateValue("EmailView6",2,"");
+        SetStrGateValue("EmailView7",2,"");
+        SetStrGateValue("EmailView8",2,"");
+        SetStrGateValue("EmailView9",2,"");
+        SetStrGateValue("EmailView10",2,"");
+
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+    //TextRow = FileReadLn(FileHandle); // Header
+    //////////read until start of display
+       StartDisplay = Row_Start -1;
+
+     if LISTTYPE=="ELC" then
+     StartDisplay=StartDisplay+1;
+     end
+
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    TextRow = FileReadLn(FileHandle);//header
+    For i = Row_Start to Row_End do
+
+
+        TextRow = FileReadLn(FileHandle);
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+                TABLEAUXLIST = FetchBU(TextRow,2,";");
+
+                SetStrGateValue(EVM,0,TABLEAUXLIST);
+                TABLEAUXLIST = FetchBU(TextRow,1,";");
+
+                SetStrGateValue(EVM,1,TABLEAUXLIST);
+                   TABLEAUXLIST = FetchBU(TextRow,3,";");
+
+                SetStrGateValue(EVM,2,TABLEAUXLIST);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void View_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     View_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    View_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    View_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     View_Display(MaxPage);
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void View_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView1",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView2",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView3",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView4",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView5",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView6",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView7",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView8",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_9()
+String S;
+    S = GetStrGateValue("SelectView",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView9",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+function void View_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView10",1)));
+      TPageCloseByName("Select_VIEW");
+      SelectView();
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Report_View()
+
+    // Display
+          if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Views.csv";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+
+    TPageOpen("Select_Report_VIEW");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Report_View_SelectRow_1()
+String S;
+    S = GetStrGateValue("EmailView1",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView1",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_2()
+String S;
+    S = GetStrGateValue("EmailView2",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView2",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_3()
+String S;
+    S = GetStrGateValue("EmailView3",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView3",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_4()
+String S;
+    S = GetStrGateValue("EmailView4",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView4",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_5()
+String S;
+    S = GetStrGateValue("EmailView5",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView5",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView6",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView7",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView8",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_9()
+String S;
+    S = GetStrGateValue("SelectView",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectTableau",0,StrToInt(GetStrGateValue("EmailView9",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+function void Report_View_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+      SetNumGateValue("SelectView",0,StrToInt(GetStrGateValue("EmailView10",1)));
+      TPageCloseByName("Select_Report_VIEW");
+      SELECT_T_E_V_REPORT();
+    End
+end
+
+
+
+/*
+function void SelectCompteurList()
+    String TemplateName;
+    //TemplateName = "ListCompteur"+E;
+    TPageCloseByName("ListCompteurElectrique");
+    TPageCloseByName("ListCompteurVapeur");
+    TPageCloseByName("ListCompteurEau");
+    TPageCloseByName("ListCompteurGaz");
+    TPageCloseByName("ListCompteurProduction");
+
+        if ( GetNumGateValue("SelectEnergie",0) == 1 ) then
+            SetStrGateValue("PopUpList_Path",0,"Electrique");
+            PopupList_Display(1);
+
+    end
+        if ( GetNumGateValue("SelectEnergie",0) == 2 ) then
+
+        SetStrGateValue("PopUpList_Path",0,"Vapeur");
+        PopupList_Display(1);
+    end
+        if ( GetNumGateValue("SelectEnergie",0) == 3 ) then
+
+        SetStrGateValue("PopUpList_Path",0,"Eau");
+        PopupList_Display(1);
+
+    end
+        if ( GetNumGateValue("SelectEnergie",0) == 4 ) then
+
+        SetStrGateValue("PopUpList_Path",0,"Gaz");
+        PopupList_Display(1);
+
+    end
+        if ( GetNumGateValue("SelectEnergie",0) == 5 ) then
+
+        SetStrGateValue("PopUpList_Path",0,"Production");
+        PopupList_Display(1);
+
+    end
+TPageOpen("PopUp_List");
+end*/
+
+//*****************************************************************************
+//*****************************************************************************
+function void PopupList_MaxPAGES()
+
+    String FileToSearch =  Path_Display_Popup+"*" + POPUPList_Extension;
+    Bool found = True ;
+    Int MaxRow = 5;
+    Int i;
+//MessageBox(FileToSearch,"FileToSearch");
+
+    int Handle = FileFindFirstEx(FileToSearch);
+    if ( Handle != 0 ) then found = true;
+     else found = false;
+    end
+    i=0;
+
+    while (found ==true)
+          //CurrFile = FileNameFoundEx(Handle);
+          found  = FileFindNextEx(Handle);
+          i = i+1;
+    end
+
+    POPUPList_MaxPages = i/MaxRow;
+    If (Mod(i,MaxRow) != 0 )Then    POPUPList_MaxPages = POPUPList_MaxPages + 1;   End
+End
+//*****************************************************************************
+function void PopupList_Display(int Page)
+int PopupList_MaxRow = 5;
+int PopupList_Row_Start;
+int PopupList_Row_End;
+bool found = true;
+bool RowHeader=false;
+int ReadRowPos = 0;
+int j=0;
+String CurrFile;
+int P;
+    if ( Page == 1 ) then SetNumGateValue("PageAlarmeEventView",0,1);   end
+
+     PopupList_Row_Start = (Page - 1)*PopupList_MaxRow+1;
+
+     PopupList_Row_End =  Page*PopupList_MaxRow;
+
+     //String FileToSearch = ENV_PATH + GetStrGateValue("PopUpList_Root",0)+GetStrGateValue("PopUpList_Path",0)+ "\*.txt";
+     String FileToSearch = Path_Display_Popup +"*" + POPUPList_Extension ;
+     //MessageBox(FileToSearch,"FileToSearch");
+   // MessageBox(FileToSearch,"");
+     SetStrGateValue("Display",6,"Page :" + Page + "/" + POPUPList_MaxPages );
+
+      int Handle = FileFindFirstEx(FileToSearch);
+          if ( Handle != 0 ) then found = true;
+          else found = false;
+          end
+    //MessageBox(FileToSearch,"FileToSearch");
+
+     while (j <= PopupList_Row_End &&  found ==true)
+
+          CurrFile = FileNameFoundEx(Handle);
+
+           P = StrPos(CurrFile, POPUPList_Extension);
+           CurrFile = StrSubString(CurrFile,1,P-1);
+          ReadRowPos = ReadRowPos+1;
+
+          //MessageBox(CurrFile,"CurrFile");
+          //MessageBox(PopupList_Row_Start + "/"+ PopupList_Row_End,ReadRowPos);
+
+          if ( ReadRowPos >=  PopupList_Row_Start && ReadRowPos <= PopupList_Row_End ) then
+               j = ReadRowPos-PopupList_Row_Start+1;
+       //         display (CurrFile,j) in row J in popup
+       //MessageBox(CurrFile,j);
+                SetStrGateValue("Display",j,CurrFile);
+         end
+
+            found  = FileFindNextEx(Handle);
+    end
+
+    for P = j+1 to PopupList_MaxRow do
+     SetStrGateValue("Display",P,"");
+    end
+
+end
+//*****************************************************************************
+//*****************************************************************************
+function void PopupList_Add()
+
+int CurrentPage ;
+
+     CurrentPage = GetNumGateValue("PageAlarmeEventView",0) +1;
+
+    If ( CurrentPage >= POPUPList_MaxPages ) then
+    CurrentPage = POPUPList_MaxPages;
+    End
+
+     SetNumGateValue("PageAlarmeEventView",0, CurrentPage );
+     PopupList_Display(CurrentPage);
+end
+
+function void PopupList_First()
+     SetNumGateValue("PageAlarmeEventView",0, 1 );
+     PopupList_Display(1);
+end
+function void PopupList_LAST()
+     SetNumGateValue("PageAlarmeEventView",0, POPUPList_MaxPages );
+     PopupList_Display(POPUPList_MaxPages);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void PopupList_Sub()
+int CurrentPage= GetNumGateValue("PageAlarmeEventView",0);
+bool Continue;
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAlarmeEventView",0,CurrentPage);
+     PopupList_Display(CurrentPage);
+
+end
+/*****************************************************************************/
+/*****************************************************************************/
+function void SelectPOPUPList_L1()
+    SelectPOPUPList_SELECTED( 1 );
+end
+
+function void SelectPOPUPList_L2()
+    SelectPOPUPList_SELECTED( 2 );
+end
+
+function void SelectPOPUPList_L3()
+    SelectPOPUPList_SELECTED( 3 );
+end
+
+function void SelectPOPUPList_L4()
+    SelectPOPUPList_SELECTED( 4 );
+end
+
+function void SelectPOPUPList_L5()
+    SelectPOPUPList_SELECTED( 5 );
+end
+/*****************************************************************************/
+function void SelectPOPUPList_SELECTED( Int Row )
+
+    String SELECTED ;
+    String Source ;
+
+    SELECTED = GetStrGateValue("Display",Row);
+    Source =   GetStrGateValue("PopUpList_Path",0);
+
+
+    If ( Source == "Email CC" ) Then
+    SetStrGateValue("SelectMailingList",0,SELECTED);
+    FillEmailCC();
+    Else
+       If ( Source == "Email TO" ) Then
+       SetStrGateValue("SelectMailingList",0,SELECTED);
+       FillEmailTO();
+       Else
+         If ( Source == "Incidents" ) Then
+          SetStrGateValue("SelectMailingList",0,SELECTED);
+          FillChoiceEvent();
+         Else
+           If ( Source == "Evenements" ) Then
+           SetStrGateValue("SelectMailingList",0,SELECTED);
+           FillChoiceEvent();
+           Else
+              If ( Source == "Email" ) Then
+              SetStrGateValue("SelectMailingList",0,SELECTED);
+              FillChoiceEmail();
+              Else
+                If ( Source == "MailingList" ) Then
+                SetStrGateValue("SelectMailingList",0,SELECTED);
+                Fill_Select_List();
+                Else
+                  If ( Source == "MailingList Existant" ) Then
+                  SetStrGateValue("SelectMailingList",0,SELECTED);
+                  Fill_Selected_List();
+                  Else
+                    If ( Source == "Liste de Compteurs" ) Then
+                    SetStrGateValue("SelectMailingList",0,SELECTED);
+                    Fill_Select_CMPList_Report();
+                    Else
+                      If ( Source == "Liste de Mesures" ) Then
+                      SetStrGateValue("SelectMailingList",0,SELECTED);
+                      Fill_Select_MeasureList_Report();
+                      Else
+                        If ( Source == "Mise en page" ) Then
+                        SetStrGateValue("SelectMailingList",0,SELECTED);
+                        Fill_Select_Master_Layaout();
+                        Else
+                          If ( Source == "Mesure Liste" ) Then
+                          SetStrGateValue("SelectMailingList",0,SELECTED);
+                          Fill_Select_List_EVM();
+                          Else
+                            If ( Source == "Compteur Liste" ) Then
+                            SetStrGateValue("SelectMailingList",0,SELECTED);
+                            Fill_Selected_List_Compteur();
+                            //Else
+                            Else
+                               If ( Source == "Measure_ADD" ) Then
+                                 SetStrGateValue("SelectMailingList",0,SELECTED);
+                                 Fill_Select_List_EVM_ADD();
+                                 Else
+                                   If ( Source == "Compteur_ADD" ) Then
+                                         SetStrGateValue("SelectMailingList",0,SELECTED);
+                                        Fill_Select_List_Compteur();
+                                       Else
+                                         If ( Source == "Factbook" ) Then
+                                            SetStrGateValue("SelectMailingList",0,SELECTED);
+                                            Fill_Selected_FactBook();
+
+
+                                         Else
+                                            If ( Source == "Factbook_Select" ) Then
+                                                SetStrGateValue("SelectMailingList",0,SELECTED);
+                                                Fill_Select_Factbook();
+                                            end
+                                                    If ( Source == "Master" ) Then
+                                                SetStrGateValue("SelectMailingList",0,SELECTED);
+                                                Fill_Select_Master();
+                                                 end
+                               End
+                              End
+                             End
+                            End
+                          End
+                        End
+                      End
+                    End
+                  End
+                End
+              End
+           End
+         End
+       End
+    End
+                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    SetStrGateValue("PopUpList_Path",0,"");
+
+End
+/*****************************************************************************/
+/*****************************************************************************/
+Function void OpenChart()
+   int dd = GetDayOfMonth();
+   int mm = GetMonth();
+   int yy = GetYear();
+   int hh = GetHour() +1;
+   int hh_24 = hh -24;
+   int timespan = GetNumGateValue("chart_time_span",0);
+
+   if ( timespan == 1) then // rolling 24heures
+    ChartSetTimeRange(dd,mm,yy,hh_24,0,0,dd,mm,yy,hh,0,0);
+    else
+
+    if ( timespan == 2) then // 00 to 23:59
+      ChartSetTimeRange(dd,mm,yy,0,0,0,dd,mm,yy,23,59,59);
+    end
+
+   end
+end
+

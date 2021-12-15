@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K11;ATL-Coproduit;Electrique;CC1K1;Coproduit TR4;6;S200;M190;C210;STEG;PosteTR4;Prod Coproduit;Reel;SubAtelier;*;*;CoProduit;!~*;!~*;;;;;2;Atelier Coproduit;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K12;COP-Collecte;Electrique;CC1K1;Coproduit TR4;6;S200;M190;C220;STEG;PosteTR4;COP-Facility;Reel;SubAtelier;*;*;CoProduit;!~*;!~*;;;;;2;Coproduit Collecte;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K13;TP Coproduit;Electrique;CC1K1;Coproduit TR4;6;S200;M190;C240;STEG;PosteTR4;TP Coopr;Reel;SubAtelier;*;*;CoProduit;!~*;!~*;;;;;3;TP Coproduit;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1K14;Coproduit Process;Electrique;CC1K1;Coproduit TR4;6;S200;M190;M152B;STEG;PosteTR4;CoProduit TR4;Reel;SubAtelier;*;*;CoProduit;!~*;!~*;;;;;2;COP-Process;*

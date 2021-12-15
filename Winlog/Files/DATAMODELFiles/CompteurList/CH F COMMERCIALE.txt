@@ -1,0 +1,6 @@
+CTC3;CH_F_Commerciale;Temperature;CTCA;CLC;;*;*;D3;*;*;CH_F_Commerciale;;Unite;*;CH_F_Commerciale Temperature
+CTC31;CH1_F_Commerciale_P1;Temperature;CTC3;CH_F_Commerciale;;D64;*;D31;T°c  positive;*;CH1_F_Commerciale_P1;;Point de mesure;*;CH1_F_Commerciale_P1 Temperature
+CTC32;CH2_F_Commerciale_P2;Temperature;CTC3;CH_F_Commerciale;;D64;*;D32;T°c  positive;*;CH2_F_Commerciale_P2;;Point de mesure;*;CH2_F_Commerciale_P2 Temperature
+CHC2;CH_F_Commerciale;Humidite;CHCA;CLC;;*;*;D3;*;*;CH_F_Commerciale;;Unite;;CH_F_Commerciale Humidite
+CHC21;CH1_F_Commerciale_P1;Humidite;CHC2;CH_F_Commerciale;;D70;*;D31;RH  CH_Positive;*;CH1_F_Commerciale_P1;;Point de mesure;;CH1_F_Commerciale_P1 Humidite
+CHC22;CH2_F_Commerciale_P2;Humidite;CHC2;CH_F_Commerciale;;D70;*;D32;RH  CH_Positive;*;CH2_F_Commerciale_P2;;Point de mesure;;CH2_F_Commerciale_P2 Humidite

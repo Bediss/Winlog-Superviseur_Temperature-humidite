@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I31;GA 30 Elec;Electrique;CC1I3;Chaufferie TR2;6;S200;M170;M153;STEG;PosteTR2;GA 30;Reel;SubAtelier;*;*;Chaufferie;!~*;!~*;;;;;2;GA 30 Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I32;GA 50 Elec;Electrique;CC1I3;Chaufferie TR2;6;S200;M170;M154;STEG;PosteTR2;GA 50;Reel;SubAtelier;*;*;Chaufferie;!~*;!~*;;;;;2;GA 50 Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I33;Comp Kaeser;Electrique;CC1I3;Chaufferie TR2;7;S200;M170;M155;STEG;PosteTR2;Compress-Kaeser;Reel;Machine;*;*;Chaufferie;!~*;!~*;;;;;2;CompresseurKaeser;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I34;CHAUFFERIE+AC;Electrique;CC1I3;Chaufferie TR2;6;S200;M170;M1R0;STEG;PosteTR2;CHAUFFERIE+AC;Reel;SubAtelier;*;*;Chaufferie;!~*;!~*;;;;;2;CHAUFFERIE+ air comprime;*

@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1J2;Matal TR3;Electrique;CC1V;Dick TR5;5;S200;M180;MA04E;STEG;PosteTR3;Matal TR3;F(CC1J2);Atelier;*;*;Froid;*;*;F~(~CC1J2~)~;F~(~Matal TR3~)~;;;0;Matal TR3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1J3;SMF ElMazraaTR3;Electrique;CC1V;Dick TR5;5;S200;M180;MA04H;STEG;PosteTR3;SMF ElMazraaTR3;F(CC1J3);Atelier;*;*;Froid;*;*;F~(~CC1J3~)~;F~(~SMF ElMazraaTR3~)~;;;0;SalleMachine Froid ElMazeraa TR3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1V1;FROID DICK;Electrique;CC1V;Dick TR5;6;S200;M1A0;D200;STEG;PosteTR5;Dick;Reel;SubAtelier;*;*;Dick;!~*;!~*;;;;;2;FROID DICK;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1V2;PROC RESS DICK;Electrique;CC1V;Dick TR5;6;S200;M1A0;D200;STEG;PosteTR5;Dick;Reel;SubAtelier;*;*;Dick;!~*;!~*;;;;;2;PROCESS RESSUAGE DICK;*

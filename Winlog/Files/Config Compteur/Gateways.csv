@@ -1,0 +1,9 @@
+Gateway Id;Gateway Name;Adresse IP;COMsType;Emplacement;Post Code;Nomber Port;Nomber Device connected;P1;P2;P3;P4;P5;P6;P7;P8;P9;P10;P11;P12;P13;P14;P15;P16
+R1;Convertisseur RTU-TCP Local Habillement;10.10.14.10;R;Local Habillement;D8;3;30;502;503;504;*;*;*;*;*;*;*;*;*;*;*;*;*
+R2;Convertisseur RTU-TCP Local Beurrerie;10.10.14.11;R;Beurrerie;D27;3;30;502;503;504;*;*;*;*;*;*;*;*;*;*;*;*;*
+R3;Convertisseur RTU-TCP Local Serveur Process;10.10.14.12;R;Local serveur Production;D2C;3;30;502;503;504;*;*;*;*;*;*;*;*;*;*;*;*;*
+R4;Convertisseur RTU-TCP Local Matiere Premiere;10.10.14.13;R;Matiere_Premiere_P1;D6;3;30;502;503;504;*;*;*;*;*;*;*;*;*;*;*;*;*
+R5;Convertisseur ANA-TCP LABO PHY-Chimique;10.10.14.16;A;LAB_PhysicoChimique;D42;10;1;80:40000;80:40001;80:40002;80:40003;80:40004;80:40005;80:40006;80:40007;80:40008;80:40009;*;*;*;*;*;*
+R6;Convertisseur ANA-TCP LABO Bacterio 1;10.10.14.15;A;LAB_Bacterio;D41;10;1;80:40000;80:40001;80:40002;80:40003;80:40004;80:40005;80:40006;80:40007;80:40008;80:40009;*;*;*;*;*;*
+R7;Convertisseur ANA-TCP LABO Bacterio 2;10.10.14.17;A;LAB_Bacterio;D41;10;1;80:40000;80:40001;80:40002;80:40003;80:40004;80:40005;80:40006;80:40007;80:40008;80:40009;*;*;*;*;*;*
+R8;Convertisseur ANA-TCP Salle Fermentation;10.10.14.18;A;Salle_De_Fermentation;D5;10;1;80:40000;80:40001;80:40002;80:40003;80:40004;80:40005;80:40006;80:40007;80:40008;80:40009;*;*;*;*;*;*

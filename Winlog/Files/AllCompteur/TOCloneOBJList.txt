@@ -1,0 +1,10 @@
+CTC2A,Process_Pasto,Temperature
+CTC2B,Process_Sterilo,Temperature
+CTC2C,Cond_UHT1_P1,Temperature
+CTC2D,Cond_UHT1_P2,Temperature
+CTC2E,Process_Lait_Fermente,Temperature
+CTC2F,Galdi,Temperature
+CTC2G,Beurrerie,Temperature
+CTC2H,CH_Chaud_P1,Temperature
+CTC2I,CH_Froid_P1,Temperature
+CTC2J,CH_Froid_P2,Temperature

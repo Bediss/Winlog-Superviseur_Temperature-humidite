@@ -1,0 +1,6 @@
+CODE;NAME;ACCESS;SHORTNAME
+0;Temps Réel;Min_60;Live
+1;Journalier;Heure_24;J
+2;Hebdomadaire;Jour_7;S
+3;Mensuel;Jour_30;M
+4;Annuel;Mois_12;A

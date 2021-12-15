@@ -1,0 +1,10 @@
+CODE;NAME;ACCESS
+*;¤ Tout POINT DE MESURE. ;32767
+D51;¤ LSF_C_06.             ;8
+D52;¤ LSF_C_01.             ;8
+D53;¤ LSF_C_03.             ;8
+D54;¤ LSF_C_11.             ;8
+D55;¤ LSF_C_10.             ;8
+D56;¤ LSF_C_04.             ;8
+D57;¤ LSF_C_09.             ;8
+D58;¤ LSF_C_08.             ;8

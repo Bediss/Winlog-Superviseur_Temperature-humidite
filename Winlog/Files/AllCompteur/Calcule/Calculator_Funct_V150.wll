@@ -1,0 +1,328 @@
+/////////Calculatrice generateur  26/8/2020_11:07:18
+function void CTCA_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC2",List )+GetCmpGateValue("CTC3",List )+GetCmpGateValue("CTC4",List )+GetCmpGateValue("CTC5",List )+GetCmpGateValue("CTC6",List )+GetCmpGateValue("CTC7",List ));
+SetNumGateValue("TCA",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC2",List )+GetCmpGateValue("CTC3",List )+GetCmpGateValue("CTC4",List )+GetCmpGateValue("CTC5",List )+GetCmpGateValue("CTC6",List )+GetCmpGateValue("CTC7",List ));
+SetNumGateValue("TCA",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC2",List )+GetCmpGateValue("CTC3",List )+GetCmpGateValue("CTC4",List )+GetCmpGateValue("CTC5",List )+GetCmpGateValue("CTC6",List )+GetCmpGateValue("CTC7",List ));
+SetNumGateValue("TCA",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC2",List )+GetCmpGateValue("CTC3",List )+GetCmpGateValue("CTC4",List )+GetCmpGateValue("CTC5",List )+GetCmpGateValue("CTC6",List )+GetCmpGateValue("CTC7",List ));
+SetNumGateValue("TCA",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC2",List )+GetCmpGateValue("CTC3",List )+GetCmpGateValue("CTC4",List )+GetCmpGateValue("CTC5",List )+GetCmpGateValue("CTC6",List )+GetCmpGateValue("CTC7",List ));
+SetNumGateValue("TCA",42,Valeur);
+END
+
+
+function void CTC2_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC2A",List )+GetCmpGateValue("CTC2B",List )+GetCmpGateValue("CTC2C",List )+GetCmpGateValue("CTC2D",List )+GetCmpGateValue("CTC2E",List )+GetCmpGateValue("CTC2F",List )+GetCmpGateValue("CTC2G",List )+GetCmpGateValue("CTC2H",List )+GetCmpGateValue("CTC2I",List )+GetCmpGateValue("CTC2J",List ));
+SetNumGateValue("TC2",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC2A",List )+GetCmpGateValue("CTC2B",List )+GetCmpGateValue("CTC2C",List )+GetCmpGateValue("CTC2D",List )+GetCmpGateValue("CTC2E",List )+GetCmpGateValue("CTC2F",List )+GetCmpGateValue("CTC2G",List )+GetCmpGateValue("CTC2H",List )+GetCmpGateValue("CTC2I",List )+GetCmpGateValue("CTC2J",List ));
+SetNumGateValue("TC2",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC2A",List )+GetCmpGateValue("CTC2B",List )+GetCmpGateValue("CTC2C",List )+GetCmpGateValue("CTC2D",List )+GetCmpGateValue("CTC2E",List )+GetCmpGateValue("CTC2F",List )+GetCmpGateValue("CTC2G",List )+GetCmpGateValue("CTC2H",List )+GetCmpGateValue("CTC2I",List )+GetCmpGateValue("CTC2J",List ));
+SetNumGateValue("TC2",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC2A",List )+GetCmpGateValue("CTC2B",List )+GetCmpGateValue("CTC2C",List )+GetCmpGateValue("CTC2D",List )+GetCmpGateValue("CTC2E",List )+GetCmpGateValue("CTC2F",List )+GetCmpGateValue("CTC2G",List )+GetCmpGateValue("CTC2H",List )+GetCmpGateValue("CTC2I",List )+GetCmpGateValue("CTC2J",List ));
+SetNumGateValue("TC2",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC2A",List )+GetCmpGateValue("CTC2B",List )+GetCmpGateValue("CTC2C",List )+GetCmpGateValue("CTC2D",List )+GetCmpGateValue("CTC2E",List )+GetCmpGateValue("CTC2F",List )+GetCmpGateValue("CTC2G",List )+GetCmpGateValue("CTC2H",List )+GetCmpGateValue("CTC2I",List )+GetCmpGateValue("CTC2J",List ));
+SetNumGateValue("TC2",42,Valeur);
+END
+
+
+function void CTC2F_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC21",List )+GetCmpGateValue("CTC22",List ));
+SetNumGateValue("TC2F",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC21",List )+GetCmpGateValue("CTC22",List ));
+SetNumGateValue("TC2F",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC21",List )+GetCmpGateValue("CTC22",List ));
+SetNumGateValue("TC2F",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC21",List )+GetCmpGateValue("CTC22",List ));
+SetNumGateValue("TC2F",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC21",List )+GetCmpGateValue("CTC22",List ));
+SetNumGateValue("TC2F",42,Valeur);
+END
+
+
+function void CTC2G_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC23",List )+GetCmpGateValue("CTC24",List ));
+SetNumGateValue("TC2G",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC23",List )+GetCmpGateValue("CTC24",List ));
+SetNumGateValue("TC2G",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC23",List )+GetCmpGateValue("CTC24",List ));
+SetNumGateValue("TC2G",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC23",List )+GetCmpGateValue("CTC24",List ));
+SetNumGateValue("TC2G",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC23",List )+GetCmpGateValue("CTC24",List ));
+SetNumGateValue("TC2G",42,Valeur);
+END
+
+
+function void CTC3_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC31",List )+GetCmpGateValue("CTC32",List ));
+SetNumGateValue("TC3",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC31",List )+GetCmpGateValue("CTC32",List ));
+SetNumGateValue("TC3",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC31",List )+GetCmpGateValue("CTC32",List ));
+SetNumGateValue("TC3",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC31",List )+GetCmpGateValue("CTC32",List ));
+SetNumGateValue("TC3",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC31",List )+GetCmpGateValue("CTC32",List ));
+SetNumGateValue("TC3",42,Valeur);
+END
+
+
+function void CTC4_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC41",List )+GetCmpGateValue("CTC42",List ));
+SetNumGateValue("TC4",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC41",List )+GetCmpGateValue("CTC42",List ));
+SetNumGateValue("TC4",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC41",List )+GetCmpGateValue("CTC42",List ));
+SetNumGateValue("TC4",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC41",List )+GetCmpGateValue("CTC42",List ));
+SetNumGateValue("TC4",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC41",List )+GetCmpGateValue("CTC42",List ));
+SetNumGateValue("TC4",42,Valeur);
+END
+
+
+function void CTC41_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC4A",List )+GetCmpGateValue("CTC4B",List )+GetCmpGateValue("CTC4C",List )+GetCmpGateValue("CTC4D",List )+GetCmpGateValue("CTC4E",List )+GetCmpGateValue("CTC4F",List )+GetCmpGateValue("CTC4G",List )+GetCmpGateValue("CTC4H",List )+GetCmpGateValue("CTC4I",List )+GetCmpGateValue("CTC4J",List )+GetCmpGateValue("CTC4K",List ));
+SetNumGateValue("TC41",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC4A",List )+GetCmpGateValue("CTC4B",List )+GetCmpGateValue("CTC4C",List )+GetCmpGateValue("CTC4D",List )+GetCmpGateValue("CTC4E",List )+GetCmpGateValue("CTC4F",List )+GetCmpGateValue("CTC4G",List )+GetCmpGateValue("CTC4H",List )+GetCmpGateValue("CTC4I",List )+GetCmpGateValue("CTC4J",List )+GetCmpGateValue("CTC4K",List ));
+SetNumGateValue("TC41",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC4A",List )+GetCmpGateValue("CTC4B",List )+GetCmpGateValue("CTC4C",List )+GetCmpGateValue("CTC4D",List )+GetCmpGateValue("CTC4E",List )+GetCmpGateValue("CTC4F",List )+GetCmpGateValue("CTC4G",List )+GetCmpGateValue("CTC4H",List )+GetCmpGateValue("CTC4I",List )+GetCmpGateValue("CTC4J",List )+GetCmpGateValue("CTC4K",List ));
+SetNumGateValue("TC41",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC4A",List )+GetCmpGateValue("CTC4B",List )+GetCmpGateValue("CTC4C",List )+GetCmpGateValue("CTC4D",List )+GetCmpGateValue("CTC4E",List )+GetCmpGateValue("CTC4F",List )+GetCmpGateValue("CTC4G",List )+GetCmpGateValue("CTC4H",List )+GetCmpGateValue("CTC4I",List )+GetCmpGateValue("CTC4J",List )+GetCmpGateValue("CTC4K",List ));
+SetNumGateValue("TC41",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC4A",List )+GetCmpGateValue("CTC4B",List )+GetCmpGateValue("CTC4C",List )+GetCmpGateValue("CTC4D",List )+GetCmpGateValue("CTC4E",List )+GetCmpGateValue("CTC4F",List )+GetCmpGateValue("CTC4G",List )+GetCmpGateValue("CTC4H",List )+GetCmpGateValue("CTC4I",List )+GetCmpGateValue("CTC4J",List )+GetCmpGateValue("CTC4K",List ));
+SetNumGateValue("TC41",42,Valeur);
+END
+
+
+function void CTC42_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC4R",List )+GetCmpGateValue("CTC4L",List )+GetCmpGateValue("CTC4M",List )+GetCmpGateValue("CTC4N",List )+GetCmpGateValue("CTC4O",List )+GetCmpGateValue("CTC4P",List ));
+SetNumGateValue("TC42",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC4R",List )+GetCmpGateValue("CTC4L",List )+GetCmpGateValue("CTC4M",List )+GetCmpGateValue("CTC4N",List )+GetCmpGateValue("CTC4O",List )+GetCmpGateValue("CTC4P",List ));
+SetNumGateValue("TC42",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC4R",List )+GetCmpGateValue("CTC4L",List )+GetCmpGateValue("CTC4M",List )+GetCmpGateValue("CTC4N",List )+GetCmpGateValue("CTC4O",List )+GetCmpGateValue("CTC4P",List ));
+SetNumGateValue("TC42",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC4R",List )+GetCmpGateValue("CTC4L",List )+GetCmpGateValue("CTC4M",List )+GetCmpGateValue("CTC4N",List )+GetCmpGateValue("CTC4O",List )+GetCmpGateValue("CTC4P",List ));
+SetNumGateValue("TC42",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC4R",List )+GetCmpGateValue("CTC4L",List )+GetCmpGateValue("CTC4M",List )+GetCmpGateValue("CTC4N",List )+GetCmpGateValue("CTC4O",List )+GetCmpGateValue("CTC4P",List ));
+SetNumGateValue("TC42",42,Valeur);
+END
+
+
+function void CTC5_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CTC5A",List )+GetCmpGateValue("CTC5B",List )+GetCmpGateValue("CTC5C",List )+GetCmpGateValue("CTC5D",List )+GetCmpGateValue("CTC5E",List )+GetCmpGateValue("CTC5F",List )+GetCmpGateValue("CTC5G",List )+GetCmpGateValue("CTC5H",List ));
+SetNumGateValue("TC5",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CTC5A",List )+GetCmpGateValue("CTC5B",List )+GetCmpGateValue("CTC5C",List )+GetCmpGateValue("CTC5D",List )+GetCmpGateValue("CTC5E",List )+GetCmpGateValue("CTC5F",List )+GetCmpGateValue("CTC5G",List )+GetCmpGateValue("CTC5H",List ));
+SetNumGateValue("TC5",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CTC5A",List )+GetCmpGateValue("CTC5B",List )+GetCmpGateValue("CTC5C",List )+GetCmpGateValue("CTC5D",List )+GetCmpGateValue("CTC5E",List )+GetCmpGateValue("CTC5F",List )+GetCmpGateValue("CTC5G",List )+GetCmpGateValue("CTC5H",List ));
+SetNumGateValue("TC5",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CTC5A",List )+GetCmpGateValue("CTC5B",List )+GetCmpGateValue("CTC5C",List )+GetCmpGateValue("CTC5D",List )+GetCmpGateValue("CTC5E",List )+GetCmpGateValue("CTC5F",List )+GetCmpGateValue("CTC5G",List )+GetCmpGateValue("CTC5H",List ));
+SetNumGateValue("TC5",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CTC5A",List )+GetCmpGateValue("CTC5B",List )+GetCmpGateValue("CTC5C",List )+GetCmpGateValue("CTC5D",List )+GetCmpGateValue("CTC5E",List )+GetCmpGateValue("CTC5F",List )+GetCmpGateValue("CTC5G",List )+GetCmpGateValue("CTC5H",List ));
+SetNumGateValue("TC5",42,Valeur);
+END
+
+
+function void CHCA_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CHC1",List )+GetCmpGateValue("CHC2",List )+GetCmpGateValue("CHC3",List )+GetCmpGateValue("CHC5",List ));
+SetNumGateValue("HCA",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CHC1",List )+GetCmpGateValue("CHC2",List )+GetCmpGateValue("CHC3",List )+GetCmpGateValue("CHC5",List ));
+SetNumGateValue("HCA",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CHC1",List )+GetCmpGateValue("CHC2",List )+GetCmpGateValue("CHC3",List )+GetCmpGateValue("CHC5",List ));
+SetNumGateValue("HCA",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CHC1",List )+GetCmpGateValue("CHC2",List )+GetCmpGateValue("CHC3",List )+GetCmpGateValue("CHC5",List ));
+SetNumGateValue("HCA",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CHC1",List )+GetCmpGateValue("CHC2",List )+GetCmpGateValue("CHC3",List )+GetCmpGateValue("CHC5",List ));
+SetNumGateValue("HCA",42,Valeur);
+END
+
+
+function void CHC1_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CHC1A",List )+GetCmpGateValue("CHC1B",List )+GetCmpGateValue("CHC1C",List )+GetCmpGateValue("CHC1D",List )+GetCmpGateValue("CHC1E",List )+GetCmpGateValue("CHC1F",List )+GetCmpGateValue("CHC1G",List )+GetCmpGateValue("CHC1H",List )+GetCmpGateValue("CHC1I",List )+GetCmpGateValue("CHC1J",List ));
+SetNumGateValue("HC1",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CHC1A",List )+GetCmpGateValue("CHC1B",List )+GetCmpGateValue("CHC1C",List )+GetCmpGateValue("CHC1D",List )+GetCmpGateValue("CHC1E",List )+GetCmpGateValue("CHC1F",List )+GetCmpGateValue("CHC1G",List )+GetCmpGateValue("CHC1H",List )+GetCmpGateValue("CHC1I",List )+GetCmpGateValue("CHC1J",List ));
+SetNumGateValue("HC1",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CHC1A",List )+GetCmpGateValue("CHC1B",List )+GetCmpGateValue("CHC1C",List )+GetCmpGateValue("CHC1D",List )+GetCmpGateValue("CHC1E",List )+GetCmpGateValue("CHC1F",List )+GetCmpGateValue("CHC1G",List )+GetCmpGateValue("CHC1H",List )+GetCmpGateValue("CHC1I",List )+GetCmpGateValue("CHC1J",List ));
+SetNumGateValue("HC1",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CHC1A",List )+GetCmpGateValue("CHC1B",List )+GetCmpGateValue("CHC1C",List )+GetCmpGateValue("CHC1D",List )+GetCmpGateValue("CHC1E",List )+GetCmpGateValue("CHC1F",List )+GetCmpGateValue("CHC1G",List )+GetCmpGateValue("CHC1H",List )+GetCmpGateValue("CHC1I",List )+GetCmpGateValue("CHC1J",List ));
+SetNumGateValue("HC1",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CHC1A",List )+GetCmpGateValue("CHC1B",List )+GetCmpGateValue("CHC1C",List )+GetCmpGateValue("CHC1D",List )+GetCmpGateValue("CHC1E",List )+GetCmpGateValue("CHC1F",List )+GetCmpGateValue("CHC1G",List )+GetCmpGateValue("CHC1H",List )+GetCmpGateValue("CHC1I",List )+GetCmpGateValue("CHC1J",List ));
+SetNumGateValue("HC1",42,Valeur);
+END
+
+
+function void CHC1F_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CHC11",List )+GetCmpGateValue("CHC12",List ));
+SetNumGateValue("HC1F",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CHC11",List )+GetCmpGateValue("CHC12",List ));
+SetNumGateValue("HC1F",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CHC11",List )+GetCmpGateValue("CHC12",List ));
+SetNumGateValue("HC1F",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CHC11",List )+GetCmpGateValue("CHC12",List ));
+SetNumGateValue("HC1F",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CHC11",List )+GetCmpGateValue("CHC12",List ));
+SetNumGateValue("HC1F",42,Valeur);
+END
+
+
+function void CHC1G_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CHC13",List )+GetCmpGateValue("CHC14",List ));
+SetNumGateValue("HC1G",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CHC13",List )+GetCmpGateValue("CHC14",List ));
+SetNumGateValue("HC1G",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CHC13",List )+GetCmpGateValue("CHC14",List ));
+SetNumGateValue("HC1G",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CHC13",List )+GetCmpGateValue("CHC14",List ));
+SetNumGateValue("HC1G",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CHC13",List )+GetCmpGateValue("CHC14",List ));
+SetNumGateValue("HC1G",42,Valeur);
+END
+
+
+function void CHC2_Calculator()
+    int List;
+    int Valeur;
+    Int NBR = 0;
+   List = 12;
+Valeur =(GetCmpGateValue("CHC21",List )+GetCmpGateValue("CHC22",List ));
+SetNumGateValue("HC2",12,Valeur);
+   List = 13;
+Valeur =(GetCmpGateValue("CHC21",List )+GetCmpGateValue("CHC22",List ));
+SetNumGateValue("HC2",13,Valeur);
+   List = 14;
+Valeur =(GetCmpGateValue("CHC21",List )+GetCmpGateValue("CHC22",List ));
+SetNumGateValue("HC2",14,Valeur);
+   List = 15;
+Valeur =(GetCmpGateValue("CHC21",List )+GetCmpGateValue("CHC22",List ));
+SetNumGateValue("HC2",15,Valeur);
+   List = 42;
+Valeur =(GetCmpGateValue("CHC21",List )+GetCmpGateValue("CHC22",List ));
+SetNumGateValue("HC2",42,Valeur);
+END
+
+
+function void CALCULATOR()
+#StartUp
+  While(WindowIsOpen())
+  CTC2F_Calculator();
+  CTC2G_Calculator();
+  CTC41_Calculator();
+  CTC42_Calculator();
+  CHC1F_Calculator();
+  CHC1G_Calculator();
+  CTC2_Calculator();
+  CTC3_Calculator();
+  CTC4_Calculator();
+  CTC5_Calculator();
+  CHC1_Calculator();
+  CHC2_Calculator();
+  CTCA_Calculator();
+  CHCA_Calculator();
+  End
+End

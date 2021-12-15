@@ -1,0 +1,255 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,110
+#Size: 1350,40
+#BkColor: 226,226,226
+#Gates: 1
+  #NUM: Show_Temp_Pointer,0
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 30,5
+  #Size: 105,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Meta-Compteurs
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_AllCompteur()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 165,5
+  #Size: 65,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Gateways
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Gateway()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 260,5
+  #Size: 40,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Unites
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Unit()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 655,5
+  #Size: 55,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Capteurs
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Energy_UI()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 570,5
+  #Size: 70,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Periodicites
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Views()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 495,5
+  #Size: 60,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Tableaux
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_UI_Tableaux()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 330,5
+  #Size: 70,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Utilisateurs
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_User_MASTER()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 425,5
+  #Size: 75,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,8,0000
+  #Label: Access :
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,35
+  #Size: 1350,5
+  #BkColor: 226,226,226
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 30,0
+    #Size: 105,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870913
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 260,0
+    #Size: 40,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870916
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 330,0
+    #Size: 70,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870920
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 165,0
+    #Size: 65,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870914
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 495,0
+    #Size: 60,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870928
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 570,0
+    #Size: 70,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870944
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 655,0
+    #Size: 55,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536870976
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 740,0
+    #Size: 95,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 0,112,536871040
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 740,5
+  #Size: 95,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0000
+  #Label: Configuration
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,CONFIG_Button()
+#EndObj

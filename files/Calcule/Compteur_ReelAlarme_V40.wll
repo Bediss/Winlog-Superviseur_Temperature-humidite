@@ -1,0 +1,1358 @@
+function void Reel_Alarme_Calculatrice()
+  String CompteurCode ;
+  Int NBR ;
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEI";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EI",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AED1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("ED1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AED2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("ED2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1H1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1H1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1H2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1H2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P111";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P111",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P112";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P112",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P113";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P113",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P121";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P121",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P122";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P122",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P123";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P123",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P124";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P124",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P125";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P125",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P126";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P126",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1P127";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1P127",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE11D";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E11D",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I11";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I11",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I12";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I12",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I13";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I13",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I14";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I14",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I15";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I15",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I21";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I21",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I22";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I22",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I23";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I23",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I24";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I24",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I25";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I25",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I26";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I26",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1F5";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1F5",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I32";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I32",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I33";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I33",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I34";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I34",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1Q6";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1Q6",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1N7";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1N7",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I41";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I41",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1I42";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1I42",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1T1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1T1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1T2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1T2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE161";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E161",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE162";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E162",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1N1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1N1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J11";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J11",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J12";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J12",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J21";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J21",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J22";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J22",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J32";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J32",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1J33";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1J33",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K11";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K11",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K12";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K12",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K13";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K13",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K14";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K14",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K21";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K21",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K22";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K22",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K23";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K23",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1U1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1U1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1U2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1U2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K32";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K32",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1K33";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1K33",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1Q5";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1Q5",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1V1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1V1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1V2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1V2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1N4";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1N4",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1C4";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1C4",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1C5";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1C5",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1Q10";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1Q10",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1C6";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1C6",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M111";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M111",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M112";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M112",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M113";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M113",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M114";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M114",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M115";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M115",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M116";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M116",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M117";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M117",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M118";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M118",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE156";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E156",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE15A";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E15A",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE15B";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E15B",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE15C";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E15C",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE15D";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E15D",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE15E";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E15E",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1Q2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1Q2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M21";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M21",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M22";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M22",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M23";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M23",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M24";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M24",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M32";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M32",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1M33";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1M33",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O3";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O3",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O4";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O4",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O5";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O5",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O6";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O6",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O7";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O7",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O8";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O8",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AE1O9";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,18) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,19) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,20) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("E1O9",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV06";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V06",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV021";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V021",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV11";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V11",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV12";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V12",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV13";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V13",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV14";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V14",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV15";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V15",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV16";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V16",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O2";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O2",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O3";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O3",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O4";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O4",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O5";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O5",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O6";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O6",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O7";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O7",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1O9";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1O9",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AV1OA";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("V1OA",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF06";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F06",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF121";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F121",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF122";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F122",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF123";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F123",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF124";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F124",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF125";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F125",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AF126";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("F126",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1A61";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1A61",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1A71";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1A71",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1C7";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1C7",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1C8";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1C8",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1C81";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1C81",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AEG1B41";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("EG1B41",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAM1A51";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AM1A51",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAM1A331";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AM1A331",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAM1A341";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AM1A341",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAM1B3";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AM1B3",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAM1B31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+if ( GetEvnGateValue( CompteurCode,13) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AM1B31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC06";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC06",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1GA";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1GA",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1GB";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1GB",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1GC";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1GC",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1FA1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1FA1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1FB1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1FB1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1FC1";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1FC1",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1F3";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1F3",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1F6";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1F6",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1F31";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1F31",49,NBR);
+////////////////////////////////////////////////////////////////////
+  CompteurCode = "AAC1F61";
+  NBR = 0;
+if ( GetEvnGateValue( CompteurCode,12) == True ) Then NBR = NBR +1 ; End
+
+SetNumGateValue("AC1F61",49,NBR);
+End

@@ -1,0 +1,128 @@
+#Version: 0x03021e
+#Name: Coms Type Selector
+#Access: 0
+#Pos: 450,275
+#Size: 220,200
+#BkColor: clWhite
+#Gates: 12
+  #STR: EmailView1,0
+  #STR: EmailView2,0
+  #STR: EmailView3,0
+  #STR: EmailView4,0
+  #STR: EmailView5,0
+  #STR: EmailView6,0
+  #STR: EmailView7,0
+  #STR: EmailView8,0
+  #STR: EmailView9,0
+  #STR: EmailView10,0
+  #NUM: PageAllCommpteurView,0
+  #STR: BU_Energy,0
+#Style: Fixed
+#StayOnTop: 1
+#Object: Label
+  #ID: 0
+  #Pos: 10,35
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Coms_SelectRow_1()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,60
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Coms_SelectRow_2()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,85
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Coms_SelectRow_3()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,110
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 3
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Coms_SelectRow_4()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,135
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 104
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 4
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,Coms_SelectRow_5()
+  #NewOnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 200,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,9,0001
+  #Gate: 1
+  #Label: Select le type de Gateway :
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,EVM_SelectRow_2()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,165
+  #Size: 200,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: Close
+#EndObj

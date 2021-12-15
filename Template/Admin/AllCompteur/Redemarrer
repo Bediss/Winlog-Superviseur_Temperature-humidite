@@ -1,0 +1,35 @@
+#Version: 0x030217
+#Name: Attention
+#Access: 0
+#Pos: 450,150
+#Size: 460,100
+#BkColor: clWhite
+#Gates: 0
+#Style: Standard
+#StayOnTop: 1
+#Object: Button
+  #ID: 0
+  #Pos: 130,65
+  #Size: 200,25
+  #Cursor: 0
+  #Label: Confirmer
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,Redemarer()
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,10
+  #Size: 440,50
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0001
+  #Label: Votre système doit redémarrer pour appliquer toutes les modifications. Appuyez sur "Confirmer" pour continuer?
+  #Align: 21
+  #Frame: 1
+  #Access: 0
+#EndObj

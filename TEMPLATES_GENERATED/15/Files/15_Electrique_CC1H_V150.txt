@@ -1,0 +1,5 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1H1;General 1/1;Electrique;CC1H;PosteTR1;5;S200;M160;*;STEG;PosteTR1;*;Reel;Atelier;*;*;PosteTR1;!~CG WM14-DIN AV5 3 D S:R;!~R3:502:2:1:11;;;;;1;General 1/1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1H2;General 1/2;Electrique;CC1H;PosteTR1;5;S200;M160;*;STEG;PosteTR1;*;Reel;Atelier;*;*;PosteTR1;!~CG WM14-DIN AV5 3 D S:R;!~R3:502:2:1:16;;;;;1;General 1/2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1C;Eau TR1;Electrique;CC1H;PosteTR1;6;S200;M160;MB07;STEG;PosteTR1;Eau TR1;CC1P1;SubAtelier;*;*;Eau;*;*;CC1P1~;forage~;;;0;Eau TR1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1E;Froid TR1;Electrique;CC1H;PosteTR1;6;S200;M160;MA02;STEG;PosteTR1;Froid TR1;F(CC1E);SubAtelier;*;*;Froid;*;*;F~(~CC1E~)~;F~(~Froid TR1~)~;;;0;Froid TR1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1D;Abattoir TR1;Electrique;CC1H;PosteTR1;6;S200;M160;M21I;STEG;PosteTR1;Hangar-A;CC11D;SubAtelier;*;*;Abattoir;*;*;CC11D~;ventilo res 1+2~;;;0;Abattoir TR1;*

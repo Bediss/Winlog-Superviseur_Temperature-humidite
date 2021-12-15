@@ -1,0 +1,10 @@
+Code;unite;Parent;Parent Name;level;type;description;Access
+D1;CLC;*;*;0;Company;Centrale Laitiere du Cap Bon CLC;14
+D2;Production;D1;CLC;1;Unite;;2
+D26;Galdi;D2;Production;2;Atelier;;2
+D27;Beurrerie;D2;Production;2;Atelier;;2
+D3;CH_F_Commerciale;D1;CLC;1;Unite;;32
+D4;Laboratoire;D1;CLC;1;Unite;;4
+D41;LAB_Bacterio;D4;Laboratoire;2;Atelier;;4
+D42;LAB_PhysicoChimique;D4;Laboratoire;2;Atelier;;4
+D5;Salle_De_Fermentation;D1;CLC;1;Unite;;8

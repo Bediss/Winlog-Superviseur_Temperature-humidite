@@ -1,0 +1,150 @@
+function void Main()
+#Startup
+String FilPath;
+
+Int FileHandle;
+String PS_EXE_PATH  = GetProjectPath() + "\Winlog\PowerShell\";
+String CHEK_FILE = "C:\Winlog\CHECK_WAKEUP_WINLOG.txt";
+String STATUS ;
+
+ShowPage("StartPage");
+SetNumGateValue("LOGIN_SUP_ADMIN",0,0);
+SetNumGateValue("PageAlarmeEventView",0,1);
+
+FilPath = ENV_PATH+"\Files\AllCompteur\AllCompteur_"+GetYear()+GetMonth()+GetDayOfMonth()+GetHour()+GetMinute()+".csv";
+    SetStrGateValue("UserName",0,"");
+    INIT_GLOBAL_PATHS( GetProjectPath() + "\Winlog\Settings\Paths.txt");
+    InitialiseGates();
+    Initialisation();
+    Event_Runtime_LOG( " Main : INITAILISATION Monitor");
+    //ShowPage("index");
+
+    OpenChart();
+
+    FileDelete(CHEK_FILE);
+
+    ShellExec("CHECK_WAKEUP_WINLOG.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    while (FileExist(CHEK_FILE) == FAlse)
+        Sleep(1000);
+    end
+
+
+    IF (FileExist(CHEK_FILE) == True) Then
+
+    FileHandle = FileOpen(CHEK_FILE,"rt");
+        IF ( FileHandle != 0 ) Then
+        STATUS = FileReadLn(FileHandle);
+            IF ( STATUS == "0" ) Then
+                ShellExec("WAKEUP_WINLOG.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+            End
+        End
+
+    Else
+        ShellExec("WAKEUP_WINLOG.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+    End
+     FileClose(FileHandle);
+     FileDelete(CHEK_FILE);
+
+     ShowPage("index");
+end
+
+/*function void CallLogin()
+    TemplatePassword();
+    SetStrGateValue("UserName",0,GetUserName());
+
+end*/
+
+
+function void CallLogout()
+    Logout();
+    SetStrGateValue("UserName",0,"");
+    SetNumGateValue("LOGIN_SUP_ADMIN",0,0);
+
+    TPageCloseByName("Menu");
+    ShowPage("index");
+    ShowPath("");
+    ShowPoPUPs("");
+    Initialisation();
+
+end
+function void CallLogin()
+
+TemplatePassword();
+
+
+
+    string UserName = GetUserName();
+    int UserGroupe = GetUserGroups();
+    int UserMode = GetNumGateValue("PageAlarmeEventView",0);
+    SetNumGateValue("Show_Temp_Pointer",0,0);
+    If ( UserName == "" ) Then  Return ;  End
+
+    Bu_Access();
+
+
+    SetStrGateValue("UserName",0,GetUserName());
+
+
+      //TPageCloseByName("index");
+      //ShowPage("Site");
+
+            if ( UserMode == 1 ) then
+
+                TPageOpen("Menu");
+
+                SetStrGateValue("TemplatePath",0,"");
+                ShowPath("Path_Superviseur");
+                ShowPage("Site");
+
+                return;
+              else
+                if ( UserMode == 2 ) then
+                TPageOpen("Menu");
+
+                //ShowPath("Path");
+                ShowPage("Site");
+
+                return;
+                end
+            end
+
+MessageBox("Je suis désolé, vous n'êtes pas autorisé à accéder à la destination choisie. Veuillez contacter votre administrateur système.","Attention");
+end
+
+function void SelectBU_2()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_3()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_4()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_5()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_6()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_7()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_8()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_9()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end
+function void SelectBU_10()
+    SetStrGateValue("AlarmeEventModifer",0,"");
+    MessageBox("Le système n'est pas encore disponible. Vérifiez bientôt.","Information :");
+end

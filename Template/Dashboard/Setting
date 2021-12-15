@@ -1,0 +1,67 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: 0,28,0
+#Gates: 23
+  #STR: View,0
+  #STR: Detail,0
+  #STR: Detail,1
+  #STR: Detail,2
+  #STR: Detail,3
+  #STR: Detail,4
+  #STR: Detail,5
+  #STR: Detail,6
+  #STR: Detail,7
+  #STR: Detail,8
+  #STR: Detail,9
+  #STR: Detail,10
+  #STR: Detail,11
+  #STR: Detail,12
+  #STR: Detail,13
+  #STR: Detail,14
+  #STR: Detail,15
+  #STR: Detail,16
+  #STR: Detail,17
+  #STR: Detail,18
+  #STR: Detail,19
+  #STR: PathFileCompteur,0
+  #STR: ProjectPath,0
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Button
+  #ID: 0
+  #Pos: 85,55
+  #Size: 115,25
+  #Cursor: 0
+  #Label: Calculatrice()
+  #Font: Segoe UI,9,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,Calculatrice()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 85,85
+  #Size: 115,25
+  #Cursor: 0
+  #Label: Web_Navigator
+  #Font: Calibri,11,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: StartF,Web_Navigator()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 85,115
+  #Size: 115,25
+  #Cursor: 0
+  #Label: Create_N_Gates
+  #Font: Segoe UI,9,0000
+  #FunctionKey: -1
+  #TabOrder: 2
+  #Access: 0
+  #OnClick: StartF,Gates()
+#EndObj
