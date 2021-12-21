@@ -1,0 +1,6 @@
+C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47\Winlog\Files\DATAMODELFiles\Rapport\Reporting.csv
+C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47\Winlog\Files\DATAMODELFiles\Rapport\RESULT-SEARCH.csv
+3
+Report_TableauCode:10
+Report_ViewCode:J
+Report_PostC_Code:*&*&M200

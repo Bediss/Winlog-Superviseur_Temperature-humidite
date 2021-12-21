@@ -1,0 +1,1379 @@
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function String PRINT_SingleReport_Generator( String ReportLine , String EventAlarme_Name , string EmailName)
+
+    String Report_STR_Tableau;
+    String Report_Code;
+    String Report_Name;
+    String Report_Generated;
+    String FinalReportFullName;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    Bool Print_Report = False;
+
+    String ReportMaster;
+    String DefaultReportPath;
+
+    Report_Code  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,1,",");
+    Report_Name  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,2,",");
+    Report_STR_Tableau = PRINT_FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+    ReportMaster      = PRINT_FETCH_REPORT_GENERATOR(ReportLine,13,",");
+    DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+
+
+
+    If ( Report_STR_Tableau == "*" || Report_STR_Tableau == ""  ) Then
+        // Error Runlog
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : (Single) Tableau not defined " + Report_STR_Tableau);
+        Return "";
+     End
+
+     IF ( GetStrGateValue("Tableau_TVE",StrToInt(Report_STR_Tableau)) == "0" ) Then
+      // False ( print sreen Report )
+      Print_Report = PRINT_PRINT_SINGLE( ReportLine , EventAlarme_Name , EmailName );
+
+     Else
+      // true ( dynamic Report )
+      Print_Report = PRINT_PRINT_ADHOC(  ReportLine ,  EventAlarme_Name , EmailName );
+     End
+
+     PRINT_REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Print_Report);
+     IF (Print_Report == True) Then
+        // Constract Final User pdf name
+        HH = "00" + GetHour();
+        P = StrLen( HH ) -1;
+        HH = StrSubString( HH , P , 2 );
+
+        mm = "00" + GetMinute();
+        P = StrLen( mm ) -1;
+        mm = StrSubString( mm , P , 2 );
+
+        DD = "00" + GetDayOfMonth();
+        P = StrLen( DD ) -1;
+        DD = StrSubString( DD , P , 2 );
+
+        MM = "00" + GetMonth();
+        P = StrLen( MM ) -1;
+        MM = StrSubString( MM , P , 2 );
+
+        YYYY = "0000" + GetYear();
+        P = StrLen( YYYY ) -3;
+        YYYY = StrSubString( YYYY , P , 4);
+
+        Report_Name = Report_Name + "_"+YYYY+MM+DD+HH+mm +".Pdf";
+        Report_Name = REPORT_PATH_OUT + Report_Name;
+        Report_Generated = REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+
+        // Copy out master pdf file and rename to user pdf name
+        PRINT_REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Report_Generated + " >> " + Report_Name );
+        FileCopy(DefaultReportPath,Report_Name,False);
+
+     Else
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : (Single) ReportCreate : " + Print_Report);
+        Report_Name = "";
+     End
+
+     //ShellExec(Report_Name,"open","",1,"","");
+     Return Report_Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String PRINT_FACTBOOK_Generator(String FactBook_Code , String FactBook_Name , String Attache_Data , String EventAlarme_Name , string EmailName , Int FactBook_NBR)
+
+    String Report_STR_Tableau;
+    String Report_Code;
+    String Report_Name;
+    String Report_Generated;
+    String ReportLine;
+    String FinalReportFullName;
+    String FactBook_Path;
+    String FactBook_File;
+    String FactBook_OutFile;
+    String PSConfig_File;
+
+    Int    PsConfig_FileHandle;
+    int i;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    Bool Print_Report = False;
+
+    String IN_TIME = GetDateString("/",True) + " " + GetTimeString(":");
+    PSConfig_File = POWERSHELL_PATH_CONFIG +"Config_MergeFILE.txt";
+
+    FactBook_Path = REPORT_PATH_DEFAULT + FactBook_Code;
+    DirectoryCreate(FactBook_Path);
+
+    For i = 1 to FactBook_NBR do
+
+        ReportLine = PRINT_FETCH_REPORT_GENERATOR(Attache_Data,i,":");
+        //Report_STR_Tableau = PRINT_FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+        Report_Code  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,1,",");
+        Report_Name  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,2,",");
+        Report_STR_Tableau = PRINT_FETCH_REPORT_GENERATOR(ReportLine,3,",");
+
+        //MessageBox(ReportLine,Report_STR_Tableau);
+
+
+        If ( Report_STR_Tableau == "*" || Report_STR_Tableau == ""  ) Then
+         PRINT_REPORT_Runtime_LOG(" Report Not generated : (FactBook) Tableau not defined " + Report_STR_Tableau);
+         Report_Name = "";
+        End
+
+        //// Create FactBook directories
+
+        //// Constract Report Name
+
+
+        IF ( GetStrGateValue("Tableau_TVE",StrToInt(Report_STR_Tableau)) == "0" ) Then
+            // False ( print sreen Report )
+            Print_Report = PRINT_PRINT_SINGLE( ReportLine , EventAlarme_Name , EmailName);
+        Else
+            // true ( dynamic Report )
+            Print_Report = PRINT_PRINT_ADHOC(  ReportLine ,  EventAlarme_Name , EmailName);
+        End
+
+        //PRINT_REPORT_Runtime_LOG(" Report SingleReport_Generator : " + Print_Report);
+
+        Report_Generated = REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+        FactBook_File      = FactBook_Path + "\" +Report_Code + ".Pdf";
+
+        FileCopy(Report_Generated,FactBook_File,False);
+        FileSetAttr(Report_Generated,0);
+        //MessageBox(FileDelete(Report_Generated),"");
+    End // For
+
+    //PRINT_REPORT_Runtime_LOG(" Report : (FactBook) To MERGE " );
+    //// Merge Pdf report in one FactBook
+    FactBook_File = REPORT_PATH_DEFAULT + FactBook_Code + ".Pdf";
+    PsConfig_FileHandle = FileOpen(PSConfig_File,"wt");
+    FileWriteLn(PsConfig_FileHandle, FactBook_Path ); // PDFs location
+    FileWriteLn(PsConfig_FileHandle, FactBook_File ); // Final FactBook name
+    FileClose(PsConfig_FileHandle);
+
+     ShellExec("MergePDFs.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    Print_Report = False;
+        While ( Print_Report == False )
+            If (FileExist( FactBook_File ) == False ) Then      i = i+1;
+            Else    Print_Report = True;      End
+            IF ( i > 3 ) Then Print_Report = True; End
+            Sleep(1000);
+        End
+
+       IF (FileExist( FactBook_File ) == True) Then
+        // Constract Final User pdf name
+        HH = "00" + GetHour();
+        P = StrLen( HH ) -1;
+        HH = StrSubString( HH , P , 2 );
+
+        mm = "00" + GetMinute();
+        P = StrLen( mm ) -1;
+        mm = StrSubString( mm , P , 2 );
+
+        DD = "00" + GetDayOfMonth();
+        P = StrLen( DD ) -1;
+        DD = StrSubString( DD , P , 2 );
+
+        MM = "00" + GetMonth();
+        P = StrLen( MM ) -1;
+        MM = StrSubString( MM , P , 2 );
+
+        YYYY = "0000" + GetYear();
+        P = StrLen( YYYY ) -3;
+        YYYY = StrSubString( YYYY , P , 4);
+
+        Report_Name = FactBook_Name + "_"+YYYY+MM+DD+HH+mm +".Pdf";
+        Report_Name = REPORT_PATH_OUT + Report_Name;
+
+        FileCopy(FactBook_File,Report_Name,False);
+
+     Else
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : (Single) ReportCreate : " + Print_Report);
+        Report_Name = "";
+     End
+
+        //MessageBox(Report_Name,"Report_Name");
+     Return Report_Name;
+end
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+////                                                                       ////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function Bool PRINT_PRINT_SINGLE(string ReportLine , String EventAlarme_Name , string EmailName)
+
+    Int Local_TotalRow = 0; Int Local_TotalCol = 0;
+    Int Local_MAXRow = 10; Int Local_MAXCol = 6;
+    String USER_Report_Name = "";
+    String CreationDate;        String ReportLayout;        String Report_Chart;
+    String Report_Name;         String Report_OUT_Path;     String Report_Code;
+    String ReportMaster;        String Description_Report;
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    String LayoutPath;
+    String Report_Directory_Config;
+    String ChartPATH;
+    String DefaultReportPath;
+
+    Bool Creationreport = False;
+
+    //// 0. Initialisation
+      PRINT_REPORT_GENERATOR_OpenChart();
+    //// 1. Get Config data from report Line
+      CreationDate = GetDateString("/",true)+" " +GetTimeString(":");
+      Report_Code  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,1,",");
+      Report_Name  = PRINT_FETCH_REPORT_GENERATOR(ReportLine,2,",");
+      ReportMaster = PRINT_FETCH_REPORT_GENERATOR(ReportLine,13,",");
+      ReportLayout = PRINT_FETCH_REPORT_GENERATOR(ReportLine,14,",");
+      Report_Chart = PRINT_FETCH_REPORT_GENERATOR(ReportLine,15,",");
+    //// 2. Set Report Gates
+      SetStrGateValue("ReportView",0,EventAlarme_Name);
+      SetStrGateValue("ReportView",1,EmailName);
+      //SetStrGateValue("ReportView",2,Local_TotalRow);
+      R_TotalRow= Local_TotalRow;
+      //SetStrGateValue("ReportView",3,Local_TotalCol);
+      R_TotalCol = Local_TotalCol;
+      //SetStrGateValue("ReportView",4,Local_MAXRow);
+      //SetStrGateValue("ReportView",5,Local_MAXCol);
+      SetStrGateValue("ReportView",6,Report_Name);
+      //SetStrGateValue("ReportView",9,Report_Chart);
+      GLOBAL_CHART_NAME = Report_Chart;
+      SetStrGateValue("ReportView",10,CreationDate);
+    //// 3. Copy Report Layout
+      LayoutPath   = REPORT_PATH_LAYOUT_SOURCE + ReportLayout + ".RTF";
+      Report_Directory_Config = REPORT_PATH_LAYOUT_DESTINATION + ReportMaster+"\"+ ReportMaster +".RTF";
+      FileCopy(LayoutPath , Report_Directory_Config , False );
+    //// 4. Create default Report
+      DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+      If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+
+      ChartPATH = REPORT_PATH_CHART + Report_Chart;
+
+       IF ( FileExist( ChartPATH ) == True ) Then
+        PRINT_REPORT_Runtime_LOG(" Report : (Single) Chart Found " + ChartPATH);
+         Creationreport = ReportCreate( ReportMaster ) ;
+       Else
+         Creationreport = False;
+         PRINT_REPORT_Runtime_LOG(" Report Not generated : (Single) Chart not Found " + ChartPATH);
+       End
+
+       IF ( Creationreport == True && FileExist( DefaultReportPath ) == True ) Then
+        PRINT_REPORT_Runtime_LOG(" Report : Copy " + DefaultReportPath +" >> "+ REPORT_PATH_DEFAULT + Report_Code + ".Pdf" );
+        FileCopy( DefaultReportPath , REPORT_PATH_DEFAULT + Report_Code + ".Pdf" , False );
+       End
+       Return Creationreport;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function Bool PRINT_PRINT_ADHOC( String ReportLine , String EventAlarme_Name , String EmailName)
+
+    Int Local_MAXRow = 10; Int Local_MAXCol = 6;
+    String CL_FilePath;
+    String ML_FilePath;
+    String CL_NBR_Energy;       String ML_NBR_Energy;
+    String CL_TempFilePATH;     String ML_TempFilePATH;
+    String CL_ENERGY;           String ML_ENERGY;
+
+    String Report_Code;     String Report_Name;     String ReportMaster;
+    String ReportLayout;    String Report_OUT_Path; String Description_Report;
+    String USER_Report_Name;
+    String FactBookDir;
+    String DefaultReportPath ;
+    String FACTBOOK_FILES = "";
+    String CreationDate;
+    String PSConfig_File ;
+    String Location;    String NomFinal;
+
+    String DD;  String MM;  String YYYY;    String HH; String mm;   int P;
+    String LayoutPath;
+    String Report_Directory_Config;
+    Int TotalEnergyIN_CL;   Int TotalEnergyIN_ML;
+    Int CL_ENERGY_TOTAL;    Int ML_ENERGY_TOTAL;
+    Int i;  Int FORLOOPEND =0;  Int ML_CL_StartFild =2;
+    Int Num_fild_ML_Found =0;
+    Int FACTBOOK_COUNTER = 0;
+    Int PsConfig_FileHandle;
+    Int MaxWait = 30;
+    Bool Creationreport =False;
+    Bool Copying = False;
+
+    PSConfig_File = POWERSHELL_PATH_CONFIG +"Config_MergeFILE.txt";
+    //// 0. Intitialisation.
+
+    IF ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 2 ) Then
+        // "SELECT";
+            CL_FilePath = REPORT_PATH_CL + PRINT_FETCH_REPORT_GENERATOR(ReportLine,16,",") + ".txt";
+            ML_FilePath = REPORT_PATH_ML + PRINT_FETCH_REPORT_GENERATOR(ReportLine,17,",") + ".txt";
+    Else
+        if ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 1 ) Then
+          //"PRINT";
+            CL_FilePath = RowFullFileName ;
+            ML_FilePath = ColFullFileName ;
+        End
+    end
+
+    REPORT_TABLEAU = StrToInt( FETCH_REPORT_GENERATOR(ReportLine,3,",") );
+
+    If ( REPORT_TABLEAU == 0 ) then
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : Warning Tableau" + REPORT_TABLEAU);
+        Return False;
+    End
+
+
+      Report_Code       = PRINT_FETCH_REPORT_GENERATOR(ReportLine,1,",");
+
+      IF ( FileExist( CL_FilePath ) == False ) Then
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC CL not Found " + CL_FilePath);
+        Return False;
+      End
+      IF ( FileExist( ML_FilePath ) == False ) Then
+        PRINT_REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC ML not Found " + ML_FilePath);
+        Return False;
+      End
+
+    //// 1. create compteur listes + get nombre des listes
+
+      CL_TempFilePATH  = PRINT_REPORT_GENERATOR_GET_COMPTEURLIST( CL_FilePath , Report_Code , REPORT_PATH_CLML_TEMP );
+      CL_NBR_Energy    = GetStrGateValue("ReportView",2);
+    //// 2. create compteur listes + get nombre des listes
+
+      ML_TempFilePATH  = PRINT_REPORT_GENERATOR_GET_MEASURELIST(  ML_FilePath , Report_Code , REPORT_PATH_CLML_TEMP );
+      ML_NBR_Energy    = GetStrGateValue("ReportView",2);
+    ////
+      //MessageBox(ML_NBR_Energy,"ML_NBR_Energy");
+      //MessageBox(ML_NBR_Energy,"ML_NBR_Energy");
+     R_TotalRow = 0;
+     R_TotalCol = 0;
+
+    IF ( CL_NBR_Energy == "0" || ML_NBR_Energy == "0" ) Then
+     PRINT_REPORT_Runtime_LOG(" Report Not generated : PRINT_ADHOC Check CL File : "+CL_NBR_Energy+" and ML File : "+ML_NBR_Energy );
+     Return False;
+    End
+
+    PRINT_REPORT_Runtime_LOG(" Report : PRINT_ADHOC Check CL File : "+CL_NBR_Energy+" and ML File : "+ML_NBR_Energy );
+
+      CreationDate = GetDateString("/",true)+" " +GetTimeString(":");
+
+      Report_Name       = PRINT_FETCH_REPORT_GENERATOR(ReportLine,2,",");
+      ReportMaster      = PRINT_FETCH_REPORT_GENERATOR(ReportLine,13,",");
+      ReportLayout      = PRINT_FETCH_REPORT_GENERATOR(ReportLine,14,",");
+      FactBookDir       = REPORT_PATH_DEFAULT + Report_Code+"\";
+      DefaultReportPath = REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+      NomFinal          =  REPORT_PATH_DEFAULT + Report_Code + ".Pdf";
+
+
+    //// 3. Set report gates
+      SetStrGateValue("ReportView",0,EventAlarme_Name);
+      SetStrGateValue("ReportView",1,EmailName);
+
+      SetStrGateValue("ReportView",6,Report_Name);
+      //SetStrGateValue("ReportView",9,"");
+      GLOBAL_CHART_NAME = "";
+      SetStrGateValue("ReportView",10,CreationDate);
+    //// 3. Copy Report Layout
+      LayoutPath              = REPORT_PATH_LAYOUT_SOURCE + ReportLayout + ".RTF";
+      Report_Directory_Config = REPORT_PATH_LAYOUT_DESTINATION + ReportMaster+"\"+ ReportMaster +".RTF";
+      //MessageBox(LayoutPath,"LayoutPath : " + FileExist(LayoutPath));
+      //MessageBox(Report_Directory_Config,"Report_Directory_Config");
+      Copying = FileCopy(LayoutPath , Report_Directory_Config , False );
+
+
+    //// 4. Pour chaque liste Print ADHoc
+
+      TotalEnergyIN_CL = StrToInt( PRINT_FETCH_REPORT_GENERATOR(CL_NBR_Energy,1,";") );
+      TotalEnergyIN_ML = StrToInt( PRINT_FETCH_REPORT_GENERATOR(ML_NBR_Energy,1,";") );
+
+      FORLOOPEND = TotalEnergyIN_CL+1;
+      FACTBOOK_COUNTER = 1;
+
+      CL_ENERGY = PRINT_FETCH_REPORT_GENERATOR(CL_NBR_Energy,1,";");
+      ML_ENERGY = PRINT_FETCH_REPORT_GENERATOR(ML_NBR_Energy,1,";");
+
+    ///////////////////////////////////////////////////////////////////////////
+    IF ( CL_ENERGY == 1 ) Then //&& ML_ENERGY == 1
+
+      PRINT_REPORT_Runtime_LOG(" Report : One page " + CL_ENERGY + " || " + ML_ENERGY );
+
+      CL_ENERGY = PRINT_FETCH_REPORT_GENERATOR(CL_NBR_Energy,2,";");
+      ML_ENERGY = PRINT_FETCH_REPORT_GENERATOR(ML_NBR_Energy,2,";");
+
+      CL_ENERGY_TOTAL   = StrToInt( PRINT_FETCH_REPORT_GENERATOR(CL_ENERGY,2,":") );
+      CL_ENERGY         = PRINT_FETCH_REPORT_GENERATOR(CL_ENERGY,1,":");
+
+      ML_ENERGY_TOTAL  = StrToInt( PRINT_FETCH_REPORT_GENERATOR(ML_ENERGY,2,":") );
+      ML_ENERGY        = PRINT_FETCH_REPORT_GENERATOR(ML_ENERGY,1,":");
+
+      //SetStrGateValue("ReportView",2,ML_ENERGY_TOTAL);
+      //SetStrGateValue("ReportView",3,CL_ENERGY_TOTAL);
+      SetStrGateValue("ReportView",2, CL_ENERGY); // Capteur
+      SetStrGateValue("ReportView",3, PRINT_FETCH_REPORT_GENERATOR(ReportLine,8,",") ); // View
+      SetStrGateValue("ReportView",4, PRINT_FETCH_REPORT_GENERATOR(ReportLine,10,",") ); // Unite
+
+      R_TotalRow = CL_ENERGY_TOTAL;
+      R_TotalCol = ML_ENERGY_TOTAL;
+
+      R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+      R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+
+        If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+
+        If (FileExist( NomFinal ) == True) Then    FileDelete(NomFinal);    End
+        Creationreport = ReportCreate( ReportMaster ) ;
+
+        If ( Creationreport == true) Then
+          FileCopy( DefaultReportPath , NomFinal , False );
+
+        End
+
+        FileSetAttr(R_ColFullFileName,0);
+        FileSetAttr(R_RowFullFileName,0);
+        FileDelete(R_ColFullFileName);
+        FileDelete(R_RowFullFileName);
+
+
+
+     Return Creationreport;
+    ///////////////////////////////////////////////////////////////////////////
+    Else
+    ///////////////////////////////////////////////////////////////////////////
+
+     DirectoryCreate(FactBookDir);
+      PRINT_REPORT_Runtime_LOG(" Report : Multipage " + CL_ENERGY + " || " + ML_ENERGY );
+     For i = ML_CL_StartFild to FORLOOPEND do
+
+      CL_ENERGY         = PRINT_FETCH_REPORT_GENERATOR(CL_NBR_Energy,i,";");
+      CL_ENERGY_TOTAL   = StrToInt( PRINT_FETCH_REPORT_GENERATOR(CL_ENERGY,2,":") );
+      CL_ENERGY         = PRINT_FETCH_REPORT_GENERATOR(CL_ENERGY,1,":");
+
+      //MessageBox("TotalEnergyIN_ML : "+TotalEnergyIN_ML,"CL_ENERGY : "+CL_ENERGY);
+        //MessageBox(ML_NBR_Energy,"ML_NBR_Energy");
+      Num_fild_ML_Found = PRINT_FOUND_ENERGY_CL_IN_ML( CL_ENERGY , ML_NBR_Energy , TotalEnergyIN_ML );
+
+      //MessageBox("Num_fild_ML_Found : "+Num_fild_ML_Found+Eol()+"CL_ENERGY : "+CL_ENERGY,"");
+
+      IF ( Num_fild_ML_Found >= ML_CL_StartFild ) Then
+
+       ML_ENERGY        = PRINT_FETCH_REPORT_GENERATOR(ML_NBR_Energy,Num_fild_ML_Found,";");
+       ML_ENERGY_TOTAL  = StrToInt( PRINT_FETCH_REPORT_GENERATOR(ML_ENERGY,2,":") );
+       ML_ENERGY        = PRINT_FETCH_REPORT_GENERATOR(ML_ENERGY,1,":");
+       //// Set Glabal
+       R_TotalRow = CL_ENERGY_TOTAL;
+       R_TotalCol = ML_ENERGY_TOTAL;
+       //SetStrGateValue("ReportView",2,ML_ENERGY_TOTAL);
+       //SetStrGateValue("ReportView",3,CL_ENERGY_TOTAL);
+
+        SetStrGateValue("ReportView",2, CL_ENERGY); // Capteur
+        SetStrGateValue("ReportView",3, PRINT_FETCH_REPORT_GENERATOR(ReportLine,8,",") ); // View
+        SetStrGateValue("ReportView",4, PRINT_FETCH_REPORT_GENERATOR(ReportLine,10,",") ); // Unite
+
+       R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+       R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+
+       //MessageBox("CL_ENERGY : "+CL_ENERGY,"ML_ENERGY : "+ML_ENERGY);
+
+        FACTBOOK_FILES = FactBookDir + Report_Code +"_"+FACTBOOK_COUNTER+".pdf";
+        PRINT_REPORT_Runtime_LOG(" Report FACTBOOK_FILES : " + FACTBOOK_FILES );
+
+        If (FileExist( DefaultReportPath ) == True) Then    FileDelete(DefaultReportPath);    End
+        Creationreport = ReportCreate( ReportMaster ) ;
+
+        If ( Creationreport == true) Then
+         FACTBOOK_COUNTER = FACTBOOK_COUNTER+1;
+         FileCopy(DefaultReportPath,FACTBOOK_FILES,False);
+         FileSetAttr(R_ColFullFileName,0);
+         FileSetAttr(R_RowFullFileName,0);
+         //FileDelete(R_ColFullFileName);
+         //FileDelete(R_RowFullFileName);
+         //FileDelete(DefaultReportPath);
+        End
+
+      Else
+        PRINT_REPORT_Runtime_LOG(" CL Energy : " + CL_ENERGY + " not found in ML energy : "+ ML_ENERGY);
+        R_ColFullFileName = CL_TempFilePATH + "_" + CL_ENERGY + "_ColList.txt";
+        R_RowFullFileName = ML_TempFilePATH + "_" + ML_ENERGY + "_RowList.txt";
+        FileSetAttr(R_ColFullFileName,0);
+        FileSetAttr(R_RowFullFileName,0);
+        IF ( FileExist( R_ColFullFileName)==True ) Then FileDelete(R_ColFullFileName);     End
+        IF ( FileExist( R_ColFullFileName)==True ) Then FileDelete(R_ColFullFileName);     End
+      End
+
+    End // FOR
+
+    ///////////////////////////////////////////////////////////////////////////
+   End // IF CL_ENERGY == 1 || ML_ENERGY == 1
+    ///////////////////////////////////////////////////////////////////////////
+
+    //// 5. Copy default Report to final location and merge files if FACTBOOK_COUNTER > 1
+
+    //// 5 merge files if FACTBOOK_COUNTER > 1
+    IF ( FACTBOOK_COUNTER > 1 ) Then
+        //// Create Config File
+
+         PsConfig_FileHandle = FileOpen(PSConfig_File,"wt");
+         FileWriteLn(PsConfig_FileHandle, FactBookDir ); // PDFs location
+         FileWriteLn(PsConfig_FileHandle, NomFinal ); // Final FactBook name
+         FileClose(PsConfig_FileHandle);
+        //// Call PS exe
+        PRINT_REPORT_Runtime_LOG(" Report CALL MergePDFs: " + POWERSHELL_PATH_EXECUTION );
+        ShellExec("MergePDFs.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+        //MessageBox(i,"i");
+        //// Waite Final Out-file
+        i = 0;
+        Creationreport = False;
+        Copying = False;
+        While ( Creationreport == False )
+
+            Copying = FileExist( NomFinal );
+            i = i+1;
+
+            If ( Copying == True || i > MaxWait ) Then
+              Creationreport = True;
+            Else
+             Creationreport = False;
+            End
+            //IF ( i > 3 ) Then Creationreport = True; End
+            Sleep(1000);
+        End
+
+        //MessageBox(NomFinal,"NomFinal");
+        IF ( FileExist( NomFinal ) == False) Then
+            PRINT_REPORT_Runtime_LOG(" Report out ps MergePDFs not found : " + NomFinal );
+        End
+
+    End
+    //// 5.3 Copy default Report to final location
+
+    PRINT_REPORT_Runtime_LOG(" Report CALL MergePDFs: End " + Copying );
+
+    //Report_OUT_Path =  REPORT_PATH_DEFAULT + ReportMaster +".Pdf";
+    //FileRename(DefaultReportPath,REPORT_PATH_DEFAULT + ReportMaster +"TEMP.Pdf");
+    FileSetAttr(DefaultReportPath,0);
+    FileDelete(DefaultReportPath);
+    FileRename(NomFinal,DefaultReportPath);
+    FileDelete(NomFinal);
+    /*While(FileExist(DefaultReportPath) == true)
+        FileDelete(DefaultReportPath);
+    end
+    IF (FileExist(DefaultReportPath) == true) Then
+        FileDelete(DefaultReportPath);
+        MessageBox(DefaultReportPath,"Deleting");
+    End*/
+
+    /*MessageBox(NomFinal,"NomFinal");
+    MessageBox(DefaultReportPath,"DefaultReportPath");
+        FileCopy( NomFinal , DefaultReportPath , False );
+        P=0;
+              While ( Creationreport == False )
+                Copying = FileExist(DefaultReportPath);
+                P=P+1;
+
+                If ( Copying == True || P > MaxWait ) Then
+                    Creationreport = True;
+                Else
+                    Creationreport = False;
+                End
+
+                Sleep(1000);
+              End
+    */
+     IF ( FileExist(DefaultReportPath) == False ) Then
+       PRINT_REPORT_Runtime_LOG(" Report Not Found : " +  DefaultReportPath );
+       Creationreport = False;
+     Else
+        Creationreport = True;
+     End
+
+     ////FileDelete(REPORT_PATH_DEFAULT + ReportMaster +"TEMP.Pdf");
+
+     Return Creationreport;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String PRINT_FindIF_CLML_Or_MLCL( String tableauCode , String CLFile, String MLFile)
+
+    String Mode;
+    String RowId = "R";
+    String ColId = "C";
+    String CLId  = "C";
+    String MLId  = "L";
+    String P1;
+    String P2;
+    String P11;
+    String P12;
+    String P21;
+    String P22;
+    String In_Row;
+    String In_Col;
+
+    Mode = GetStrGateValue("Tableau_VEPC",StrToInt(tableauCode));
+
+       //MessageBox(CLFile,"CLFile");
+        //MessageBox(MLFile,"MLFile");
+
+    P1= FETCH_REPORT_GENERATOR(Mode,1,"/");
+        P11 = FETCH_REPORT_GENERATOR(P1,1,":");
+        P12 = FETCH_REPORT_GENERATOR(P1,2,":");
+    P2= FETCH_REPORT_GENERATOR(Mode,2,"/");
+        P21 = FETCH_REPORT_GENERATOR(P2,1,":");
+        P22 = FETCH_REPORT_GENERATOR(P2,2,":");
+
+
+        IF ( P11 == RowId ) Then
+                IF ( P12 == CLId ) Then In_Row = CLFile; End
+                IF ( P12 == MLId ) Then In_Row = MLFile; End
+        Else
+          IF ( P11 == ColId ) Then
+                IF ( P12 == CLId ) Then In_Col = CLFile; End
+                IF ( P12 == MLId ) Then In_Col = MLFile; End
+          End
+        End
+
+        IF ( P21 == RowId ) Then
+                IF ( P22 == CLId ) Then In_Row = CLFile; End
+                IF ( P22 == MLId ) Then In_Row = MLFile; End
+        Else
+          IF ( P21 == ColId ) Then
+                IF ( P22 == CLId ) Then In_Col = CLFile; End
+                IF ( P22 == MLId ) Then In_Col = MLFile; End
+          End
+        End
+
+        //MessageBox(In_Row,"In_Row");
+        //MessageBox(In_Col,"In_Col");
+
+    P1 = In_Row+";"+In_Col;
+
+    Return P1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String PRINT_REPORT_GENERATOR_GET_COMPTEURLIST( String Compteur_List_Path , String REPORT_CODE , String OUT_Path )
+
+    string CFullPathFileName;   String  E_FullPathFileName;
+    int CFileHandle;            int     E_FileHandle;
+
+    String CompteurLigne;
+    String CompteurCode;
+    String CompteurName;
+    String CompteurQuery;
+    String ReturnedLINE = "";
+    String ENERGY;
+    String FINDQuery = "Query~";
+    Int TotalCompteur = 0;
+    Int QUERY_NBR = 0;
+    Int EnergyCounter = 0;
+    String ALLEnergy_nbr ="";
+    String Last_Energy = "";
+    Int CompteurCount = 0;
+
+    SetStrGateValue("ReportView",2, "0" );
+
+        CFileHandle = FileOpen(Compteur_List_Path,"rt");
+
+        If ( CFileHandle == 0 ) Then
+            PRINT_REPORT_Runtime_LOG(" CL Not found : " + Compteur_List_Path);
+            Return "0" ;
+        End
+
+        While( FileEof(CFileHandle) == 0 )
+
+         CompteurLigne = FileReadLn(CFileHandle);
+
+           IF ( CompteurLigne != "" ) Then
+
+                CompteurCode = PRINT_FETCH_REPORT_GENERATOR(CompteurLigne,1,";");
+                CompteurName = PRINT_FETCH_REPORT_GENERATOR(CompteurLigne,2,";");
+                ENERGY = PRINT_FETCH_REPORT_GENERATOR(CompteurLigne,3,";");
+                CompteurQuery = PRINT_FETCH_REPORT_GENERATOR(CompteurLigne,4,";");
+
+                IF (Last_Energy == "" ) Then Last_Energy = ENERGY;  EnergyCounter = 1; End
+
+                IF ( Last_Energy != ENERGY ) Then
+                    ALLEnergy_nbr = ALLEnergy_nbr + Last_Energy + ":" +TotalCompteur +";";
+                    Last_Energy = ENERGY;
+                    EnergyCounter = EnergyCounter+1;
+                    TotalCompteur = 0;
+                End
+
+                If ( ENERGY != "*" ) Then
+
+                ///////////////////////////////////////////////////////////////
+                E_FullPathFileName = OUT_Path + REPORT_CODE +"_"+ ENERGY+"_RowList.txt";
+                E_FileHandle = FileOpen(E_FullPathFileName,"at");
+                ///////////////////////////////////////////////////////////////
+                    IF ( CompteurCode == FINDQuery ) Then
+
+                        QUERY_NBR = R_AnalyseQuerryCompteur( CompteurQuery , E_FileHandle , "TVE" , "" );
+                        //MessageBox(CompteurQuery,"CompteurQuery : " +QUERY_NBR);
+                        TotalCompteur = TotalCompteur+QUERY_NBR;
+                      Else
+                        FileWriteLn( E_FileHandle , CompteurCode +","+ CompteurName );
+                        TotalCompteur = TotalCompteur+1;
+                    End
+                ///////////////////////////////////////////////////////////////
+                FileClose(E_FileHandle);
+                ///////////////////////////////////////////////////////////////
+                End // ENERGY != "*"
+
+           Else //CompteurLigne == ""
+           ALLEnergy_nbr = ALLEnergy_nbr + ENERGY + ":" +TotalCompteur +";";
+           CompteurCount = CompteurCount + TotalCompteur;
+           End //CompteurLigne != ""
+
+           //MessageBox(ALLEnergy_nbr,"ALLEnergy_nbr");
+        End
+
+    FileClose(CFileHandle);
+    //PRINT_REPORT_Runtime_LOG(" Report : (ADHoc) REPORT_GENERATOR_GET_COMPTEURLIST " +EnergyCounter + " >> " );
+    If (EnergyCounter == 0 || CompteurCount == 0 ) Then
+        ALLEnergy_nbr = "0";
+        PRINT_REPORT_Runtime_LOG(" CL List : file is empty " + Compteur_List_Path );
+    Else
+        ALLEnergy_nbr = EnergyCounter + ";" + ALLEnergy_nbr;
+    End
+
+    E_FullPathFileName = OUT_Path + REPORT_CODE;
+
+        SetStrGateValue("ReportView",2, ALLEnergy_nbr );
+
+    Return E_FullPathFileName;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String PRINT_REPORT_GENERATOR_GET_MEASURELIST( String Measure_List_Path , String REPORT_CODE , String OUT_Path )
+    String CFullPathFileName;   String E_FullPathFileName;
+    int CFileHandle;            Int E_FileHandle;
+    Int Totalmeasure =0;
+    String MeasureLigne;
+    String Measure_Energy;
+    String Last_Energy = "";
+    String ALLEnergy_nbr  ="";
+    Int EnergyCounter =0;
+    String FinalLine = "";
+    CFileHandle = FileOpen(Measure_List_Path,"rt");
+
+    SetStrGateValue("ReportView",2, "0" );
+
+        If ( CFileHandle == 0 ) Then
+            Event_Runtime_LOG(" ML Not found : " + Measure_List_Path);
+            Return "0" ;
+        End
+
+    Last_Energy = "";
+    FinalLine   = "";
+    Totalmeasure = 0;
+    EnergyCounter = 0;
+
+    While( FileEof(CFileHandle) == 0 )
+        MeasureLigne = FileReadLn(CFileHandle);
+        IF ( MeasureLigne != "" && MeasureLigne != "*") Then
+            Measure_Energy = PRINT_FETCH_REPORT_GENERATOR(MeasureLigne,3,",");
+            //MessageBox(MeasureLigne,Measure_Energy);
+                ///////////////////////////////////////////////////////////////
+
+                IF ( Last_Energy == "" ) Then
+
+                    Last_Energy = Measure_Energy;
+                    EnergyCounter = 1;
+
+                Else
+
+                    IF ( Measure_Energy == Last_Energy ) Then
+                        Totalmeasure = Totalmeasure+1;
+                    Else
+                        //MessageBox(FinalLine,"FinalLine 0");
+                        FinalLine = Last_Energy + ":" +Totalmeasure +";" + FinalLine;
+                        EnergyCounter = EnergyCounter+1;
+                        Totalmeasure = 1;
+                        Last_Energy = Measure_Energy;
+                        // MessageBox(FinalLine,"FinalLine 1");
+                    End
+
+                End
+
+                 E_FullPathFileName = OUT_Path + REPORT_CODE +"_"+ Measure_Energy+"_ColList.txt";
+                 E_FileHandle = FileOpen(E_FullPathFileName,"at");
+                 FileWriteLn( E_FileHandle , MeasureLigne);
+                 FileClose(E_FileHandle);
+
+                ///////////////////////////////////////////////////////////////
+        //Else //CompteurLigne == ""
+           //ALLEnergy_nbr = ALLEnergy_nbr + Measure_Energy + ":" +Totalmeasure +";";
+        Else
+
+        End // MeasureLigne != ""
+
+    End // While
+
+    //FinalLine = Measure_Energy + ":" +Totalmeasure +";" + FinalLine;
+    //MessageBox(FinalLine,EnergyCounter);
+    //FileClose(CFileHandle);
+
+    FinalLine = Last_Energy + ":" +Totalmeasure +";" + FinalLine;
+
+    If (EnergyCounter == 0) Then
+        //PRINT_REPORT_Runtime_LOG(" Report : (ADHoc) PRINT_REPORT_GENERATOR_GET_MEASURELIST " +EnergyCounter + "== 0" );
+        ALLEnergy_nbr = "0";
+        FinalLine = "0";
+        PRINT_REPORT_Runtime_LOG(" ML List : file is empty " + Measure_List_Path );
+        Return "0" ;
+    Else
+        //ALLEnergy_nbr = EnergyCounter + ";" + ALLEnergy_nbr;
+        FinalLine = EnergyCounter + ";" + FinalLine;
+    End
+
+   // MessageBox(FinalLine,"FinalLine");
+    E_FullPathFileName = OUT_Path + REPORT_CODE;
+    SetStrGateValue("ReportView",2, FinalLine );
+
+    Return E_FullPathFileName;
+End
+///////////////////////////////////////////////////////////////////////////////
+////    fonction generique pour le rapport                                 ////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Function void PRINT_REPORT_GENERATOR_OpenChart()
+   int dd = GetDayOfMonth();
+   int mm = GetMonth();
+   int yy = GetYear();
+   int hh = GetHour() +1;
+   int hh_24 = hh -24;
+   int timespan = GetNumGateValue("chart_time_span",0);
+
+   if ( timespan == 1) then // rolling 24heures
+    ChartSetTimeRange(dd,mm,yy,hh_24,0,0,dd,mm,yy,hh,0,0);
+    else
+
+    if ( timespan == 2) then // 00 to 23:59
+      ChartSetTimeRange(dd,mm,yy,0,0,0,dd,mm,yy,23,59,59);
+    end
+
+   end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+Function String PRINT_Change_CHAR_REPORT_GENERATOR(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"&")+1;
+    MaxD=Occurence_operateur(Formule,"#")+1;
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"&");
+                TSimple=TSimple+blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+    if MaxD<1 then
+        TTSimple =TSimple;
+
+    Else
+
+        For i=1 to MaxD do
+            blob=FetchBlob(TSimple,i,"#");
+            TTSimple=TTSimple+blob;
+
+        end
+
+
+    end
+    return TTSimple;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+Function String PRINT_Change_CHAR2_REPORT_GENERATOR(String Formule)
+    String TSimple="";
+
+    int MaxT;
+    int MaxD;
+    String blob="";
+    String TTSimple="";
+     int i;
+
+    MaxT=Occurence_operateur(Formule,"_")+1;
+
+    //MessageBox(MaxT,"");
+    if MaxT<1 then
+       //Formule = Formule_Parse_Complet  ;
+       TSimple = Formule;
+        else
+            For i=1 to MaxT do
+                blob=FetchBlob(Formule,i,"_");
+                TSimple=TSimple+" " +blob;
+            end
+       //TTSimple=TSimple;
+    end
+
+
+    return TSimple;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function string PRINT_FETCH_REPORT_GENERATOR(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+
+     return V;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int PRINT_FOUND_ENERGY_CL_IN_ML( String CL_ENERGY , String ML_LINE , Int Total_ML_Energy )
+
+    String ML_EnergyANDNBR = "";
+    String ML_Energy = "";
+    //Int ML_NBR = 0;
+    Int i;
+    Int Start_Energy_NUM = 2;
+    Int ML_NUMFILD = 0;
+    Bool Exit = False;  Bool Found = False;
+
+    MessageBox(Total_ML_Energy,CL_ENERGY);
+    MessageBox(ML_LINE,"ML_LINE");
+    if ( Total_ML_Energy > 1 ) Then
+      i = Start_Energy_NUM;
+        While( Exit == False)
+
+         ML_EnergyANDNBR = PRINT_FETCH_REPORT_GENERATOR( ML_LINE , i ,";" );
+         ML_Energy = PRINT_FETCH_REPORT_GENERATOR( ML_EnergyANDNBR , 1 ,":" );
+         ///////////////////////////////////////////////////////////////
+          IF (CL_ENERGY == ML_Energy) Then
+            Found = True;
+            ML_NUMFILD = i;
+          Else
+            Found = False;
+          End
+         ///////////////////////////////////////////////////////////////
+          IF (Found == True) Then
+            Exit =True;
+          Else // Found == False
+            IF (i > Total_ML_Energy)Then
+              Exit =True;
+              ML_NUMFILD = 0;
+            End
+          End
+          ///////////////////////////////////////////////////////////////
+          //IF (Found == True) Then Exit =True    End
+          i=i+1;
+        End
+    Else
+        ML_EnergyANDNBR = PRINT_FETCH_REPORT_GENERATOR( ML_LINE , Start_Energy_NUM ,";" );
+        ML_Energy = PRINT_FETCH_REPORT_GENERATOR( ML_EnergyANDNBR , 1 ,":" );
+        IF (CL_ENERGY == ML_Energy) Then
+            //Return Start_Energy_NUM;
+            ML_NUMFILD = Start_Energy_NUM;
+        Else
+            //Return 0;
+            ML_NUMFILD = 0;
+        End
+    End
+
+    Return ML_NUMFILD;
+End
+///////////////////////////////////////////////////////////////////////////////
+function void PRINT_REPORT_Runtime_LOG( String NAME)
+
+    String FILENAME = GetProjectPath() + "\Winlog\EVENT_RUNTIME_LOG.txt";
+    Int FileHANDLE;
+    String WRITE_LINE = "";
+    FileHANDLE = FileOpen(FILENAME,"at");
+    WRITE_LINE = GetDateString("/",False) +"_"+ GetTimeString(":") +" : " + NAME;
+      FileWriteLn(FileHANDLE,WRITE_LINE);
+    FileClose(FileHANDLE);
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int ReportDisplay( Int RowPage , Int ColPage , String RowFile , String ColFile )
+
+
+    /// 1. declaration des variable
+
+    Int RowFilehandle;
+    Int ColFilehandle;
+
+    Int MaxRowInFirstPage = 35;
+    Int MaxRowInOtherPage = 25;
+    Int MaxColInPage = 7;
+    Int MaxRowInPage;
+    Int RowLineCounter = 0;         Int ColLineCounter = 0;
+    Int Row_Start;  Int Row_End;
+    Int Col_Start;  Int Col_End;
+    Int NbrCharInCell = 0;
+    Int MaxCharInOtherCell = 9;
+    Int MaxCharInFirstCell = 20;
+    Int MaxCharInCell;
+    Int SpaceAsciiCode = 32;
+    Int MaxCharInLine  = 63;
+    Int RowCounter;     Int ColCounter;
+    Int LineCounter = 0;
+    Int ColInPage;
+
+    String RowLine;
+    String ColLine;
+    String FinalLine;
+    String TempStr;
+    String RowCode;     String RowName;
+    String ColCode;     String ColName;
+    String CellSeparator = " ";
+    String Header = "";
+    int i;  Int j;
+
+    Bool RowExit = False;
+    Bool ColExit = False;
+
+    /// 2. Initialisation
+
+    MaxColInPage = R_max_Col_Items ;
+    MaxRowInPage = R_max_Row_Items ;
+
+        If ( FileExist(RowFile) == False ) Then
+            PRINT_REPORT_Runtime_LOG( " File Not Found : " + RowFile );
+
+            Return 0 ;
+        End
+
+        If ( FileExist(ColFile) == False ) Then
+            PRINT_REPORT_Runtime_LOG( " File Not Found : " + ColFile );
+            Return 0 ;
+        End
+
+        /*IF ( RowPage > 1 ) Then     MaxRowInPage = MaxRowInOtherPage;
+        Else                        MaxRowInPage = MaxRowInFirstPage;
+        End*/
+
+    /// 3. Calcule
+    Row_Start = (RowPage - 1) * MaxRowInPage+1;
+    Row_End = RowPage * MaxRowInPage;
+
+    Col_Start = (ColPage - 1) * MaxColInPage+1;
+    Col_End = ColPage * MaxColInPage;
+
+    //MessageBox("Row_Start : "+Row_Start,Row_End);
+    //MessageBox("Col_Start : "+Col_Start,Col_End);
+    /// 4. Body Program
+
+        /// 4.1 read Row File
+
+        RowFilehandle   = FileOpen(RowFile,"rt");
+        RowLineCounter  = 0;
+        RowCounter      = 0;
+        RowCode         = "";
+        RowName         = "";
+        RowExit         = False;
+
+        While ( RowExit == False )
+
+            If ( FileEof(RowFilehandle) == 0 ) Then
+                RowLine = FileReadLn(RowFilehandle);
+
+                    IF ( RowLine != "" ) Then
+                    RowLineCounter = RowLineCounter+1;
+
+                        IF ( (RowLineCounter >= Row_Start) && (RowLineCounter <= Row_End) ) Then
+                            RowCode = RowCode + "," + FETCH_ReportDisplay( RowLine, 1, "," );
+                            RowName = RowName + "," + FETCH_ReportDisplay( RowLine, 2, "," );
+                            RowCounter = RowCounter+1;
+                        End
+
+                        IF (RowLineCounter > Row_End) Then  RowExit = True;  End
+                        IF (FileEof(RowFilehandle) != 0) Then  RowExit = True;  End
+
+                    End //RowLine != ""
+
+            Else
+                RowExit = True;
+            End // FileEof(RowFilehandle) == 0
+
+        End // While
+
+        FileClose(RowFilehandle);
+
+        /// 4.2 Read Col File
+
+        ColFilehandle   = FileOpen(ColFile,"rt");
+        ColExit         = False;
+        ColLineCounter  = 0;
+        ColCounter      = 0;
+        ColCode         = "";
+        ColName         = "";
+
+        While ( ColExit == False )
+
+            If ( FileEof(RowFilehandle) == 0 ) Then
+                ColLine = FileReadLn(ColFilehandle);
+
+                    IF ( ColLine != "" ) Then
+                    ColLineCounter = ColLineCounter+1;
+
+                        IF ( (ColLineCounter >= Col_Start) && (ColLineCounter <= Col_End) ) Then
+                            ColCode = ColCode + "," + FETCH_ReportDisplay( ColLine, 1, "," );
+                            ColName = ColName + "," + FETCH_ReportDisplay( ColLine, 2, "," );
+                            ColCounter = ColCounter+1;
+                        End
+
+                        IF (ColLineCounter > Col_End) Then  ColExit = True;  End
+                        IF (FileEof(ColFilehandle) != 0) Then  ColExit = True;  End
+
+                    End // ColLine != ""
+            Else
+                ColExit = True;
+            End // FileEof(RowFilehandle) == 0
+
+        End // While
+
+        FileClose(ColFilehandle);
+
+        /// 4.3
+
+        If ( ColCounter < MaxColInPage ) Then
+            IF ( ColCounter > 0 ) then
+                MaxCharInOtherCell = RealToInt( MaxCharInLine / ColCounter );
+            Else
+                PRINT_REPORT_Runtime_LOG( " ColCounter <= 0 " + ColCounter + " //Col_Start : " +  Col_Start + " //Col_End : " + Col_End);
+                Return 0 ;
+            End
+        End
+
+
+        IF ( StrSubString(RowCode,1,1) == "," ) Then RowCode=StrDelete(RowCode,1,1);  End
+        IF ( StrSubString(RowName,1,1) == "," ) Then RowName=StrDelete(RowName,1,1);  End
+        IF ( StrSubString(ColCode,1,1) == "," ) Then ColCode=StrDelete(ColCode,1,1);  End
+        IF ( StrSubString(ColName,1,1) == "," ) Then ColName=StrDelete(ColName,1,1);  End
+
+
+
+        IF ( RowPage == 1 || ColPage == 1) Then
+
+            Header = StrOfChar(SpaceAsciiCode,MaxCharInFirstCell) + CellSeparator ;
+            MaxCharInCell = MaxCharInOtherCell;
+
+            For i = 1 to ColCounter do
+
+                TempStr = FETCH_ReportDisplay( ColName, i , "," );
+                 ColLineCounter = StrLen(TempStr);
+                 If ( MaxCharInOtherCell > ColLineCounter ) Then
+
+                    ColLineCounter = MaxCharInCell - StrLen(TempStr);
+                    ColLineCounter = RealToInt( ColLineCounter / 2 );
+                    TempStr = StrOfChar(SpaceAsciiCode,ColLineCounter) + TempStr + StrOfChar(SpaceAsciiCode,MaxCharInOtherCell);
+                    TempStr = StrSubString(TempStr,1,MaxCharInCell);
+
+                 Else
+                    TempStr = StrSubString(TempStr,1,MaxCharInCell);
+                 End
+
+                 Header  = Header +  TempStr + CellSeparator;
+
+            End
+
+            ReportInsertText(Header);
+            ReportInsertText(Eol());
+
+        End
+
+
+        //MessageBox("RowCounter : "+RowCounter,ColCounter);
+
+        For i = 1 to RowCounter do
+
+            RowLine = FETCH_ReportDisplay( RowCode, i , "," );
+
+            FinalLine = StrSubString(FETCH_ReportDisplay( RowName, i , "," ) + StrOfChar(32,MaxCharInFirstCell) ,1,MaxCharInFirstCell);
+            FinalLine = FinalLine+ CellSeparator;
+
+            For j = 1 to ColCounter do
+
+                ColLine = FETCH_ReportDisplay( ColCode, j , "," );
+
+                IF ( CmpGateExists(RowLine,StrToInt(ColLine)) == true ) Then
+
+                     TempStr = GetCmpGateValue(RowLine,StrToInt(ColLine));
+                     ColLineCounter = StrLen( StrToReal( TempStr ) );
+                     ColLineCounter = RealToInt( (MaxCharInCell - ColLineCounter)/2 ) ;
+                     TempStr = StrSubString( StrOfChar(32,ColLineCounter) + TempStr + StrOfChar(32,MaxCharInOtherCell) ,1,MaxCharInOtherCell);
+                     TempStr = TempStr + CellSeparator;
+                     FinalLine = FinalLine + TempStr;
+
+                Else
+
+                    IF ( CmpGateExists( ColLine ,StrToInt(RowLine)) == true  ) then
+
+                        TempStr = GetCmpGateValue(ColLine,StrToInt(RowLine));
+                        ColLineCounter = StrLen( StrToReal( TempStr ) );
+                        ColLineCounter = RealToInt( (MaxCharInCell - ColLineCounter)/2 ) ;
+                        TempStr = StrSubString( StrOfChar(32,ColLineCounter) + TempStr + StrOfChar(32,MaxCharInOtherCell) ,1,MaxCharInOtherCell);
+                        TempStr = TempStr + CellSeparator;
+                        FinalLine = FinalLine + TempStr;
+
+                    Else
+                        FinalLine = FinalLine + StrOfChar(32,MaxCharInOtherCell) ;
+                    End
+
+
+                end
+
+
+            End
+
+            //MessageBox(FinalLine,"FinalLine");
+            ReportInsertText(FinalLine);
+            ReportInsertText(Eol());
+            LineCounter = LineCounter+1;
+            FinalLine = "";
+
+        End
+
+        //FileDelete(RowFile);
+        //FileDelete(ColFile);
+        Return LineCounter;
+end
+//////////////////////////////////////////////////////////////////////////////////////
+function void Reporting()
+
+    R_max_Col_Items = 7 ;
+    R_max_Row_Items = 35 ;
+    string space26 = StrOfChar(32,26);
+    string space20 = StrOfChar(32,20);
+    string PageNumberLine;
+    int Matrix_MaxRowPage;
+    int Matrix_MaxColPage;
+    int Row_Page;
+    int Col_Page;
+    Int R_Curr_LigneInPage = 0;
+    Int EmptyLine;
+    Int MaxRowInFirstPage = 34;
+    Int MaxLine;
+    R_max_Row_Items = MaxRowInFirstPage;
+
+    String Mode;
+    String RowId = "R";
+    String ColId = "C";
+    String CLId  = "C";
+    String MLId  = "L";
+    String P1;
+    String P2;
+    String P11;
+    String P12;
+    String P21;
+    String P22;
+    String In_Row;
+    String In_Col;
+    Int RowCount = 0;
+    int ColCount = 0;
+
+      /*CL_FilePath = PRINT_FindIF_CLML_Or_MLCL( FETCH_REPORT_GENERATOR(ReportLine,3,",") , CL_FilePath , ML_FilePath );
+
+      CL_TempFilePATH = FETCH_REPORT_GENERATOR(CL_FilePath,1,";");
+      ML_TempFilePATH = FETCH_REPORT_GENERATOR(CL_FilePath,2,";");*/
+
+      Mode = GetStrGateValue("Tableau_VEPC",REPORT_TABLEAU);
+
+    P1= FETCH_REPORT_GENERATOR(Mode,1,"/");
+        P11 = FETCH_REPORT_GENERATOR(P1,1,":");
+        P12 = FETCH_REPORT_GENERATOR(P1,2,":");
+    P2= FETCH_REPORT_GENERATOR(Mode,2,"/");
+        P21 = FETCH_REPORT_GENERATOR(P2,1,":");
+        P22 = FETCH_REPORT_GENERATOR(P2,2,":");
+
+
+        IF ( P11 == RowId ) Then
+                IF ( P12 == CLId ) Then In_Row = R_RowFullFileName; RowCount = R_TotalRow;  End
+                IF ( P12 == MLId ) Then In_Row = R_ColFullFileName; RowCount = R_TotalCol;  End
+        Else
+          IF ( P11 == ColId ) Then
+                IF ( P12 == CLId ) Then In_Col = R_RowFullFileName; ColCount = R_TotalRow;  End
+                IF ( P12 == MLId ) Then In_Col = R_ColFullFileName; ColCount = R_TotalCol;  End
+          End
+        End
+
+        IF ( P21 == RowId ) Then
+                IF ( P22 == CLId ) Then In_Row = R_RowFullFileName; RowCount = R_TotalRow;  End
+                IF ( P22 == MLId ) Then In_Row = R_ColFullFileName; RowCount = R_TotalCol;  End
+        Else
+          IF ( P21 == ColId ) Then
+                IF ( P22 == CLId ) Then In_Col = R_RowFullFileName; ColCount = R_TotalRow;  End
+                IF ( P22 == MLId ) Then In_Col = R_ColFullFileName; ColCount = R_TotalCol;  End
+          End
+        End
+
+
+
+
+
+              Matrix_MaxRowPage = RowCount / R_max_Row_Items;
+              Matrix_MaxColPage = ColCount / R_max_Col_Items;
+
+              IF ( Mod( RowCount , R_max_Row_Items ) > 0 ) Then Matrix_MaxRowPage = Matrix_MaxRowPage +1; End
+              IF ( Mod( ColCount , R_max_Col_Items ) > 0 ) Then Matrix_MaxColPage = Matrix_MaxColPage +1; End
+
+
+
+                //Matrix_MaxRowPage = 1;
+                //Matrix_MaxColPage = 1;
+
+
+               // MessageBox(In_Row,"In_Row");
+               // MessageBox(In_Col,"In_Col");
+              MaxLine = MaxRowInFirstPage;
+              for Row_Page = 1 to Matrix_MaxRowPage do
+                    //MessageBox("Row_Page : "+Row_Page,Matrix_MaxRowPage);
+                     for Col_Page = 1 to Matrix_MaxColPage do
+
+                        //MessageBox("Col_Page : "+Col_Page,Matrix_MaxColPage);
+                        ReportInsertTemplate("ReportHeader");
+                        ReportInsertText(Eol());
+
+                        R_Curr_LigneInPage = ReportDisplay( Row_Page , Col_Page , In_Row , In_Col);
+                        R_Curr_LigneInPage = R_Curr_LigneInPage+1;
+
+                            For EmptyLine = R_Curr_LigneInPage to MaxLine do
+
+                             //ReportInsertText(EmptyLine);
+                             ReportInsertText(Eol());
+
+                            End
+                        //MaxLine = MaxRowInOtherPage;
+
+                     end
+
+              end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function string FETCH_ReportDisplay(String Ligne,int Numero,string sep)
+int P;
+string V;
+String TXT = Ligne;
+int i =1;
+    While ( i < (Numero) )
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+     TXT = StrDelete(TXT,1,P);
+     i=i+1;
+    end
+
+     P = StrPos(TXT,sep);
+     V = StrSubString(TXT,1,P-1);
+
+     return V;
+end

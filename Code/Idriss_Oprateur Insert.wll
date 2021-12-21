@@ -1,0 +1,94 @@
+
+Function void ClickOperator_Diff()
+SetStrGateValue("Operateur_Formule",0,"!=");
+End
+
+Function void ClickOperator_InfEgal()
+SetStrGateValue("Operateur_Formule",0,"<=");
+End
+
+Function void ClickOperator_SupEgal()
+SetStrGateValue("Operateur_Formule",0,">=");
+End
+
+Function void ClickOperator_Egal()
+SetStrGateValue("Operateur_Formule",0,"==");
+End
+
+Function void ClickOperator_Inf()
+SetStrGateValue("Operateur_Formule",0,"<");
+End
+
+Function void ClickOperator_Sup()
+SetStrGateValue("Operateur_Formule",0,">");
+End
+
+Function void CancelOP()
+TPageCloseByName("POPUP_Operator");
+End
+
+Function void SaveOP()
+    String Part1;
+    String Formule;
+    String OP;
+    String OPD;
+    String Part2;
+    OPD=GetStrGateValue("AlarmeEventModifer",3);
+    OP=GetStrGateValue("Operateur_Formule",0);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,OP,5);
+     SetStrGateValue("AlarmeEventModifer",3,OP);
+     TPageCloseByName("POPUP_Operator");
+     Formule=Fetch_Formule(Admin_View_CurrentLine,10,";");
+     Part1=Fetch_Formule(Formule,1,OPD);
+     Part2=Fetch_Formule(Formule,2,OPD);
+     Formule=Part1+OP+Part2;
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Formule,10);
+     AlarmeFormuleEdit_FLAG = True;
+	                    if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+end
+Function void CancelOperande()
+TPageCloseByName("POPUP_Operande");
+End
+
+Function void SaveOperande()
+    String Formule;
+    String OP;
+    String OPD;
+    String Part1;
+    String User;
+  OPD=GetStrGateValue("AlarmeEventModifer",3);
+    OP=GetStrGateValue("Operande_Formule",0);
+    Part1=GetStrGateValue("AlarmeEventModifer",1);
+      if Fetch_Formule(OP,1,":")== "O" then
+           User=Fetch_Formule(OP,3,":");
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,OP,6);
+           SetStrGateValue("AlarmeEventModifer",4,User);
+        else
+           SetStrGateValue("AlarmeEventModifer",4,OP);
+      end
+     Formule=Fetch_Formule(Admin_View_CurrentLine,10,";");
+     Formule=Part1+OPD+OP;
+     Part1=Fetch_Formule(Admin_View_CurrentLine,2,";");
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Formule,10);
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,OP,6);
+	                    if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+        TPageCloseByName("POPUP_Operande");
+		
+
+end
+
+
+
+
+
+
+
+

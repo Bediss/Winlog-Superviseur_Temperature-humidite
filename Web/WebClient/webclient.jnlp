@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0" version="0.16" codebase="http://{serverHost}:{httpPort}/webclient" href="get-jnlpfile.cgi">
+<information>
+	<title>Bizeyes REAL TIME MONITORING SYSTEM</title>
+	<vendor>Bizeyes</vendor>
+</information>
+<resources>
+	<j2se version="1.7+" initial-heap-size="64m" max-heap-size="512m" />
+	<jar href="static/sielcowebclientapp.jar" main="true" />
+	<jar href="static/httpfilegetter.jar" />
+	<jar href="static/safecomclient.jar" />
+	<jar href="static/winlogtcpclient.jar" />
+	<jar href="static/winlogwebclient.jar" />
+	<jar href="imageresources.jar" />
+	<jar href="templates.jar" />
+	<jar href="customfonts.jar" />
+	<jar href="static/winlogprintfwrapper.jar" />
+	<jar href="static/junit.jar" />
+	<jar href="static/jdom.jar" />
+	<jar href="static/jcommon-1.0.21.jar" />
+	<jar href="static/jfreechart-1.0.17.jar" />
+	<jar href="static/log4j-1.2.15.jar" />
+	<property name="TRACER_ON" value="0"/>
+</resources>
+<application-desc main-class="it.grgmeda.sielco.winlog.webclient.AppClientCore">
+	<argument>1</argument>
+	<argument>{serverHost}</argument>
+	<argument>{httpPort}</argument>
+	<argument>{wltpPort}</argument>
+	<argument>Bizeyes REAL TIME MONITORING SYSTEM</argument>
+	<argument>auto</argument>
+	<argument>Site</argument>
+	<argument>2000</argument>
+	<argument>15000</argument>
+	<argument>3</argument>
+</application-desc>
+</jnlp>

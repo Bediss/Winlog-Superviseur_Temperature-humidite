@@ -1,0 +1,104 @@
+Global string ElectriqueLabels;
+Global string EauLabels;
+Global string GazLabels;
+Global string VapeurLabels;
+Global string ProductionLabels;
+
+Global int ElectriqueLabelsMax;
+Global int EauLabelsMax;
+Global int GazLabelsMax;
+Global int VapeurLabelsMax;
+Global int ProductionLabelsMax;
+
+
+function void GetListLabels()
+//*****************************************************************************
+// Reading Recover File
+//*****************************************************************************
+int i;
+   int FileHandle;  int num;
+    num = 0;
+   string FullPathFileName;
+   string TextRow;
+   string Path0;
+   FullPathFileName=ENV_PATH+"\Files\AllCompteur\EnergyMeasureView.csv";
+///////////////////////////////////////////////////////////////
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+   end
+//////////////////////////////////////////////////////////////
+
+   while(FileEof(FileHandle)==0)
+    TextRow=FileReadLn(FileHandle);
+    AnalyseListLabels(TextRow);
+  end
+   FileClose(FileHandle);
+end
+
+
+               /////   AnalyseData() "CSV File"    /////
+ function void AnalyseListLabels(string TextRow)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+int i;      i=0;
+string V;
+
+            P = StrPos(txt,";");
+            V=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            if ( V == "Electrique") then
+            ElectriqueLabels =TextRow;
+            ElectriqueLabelsMax = CountMaxLabels("Electrique");
+            SetNumGateValue("EnergyMax",1,CountMaxLabels("Electrique"));
+            end
+
+            if ( V == "Eau") then
+            EauLabels =TextRow;
+            EauLabelsMax = CountMaxLabels("Eau");
+            SetNumGateValue("EnergyMax",2,CountMaxLabels("Eau"));
+            end
+
+            if ( V == "Gaz") then
+            GazLabels =TextRow;
+            GazLabelsMax = CountMaxLabels("Gaz");
+            SetNumGateValue("EnergyMax",3,CountMaxLabels("Electrique"));
+            end
+
+            if ( V == "Vapeur") then
+            VapeurLabels =TextRow;
+            VapeurLabelsMax = CountMaxLabels("Vapeur");
+            SetNumGateValue("EnergyMax",4,CountMaxLabels("Electrique"));
+            end
+
+
+            if ( V == "Tonnage") then
+            ProductionLabels =TextRow;
+            ProductionLabelsMax = CountMaxLabels("Tonnage");
+            SetNumGateValue("EnergyMax",5,CountMaxLabels("Electrique"));
+            end
+
+
+
+end
+
+function int CountMaxLabels( string LabelRow)
+
+string txt = LabelRow;
+int Counter = 0;
+int P;
+
+    while ( P != 0)
+
+    P = StrPos(txt,";");
+    Counter = Counter +1;
+    txt=StrDelete(txt,1,P);
+    end
+return Counter;
+end
+

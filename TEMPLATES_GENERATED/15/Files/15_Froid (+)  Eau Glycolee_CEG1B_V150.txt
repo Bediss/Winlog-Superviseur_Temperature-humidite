@@ -1,0 +1,2 @@
+F:*§CEG1B4;Groupe EG;Froid (+)  Eau Glycolee;CEG1B;SMF Surgele;5;*;M120;M122;*;SMF Surgele;Groupe EG;CEG1B41;Atelier;Froid;*;Froid;*;*;CEG1B41~;Ch PF,Ch Prepar~;;;0;Groupe Eau Gycolee;*
+F:*§CEG1B41;Ch PF,Ch Prepar;Froid (+)  Eau Glycolee;CEG1B;SMF Surgele;5;*;M120;M122;*;SMF Surgele;Groupe EG;Reel;Atelier;Froid;*;Froid;!~*;!~*;;;;;2;Ch Produit Fini , Ch Preparation;*

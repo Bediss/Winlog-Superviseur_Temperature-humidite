@@ -1,0 +1,35 @@
+CC11,Abattoire,Electrique
+CC11D,ventilo ressuag 1 et 2,Electrique
+CC11O,Abattage 1,Electrique
+CC11F,hangar d'attente,Electrique
+CC117,Decoupe,Electrique
+CC118,Pompe a Vide,Electrique
+CC1141,Plumeuse,Electrique
+CC11B,Pompe a Vide Poumons,Electrique
+CC119,Pompe a Vide 1,Electrique
+CC11A,Pompe a Vide 2,Electrique
+CC11C,Pompe a Vide Decoupe,Electrique
+CC1C6,ventilo ress 3 44 ventilos,Electrique
+CC1O4,Abbattoire_Chaine Ressuage,Electrique
+CC1O5,Atelier Osso Bucoo,Electrique
+CV11,Abattoire,Vapeur
+CEA1,Abattoire,Eau
+CEA11,Abattage,Eau
+CEA12,Decoupe,Eau
+CEB123,CB17_LAVAGE-HP ,Eau Brute
+CEB14,CB13_ABATTAGE,Eau Brute
+CEB127,CB48_hydro nettoyeur,Eau Brute
+CEB141,CB42_Echaudoire,Eau Brute
+CETB1,CT11_abattage+decoupe,Eau Traite
+CETB11,CT22_ElMazraa-decoupe+lavage-caisse,Eau Traite
+CETB111,CT24_lavage-caisse,Eau Traite
+CETB2,CT19_Ruisseleur,Eau Traite
+CET121,CT40_Refroidisseurs abats,Eau Traite
+CETA1,Abattoire,Eau Traite
+CET16,CT20_abattage,Eau Traite
+CET1H,CT32_ELMEZRAA-ABATTAGE-QAI-VIFS,Eau Traite
+CET1H1,CT46_ELMEZRAA-ABATTAGE-HANGER,Eau Traite
+CET17,CT21_ELMEZRAA-ABATTAGE-evisceration,Eau Traite
+CET171,CT43_machine-gesier,Eau Traite
+CPT11,Abattoire,Tonnage
+X11,Abattoire,*

@@ -1,0 +1,62 @@
+Code;unite;Parent;Parent Name;level;type;description;Access
+*;*;;;;;;*
+D1;CLC;*;*;0;Company;Centrale Laitiere du Cap Bon CLC;14
+D2;Production;D1;CLC;1;Unite;;2
+D21;Process_Pasto;D2;Production;3;Point de mesure;;2
+D22;Process_Sterilo;D2;Production;3;Point de mesure;;2
+D23;Cond_UHT1_P1;D2;Production;3;Point de mesure;;2
+D24;Cond_UHT1_P2;D2;Production;3;Point de mesure;;2
+D25;Process_Lait_Fermente;D2;Production;3;Point de mesure;;2
+D26;Galdi;D2;Production;2;Atelier;;2
+D261;Galdi_A&B;D26;Galdi;3;Point de mesure;;2
+D262;Galdi_C;D26;Galdi;3;Point de mesure;;2
+D27;Beurrerie;D2;Production;2;Atelier;;2
+D271;BER_Process;D27;Beurrerie;3;Point de mesure;;2
+D272;BER_Cond;D27;Beurrerie;3;Point de mesure;;2
+D28;CH_Chaud_P1;D2;Production;3;Point de mesure;;2
+D29;CH_Chaud_P2;D2;Production;3;Point de mesure;;2
+D2A;CH_Froid_P1;D2;Production;3;Point de mesure;;2
+D2B;CH_Froid_P2;D2;Production;3;Point de mesure;;2
+D3;CH_F_Commerciale;D1;CLC;1;Unite;;32
+D31;CH1_F_Commerciale_P1;D3;CH_F_Commerciale;3;Point de mesure;;32
+D32;CH2_F_Commerciale_P2;D3;CH_F_Commerciale;3;Point de mesure;;32
+D4;Laboratoire;D1;CLC;1;Unite;;4
+D41;LAB_Bacterio;D4;Laboratoire;2;Atelier;;4
+D411;LB1_E_16;D41;LAB_Bacterio;3;Point de mesure;;4
+D412;LB1_E_18;D41;LAB_Bacterio;3;Point de mesure;;4
+D413;LB1_E_14;D41;LAB_Bacterio;3;Point de mesure;;4
+D414;LB1_E_06;D41;LAB_Bacterio;3;Point de mesure;;4
+D415;LB1_E_05;D41;LAB_Bacterio;3;Point de mesure;;4
+D416;LB1_E_02;D41;LAB_Bacterio;3;Point de mesure;;4
+D417;LB1_E_09;D41;LAB_Bacterio;3;Point de mesure;;4
+D418;LB1_R_11;D41;LAB_Bacterio;3;Point de mesure;;4
+D419;LB2_R_02;D41;LAB_Bacterio;3;Point de mesure;;4
+D41A;LB2_R_03;D41;LAB_Bacterio;3;Point de mesure;;4
+D41B;SALLE ANALYSE;D41;LAB_Bacterio;3;Point de mesure;;4
+D42;LAB_PhysicoChimique;D4;Laboratoire;2;Atelier;;4
+D421;LPC_C_20;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D422;LPC_C_18;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D423;LPC_C_15;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D424;LPC_C_16;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D425;LPC_C_19;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D426;LPC_C_17;D42;LAB_PhysicoChimique;3;Point de mesure;;4
+D5;Salle_De_Fermentation;D1;CLC;1;Unite;;8
+D51;LSF_C_06;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D52;LSF_C_01;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D53;LSF_C_03;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D54;LSF_C_11;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D55;LSF_C_10;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D56;LSF_C_04;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D57;LSF_C_09;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D58;LSF_C_08;D5;Salle_De_Fermentation;3;Point de mesure;;8
+D6;Matiere_Premiere_P1;D1;CLC;3;Point de mesure;;64
+D7;CH_CHAUD_LABO;D1;CLC;3;Point de mesure;;64
+D64;T°c  positive;*;*;*;*;;
+D65;T°c  negativre;*;*;*;*;;
+D66;T°c  chaude;*;*;*;*;;
+D67;T°c  Ambiante;*;*;*;*;;
+D68;RH  CH_Chaude;*;*;*;*;;
+D69;RH  CH_Ambiante;*;*;*;*;;
+D70;RH  CH_Positive;*;*;*;*;;
+D8;Local Habillement;D1;CLC;*;*;;
+D2C;Local serveur Production;D2;Production;*;*;;

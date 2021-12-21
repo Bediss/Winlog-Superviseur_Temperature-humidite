@@ -1,0 +1,8 @@
+16,T°c ^LIVE
+0,[T°c ]^J
+18,[T°c ]^J-1
+34,C %^J
+38,C %^J-1
+4,T°c min^J
+8,T°c Max^J
+12,Inc^J

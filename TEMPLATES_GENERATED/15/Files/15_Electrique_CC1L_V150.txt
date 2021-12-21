@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1V;Dick TR5;Electrique;CC1L;PosteTR5;5;S200;M1A0;D200;STEG;PosteTR5;Dick;F(CC1V);Atelier;*;*;Dick;*;*;F~(~CC1V~)~;F~(~Dick TR5~)~;;;0;Dick TR5;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1N4;Station Wedeco;Electrique;CC1L;PosteTR5;5;S200;M1A0;MB06;STEG;PosteTR5;Station Wedeco;Reel;Atelier;*;*;Eau;!~*;!~*;;;;;2;Station Wedeco;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1W;Froid TR5;Electrique;CC1L;PosteTR5;6;S200;M1A0;MA05;STEG;PosteTR5;Froid TR5;F(CC1W);SubAtelier;*;*;Froid;*;*;F~(~CC1W~)~;F~(~Froid TR5~)~;;;0;Froid TR5;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1C6;ventilo ress3 ;Electrique;CC1L;PosteTR5;7;S200;M1A0;M21M;STEG;PosteTR5;ventilo ress-3;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;ventilo ress 3 44 ventilos;*

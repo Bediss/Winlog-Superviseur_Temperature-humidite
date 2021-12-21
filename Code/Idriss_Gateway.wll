@@ -1,0 +1,911 @@
+Global String LineGateway;
+
+//////////////////////////////////////////////////////
+function void SetDisplay_Gateway_Table(string TextRow,String GateName)
+string txt = TextRow;
+int P;
+String EmailView = GateName;
+
+String NAME;
+string CODE;
+String FirstPort;
+string Nombre_Port;
+string Adresse_IP;
+string COMsType;
+string Emplacement;
+String NBR;
+
+
+                txt = TextRow;
+//***********************************************************
+                NAME=Fetch_Gateway(txt,2,";");
+                SetStrGateValue(EmailView,0,NAME);
+//***********************************************************
+                Adresse_IP=Fetch_Gateway(txt,3,";");
+                SetStrGateValue(EmailView,1,Adresse_IP);
+
+//***********************************************************
+
+                COMsType=Fetch_Gateway(txt,4,";");
+                if COMsType=="D" then COMsType="DIGITAL"; end
+                if COMsType=="R" then COMsType="RTU"; end
+                if COMsType=="A" then COMsType="ANALOGIQUE"; end
+                SetStrGateValue(EmailView,2,COMsType);
+//***********************************************************
+
+                Emplacement=Fetch_Gateway(txt,5,";");
+                SetStrGateValue(EmailView,3,Emplacement);
+
+//***********************************************************
+
+                Nombre_Port=Fetch_Gateway(txt,7,";");
+                SetStrGateValue(EmailView,4,Nombre_Port);
+
+//***********************************************************
+
+                NBR=Fetch_Gateway(txt,8,";");
+                SetStrGateValue(EmailView,5,NBR);
+//***********************************************************
+
+                FirstPort=Fetch_Gateway(txt,9,";");
+                SetStrGateValue(EmailView,6,FirstPort);
+
+
+
+end
+////////////////////////////////////////////////////////
+function void NameGatewayBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("Gateway_Name");
+End
+
+
+function void FillNameGateway()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+     if ( V != "") then
+     //MessageBox(V,"Nom");
+    SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,2);
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    end
+end
+
+
+
+////////////////////////////////////////////////
+function String Fetch_Gateway(string Item, int Col,String op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+////////////////////////////////////////////////////////////////
+Function String FetchCodeGateway(String Type)
+
+    String FullPathFileName;
+    String CodeNewGateway="";
+    String Ligne="";
+    int FileHandle;
+    int LastCode;
+    String Prefix;
+    int NCode;
+    String Code;
+    int P;
+
+          FullPathFileName=ENV_PATH+"\Files\Config Compteur\Temp_Gateways.CSV";
+          FileHandle=FileOpen(FullPathFileName,"rt");
+
+
+        while(FileEof(FileHandle)==0)
+
+            Ligne=FileReadLn(FileHandle);
+            Code=Fetch_Gateway(Ligne,1,";");
+            P=StrLen(Code);
+            Prefix=StrSubString(Code,1,1);
+            NCode=StrToInt(StrSubString(Code,2,P-1));
+
+             if Prefix == Type then
+
+                if LastCode<NCode then
+                    LastCode=NCode;
+                end
+             end
+        end
+
+        LastCode=LastCode+1;
+        CodeNewGateway=Type+LastCode;
+        FileClose(FileHandle);
+
+   return CodeNewGateway;
+end
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Navigation********////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function void View_Gateway_Add()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+
+     Admin_View_Display(CurrentPage,"Gateway");
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Gateway_Sub()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"Gateway");
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Gateway_First()
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"Gateway");
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void View_Gateway_End()
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then
+        MaxPage =  MaxPage +1;
+    end
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+            Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+            if (Continue == False) then
+                return ;
+            end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"Gateway");
+
+end
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+Function Void CopyGateway()
+
+
+String Prefix="";
+String CodeNewGateway;
+    Prefix=Fetch_Gateway(Admin_View_CurrentLine,4,";");
+    CodeNewGateway=FetchCodeGateway(Prefix);
+
+    Admin_Copy("Gateway",CodeNewGateway);
+    Confirme_Save=True;
+
+End
+
+//////////////////////
+Function Void DeleteGateway()
+
+String PathC=ENV_PATH+"\Files\Config Compteur\TempGateways.CSV";
+String WPath=ENV_PATH+"\Files\Config Compteur\WTempGateways.CSV";
+String BackPath=ENV_PATH+"\Files\Config Compteur\Back_Temp_Gateways.CSV";
+
+    Admin_Delete("Gateway",WPath,BackPath);
+    Confirme_Save=True;
+
+End
+
+
+/*****************************************************************************/
+Function Void Add_New_Gateway()
+String CodeNewGateway ;
+String Prefix;
+
+        Prefix=Fetch_Gateway(Admin_View_CurrentLine,4,";");
+        if Prefix=="" then MessageBox("Ajoutez le COMs Type SVP!! ","Important");return; end
+        CodeNewGateway=FetchCodeGateway(Prefix);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+      //MessageBox(Admin_View_CurrentLine,"");
+
+    Admin_New_Ligne("Gateway",CodeNewGateway);
+    Confirme_Save=True;
+
+end
+//////////////////////////////////////////////////////////////////
+function void SaveGateway()
+    String FullPathFileName;
+    String BackFullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;  string EditRow;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    int save_pos = GetNumGateValue("EditPosition",0);
+    int Page = GetNumGateValue("EmailPageView",0);
+    string RowName;
+    string WFullPathFileName;
+    int WFileHandle;
+    bool W_already = false;
+
+
+if ( Page == 1 ) then RowHeader = true; end
+    BackFullPathFileName=ENV_PATH+"\Files\Config Compteur\Back_Temp_Gateways.CSV";
+    FullPathFileName =Admin_View_Temp_File;
+    WFullPathFileName = ENV_PATH+"\Files\Config Compteur\WTempGateways.CSV";
+
+
+FileHandle=FileOpen(FullPathFileName,"rt");
+WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+      end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+while(FileEof(FileHandle)==0)
+     TextRow = FileReadLn(FileHandle);
+
+
+     if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+            if (TextRow != "" ) then
+               ReadRowPos = ReadRowPos+1;
+
+               if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+                  j = ReadRowPos-Row_Start+1;
+
+                  if (j== save_pos) then EditRow =Admin_View_CurrentLine;
+
+
+                        FileWriteLn(WFileHandle,EditRow);
+                        W_already=true;
+
+                        RowName = "ROW"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+                        SetStrGateValue(RowName,4,GetStrGateValue("AlarmeEventModifer",4));
+                        SetStrGateValue(RowName,5,GetStrGateValue("AlarmeEventModifer",5));
+                        SetStrGateValue(RowName,6,GetStrGateValue("AlarmeEventModifer",6));
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+                        SetStrGateValue("AlarmeEventModifer",4,"");
+                        SetStrGateValue("AlarmeEventModifer",5,"");
+                        SetStrGateValue("AlarmeEventModifer",6,"");
+                        // change winlog alarm
+                        Confirme_Save=True;
+
+                         end
+                     end
+               end
+          end
+
+              SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+
+     if (W_already == false) && (TextRow!="") then FileWriteLn(WFileHandle,TextRow);end
+     W_already = false;
+
+
+end
+
+FileClose(FileHandle);
+FileClose(WFileHandle);
+
+
+    if ( FileExist(BackFullPathFileName) == true ) then
+        FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+
+FileDelete(WFullPathFileName);
+//return;
+MessageBox("Fin De Sauvegardage ","Information :");
+return;
+end
+////////////////////////////////////////////////////////////////////////
+Function Void Gateway_Commit()
+Confirme_Save=False;
+
+String BackFullPathFileName=ENV_PATH+"\Files\Config Compteur\Back_Gateways.CSV";
+Admin_Commit(BackFullPathFileName);
+Save_Device();
+End
+/////////////////////////////////
+Function Void Save_Device()
+
+ int FileHandle;
+ int DFileHandle;
+ int i;
+ int j;
+ int Channel;
+ int Device;
+ int NBRPort;
+ int NBRDevice;
+ String CodeG;
+ String EmplacementG;
+ String Ligne;
+ String WLigne;
+ String TypeG;
+ String NameG;
+ String PortG;
+ String PostCodeG;
+ String FileFullPathName;
+
+    FileFullPathName=ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.CSV";
+    FileHandle=FileOpen(Admin_View_Original_File,"rt");
+    DFileHandle=FileOpen(FileFullPathName,"wt");
+     Channel=1;
+     Device=1;
+     WLigne=";;;;;;;;;;;;;;;;;;;";
+      FileWriteLn(DFileHandle,"Channel Id;ChannelDevice Id;CompteurCode;Gateway Id;Master;COMsType;Port;Compteur Name;Gateway Name;Post code;Emplacement");
+
+    while(FileEof(FileHandle)==0)
+
+        Ligne = FileReadLn(FileHandle);
+        CodeG=Fetch_Gateway(Ligne,1,";");
+        NameG=Fetch_Gateway(Ligne,2,";");
+        TypeG=Fetch_Gateway(Ligne,4,";");
+         EmplacementG=Fetch_Gateway(Ligne,5,";");
+         PostCodeG=Fetch_Gateway(Ligne,6,";");
+          NBRPort=StrToInt(Fetch_Gateway(Ligne,7,";"));
+          NBRDevice=StrToInt(Fetch_Gateway(Ligne,8,";"));
+
+
+            for i = 1 to NBRPort do
+
+                for j = 1 to NBRDevice do
+                    PortG=Fetch_Gateway(Ligne,8+i,";");
+                    WLigne=Channel+";"+Device+";;"+CodeG+";;"+TypeG+";"+PortG+";;"+NameG+";"+PostCodeG+";"+EmplacementG;
+                    FileWriteLn(DFileHandle,WLigne);
+
+                    if (Fetch_Gateway(WLigne,2,";")=="255" && StrToInt(Fetch_Gateway(WLigne,1,";"))<15 ) then
+
+                            Channel=Channel+1;
+
+
+                        Device=1;
+                     else
+                        if Fetch_Gateway(WLigne,1,";")=="15" && Fetch_Gateway(WLigne,2,";")=="255" then
+                        MessageBox("Device Plaine","Error");
+                        end
+                     end
+
+                    if ( StrToInt(Fetch_Gateway(WLigne,2,";"))<255 ) then
+                        if NBRDevice == 1 then
+                            Device=Device+1;
+                        end
+                    end
+
+
+                end
+            end
+
+    end
+FileClose(FileHandle);
+FileClose(DFileHandle);
+
+End
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Popups edit********//////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function void Coms_Type_View()
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\Config Compteur\ComsType.CSV";
+    Coms_Display(1);
+     ShowPoPUPs("Type_Coms_Selector");
+
+
+end
+////////////////////////////////////////
+function void Coms_Display(int Page)
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+    String Name;
+    String Code;
+
+        SetStrGateValue("EmailView1",0,"");
+        SetStrGateValue("EmailView2",0,"");
+        SetStrGateValue("EmailView3",0,"");
+        SetStrGateValue("EmailView4",0,"");
+        SetStrGateValue("EmailView5",0,"");
+        SetStrGateValue("EmailView1",1,"");
+        SetStrGateValue("EmailView2",1,"");
+        SetStrGateValue("EmailView3",1,"");
+        SetStrGateValue("EmailView4",1,"");
+        SetStrGateValue("EmailView5",1,"");
+
+
+    FileHandle=FileOpen(EVM_LIST_FILE,"rt");
+    if (FileHandle==0) then   MessageBox(EVM_LIST_FILE+" file is missing","Error");  Return; end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+    TextRow = FileReadLn(FileHandle); // Header
+    //////////read until start of display
+    StartDisplay = Row_Start -1;
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Name=Fetch_Gateway(TextRow,1,";");
+        Code=Fetch_Gateway(TextRow,2,";");
+              j = j+1;
+                EVM = "EmailView"+j;
+                    // For Display
+
+                SetStrGateValue(EVM,1,Code);
+
+                SetStrGateValue(EVM,0,Name);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,"EmailView");
+      else
+        CleanEmptyRows(j+1,"EmailView");
+     end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Coms_SelectRow_1()
+String S;
+String C;
+    S = GetStrGateValue("EmailView1",0);
+    C =GetStrGateValue("EmailView1",1);
+    IF ( S != "" ) Then
+          SetStrGateValue("AlarmeEventModifer",2,S);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,4);
+                                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void Coms_SelectRow_2()
+String S;
+String C;
+    S = GetStrGateValue("EmailView2",0);
+    C =GetStrGateValue("EmailView2",1);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",2,S);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,4);
+                                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void Coms_SelectRow_3()
+String S;
+String C;
+    S = GetStrGateValue("EmailView3",0);
+    C =GetStrGateValue("EmailView3",1);
+    IF ( S != "" ) Then
+     SetStrGateValue("AlarmeEventModifer",2,S);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,4);
+                                 if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    End
+end
+function void Coms_SelectRow_4()
+String S;
+String C;
+    S = GetStrGateValue("EmailView4",0);
+    C =GetStrGateValue("EmailView4",1);
+    IF ( S != "" ) Then
+         SetStrGateValue("AlarmeEventModifer",2,S);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,4);
+                                 if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    End
+end
+function void Coms_SelectRow_5()
+String S;
+String C;
+    S = GetStrGateValue("EmailView5",0);
+    C =GetStrGateValue("EmailView5",1);
+    IF ( S != "" ) Then
+
+     SetStrGateValue("AlarmeEventModifer",2,S);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,4);
+                                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    End
+end
+function void Coms_SelectRow_6()
+String S;
+    S = GetStrGateValue("EmailView6",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",2,S);
+      TPageCloseByName("Type_Coms_Selector");
+    End
+end
+function void Coms_SelectRow_7()
+String S;
+    S = GetStrGateValue("EmailView7",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",2,S);
+      TPageCloseByName("Type_Coms_Selector");
+    End
+end
+function void Coms_SelectRow_8()
+String S;
+    S = GetStrGateValue("EmailView8",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",2,S);
+      TPageCloseByName("Type_Coms_Selector");
+    End
+end
+function void Coms_SelectRow_9()
+String S;
+    S = GetStrGateValue("EmailView9",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",2,S);
+      TPageCloseByName("Type_Coms_Selector");
+    End
+end
+function void Coms_SelectRow_10()
+String S;
+    S = GetStrGateValue("EmailView10",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",2,S);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+      TPageCloseByName("Type_Coms_Selector");
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Adresse_IP()
+
+String Part1;
+String Part2;
+String Part3;
+String Part4;
+String AdresseIP;
+
+    AdresseIP=Fetch_Gateway(Admin_View_CurrentLine,3,";");
+    Part1=Fetch_Gateway(AdresseIP,1,".");
+    Part2=Fetch_Gateway(AdresseIP,2,".");
+    Part3=Fetch_Gateway(AdresseIP,3,".");
+    Part4=Fetch_Gateway(AdresseIP,4,".");
+    SetStrGateValue("AlarmeEventModifer",11,Part1);
+    SetStrGateValue("AlarmeEventModifer",12,Part2);
+    SetStrGateValue("AlarmeEventModifer",13,Part3);
+    SetStrGateValue("AlarmeEventModifer",14,Part4);
+    SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+      ShowPoPUPs("POPUPAdresseIP");
+
+end
+
+/////////////////////////////////////////////////////
+
+function Void AdresseOK()
+int Part1;
+int Part2;
+int Part3;
+int Part4;
+String AdresseIP;
+
+
+    if(getStrGateValue("AlarmeEventModifer",11)=="" || getStrGateValue("AlarmeEventModifer",12)=="" || getStrGateValue("AlarmeEventModifer",13)=="" || getStrGateValue("AlarmeEventModifer",14)=="")then
+    SetStrGateValue("AlarmeEventModifer",17,"Il faut remplie tous les Input !! "); return; end
+
+    Part1=StrToInt(getStrGateValue("AlarmeEventModifer",11));
+    Part2=StrToInt(getStrGateValue("AlarmeEventModifer",12));
+    Part3=StrToInt(getStrGateValue("AlarmeEventModifer",13));
+    Part4=StrToInt(getStrGateValue("AlarmeEventModifer",14));
+
+    if(Part1 > 255) || (Part2 > 255) || (Part3 > 255) || (Part4 > 255)||(Part1 < 0) || (Part2 < 0) || (Part3 < 0) || (Part4 < 0) then SetStrGateValue("AlarmeEventModifer",17,"Il faut que les valeur entre 0 et 255 !! "); return; end
+
+        AdresseIP=Part1+"."+Part2+"."+Part3+"."+Part4;
+        SetStrGateValue("AlarmeEventModifer",1,AdresseIP);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,AdresseIP,3);
+SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("POPUPAdresseIP");
+        SetStrGateValue("AlarmeEventModifer",11,"");
+        SetStrGateValue("AlarmeEventModifer",12,"");
+        SetStrGateValue("AlarmeEventModifer",13,"");
+        SetStrGateValue("AlarmeEventModifer",14,"");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+end
+///////////////////////////////////////////////////////////
+function void Bouton_COMsType()
+
+      ShowPoPUPs("POPUP_COMsType");
+
+end
+/////////////////////////////////////////////////////////
+function void Select_RTU_Type()
+    SetStrGateValue("AlarmeEventModifer",2,"RTU");
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"R",4);
+
+end
+function void Select_DIGITAL_Type()
+    SetStrGateValue("AlarmeEventModifer",2,"DIGITAL");
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"D",4);
+
+end
+function void Select_ANALOGIQUE_Type()
+SetStrGateValue("AlarmeEventModifer",2,"ANALOGIQUE");
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"A",4);
+
+end
+///////////////////////////////////////////////////////////
+function void Bouton_Emplacement_Gateway()
+         POPUP_Start();
+      ShowPoPUPs("EMPLACEMENT_GATEWAY_SELECTOR");
+
+end
+
+//////////////////////////////
+function void Fill_Emplacement_Gateway()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+
+
+       LigneSelect=Select_BU();
+       CodeBU=Fetch_Gateway(LigneSelect,8,";");
+       NameBU=Fetch_Gateway(LigneSelect,9,";");
+
+     SetStrGateValue("AlarmeEventModifer",3,NameBU);
+    SetNumGateValue("Template_Control",0,2);
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,CodeBU,6);
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NameBU,5);
+
+
+end
+//////////////////////////////////////////////
+function void Bouton_NBR_Port()
+String NBRPort;
+        NBRPort=Fetch_Gateway(Admin_View_CurrentLine,7,";");
+    SetStrGateValue("AlarmeEventModifer",11,NBRPort);
+      ShowPoPUPs("POPUP_NBR_Port");
+
+end
+///////////////////////////////////////////////
+
+function Void NBR_Port_OK()
+
+int NBRPort;
+int Part1;
+int Part2;
+int i;
+String FirstPort;
+
+        SetStrGateValue("AlarmeEventModifer",17,"");
+    if(getStrGateValue("AlarmeEventModifer",11)=="") then SetStrGateValue("AlarmeEventModifer",17,"Il faut remplie le nombre de port !! "); return; end
+
+    NBRPort=StrToInt(getStrGateValue("AlarmeEventModifer",11));
+
+    if(NBRPort > 32)||(NBRPort < 1) then SetStrGateValue("AlarmeEventModifer",17,"Il faut que les valeur entre 1 et 32 !! "); return; end
+
+        SetStrGateValue("AlarmeEventModifer",4,NBRPort);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NBRPort,7);
+
+
+    FirstPort=GetStrGateValue("AlarmeEventModifer",6);
+         Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,FirstPort,9);
+    if FirstPort!="" then
+
+        Part1=StrToInt(Fetch_Gateway(FirstPort,1,":"));
+        Part2=StrToInt(Fetch_Gateway(FirstPort,2,":"));
+        for i =1  to 16 do
+            if i<NBRPort then
+                Part2=Part2+1;
+                FirstPort=Part1+":"+Part2;
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,FirstPort,9+i);
+             else
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"*",9+i);
+            end
+
+        end
+     end
+
+        TPageCloseByName("POPUP_NBR_Port");
+            SetNumGateValue("Template_Control",0,2);
+        SetStrGateValue("AlarmeEventModifer",11,"");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+end
+//////////////////////////////////////////////
+function void Bouton_NBR_Device()
+String NBRPort;
+        NBRPort=Fetch_Gateway(Admin_View_CurrentLine,8,";");
+    SetStrGateValue("AlarmeEventModifer",11,NBRPort);
+      ShowPoPUPs("POPUP_NBR_Device");
+
+end
+///////////////////////////////////////////////
+
+function Void NBR_Device_OK()
+
+int NBRDevice;
+
+        SetStrGateValue("AlarmeEventModifer",17,"");
+    if(getStrGateValue("AlarmeEventModifer",11)=="") then SetStrGateValue("AlarmeEventModifer",17,"Il faut remplie le nombre de port !! "); return; end
+
+    NBRDevice=StrToInt(getStrGateValue("AlarmeEventModifer",11));
+
+    if(NBRDevice > 100)||(NBRDevice < 1) then SetStrGateValue("AlarmeEventModifer",17,"Il faut que les valeur entre 1 et 32 !! "); return; end
+
+
+        SetStrGateValue("AlarmeEventModifer",5,NBRDevice);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NBRDevice,8);
+
+        TPageCloseByName("POPUP_NBR_Device");
+        SetNumGateValue("Template_Control",0,2);
+        SetStrGateValue("AlarmeEventModifer",11,"");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+end
+///////////////////////////////////////////////
+function void Bouton_First_Port()
+
+String Part1;
+String Part2;
+String ComsType;
+String FirstPort;
+String NBRPort;
+        NBRPort=Fetch_Gateway(Admin_View_CurrentLine,7,";");
+         if(NBRPort=="") then return; MessageBox("Tapez le nombre de port du gateway SVP!!!","Information");end
+ ComsType=Fetch_Gateway(Admin_View_CurrentLine,4,";");
+ if(ComsType=="") then return; MessageBox("Selectionnez Le Type de Gateway SVP!!!","Information");end
+    FirstPort=Fetch_Gateway(Admin_View_CurrentLine,9,";");
+    Part1=Fetch_Gateway(FirstPort,1,":");
+    Part2=Fetch_Gateway(FirstPort,2,":");
+
+
+
+        SetStrGateValue("AlarmeEventModifer",11,Part1);
+        SetStrGateValue("AlarmeEventModifer",12,Part2);
+
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+      ShowPoPUPs("POPUPFirstPort");
+
+end
+
+/////////////////////////////////////////////////////
+
+function Void FirstPortOK()
+int Part1;
+int Part2;
+    int i;
+String FirstPort;
+int NBRPort;
+        NBRPort=StrToInt(Fetch_Gateway(Admin_View_CurrentLine,7,";"));
+
+
+    if(getStrGateValue("AlarmeEventModifer",11)=="" || getStrGateValue("AlarmeEventModifer",12)=="" )then
+    SetStrGateValue("AlarmeEventModifer",17,"Il faut remplie tous les Input !! "); return; end
+
+    Part1=StrToInt(getStrGateValue("AlarmeEventModifer",11));
+    Part2=StrToInt(getStrGateValue("AlarmeEventModifer",12));
+
+    if(Part1 > 10000) || (Part2 < 0) ||(Part2 > 10000) || (Part2 < 0)  then SetStrGateValue("AlarmeEventModifer",17,"Il faut que les valeur entre 0 et 10000 !! "); return; end
+
+        FirstPort=Part1+":"+Part2;
+        SetStrGateValue("AlarmeEventModifer",6,FirstPort);
+        Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,FirstPort,9);
+
+
+        for i =1  to 16 do
+
+            if i<NBRPort then
+                Part2=Part2+1;
+                FirstPort=Part1+":"+Part2;
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,FirstPort,9+i);
+             else
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"*",9+i);
+            end
+
+        end
+
+
+        TPageCloseByName("POPUPFirstPort");
+        SetNumGateValue("Template_Control",0,2);
+        SetStrGateValue("AlarmeEventModifer",11,"");
+        SetStrGateValue("AlarmeEventModifer",12,"");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+end

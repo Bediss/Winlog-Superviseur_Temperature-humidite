@@ -1,0 +1,6 @@
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V11;Abattoir Vapeur;Vapeur;CVA;Production Vap;3;M2C0;*;M210;Chaudiere 1+2+C;*;Abattoir;Reel;Usine;*;CPT11;Abattoir;!~*;!~*;;;;;2;Abattoir Vapeur;Abattoir T
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V12;Charcuterie Vap;Vapeur;CVA;Production Vap;3;M2C0;*;M220;Chaudiere 1+2+C;*;Charcuterie;Reel;Usine;*;CPT12;Charcuterie;!~*;!~*;;;;;2;Charcuterie Vapeur;Charcuterie T
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V13;Conserve Vap;Vapeur;CVA;Production Vap;3;M2C0;*;M230;Chaudiere 1+2+C;*;Conserve;Reel;Usine;*;CPT13;Conserve;!~*;!~*;;;;;2;Conserve Vapeur;Conserve T
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V14;PetFood Vap;Vapeur;CVA;Production Vap;3;M2C0;*;M240;Chaudiere 1+2+C;*;PetFood;Reel;Usine;*;CPT14;PetFood;!~*;!~*;;;;;2;PetFood Vapeur;PetFood T
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V15;Surgele Vapeur;Vapeur;CVA;Production Vap;3;*;*;M250;*;*;Surgele;Reel;Usine;*;CPT15;Surgele;!~*;!~*;;;;;2;Surgele Vapeur;Surgele T
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V16;UCPC Vapeur;Vapeur;CVA;Production Vap;3;*;*;M260;*;*;UCPC;Reel;Usine;*;CPT16;UCPC;!~*;!~*;;;;;2;UCPC Vapeur;UCPC T

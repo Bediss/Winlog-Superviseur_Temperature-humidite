@@ -1,0 +1,6 @@
+Code;Views_Name;short_Name_Views;ViewPeriodicity;Access_Views
+0;Temps Réel;Live;Min_60;*
+1;Journalier;J;Heure_24;*
+2;Hebdomadaire;S;Jour_7;*
+3;Mensuel;M;Jour_30;*
+4;Annuel;A;Mois_12;*

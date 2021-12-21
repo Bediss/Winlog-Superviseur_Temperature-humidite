@@ -1,0 +1,3 @@
+CHC1F,Galdi
+CHC11,Galdi_A&B
+CHC12,Galdi_C

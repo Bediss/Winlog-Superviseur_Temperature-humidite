@@ -1,0 +1,2 @@
+10§AE1_29;ElMazeraa_ALR Inc_J;E1,28/E0,28;Inc_J superieur au seuil;18;ElMazeraa_ALR Inc_J;1_Heure;2/9/2019_12:45:00
+40§AE11_31;Abattoire_ALR Inc_M;E11,28/EA,28;Inc_M superieur au seuil;0;Abattoire_ALR Inc_M;7_Jour;2/9/2019_12:45:00

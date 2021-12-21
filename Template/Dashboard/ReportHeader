@@ -1,0 +1,278 @@
+#Version: 0x030222
+#Access: 0
+#Pos: 0,0
+#Size: 700,214
+#BkColor: clWhite
+#Gates: 8
+  #STR: ReportView,0
+  #STR: ReportView,1
+  #STR: ReportView,6
+  #STR: ReportView,10
+  #STR: ReportView,2
+  #STR: ReportView,3
+  #STR: ReportView,4
+  #STR: ReportView,5
+#Style: Standard
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 0,210
+  #Size: 700,1
+  #BkColor: clWindowFrame
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 150,1
+  #Size: 400,45
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Courier New,14,0001
+  #Label: REAL TIME MONITORING SYSTEM : CENTRALE LAITIERE DU CAP BON CLC
+  #Align: 21
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 350,107
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Date
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,107
+  #Size: 195,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 3
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,137
+  #Size: 540,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 0
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 5,137
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Event
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 5,167
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Email
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,167
+  #Size: 540,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 1
+  #Label: : %s
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,52
+  #Size: 540,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 2
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 5,52
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Rapport
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 5,82
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Capteur
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,82
+  #Size: 190,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 4
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 350,82
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Périodicité
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,82
+  #Size: 195,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 5
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 5,107
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Label: Unité
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,107
+  #Size: 190,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Courier New,11,0001
+  #Gate: 6
+  #Label: : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 0,45
+  #Size: 700,1
+  #BkColor: clWindowFrame
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 0,0
+  #Size: 700,1
+  #BkColor: clWindowFrame
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1,210
+  #BkColor: clWindowFrame
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 699,0
+  #Size: 1,210
+  #BkColor: clWindowFrame
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Segoe UI,9,0000
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj

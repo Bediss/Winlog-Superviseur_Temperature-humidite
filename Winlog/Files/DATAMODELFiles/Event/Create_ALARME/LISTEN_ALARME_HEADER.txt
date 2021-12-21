@@ -1,0 +1,104 @@
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Listen ALARME HEADER ///////////////////////////
+
+     function void ALARME_LISTEN()
+
+         String FullPathFileName;
+         int FileHandle;
+
+         String ALARME_AWAKE_LIST_FullPathFileName;
+         int ALARME_AWAKE_LIST_FileHandle;
+         String CurrLigne;
+         Bool Empty_Flag = False;
+
+         String AWAKE_ALARME_LIGNE;
+         String NEWLIGNE;
+         String NewTrigger;
+         Int POINTER;
+         String Trigger;
+         String Frequency;
+
+         String ALARME_OBJECTIF;
+         String ALARME_NAME;
+         String ALARME_CODE;
+         String ALARME_OPERATEUR;
+
+         String OBJ_GATE;
+         Int OBJ_List;
+
+         EVENT_FORMULA_TAG = "";
+
+
+         FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Event\Alarme_F_Reporting.csv";
+         FileHandle = FileOpen(FullPathFileName,"rt");
+
+         IF ( FileHandle == 0 ) Then MessageBox(FullPathFileName,"File Not Found 1 "); Return; End
+         ALARME_AWAKE_LIST_FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Event\Create_ALARME\ALARME_AWAKE_LIST.txt";
+         ALARME_AWAKE_LIST_FileHandle = FileOpen(ALARME_AWAKE_LIST_FullPathFileName,"wt");
+
+         CurrLigne = FileReadLn(FileHandle); // Header
+
+         While( FileEof(FileHandle)==0 && Empty_Flag == False)
+
+           CurrLigne = FileReadLn(FileHandle);
+            ALARME_CODE =  Fetch_ALARME(CurrLigne, 1, ";");
+
+            IF ( ALARME_CODE == "" ) Then
+              Empty_Flag = True;
+            Else
+              Empty_Flag = False;
+            End
+
+
+            IF (Empty_Flag == False ) Then
+             Trigger = Fetch_ALARME(CurrLigne,8, ";");
+             Frequency= Fetch_ALARME(CurrLigne,7, ";");
+
+               if ( Check_Trigger(Trigger , Fetch_ALARME(CurrLigne,9, ";") ) == TRUE ) THEN
+                POINTER = FilePos(FileHandle);
+                NewTrigger = Update_NextTrigger(Trigger , Frequency);
+                CurrLigne = FR_Alarme_Executer(CurrLigne,NewTrigger,8);
+                FileWriteLn( ALARME_AWAKE_LIST_FileHandle ,POINTER +"@"+CurrLigne );
+
+               End
+
+            End
+         End
+
+         FileClose(FileHandle);
+         FileClose(ALARME_AWAKE_LIST_FileHandle);
+
+         ALARME_AWAKE_LIST_FileHandle = FileOpen(ALARME_AWAKE_LIST_FullPathFileName,"rt");
+          IF ( ALARME_AWAKE_LIST_FileHandle == 0 ) Then MessageBox(ALARME_AWAKE_LIST_FullPathFileName,"File Not Found 2 "); Return; End
+         Empty_Flag = False;
+
+         While( FileEof(ALARME_AWAKE_LIST_FileHandle)==0 && Empty_Flag == False)
+
+           AWAKE_ALARME_LIGNE = FileReadLn(ALARME_AWAKE_LIST_FileHandle);
+
+           IF ( AWAKE_ALARME_LIGNE == "" ) Then
+              Empty_Flag = True;
+            Else
+              Empty_Flag = False;
+           End
+
+           IF (Empty_Flag == False ) Then
+
+            ALARME_CODE =  Fetch_ALARME(AWAKE_ALARME_LIGNE,1, ";");
+            ALARME_CODE =  Fetch_ALARME(ALARME_CODE,2, "@");
+            ALARME_NAME =  Fetch_ALARME(AWAKE_ALARME_LIGNE, 9, ";");
+            ALARME_OBJECTIF = Fetch_ALARME(AWAKE_ALARME_LIGNE,6, ";") ;
+            ALARME_OPERATEUR = Fetch_ALARME(AWAKE_ALARME_LIGNE,5, ";") ;
+            EVENT_FORMULA_TAG= Fetch_ALARME(AWAKE_ALARME_LIGNE,14, ";") ;
+
+            IF ( Fetch_ALARME(ALARME_OBJECTIF, 1, ":") == "O" ) Then
+                CurrLigne = Fetch_ALARME(ALARME_OBJECTIF, 2, ":");
+                OBJ_GATE  = Fetch_ALARME(CurrLigne, 1, "$");
+                OBJ_List  = StrToInt( Fetch_ALARME(ALARME_OBJECTIF, 2, "$") );
+                OBJ_GATE  = Get_Objective_Gate( OBJ_GATE );
+
+                 IF ( NumGateExists(OBJ_GATE,OBJ_List) == True ) Then
+                   ALARME_OBJECTIF = GetNumGateValue(OBJ_GATE,OBJ_List);
+                 End
+            End

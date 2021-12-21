@@ -1,0 +1,2 @@
+Code Compteur;Le Compteur;Energie;Compteur Parent;Le Compteur Parent;Compteur_Level;PC_Production;PC_Distribution;PC_Consommation;Point de Production;Point de Distribution;Point de Consommation;Description;type;parent energie;Ratio;Unite;Master;COMs (Gate:PortTCP:Sortie:Channel:Device);Parse Formule;User Formule;Date Modify;Date Load;Nbr Error;Detailles Nom;Nom Ratio;Access_Group
+CTC5I;FER_C3;Temperature;CTC5;Salle_De_Fermentation;3;D65;*;D59;T?c  negativre;*;FER_C3;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;

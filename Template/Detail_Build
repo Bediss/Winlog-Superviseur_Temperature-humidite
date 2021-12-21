@@ -1,0 +1,498 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: 0,28,0
+#Gates: 6
+  #STR: Nom_Version,0
+  #STR: Version,0
+  #STR: AlarmeEventModifer,20
+  #STR: Errors_AllCompteur,0
+  #STR: Errors_Formule,0
+  #STR: Errors_GTemplates,0
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: GroupBox
+  #ID: 0
+  #Pos: 186,43
+  #Size: 215,215
+  #Descr: Initialisation
+  #BkColor: clBtnFace
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0000
+  #Label: 1. Initialisation
+  #Align: 0
+  #TabOrder: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 12,185
+    #Size: 90,25
+    #BkColor: clMenu
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Calibri,10,0001
+    #Label: Review Settings
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,REVIEW_init_Gates()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 156,31
+    #Size: 50,25
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clMaroon
+    #Font: Calibri,11,0001
+    #Gate: 1
+    #Label: %s
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 6,31
+    #Size: 140,25
+    #BkColor: clMenu
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Calibri,11,0001
+    #Label: Create New Version
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,Create_Version()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 7,61
+    #Size: 200,25
+    #BkColor: clMenu
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Calibri,11,0001
+    #Label:   Titre
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 7,91
+    #Size: 200,25
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,9,0000
+    #Gate: 0
+    #NeedApply: 0
+    #Style: 0
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 7,120
+    #Size: 200,25
+    #BkColor: clMenu
+    #Cursor: 101
+    #TxtColor: clMaroon
+    #Font: Calibri,11,0001
+    #Label: Proceed
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,Create_BACKUP_Version()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 32,145
+    #Size: 175,35
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clGreen
+    #Font: Calibri,8,0000
+    #Gate: 2
+    #Label: %s
+    #Align: 16
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 7,145
+    #Size: 25,35
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clGreen
+    #Font: Calibri,11,0001
+    #Label: (i)
+    #Align: 37
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 112,185
+    #Size: 90,25
+    #BkColor: clMenu
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Calibri,10,0001
+    #Label: Load Settings
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,Load_Settings()
+  #EndObj
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 406,43
+  #Size: 250,215
+  #Descr: Initialisation
+  #BkColor: clBtnFace
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0000
+  #Label: 2. Creation & Import Gates
+  #Align: 0
+  #TabOrder: 1
+  #Object: Label
+    #ID: 0
+    #Pos: 5,32
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 2.1 Create Gates
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,57
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 2.2 Import Gates
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,107
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 2.4 Create Formule
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateFormule()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,132
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 2.5 Import Formule
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYFormule()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,157
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clMaroon
+    #Font: Calibri,12,0001
+    #Label: Restart Runtime
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,82
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clMaroon
+    #Font: Calibri,12,0001
+    #Label: Restart Runtime
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 661,43
+  #Size: 250,215
+  #Descr: Initialisation
+  #BkColor: clBtnFace
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0000
+  #Label: 3. Creation & Import Templates
+  #Align: 0
+  #TabOrder: 2
+  #Object: Label
+    #ID: 0
+    #Pos: 5,32
+    #Size: 240,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.1 Create Files
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_Files()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,57
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.2 Create Template 10
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_10()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,82
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.3 Create Template 14
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_14()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,132
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.5 Create Template 16
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_16()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,107
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.4 Create Template 15
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_15()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,157
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 3.6 Create Template 17
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_CreateTemplate_17()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,57
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYTemplate_10()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,82
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYTemplate_14()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,132
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYTemplate_16()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,107
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYTemplate_15()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,157
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+    #NewOnClick: StartF,DetailB_COPYTemplate_17()
+  #EndObj
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 916,43
+  #Size: 250,105
+  #Descr: Initialisation
+  #BkColor: clBtnFace
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0000
+  #Label: 4. Creation & Import Synoptique
+  #Align: 0
+  #TabOrder: 3
+  #Object: Label
+    #ID: 0
+    #Pos: 5,40
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 4.1 Create Synoptique
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,40
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 184,266
+  #Size: 980,220
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clGreen
+  #Font: Calibri,8,0000
+  #Gate: 2
+  #Label: %s
+  #Align: 16
+  #Frame: 2
+  #Access: 0
+#EndObj
+#Object: GroupBox
+  #ID: 0
+  #Pos: 916,153
+  #Size: 250,105
+  #Descr: Initialisation
+  #BkColor: clBtnFace
+  #TxtColor: clWindowText
+  #Font: Calibri,14,0000
+  #Label: 5. Creation Alarme Formule
+  #Align: 0
+  #TabOrder: 4
+  #Object: Label
+    #ID: 0
+    #Pos: 5,40
+    #Size: 190,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: 5.1 Create Alarme Formule
+    #Align: 36
+    #Frame: 2
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 195,40
+    #Size: 50,25
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,12,0001
+    #Label: COPY
+    #Align: 37
+    #Frame: 2
+    #Access: 0
+  #EndObj
+#EndObj

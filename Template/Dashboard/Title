@@ -1,0 +1,67 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,0
+#Size: 1350,70
+#BkColor: 0,201,150
+#Gates: 3
+  #STR: Business_unit,0
+  #NUM: LOGIN_SUP_ADMIN,0
+  #STR: UserName,0
+#PBkBmp: 20,10,170,50,LOGO BIZEYES BLANC.png
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 1173,5
+  #Size: 150,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label: %s
+  #Align: 38
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1233,35
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 103
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Déconnecter
+  #Align: 38
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,CallLogout()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 188,3
+  #Size: 520,62
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Gotham Medium,20,0000
+  #Label: REAL TIME MONITORING SYSTEM : 
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 693,3
+  #Size: 550,62
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWhite
+  #Font: Gotham Medium,20,0000
+  #Gate: 0
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj

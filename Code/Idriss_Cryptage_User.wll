@@ -1,0 +1,267 @@
+ Function void Crypto_File(String Pseudo ,String Password,String Groups, int Remote)
+
+            String PS_OUT_FILE = "C:\Winlog\PowerShell\File_Out_Crypted.txt" ;
+            String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+            String FullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+            int FileHandle=FileOpen(FullPathFileName,"rt");
+            String WFullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Users\WUser_Master.CSV";
+            int WFileHandle=FileOpen(WFullPathFileName,"wt");
+            int FFileHandle;
+            String ADD;
+            String ARGS;
+            String Ligne;
+            String UserName;
+            String CRYPassword;
+            String CRYGroups;
+            int i;
+
+            Ligne=FileReadLn(FileHandle);
+                if (FileHandle==0) then   MessageBox(FullPathFileName+" file is missing","Error");  Return; end
+              FileWriteLn(WFileHandle,Ligne);
+
+                                ARGS = "1;2;" + PS_OUT_FILE +";"+ Pseudo +";"+ Password+";"+Groups+";"+Remote;
+                    ShellExec("MAIL_AUTH.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"",ARGS);
+                   // while (FileExist(PS_OUT_FILE)==False)
+                        Sleep(1000);
+                    //end
+                            FFileHandle=FileOpen(PS_OUT_FILE,"rt");
+                    FileReadLn(FFileHandle);
+                    FileReadLn(FFileHandle);
+                    UserName=FileReadLn(FFileHandle);
+                    CRYPassword=FileReadLn(FFileHandle);
+                    CRYGroups=FileReadLn(FFileHandle);
+                    //MessageBox(Pseudo+"_"+Groups,Password);
+              while (FileEof(FileHandle)==0)
+                    Ligne=FileReadLn(FileHandle);
+
+                   // MessageBox(UserName+"_"+CRYPassword,CRYGroups);
+                     //MessageBox(UserName,Fetch_Formule(Ligne,3,";"));
+                    if UserName == Fetch_Formule(Ligne,3,";") then
+                        //MessageBox(Ligne,CRYPassword);
+
+                        Ligne=FR_Energy(Ligne,CRYPassword,11);
+                       //MessageBox(Ligne,CRYPassword);
+                        Ligne=FR_Energy(Ligne,CRYGroups,8);
+                             //   MessageBox(Ligne,"OK");
+                        FileWriteLn(WFileHandle,Ligne);
+
+                    else if Fetch_Formule(Ligne,4,";")!="" && Fetch_Formule(Ligne,6,";")!="" then
+    //MessageBox(UserName+"KO1",Fetch_Formule(Ligne,3,";"));
+                        FileWriteLn(WFileHandle,Ligne);
+                        //MessageBox(Ligne,"NOT");
+                     end
+                    else
+                         //MessageBox(UserName+"KO",Fetch_Formule(Ligne,3,";"));
+                        Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,CRYPassword,11);
+                       Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,CRYGroups,8);
+                       Admin_View_CurrentLine=FR_Energy(Admin_View_CurrentLine,Remote,12);
+                    end
+
+              End
+
+
+
+               FileClose(WFileHandle);
+               FileClose(FileHandle);
+               FileClose(FFileHandle);
+
+          FileCopy(WFullPathFileName,FullPathFileName,false);
+
+          FileDelete(WFullPathFileName);
+
+     FileDelete(PS_OUT_FILE);
+
+
+
+ End
+
+  Function void Init_DeCrypto_Admin_File()
+  String PS_OUT_FILE = "C:\Winlog\PowerShell\File_Out_Crypted.txt" ;
+         String FullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Users\Admin_Master.CSV";
+         int RFileHandle= FileOpen( FullPathFileName , "rt" );
+          int FileHANDLE ;
+          String User;
+          String Password;
+          String Privilege;
+          String Ligne;
+          String Remote;
+          String OK;
+          int A;
+          int K;
+          bool R;
+
+              if FileExist(PS_OUT_FILE)==True then
+        FileDelete(PS_OUT_FILE);
+    end
+ if (RFileHandle==0) then   MessageBox(FullPathFileName+" file is missing","Error");  Return; end
+                    Ligne = FileReadLn(RFileHandle);
+                while (FileEof(RFileHandle)==0)
+                     Ligne = FileReadLn(RFileHandle);
+                     User=Fetch_User_Master(Ligne,3,";");
+                     Password=Fetch_User_Master(Ligne,11,";");
+                     Privilege=Fetch_User_Master(Ligne,8,";");
+
+                     Remote=Fetch_User_Master(Ligne,12,";");
+
+
+                     if Password != "" then
+                            FileHANDLE = FileOpen( PS_OUT_FILE , "wt" );
+                        FileWriteLn(FileHANDLE,"2");
+                        FileWriteLn(FileHANDLE,PS_OUT_FILE);
+                        FileWriteLn(FileHANDLE,User);
+                        FileWriteLn(FileHANDLE,Password);
+                        FileWriteLn(FileHANDLE,Privilege);
+                        FileWriteLn(FileHANDLE,Remote);
+                        FileClose(FileHANDLE);
+                       //MessageBox(User+"_"+Password,Privilege+"_"+Remote);
+
+                        OK=GET_CRYPTED_SETUP(PS_OUT_FILE);
+                        //MessageBox(OK,"");
+                       DeleteUserIfExiste(Fetch_User_Master(Ligne,1,";"));
+
+                            if Fetch_User_Master(Ligne,4,";")=="True"
+                            then R=True;
+                                else R=False;
+                            end
+
+                           K=StrToInt(Fetch_User_Master(OK,3,";"));
+                        A=AddUser(Fetch_User_Master(OK,1,";"),Fetch_User_Master(OK,2,";"),K,False,R);
+
+                    end
+
+                end
+
+                   FileClose(RFileHandle);
+
+
+
+End
+
+
+  Function void Init_DeCrypto_File()
+
+        String PS_OUT_FILE = "C:\Winlog\PowerShell\File_Out_Crypted.txt" ;
+         String FullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+         int RFileHandle= FileOpen( FullPathFileName , "rt" );
+          int FileHANDLE ;
+          String User;
+          String Password;
+          String Privilege;
+          String Ligne;
+          String Remote;
+          String OK;
+          int A;
+          int K;
+          bool R;
+
+              if FileExist(PS_OUT_FILE)==True then
+        FileDelete(PS_OUT_FILE);
+    end
+ if (RFileHandle==0) then   MessageBox(FullPathFileName+" file is missing","Error");  Return; end
+                    Ligne = FileReadLn(RFileHandle);
+                while (FileEof(RFileHandle)==0)
+                     Ligne = FileReadLn(RFileHandle);
+                     User=Fetch_User_Master(Ligne,3,";");
+                     Password=Fetch_User_Master(Ligne,11,";");
+                     Privilege=Fetch_User_Master(Ligne,8,";");
+
+                     Remote=Fetch_User_Master(Ligne,12,";");
+
+
+                     if Password != "" then
+                            FileHANDLE = FileOpen( PS_OUT_FILE , "wt" );
+                        FileWriteLn(FileHANDLE,"2");
+                        FileWriteLn(FileHANDLE,PS_OUT_FILE);
+                        FileWriteLn(FileHANDLE,User);
+                        FileWriteLn(FileHANDLE,Password);
+                        FileWriteLn(FileHANDLE,Privilege);
+                        FileWriteLn(FileHANDLE,Remote);
+                        FileClose(FileHANDLE);
+                       //MessageBox(User+"_"+Password,Privilege+"_"+Remote);
+
+                        OK=GET_CRYPTED_SETUP(PS_OUT_FILE);
+                        //MessageBox(OK,"");
+                       DeleteUserIfExiste(Fetch_User_Master(Ligne,1,";"));
+
+                            if Fetch_User_Master(Ligne,4,";")=="True"
+                            then R=True;
+                                else R=False;
+                            end
+
+                           K=StrToInt(Fetch_User_Master(OK,3,";"));
+                        A=AddUser(Fetch_User_Master(OK,1,";"),Fetch_User_Master(OK,2,";"),K,False,R);
+
+                    end
+
+                end
+
+                   FileClose(RFileHandle);
+
+
+
+End
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+function String GET_CRYPTED_SETUP( String CRYTED_FILE )
+
+    Int FileHANDLE;
+
+    String UNCRYTED_FILE = "C:\Winlog\PowerShell\File_Out_UNCrypted.txt" ;
+    String CONFIG_FILE = "C:\Winlog\PowerShell\CONFIG_UNCRYPT_LOGIN.txt";
+    String PS_EXE_PATH = GetProjectPath() + "\Winlog\PowerShell\" ;
+    String PARAMETERS_UNCRYTING;
+    Int CHECK_FILE = 0; Int MAX_CHECKS_FILE = 60;
+    Bool Exist_Check = False;
+    String Remote;
+
+    String Password;
+    String USER;
+    String Privilege;
+
+     if FileExist(UNCRYTED_FILE)==True then
+     FileDelete(UNCRYTED_FILE);
+    end
+    // 1. Convert file with Powershell
+
+    FileHANDLE = FileOpen( CONFIG_FILE , "wt" );
+        FileWriteLn(FileHANDLE,CRYTED_FILE);
+        FileWriteLn(FileHANDLE,UNCRYTED_FILE);
+    FileClose(FileHANDLE);
+
+
+     ShellExec("GET_AUT_LOGIN.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    // 2. Wait Creation
+     Exist_Check = False;
+     CHECK_FILE=0;
+    While ( FileExist(UNCRYTED_FILE) == False )
+
+        Sleep(500);
+    End
+
+
+
+    // 3. Read Config File
+
+     FileHANDLE = FileOpen( UNCRYTED_FILE , "rt" );
+       FileReadLn(FileHANDLE); // Congif LINE
+       FileReadLn(FileHANDLE); // PATH file
+        USER    = FileReadLn(FileHANDLE); // SMTP
+       Password     = FileReadLn(FileHANDLE); // User
+       Privilege  = FileReadLn(FileHANDLE); // PW_SMTP
+       Remote =FileReadLn(FileHANDLE); // IMAP
+
+     FileClose(FileHANDLE);
+
+    // 4. Prepar Config String
+    PARAMETERS_UNCRYTING = "";
+     PARAMETERS_UNCRYTING = USER +";"+ Password +";"+ Privilege+";"+Remote ;
+    // 5. Delete file
+    //MessageBox(PARAMETERS_UNCRYTING,"PARAMETERS_UNCRYTING");
+
+
+     Return PARAMETERS_UNCRYTING;
+
+end

@@ -1,0 +1,225 @@
+function void Bouton_UI_Tableaux()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+  LenPrefix=2;
+//InitialiseAdminTemplate();
+
+Confirme_Save();
+PageOpen="Tableaux";
+        LenPrefix=0;
+        SetNumGateValue("Show_Temp_Pointer",0,536870928);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("AdminTotalItems",0,0);
+        SetNumGateValue("EditPosition",0,0);
+        Admin_View_Temp_File=ENV_PATH+"\Files\Display_Templates\Temp_Tableaux.CSV";
+        Admin_View_Original_File=ENV_PATH+"\Files\Display_Templates\Tableaux.CSV";
+         Initfile(Admin_View_Original_File,Admin_View_Temp_File);
+         SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+        Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+
+
+
+
+        ShowPage("Tableaux_Display");
+
+
+        Admin_View_Display(1 , "Tableaux");
+        FlagUses=False;
+end
+
+/////////////////////////////////////////////////////////////////////////////////////
+function void SetDisplay_Tableaux( String Line , String GateName)
+
+
+                SetStrGateValue(GateName,0,Fetch_Views(Line,3, ";"));
+                SetStrGateValue(GateName,1,Fetch_Views(Line, 2, ";"));
+                SetStrGateValue(GateName,2,Fetch_Views(Line, 7, ";"));
+
+
+end
+////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////
+function void Load_Groups_Set_AP_Tableaux()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPs("SET_Access_Privilege_Tableaux");
+end
+function void AP_Set_Groupes_Tableaux()
+int Access;
+
+
+    Access=GetNumGateValue("AP_Value",0);
+        Admin_View_CurrentLine=FR_Views(Admin_View_CurrentLine,Access,7);
+
+    SetStrGateValue("AlarmeEventModifer",2,Access);
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    TPageCloseByName("SET_Access_Privilege_Tableaux");
+
+
+end
+//////////////////////////////////////////////////////////////
+
+
+function string Fetch_Tableaux(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+
+
+function String FR_Tableaux(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+
+
+//////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////************Fonctionalité edit********////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function void Modifier_Tableaux()
+    String FullPathFileName;
+    String BackFullPathFileName;
+    int FileHandle; int j=0;
+    string TextRow; string txt;  string EditRow;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    int save_pos = GetNumGateValue("EditPosition",0);
+    int Page = GetNumGateValue("EmailPageView",0);
+    string RowName;
+    string WFullPathFileName;
+    int WFileHandle;
+    bool W_already = false;
+         int Position_S=(Page-1)*10+save_pos;
+
+
+
+if ( Page == 1 ) then RowHeader = true; end
+    BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\Back_Temp_Views.CSV";
+    FullPathFileName =Admin_View_Temp_File;
+    WFullPathFileName = ENV_PATH+"\Files\AllCompteur\WTemp_Views.CSV";
+
+
+FileHandle=FileOpen(FullPathFileName,"rt");
+WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+      if (FileHandle==0) then
+       MessageBox("File not Found","Error");
+       return;
+      end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+while(FileEof(FileHandle)==0)
+     TextRow = FileReadLn(FileHandle);
+
+
+     if ( RowHeader == true ) then j = ReadRowPos-Row_Start+1;
+        RowHeader = false;
+        else
+            if (TextRow != "" ) then
+               ReadRowPos = ReadRowPos+1;
+
+               if ( ReadRowPos >=  Row_Start && ReadRowPos <= Row_End ) then
+                  j = ReadRowPos-Row_Start+1;
+  if j==10 && Page>1 then ReadRowPos=ReadRowPos+1; end
+                  if (ReadRowPos== Position_S) then EditRow =Admin_View_CurrentLine;
+
+
+                        FileWriteLn(WFileHandle,EditRow);
+                        W_already=true;
+
+                        RowName = "ROW"+save_pos;
+                            //Ecrire les modification dans la ligne distinataire
+                        SetStrGateValue(RowName,0,GetStrGateValue("AlarmeEventModifer",0));
+                        SetStrGateValue(RowName,1,GetStrGateValue("AlarmeEventModifer",1));
+                        SetStrGateValue(RowName,2,GetStrGateValue("AlarmeEventModifer",2));
+                        SetStrGateValue(RowName,3,GetStrGateValue("AlarmeEventModifer",3));
+
+
+                            //**Inisatisation de la ligne de Modification
+                        SetStrGateValue("AlarmeEventModifer",0,"");
+                        SetStrGateValue("AlarmeEventModifer",1,"");
+                        SetStrGateValue("AlarmeEventModifer",2,"");
+                        SetStrGateValue("AlarmeEventModifer",3,"");
+
+
+                        // change winlog alarm
+
+                         end
+                     end
+               end
+          end
+
+
+
+     if (W_already == false) && (TextRow!="") then FileWriteLn(WFileHandle,TextRow);end
+     W_already = false;
+     SetNumGateValue("Template_Control",0,3);
+
+
+end
+
+FileClose(FileHandle);
+FileClose(WFileHandle);
+
+
+    if ( FileExist(BackFullPathFileName) == true ) then
+        FileDelete(BackFullPathFileName); end
+
+    FileCopy(FullPathFileName,BackFullPathFileName,False);
+
+    FileCopy(WFullPathFileName,FullPathFileName,False );
+        Confirme_Save=True;
+
+FileDelete(WFullPathFileName);
+    Clean_Formulaire();
+MessageBox("Fin De Sauvegarde ","Information :");
+return;
+end
+////////////////////////////////////////////////////////////////////////
+Function Void Tableaux_Commit()
+
+Confirme_Save=False;
+String BackFullPathFileName=ENV_PATH+"\Files\Config Compteur\Back_Views.CSV";
+Admin_Commit(BackFullPathFileName);
+Read_Tableau_Tableaux();
+End

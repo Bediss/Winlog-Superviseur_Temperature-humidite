@@ -1,0 +1,97 @@
+body {
+	background-color: rgb(255, 255, 255);
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+}
+
+#header-div {
+	padding-top: 5px;
+	padding-bottom: 20px !important;
+	text-align: center
+}
+
+#icons-div {
+	margin: 0 auto;
+	width: 600px;
+}
+
+.icon-container {
+	text-align: center;
+	padding-right: 0;
+}
+
+.icon {
+	border-radius: 3px;
+	border: 1px solid rgb(197, 197, 197);
+	display: block;
+	margin: 0 auto;
+	background-color: white;
+	width: 128px;
+}
+
+.link {
+	margin: 0 auto;
+	width: 50%;
+	text-decoration: none;
+	color: rgb(61, 119, 178);
+	outline: 0;
+}
+
+.disabled {
+	pointer-events: none;
+	opacity: 0.3;
+}
+
+#buttons-div > * {
+	width: 50%;
+	min-width: 200px;
+	margin: 0 auto !important;
+	text-align: center;
+}	
+
+.button {
+	border-radius: 4px;
+	color: white;
+	background: rgb(61, 119, 178);
+	text-decoration: none;
+	text-align: center;
+	padding: 5px;
+	font-size: 18px;
+	display: block;
+	cursor: pointer;
+	border: 1px solid rgb(61, 119, 178);
+}
+
+.button:hover {
+	background-color: rgb(0, 98, 204);
+	border: 1px solid rgb(0, 98, 204);
+}
+
+li {
+	line-height: 150%;
+}
+
+.monospaced {
+	font-family: "Lucida Console", Monaco, monospace;
+	background: rgb(255, 250, 225);
+	border: 1px solid rgb(240, 200, 105);
+	padding: 1px;
+}
+
+.screenshot {
+	margin: 20px;
+}
+
+@media handheld, only screen and (max-width: 767px) {
+	#splash {
+		width: 100%;
+	}
+	
+	#icons-div {
+		width: 100%;
+	}
+
+	.link, .icon {
+		width: 75%;
+	}
+}

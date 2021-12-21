@@ -1,0 +1,30 @@
+Energy;Mesures;List
+Electrique;KWh;L:0,1,2,3,33,34,35,36
+Electrique;VARh;L:4,5,6,7,37,38,39,40
+Electrique;KWh/T;L:8,9,10,11,45,46,47,48
+Electrique;Incidents;L:29,30,31,32,41,42,43,44
+Electrique;V1;L:12
+Electrique;V2;L:13
+Electrique;V3;L:14
+Electrique;U1;L:15
+Electrique;U2;L:16
+Electrique;U3;L:17
+Electrique;A1;L:18
+Electrique;A2;L:19
+Electrique;A3;L:20
+Electrique;A MOY;L:26
+Electrique;P1;L:21
+Electrique;P2;L:22
+Electrique;P3;L:23
+Electrique;COS PHI Total;L:27
+Production;TONNE;L:1,2,3,4,5,6,7,8
+Vapeur;Kgh ;L:0,1,2,3,8,9,10,11
+Vapeur;Kgh /T;L:4,5,6,7,12,13,14,15
+Vapeur;Incidents;L:18,19,20,21,22,23,24,25
+Vapeur;°C;L:16
+Eau;m3;L:0,1,2,3,8,9,10,11
+Eau;m3 /T;L:4,5,6,7,12,13,14,15
+Eau;Incidents;L:17,18,19,20,21,22,23,24
+Gaz;m3;L:0,1,2,3,8,9,10,11
+Gaz;m3 /T;L:4,5,6,7,12,13,14,15
+Gaz;Incidents;L:17,18,19,20,21,22,23,24

@@ -1,0 +1,4 @@
+#Gate: Compteur,0,2,0,0,100
+#Gate: Compteur,4,2,65280,0,100
+#Gate: Compteur,29,2,33023,0,100
+#Gate: TonnageCompt,1,2,33023,0,100

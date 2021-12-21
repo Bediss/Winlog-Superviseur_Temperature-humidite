@@ -1,0 +1,126 @@
+Function void Ciclo()
+//#StartUp
+    real T1 = 0;
+    real T2 = 3.14159 / 2;
+    real T3 = 3.14159;
+    real span1 = 1;
+    real span2 = 2;
+    real span3 = 5;
+    real init1 = 150;
+    real init2 = 170;
+    real init3 =190;
+    real init4 = 200;
+    real init5 = 220;
+    real init6 = 200;
+    real init7 = 180;
+    real init8 = 150;
+    real factor1 = 5;
+    real factor2 = 5;
+    real factor3 = 5;
+    real factor4 = 5;
+    real factor5 = 5;
+    real factor6 = 5;
+    real factor7 = 5;
+    real factor8 = 5;
+
+    While (WindowIsOpen())
+
+        TemperatureSimulation(1, T1, init1, factor1, span3);
+        TemperatureSimulation(2, T2, init2, factor2, span3);
+        TemperatureSimulation(3, T3, init3, factor3, span3);
+        TemperatureSimulation(4, T1, init4, factor4, span3);
+        TemperatureSimulation(5, T2, init5, factor5, span3);
+        TemperatureSimulation(6, T3, init6, factor6, span3);
+
+        SINRNDvalue("102Loop1.PV", 0, T1, init7, factor7, span2);
+        SINRNDvalue("103Temp", 1, T2, init8, factor8, span2);
+
+        RNDvalue("101PrimaryOutCh", 1, 50, span3);
+        if (GetNumGateValue("101PrimaryOutCh",1) > 45)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 0));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 0));
+        end
+
+        RNDvalue("101PrimaryOutCh", 2, 55, span3);
+        if (GetNumGateValue("101PrimaryOutCh",2) > 50)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 2));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 2));
+        end
+
+        RNDvalue("101PrimaryOutCh", 3, 60, span3);
+        if (GetNumGateValue("101PrimaryOutCh",3) > 55)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 4));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 4));
+        end
+
+        RNDvalue("101PrimaryOutCh", 4, 70, span3);
+        if (GetNumGateValue("101PrimaryOutCh",4) > 65)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 6));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 6));
+        end
+
+        RNDvalue("101PrimaryOutCh", 5, 75, span3);
+        if (GetNumGateValue("101PrimaryOutCh",5) > 70)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 8));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 8));
+        end
+
+        RNDvalue("101PrimaryOutCh", 6, 60, span3);
+        if (GetNumGateValue("101PrimaryOutCh",6) > 55)then
+            SetNumGateValue("101DigitalOutputs", 0, SetBit(GetNumGateValue("101DigitalOutputs", 0), 10));
+        else
+            SetNumGateValue("101DigitalOutputs", 0, ResetBit(GetNumGateValue("101DigitalOutputs", 0), 10));
+        end
+
+        RNDvalue("102UO1.Value", 0, 50, span3);
+        RNDvalue("103CtrlOutA", 1, 45, span3);
+
+        T1 = T1 + ((2 * 3.14159) / 40);
+        if T1 > (2 * 3.14159) then T1 = 0; End
+
+        T2 = T2 + ((2 * 3.14159) / 40);
+        if T2 > (2 * 3.14159) then T2 = 0; End
+
+        T3 = T3 + ((2 * 3.14159) / 40);
+        if T3 > (2 * 3.14159) then T3 = 0; End
+
+       sleep(1000);
+    end
+end
+
+
+Function void TemperatureSimulation(int Index, real T, real init, real factor, real span)
+    SINRNDvalue("101TemperatureCh", Index, T, init, factor, span);
+
+    if (GetNumGateValue("101TemperatureCh",Index) > (init + factor)) then
+        SetNumGateValue("101AlarmsCh", Index, 1);
+    else
+        SetNumGateValue("101AlarmsCh", Index, 0);
+    end
+
+    if (GetNumGateValue("101TemperatureCh",Index) < (init - factor)) then
+        SetNumGateValue("101AlarmsCh", Index, 1);
+    else
+        SetNumGateValue("101AlarmsCh", Index, 0);
+    end
+end
+
+
+Function void SINvalue(string gateid,int nid,real T, real init,real factor)
+    SetNumGateValue(gateid, nid, init + ((init * (Sin(T))) / factor));
+End
+
+
+Function void RNDvalue(string gateid,int nid, real init, real span)
+    SetNumGateValue(gateid, nid, init + (init * ((span - Rand(100)) / 1000)));
+End
+
+
+Function void SINRNDvalue(string gateid,int nid,real T, real init,real factor, real span)
+    SetNumGateValue(gateid, nid, init + factor * (((init * (Sin(T))) / init)) + span * ((init * ((50 - Rand(100)) / 100)) / init));
+End

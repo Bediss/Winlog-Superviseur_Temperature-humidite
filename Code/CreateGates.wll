@@ -1,0 +1,1828 @@
+function void Build()
+MessageBox("Start","Build");
+    Admin_View_Original_File = "C:\ProgramData\Winlog Lite 3\Projects\Energy_Supervisor_V47 Delice\Winlog\Files\AllCompteur\AllCompteur.csv";
+    Check_AllCompteur();
+    CreateGates();
+    Calculatrice();
+MessageBox("End","Build");
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//                                  CreateGates
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void CreateGates()
+
+    String FileFullPathName = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+    String LogFileFullPathName = ENV_PATH+"\BuildLOG.txt" ;
+
+    String Final_N_File = GetProjectPath()+"\files\Gates\Final\NUMERIC_GATES_V" +GetStrGateValue("version",0)+ ".csv";
+    String Final_C_File = GetProjectPath()+"\files\Gates\Final\COMPOSED_GATES_V" +GetStrGateValue("version",0)+ ".csv";
+    String Final_A_File = GetProjectPath()+"\files\Gates\Final\ALARME_GATES_V" +GetStrGateValue("version",0)+ ".csv";
+    String Final_ALR_File=GetProjectPath()+"\files\Gates\Final\Alarme_Reporting_V" +GetStrGateValue("version",0)+ ".csv";
+    String Final_STR_File=GetProjectPath()+"\files\Gates\Final\STRING_GATES_V" +GetStrGateValue("version",0)+ ".csv";
+
+    String NUM_L  ;
+    String CMP_L  ;
+    String ALR_L  ;
+
+    Int A_FileHandle;
+    Int C_FileHandle;
+    Int N_FileHandle;
+
+    String FileCONFIG;
+    String SourceFileName;
+
+    Int FileHandle;
+    Int LogFileHandle;
+
+    String AllCompteur_Ligne;
+    String CompteurCode;
+    String CompteurName;
+    String CompteurEnergy;
+    String CompteurFormule;
+    String CompteurRatio;
+    String CompteurParent;
+    String CompteurMaster;
+    String CompteurCOMs;
+    String MasterLigne;
+    String CompteurRATIO;
+    String RATIO_Flag;
+    String Formule_Flag;
+
+    String Gate_Creation_Stamp;
+    String Version5;
+
+    Bool MASTER_Flag = True;
+    Bool COMs_Flag = True;
+    Bool Communiation_Flag;
+
+    Bool CREATION_NUM = False;
+    Bool CREATION_CMP = False;
+    Bool CREATION_ALR = False;
+    Bool CREATION_ALR_File = False;
+    String Date_Stamp;
+    Int P;
+
+
+    Version5 = GetStrGateValue("Version",0);
+    P = StrLen( Version5 );
+    Version5 = "00000"+ GetStrGateValue("Version",0);
+    Version5 = StrSubString( Version5 , P+1 , 5 );
+    Date_Stamp = Create_DateStamp();
+
+    Gate_Creation_Stamp = Version5 + Date_Stamp;
+
+    SetStrGateValue("Version",1,Gate_Creation_Stamp);
+
+    LogFileHandle = FileOpen(LogFileFullPathName,"at");
+
+    FileWriteLn(LogFileHandle,"********** Start CreateGates : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+      /////////////////////// Initialisation
+
+      //Num
+      FileCONFIG = GetProjectPath()+"\files\Gates\NUM_Gates\HEADER_N_Gates.csv";
+      FileCopy(FileCONFIG,Final_N_File,False);
+      //Comp
+      FileCONFIG = GetProjectPath()+"\files\Gates\CMP_Gates\HEADER_C_Gates.csv";
+      FileCopy(FileCONFIG,Final_C_File,False);
+      //ALR
+      FileCONFIG = GetProjectPath()+"\files\Gates\ALR_Gates\HEADER_A_Gates.csv";
+      FileCopy(FileCONFIG,Final_A_File,False);
+      //STR
+      FileCONFIG = GetProjectPath()+"\files\Gates\STR_Gates\HEADER_S_Gates.csv";
+      FileCopy(FileCONFIG,Final_STR_File,False);
+      //ALR_FILE
+      //FileCONFIG = GetProjectPath()+"\files\Gates\AlarmeReporting\HEADER_ALR_File.csv";
+      //FileCopy(FileCONFIG,Final_ALR_File,False);
+
+
+      /*/////////////////////////////////////////
+      NUM_L = "0;0;" + Gate_Creation_Stamp + ";0;;;;DOUBLE;;0;0;0;;;;0;0;1;1;3;Never;;;F;F;0;T;F;;;";
+      CMP_L = "0;0;" + Gate_Creation_Stamp + ";0;;;1;NUM;ZERO;0;/;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;";
+      ALR_L = Gate_Creation_Stamp + ";0;;NUM;ZERO;0;3;0;0;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;F;;;";
+      /////////////////////////////////////////
+      N_FileHandle = FileOpen(Final_N_File,"at+");
+      //MessageBox(NUM_L,"NUM_L");
+        FileWriteLn(N_FileHandle, NUM_L);
+      FileClose(N_FileHandle);
+      /////////////////////////////////////////
+      C_FileHandle = FileOpen(Final_C_File,"at+");
+      //MessageBox(CMP_L,"CMP_L");
+       FileWriteLn(C_FileHandle, CMP_L);
+      FileClose(C_FileHandle);
+      /////////////////////////////////////////
+      A_FileHandle = FileOpen(Final_A_File,"at+");
+      //MessageBox(ALR_L,"ALR_L");
+       FileWriteLn(A_FileHandle, ALR_L);
+      FileClose(A_FileHandle);
+      /////////////////////////////////////////*/
+
+
+        FileHandle = FileOpen(FileFullPathName,"rt");
+        If (FileHandle==0) then
+            //MessageBox(FileFullPathName,"File not Found");
+            FileWriteLn(LogFileHandle,"Error CreateGates : AllCompteur File NOT Found");
+            FileClose(LogFileHandle);
+            return;
+        end
+
+    AllCompteur_Ligne = FileReadLn(FileHandle); // HEADER
+
+    While( FileEof(FileHandle)==0 )
+      AllCompteur_Ligne = FileReadLn(FileHandle);
+
+      /////////////////////// Decomposition
+
+      CompteurCode = Fetch_BUILGATES(AllCompteur_Ligne, 1, ";");
+      CompteurName = Fetch_BUILGATES(AllCompteur_Ligne, 2, ";");
+      CompteurEnergy = Fetch_BUILGATES(AllCompteur_Ligne, 3, ";");
+      CompteurParent = Fetch_BUILGATES(AllCompteur_Ligne, 4, ";");
+      CompteurFormule = Fetch_BUILGATES(AllCompteur_Ligne, 13, ";");
+      CompteurRatio   = Fetch_BUILGATES(AllCompteur_Ligne, 16, ";");
+      CompteurMaster = Fetch_BUILGATES(AllCompteur_Ligne, 18, ";");
+      CompteurCOMs   = Fetch_BUILGATES(AllCompteur_Ligne, 19, ";");
+
+
+      MasterLigne = GET_MasterLigne(CompteurMaster);
+
+        /////////////////////// Check
+        If (CompteurFormule != "*" || CompteurFormule != "" ) Then
+
+            If ( CompteurFormule == "Reel") Then
+
+                If ( CompteurMaster == "*" || CompteurMaster == "" || StrSubString(CompteurMaster,1,2) == "!~" ) Then
+                 MASTER_Flag = False;
+                 Else
+                 MASTER_Flag = True;
+                End
+
+                If ( CompteurCOMs == "*" || CompteurCOMs == "" || StrSubString(CompteurCOMs,1,2) == "!~") Then
+                 COMs_Flag = False;
+                 Else
+                 COMs_Flag = True;
+                End
+
+                IF ( MASTER_Flag == True && COMs_Flag == True ) Then
+                  Communiation_Flag = True;
+                 Else
+                   FileWriteLn(LogFileHandle,"Error CreateGates : Communication not setup due to gateways errors of configuration");
+                End
+
+            Else
+
+             Communiation_Flag = False;
+
+            End
+
+
+            SourceFileName = GetProjectPath()+"\files\Gates\NUM_Gates\"+CompteurEnergy+"_N_Gates_R.CSV";
+
+            CREATION_NUM = Create_N_Gates(Final_N_File , LogFileHandle, SourceFileName, Communiation_Flag,CompteurCode,CompteurName, MasterLigne , CompteurCOMs, CompteurEnergy);
+
+
+                If ( CompteurRatio != "*" ) Then
+                RATIO_Flag = "R";
+                Else
+                RATIO_Flag = "";
+                End
+
+                If ( CompteurFormule != "Reel" ) Then
+                Formule_Flag = "C";
+                Else
+                Formule_Flag = "";
+                End
+
+                SourceFileName = GetProjectPath()+"\files\Gates\CMP_Gates\"+CompteurEnergy+"_C_Gates_"+RATIO_Flag+Formule_Flag+".csv";
+
+                IF (RATIO_Flag == "" && Formule_Flag == "") Then
+                    SourceFileName =  GetProjectPath()+"\files\Gates\CMP_Gates\"+CompteurEnergy+"_C_Gates.CSV";
+                End
+
+            CREATION_CMP = Create_C_Gates(Final_C_File,  LogFileHandle, SourceFileName, CompteurCode, CompteurName, CompteurRatio , CompteurEnergy , CompteurParent);
+
+                SourceFileName = GetProjectPath()+"\files\Gates\ALR_Gates\"+CompteurEnergy+"_ALR.CSV";
+
+            IF ( CompteurCode != "" || CompteurCode != "*"|| CompteurEnergy != "*"  ) Then
+                Create_A_Gates(Final_A_File ,LogFileHandle, SourceFileName, CompteurCode,CompteurName, CompteurEnergy);
+                Create_STR_Gates(Final_STR_File ,LogFileHandle, SourceFileName, CompteurCode,CompteurName, CompteurEnergy);
+            End
+
+              /*IF (CREATION_ALR == True) THEN
+
+                If (RATIO_Flag == "R" ) Then
+                  SourceFileName = GetProjectPath()+"\files\Gates\AlarmeReporting\"+CompteurEnergy+"_ALRReporting_"+RATIO_Flag+".CSV";
+                Else
+                  SourceFileName = GetProjectPath()+"\files\Gates\AlarmeReporting\"+CompteurEnergy+"_ALRReporting.CSV";
+                End
+
+              END*/
+
+            //CREATION_ALR_File = Create_RALR_File( Final_ALR_File ,LogFileHandle, SourceFileName, CompteurCode, CompteurName, CompteurEnergy, CompteurParent);
+        End
+
+    End
+
+    FileWriteLn(LogFileHandle,"********** End CreateGates : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+      /////////////////////////////////////////
+      NUM_L = "0;0;" + Gate_Creation_Stamp + ";0;;;;DOUBLE;;0;0;0;;;;0;0;1;1;3;Never;;;F;F;0;T;F;;;";
+      CMP_L = "0;0;" + Gate_Creation_Stamp + ";0;;;1;NUM;ZERO;0;/;1;NUM;ZERO;0;0;0;1;1;1;T;F;0;F;F;;;";
+      ALR_L = Gate_Creation_Stamp + ";0;;NUM;ZERO;0;3;0;0;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;F;;;";
+      /////////////////////////////////////////
+      N_FileHandle = FileOpen(Final_N_File,"at+");
+
+        FileWriteLn(N_FileHandle, NUM_L);
+      FileClose(N_FileHandle);
+      /////////////////////////////////////////
+      C_FileHandle = FileOpen(Final_C_File,"at+");
+
+       FileWriteLn(C_FileHandle, CMP_L);
+      FileClose(C_FileHandle);
+      /////////////////////////////////////////
+      A_FileHandle = FileOpen(Final_A_File,"at+");
+
+       FileWriteLn(A_FileHandle, ALR_L);
+      FileClose(A_FileHandle);
+      /////////////////////////////////////////
+
+FileClose(FileHandle);
+FileClose(LogFileHandle);
+
+      LogFileFullPathName = ENV_PATH+"\V" + GetStrGateValue("Version",0) + "GateCreation.txt" ;
+      LogFileHandle = FileOpen(LogFileFullPathName,"wt");
+      FileWriteLn(LogFileHandle,Gate_Creation_Stamp);
+      FileClose(LogFileHandle);
+      MessageBox("End","");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                              Create DateStamp
+///////////////////////////////////////////////////////////////////////////////
+function String Create_DateStamp()
+
+     int P;  String DD;  String MM;  String YYYY;  String HH;  String mm;    String ss;
+     String DateStamp;
+
+    DD = "00" + GetDayOfMonth();
+    P = StrLen(DD ) - 1;
+    DD = StrSubString( DD , P , 2 );
+
+    MM = "00" + GetMonth();
+    P = StrLen(MM ) - 1;
+    MM = StrSubString( MM , P , 2 );
+
+    YYYY = "0000" + GetYear();
+    P = StrLen(YYYY ) - 3;
+    YYYY = StrSubString( YYYY , P , 4);
+
+    HH = "00" + GetHour();
+    P = StrLen(HH ) -1;
+    HH = StrSubString( HH , P , 2 );
+
+    mm = "00" + GetMinute();
+    P = StrLen(mm ) -1;
+    mm = StrSubString( mm , P , 2 );
+
+    ss = "00" + GetSecond();
+    P = StrLen(ss ) -1;
+    ss = StrSubString( ss , P , 2 );
+    DateStamp = DD + MM + YYYY + HH + mm + ss;
+    Return DateStamp;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                              Create_N_Gates
+///////////////////////////////////////////////////////////////////////////////
+function Bool Create_N_Gates(String Final_N_File , int LogFileHandle, String SourceFileName, Bool Communiation_Flag, String CompteurCode,String CompteurName, String MasterLigne , string CompteurCOMs , string CompteurEnergy)
+
+    //String SourceFileHandle;
+    String FileCONFIG;
+
+    String INPUT_CODE;
+
+    String TextRow;
+    String P_FixEnergy;
+    String CompteurTrueNumber;
+    String SourceLigne;
+    String DESTINATION_Ligne;
+    String REGISTER;
+    String Find;
+
+    Int i;
+    Int WFileHandle;
+    Int SourceFileHandle;
+
+    Int ListNUMBER;
+    Int HEADER_NUM = 4; // num du column for Keys
+    String Master_COMs_Type;
+    Bool OBJECTIF_FLAG = False;
+    Bool REGISTRE_OK = False;
+
+    String GATEWAY  = Fetch_BUILGATES(CompteurCOMs,1,":");
+    String P_TCP    = Fetch_BUILGATES(CompteurCOMs,2,":");
+    String SORTIE   = Fetch_BUILGATES(CompteurCOMs,3,":");
+    String CHANNEL  = Fetch_BUILGATES(CompteurCOMs,4,":");
+    String DEVICE   = Fetch_BUILGATES(CompteurCOMs,5,":");
+
+    Master_COMs_Type = Fetch_BUILGATES(MasterLigne,3,":");
+
+
+    INPUT_CODE = GET_InputCode( CompteurCode, CompteurEnergy );
+
+
+    SourceFileHandle = FileOpen(SourceFileName,"rt");
+    If (SourceFileHandle==0) then   Return False; end
+
+    WFileHandle = FileOpen(Final_N_File,"at");
+
+    FileReadLn(SourceFileHandle); // Header
+
+    While( FileEof(SourceFileHandle)==0 )
+     SourceLigne = FileReadLn(SourceFileHandle);
+      If (SourceLigne != "") then
+       DESTINATION_Ligne = SourceLigne;
+
+       IF (Fetch_BUILGATES(SourceLigne,3,":") == "ONUMGate" ) Then // Objectif List
+        OBJECTIF_FLAG = True;
+       Else
+        OBJECTIF_FLAG = False;
+       End
+
+       IF (OBJECTIF_FLAG == False ) Then // List != Objectif*
+
+           IF ( Communiation_Flag == True ) Then
+
+                  ListNUMBER = StrToInt( Fetch_BUILGATES(SourceLigne,4,";") );
+                  REGISTER = Fetch_BUILGATES(MasterLigne, ListNUMBER+HEADER_NUM ,";") ;
+
+
+                        IF ( REGISTER != "*" && REGISTER != "" ) Then
+                         REGISTRE_OK = True;
+                         Else
+                         REGISTRE_OK = False;
+                        End
+
+
+                         IF (REGISTRE_OK == False ) Then
+                          FileWriteLn(LogFileHandle," Error CreateGates : Create_N_Gates : "+ CompteurCode +"/"+ CompteurName + "Registre not defind");
+                         End
+
+
+                         IF (REGISTRE_OK == True ) Then
+
+                            IF (Master_COMs_Type == "D" || Master_COMs_Type == "A") Then
+                              i = StrPos(REGISTER,"~");
+                              REGISTER = StrSubString(REGISTER,1,i-1) + SORTIE + StrSubString(REGISTER,i+1,StrLen(REGISTER)-i) ;
+                            End
+
+                            //Find = "";
+
+                            DESTINATION_Ligne = FR( DESTINATION_Ligne, "" , REGISTER , 5);
+
+                            Find = "0";
+
+                            DESTINATION_Ligne = FR( DESTINATION_Ligne,Find , CHANNEL ,1);
+                            DESTINATION_Ligne = FR( DESTINATION_Ligne,Find, DEVICE , 2);
+
+
+                        End
+
+
+
+           End
+       END // List != Objectif
+
+        Find = "ONUMGate";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find,"O"+INPUT_CODE,3);
+
+        Find = "NUMGate";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, INPUT_CODE ,3);
+
+        Find = "Name";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurName ,6);
+
+        FileWriteLn(WFileHandle,DESTINATION_Ligne);
+
+      End
+    End
+
+        DESTINATION_Ligne = "0;0;AAC_" +CompteurCode+ ";0;;Activated Alarme Counter of " +CompteurName+ ";;DOUBLE;;0;0;0;;;;0;0;1;1;3;Never;;;F;F;0;T;F;;;";
+
+        FileWriteLn(WFileHandle,DESTINATION_Ligne);
+
+    FileClose(WFileHandle);
+    FileClose(SourceFileHandle);
+
+    Return True;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                              Create_C_Gates
+///////////////////////////////////////////////////////////////////////////////
+function Bool Create_C_Gates(String Final_C_File , int LogFileHandle, String SourceFileName, String CompteurCode,String CompteurName,
+                             String CompteurRatio , string CompteurEnergy , String CompteurParent)
+
+
+    Int SourceFileHandle;
+    Int WFileHandle;
+
+    String SourceLigne;
+    String DESTINATION_Ligne;
+    String Find;
+    String INPUT_CODE;
+    Int List ;
+    Int LIST2000 = 2000;
+    Bool P_found = False;
+
+
+    SourceFileHandle = FileOpen(SourceFileName,"rt");
+    If (SourceFileHandle==0) then  Return False; end
+
+    WFileHandle = FileOpen(Final_C_File,"at");
+
+    INPUT_CODE = GET_InputCode( CompteurCode, CompteurEnergy );
+
+    IF (CompteurParent == "*") Then P_found = False;
+    Else P_found = True;    End
+
+
+    FileReadLn(SourceFileHandle); // Header
+
+    While( FileEof(SourceFileHandle)==0 )
+     SourceLigne = FileReadLn(SourceFileHandle);
+     List = StrToInt( Fetch_BUILGATES(SourceLigne,4,";") );
+     //List = List / 2000;
+      If (SourceLigne != "") then
+         DESTINATION_Ligne = SourceLigne;
+
+        IF (P_found == True) Then
+          Find = "PCMPGate";
+          DESTINATION_Ligne = FR(DESTINATION_Ligne,Find,CompteurParent ,14);
+        End
+
+        Find = "CMPGate";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurCode ,3);
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurCode ,9);
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurCode ,14);
+
+        Find = "ONUMGate";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, "O"+INPUT_CODE ,14);
+
+        Find = "NUMGate";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, INPUT_CODE ,9);
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, INPUT_CODE ,14);
+
+
+
+        Find = "Name";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurName ,6);
+
+        If (CompteurRatio != "*") Then
+           Find = "Prod";
+           DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurRatio ,14);
+        End
+
+
+        IF (P_found == True || ( P_found == False && List < LIST2000 ) ) Then
+         FileWriteLn(WFileHandle,DESTINATION_Ligne);
+        End
+
+      End
+    End
+
+    FileClose(WFileHandle);
+    FileClose(SourceFileHandle);
+
+    Return True;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                              Create_A_Gates
+///////////////////////////////////////////////////////////////////////////////
+function Void Create_A_Gates( String Final_A_File , int LogFileHandle, String SourceFileName, String CompteurCode,String CompteurName, string CompteurEnergy)
+
+    Int SourceFileHandle;
+    Int WFileHandle;
+
+    String SourceLigne;
+    String DESTINATION_Ligne;
+    String Find;
+    String ALR_CODE;
+    String WriteLine;
+
+    //SourceFileHandle = FileOpen(SourceFileName,"rt");
+    //If (SourceFileHandle==0) then   Return False; end
+
+    WFileHandle = FileOpen(Final_A_File,"at");
+
+    ALR_CODE = GET_InputCode( CompteurCode, CompteurEnergy );
+
+        WriteLine = "AA_" + CompteurCode + ";0;" + CompteurName + " Alarme Status;NUM;AAC_" + CompteurCode
+                    + ";0;3;0;0;;;T;F;T;0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;F;;;" ;
+
+        FileWriteLn(WFileHandle,WriteLine);
+
+
+    FileClose(WFileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                              Create_STR_Gates
+///////////////////////////////////////////////////////////////////////////////
+function Void Create_STR_Gates( String Final_STR_File , int LogFileHandle, String SourceFileName, String CompteurCode,String CompteurName, string CompteurEnergy)
+
+    Int SourceFileHandle;
+    Int WFileHandle;
+
+    String SourceLigne;
+    String DESTINATION_Ligne;
+    String Find;
+    String ALR_CODE;
+    String WriteLine;
+
+    WFileHandle = FileOpen(Final_STR_File,"at");
+
+        WriteLine = "0;0;AAL_" + CompteurCode + ";0;;;80;;Never;;;F;F;0";
+        FileWriteLn(WFileHandle,WriteLine);
+
+        WriteLine = "0;0;AAL_" + CompteurCode + ";1;;;80;;Never;;;F;F;0";
+        FileWriteLn(WFileHandle,WriteLine);
+
+        WriteLine = "0;0;AAL_" + CompteurCode + ";2;;;80;;Never;;;F;F;0";
+        FileWriteLn(WFileHandle,WriteLine);
+
+
+    FileClose(WFileHandle);
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                      CREATE A File
+///////////////////////////////////////////////////////////////////////////////
+function Bool Create_RALR_File( String Final_ALR_File , int LogFileHandle, String SourceFileName, String CompteurCode,String CompteurName, string CompteurEnergy, string CompteurParent)
+
+    Int SourceFileHandle;
+    Int WFileHandle;
+    String CONFIG_File = GetProjectPath()+"\files\Gates\AlarmeReporting\INPUTLIVE.txt";
+    int CONFIG_FileHandle;
+    String Config_LIGNE;
+    String SourceLigne;
+    String DESTINATION_Ligne;
+    String List;
+    String INPUT_CODE;
+    String PARENT_INPUT_CODE;
+    String Ligne ="";
+    String Find ;
+    String R;
+    Int i;
+
+    INPUT_CODE = GET_InputCode( CompteurCode, CompteurEnergy );
+    PARENT_INPUT_CODE = GET_InputCode( CompteurParent, CompteurEnergy );
+
+    SourceFileHandle = FileOpen(SourceFileName,"rt");
+    If (SourceFileHandle==0) then  Return False;  end
+
+    WFileHandle = FileOpen(Final_ALR_File,"at");
+
+    CONFIG_FileHandle = FileOpen(CONFIG_File,"rt");
+    If (CONFIG_FileHandle==0) then  Return False;  end
+
+
+///////////////////////////////////////////////////////////////////////////////
+        While( FileEof(CONFIG_FileHandle)==0 )
+        Config_LIGNE = FileReadLn(CONFIG_FileHandle);
+            If ( Fetch_BUILGATES(Config_LIGNE,1,";") == CompteurEnergy ) Then
+            List = Fetch_BUILGATES(Config_LIGNE,2,";");
+            End
+        End
+        FileClose(CONFIG_FileHandle);
+///////////////////////////////////////////////////////////////////////////////
+
+
+    FileReadLn(SourceFileHandle); // Header
+
+    While( FileEof(SourceFileHandle)==0 )
+     SourceLigne = FileReadLn(SourceFileHandle);
+      If (SourceLigne != "") then
+         DESTINATION_Ligne = SourceLigne;
+
+        Find = "AINTPUT";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, "A"+INPUT_CODE ,1);
+
+        Find = "Name";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurName ,2);
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, CompteurName ,6);
+
+        Find = "INPUT";
+        DESTINATION_Ligne = FR(DESTINATION_Ligne,Find, INPUT_CODE+","+List+"/"+PARENT_INPUT_CODE+","+List ,3);
+
+        DESTINATION_Ligne = Add_Periodicity( DESTINATION_Ligne );
+        FileWriteLn(WFileHandle,DESTINATION_Ligne);
+
+      End
+    End
+
+    FileClose(WFileHandle);
+    FileClose(SourceFileHandle);
+    return True;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                      Add Periodicity
+///////////////////////////////////////////////////////////////////////////////
+function String Add_Periodicity(String Ligne)
+
+    String OutLigne = Ligne;
+    String ReadLigne;
+    String Periode = "";
+    //String Next_Trigger;
+    String Next_DAY;
+    String Next_MONTH;
+    String Next_HOUR;
+    String Next_MUNIT;
+    String FileFullPathName;
+    Int FileHandle;
+    Int i ;
+    Bool Exit = False;
+    Bool Found = False;
+
+
+    FileFullPathName = ENV_PATH+"\Files\DATAMODELFiles\Event\Default_Alarme_Frequency.csv";
+    FileHandle = FileOpen(FileFullPathName,"rt");
+    If (FileHandle==0) then  return OutLigne;  end
+
+
+      While (Exit == False)
+       ReadLigne = FileReadLn(FileHandle);
+
+
+        If ( Fetch_BUILGATES(ReadLigne,1,";") == Fetch_BUILGATES(Ligne,7,";")) Then
+
+            Periode = Fetch_BUILGATES(ReadLigne,3,";")+"_"+Fetch_BUILGATES(ReadLigne,4,";");
+            Found = True;
+
+        End//If Periodicity
+
+
+        If (Found == True) Then Exit = True;     End
+        If (FileEof(FileHandle)!=0 ) Then Exit = True;     End
+
+      End //While
+
+               OutLigne = Fetch_BUILGATES(Ligne,1,";") +";"+ Fetch_BUILGATES(Ligne,2,";") +";"+ Fetch_BUILGATES(Ligne,3,";") +";"+ Fetch_BUILGATES(Ligne,4,";") +";"+Fetch_BUILGATES(Ligne,5,";") +";"+ Fetch_BUILGATES(Ligne,6,";") +";"+
+               Periode +";"+ GetDateString("/",True) +"_"+ GetTimeString(":");
+
+    FileClose(FileHandle);
+    return OutLigne;
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                      Find and Replace
+///////////////////////////////////////////////////////////////////////////////
+function String FR(String Ligne, String Find , string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+     P = StrPos(txt,Find);
+     IF (P == 0 ) Then Return Ligne;
+    Else
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+       If ( P == 0 ) Then
+        Return NewLigne + Replace + txt;
+       Else
+       //MessageBox(CODE,NumFild);
+        CODE=StrDelete(CODE,1,P-1);
+                //MessageBox(CODE,Replace);
+        Return NewLigne + Replace + CODE + txt;
+       End
+     End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                      Fetch_BUILGATES
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_BUILGATES(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+END
+///////////////////////////////////////////////////////////////////////////////
+//                      GET_InputCode
+///////////////////////////////////////////////////////////////////////////////
+function String GET_InputCode( String CompteurCode, String Energy)
+
+    String INPUT_CODE = "*";
+    String CompteurTrueNumber = "*";
+    String P_FixEnergy = "*";
+
+    Int i;
+
+    IF ( Energy != "*")Then
+
+        For i = 1 to GetNumGateValue("EnergyMax",0) do
+
+         IF ( Energy == GetStrGateValue("Energy_Name",i) ) then
+
+         P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+         CompteurTrueNumber = StrDelete(CompteurCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+         INPUT_CODE = P_FixEnergy+CompteurTrueNumber ;
+         End
+
+        End
+
+    End
+
+    Return INPUT_CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                      GET_InputCode
+///////////////////////////////////////////////////////////////////////////////
+function String GET_MasterLigne( String MasterCompteur )
+
+    String FileFullPathName;
+    int FileHandle;
+    String MasterLigne = "*";
+
+    Bool Exit = False;
+    Bool Found = False;
+
+    FileFullPathName = ENV_PATH+"\Files\Config Compteur\Energy Masters.csv";
+    FileHandle = FileOpen(FileFullPathName,"rt");
+    If (FileHandle==0) then  MessageBox(FileFullPathName,"File not Found");  Return "*";  end
+
+    While( Exit == False )
+         MasterLigne = FileReadLn(FileHandle);
+
+         IF (Fetch_BUILGATES(MasterLigne,2,";") == MasterCompteur ) Then
+            Found =True;
+         End
+
+
+        If ( FileEof(FileHandle)!=0 || Found == True ) Then  Exit = True; End
+    End
+
+    FileClose(FileHandle);
+
+    IF ( Found == True ) Then
+        Return MasterLigne;
+     Else
+        Return "*";
+    End
+end
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//                                  Calculatrice
+///////////////////////////////////////////////////////////////////////////////
+function void Generate_Formule()
+
+    String Source;
+    String Destination;
+    String File_Name = "Calculator_Funct_V"+ GetStrGateValue("Version",0) +".wll";
+
+            Insert_LastSTEP( "DGG2.3_Generate Calculated Items" );
+
+            SetStrGateValue("Errors_Formule",0,"Generating Calculated Compteurs . Please wait ...");
+
+           MessageBox("Creation Calculatrice","Start");
+
+            Calculatrice();
+
+            ///////Copy Files
+
+
+            Source = ENV_PATH+"\Files\AllCompteur\Calcule\" + File_Name;
+            Destination = GetProjectPath()+"\Code\" + File_Name ;
+
+            FileCopy(Source,Destination,False);
+
+             File_Name = "Compteur_ReelAlarme_V"+ GetStrGateValue("Version",0) +".wll";
+
+             Source = ENV_PATH+"\Files\AllCompteur\Calcule\" + File_Name;
+             Destination = GetProjectPath()+"\Code\" + File_Name ;
+
+            FileCopy(Source,Destination,False);
+
+            MessageBox("Copying Files","End");
+
+            SetStrGateValue("Errors_Formule",0,"Generatinon of Calculated Compteurs is Complete.");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void Calculatrice()
+
+   String FullPathFileName;
+   Int FileHandle;
+   String BUILD_FullPathFileName;
+   Int BUILD_FileHandle;
+   String Reel_FullPathFileName;
+   Int Reel_FileHandle;
+   String TextRow;
+   String Formule;
+   String Parsed_Formule;
+   String FileList;
+   String WFullPathFileName;
+   Int PROG_FileHandle;
+   Int COMPTEUR_N_EXIST ;
+   Int MaxLevel = 7;
+   int i;
+
+    BUILD_FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+    If ( FileExist(BUILD_FullPathFileName) == True ) then FileDelete(BUILD_FullPathFileName); End
+
+    BUILD_FullPathFileName = ENV_PATH+"\BuildLOG.txt";
+    BUILD_FileHandle=FileOpen(BUILD_FullPathFileName,"at");
+
+    FileWriteLn(BUILD_FileHandle,"********** Start Calculatrice Builder : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+   FullPathFileName = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+   WFullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Calculator_Funct_V" +GetStrGateValue("version",0)+ ".wll";
+   PROG_FileHandle = FileOpen(WFullPathFileName,"wt");
+
+   FileWriteLn(PROG_FileHandle,"/////////Calculatrice generateur  "+GetDateString("/",True) + "_" + GetTimeString(":")"  ////////////////");
+   FileClose(PROG_FileHandle);
+
+   if (FileHandle==0) then  MessageBox("File not Found","Error");  return;  end
+
+   Reel_FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\Compteur_ReelAlarme_V" +GetStrGateValue("version",0)+ ".wll";
+   Reel_FileHandle=FileOpen(Reel_FullPathFileName,"wt");
+
+   FileWriteLn(Reel_FileHandle,"function void Reel_Alarme_Calculatrice()");
+   FileWriteLn(Reel_FileHandle,"  String CompteurCode ;");
+   FileWriteLn(Reel_FileHandle,"  Int NBR ;");
+   FileClose(Reel_FileHandle);
+
+   FileReadLn(FileHandle);//Header
+   While(FileEof(FileHandle)==0 )
+
+    TextRow = FileReadLn(FileHandle);
+
+    If (TextRow != "") then
+
+       Formule = Fetch_CAL(TextRow, 13, ";");
+       Parsed_Formule = Fetch_CAL(TextRow, 21, ";");
+
+        If(Formule != "*") Then
+            IF (Formule == "Reel") Then
+
+             Compteur_ReelAlarme( Fetch_CAL(TextRow, 1, ";") , Fetch_CAL(TextRow, 3, ";"));
+
+            Else
+                IF ( StrSubString(Parsed_Formule,1,2) != "!~" ) Then
+                  Formula_STR_TO_FILE(  Fetch_CAL(TextRow, 20, ";") , Fetch_CAL(TextRow, 1, ";"), "Calculatrice");
+                  FileList = Parse_List(Fetch_CAL(TextRow,3,";"));
+                  Formule_Fonction(FileList , Fetch_CAL(TextRow, 1, ";"), Fetch_CAL(TextRow, 3, ";"));
+                End
+
+            End
+
+        End
+
+    End
+
+   End//While Not End Of Ligne
+   FileClose(FileHandle);
+
+   Reel_FileHandle=FileOpen(Reel_FullPathFileName,"at");
+   FileWriteLn(Reel_FileHandle,"End");// End Of Reel_Alarme_Calculatrice()
+   FileClose(Reel_FileHandle);
+
+   //WFullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Prog.wll";
+   PROG_FileHandle = FileOpen(WFullPathFileName,"at");
+
+   FileWriteLn(PROG_FileHandle,"function void CALCULATOR()");
+   FileWriteLn(PROG_FileHandle,"#StartUp");
+
+
+   FileWriteLn(PROG_FileHandle,"  While(WindowIsOpen())");
+   //FileWriteLn(PROG_FileHandle,"    Reel_Alarme_Calculatrice();");
+
+
+    For i = 0 to MaxLevel DO
+      WriteByLevel( PROG_FileHandle ,MaxLevel,  i);
+    End
+
+
+   FileWriteLn(PROG_FileHandle,"  End");
+   FileWriteLn(PROG_FileHandle,"End");
+   FileWriteLn(BUILD_FileHandle,"********** End Calculatrice Builder : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+   FileClose(BUILD_FileHandle);
+   FileClose(FileHandle);
+   FileClose(PROG_FileHandle);
+   //   MessageBox("Fin de Creation","");
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  WriteByLevel
+///////////////////////////////////////////////////////////////////////////////
+function void WriteByLevel( int WriteFileHandle ,  int MaxLevel, int Level)
+
+   String FullPathFileName;
+   Int FileHandle;
+   Int SelectedLEVEL;
+   Bool Found = False;
+   string TextRow;
+   Int CompteurMax;
+   int i;
+   Int Pos ;
+   String CompteurCode;
+
+
+   FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+    SelectedLEVEL = MaxLevel-Level;
+    CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    While(FileEof(FileHandle)==0 )
+     TextRow = FileReadLn(FileHandle);
+
+       If (TextRow != "") then
+
+        Pos = StrPos(TextRow,"_");
+        CompteurCode=StrSubString(TextRow,1,Pos-1);
+        i=0;
+        Found = False;
+           While( Found == False && i < CompteurMax)
+            i=i+1;
+            ///MessageBox(GetStrGateValue("Compteur_Code",i),CompteurCode);
+              IF (CompteurCode == GetStrGateValue("Compteur_Code",i)) Then
+               /// MessageBox(GetStrGateValue("Compteur_Level",i),SelectedLEVEL);
+                IF (SelectedLEVEL == GetStrGateValue("Compteur_Level",i)) Then
+                  Found = True;
+                  FileWriteLn(WriteFileHandle,"  "+TextRow);
+
+                End
+
+              End
+
+          End
+
+       End
+   End
+
+    FileClose(FileHandle);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  F2
+///////////////////////////////////////////////////////////////////////////////
+function String Parse_List(String Energy)
+    String FileName;
+
+
+    If (Energy != "*") then
+      FileName = ENV_PATH+"\Files\AllCompteur\Calcule\L_"+Energy+".txt";
+
+        if (FileExist(FileName) == True) then
+            Return FileName;
+        end
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3
+///////////////////////////////////////////////////////////////////////////////
+function void Formule_Fonction(String FileListName, String Compteur, String Energy)
+    String List_Ligne;
+    String Formule_Ligne;
+    String FullPathFileName;
+    string Log;
+    String INPUT;
+    String API;
+    string INPUT_CODE;
+    string Formule;
+
+    Int Log_FileHandle;
+    String LogFullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+    Log_FileHandle = FileOpen(LogFullPathFileName,"at");
+
+
+    Int List_FileHandle = FileOpen(FileListName,"rt");
+
+   FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\Calculator_Funct_V" +GetStrGateValue("version",0)+ ".wll";
+   Int PROG_FileHandle = FileOpen(FullPathFileName,"at");
+
+    Log = Header_Decleration( PROG_FileHandle,Compteur );
+
+
+
+
+      While(FileEof(List_FileHandle)==0)//List File
+       List_Ligne = FileReadLn(List_FileHandle) ;
+
+         INPUT = Formule_Ligne(PROG_FileHandle, Compteur , List_Ligne, Energy);
+
+
+      END//List File
+
+        FileWriteLn(PROG_FileHandle,"END");
+        FileWriteLn(PROG_FileHandle,Eol());
+        //FileWriteLn(PROG_FileHandle,"//////////////////////////////////////////");
+
+    FileWriteLn(Log_FileHandle,Log);
+
+    FileClose(Log_FileHandle);
+    FileClose(List_FileHandle);
+    FileClose(PROG_FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.1
+///////////////////////////////////////////////////////////////////////////////
+function String Header_Decleration(Int WFileHandle, String Compteur)
+    String Ligne;
+
+  Ligne = "function void " + Compteur + "_Calculator()";
+  FileWriteLn(WFileHandle,Ligne);
+
+  FileWriteLn(WFileHandle,"    int List;");
+  FileWriteLn(WFileHandle,"    int Valeur;");
+  FileWriteLn(WFileHandle,"    Int NBR = 0;");
+
+  return Compteur + "_Calculator();";
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.2
+///////////////////////////////////////////////////////////////////////////////
+function String Formule_Ligne(Int WFileHandle, String Compteur , String List, string Energy)
+
+
+    String BUILDLOGFileName;
+    Int BUILDLOGFileHandle;
+  String Ligne;
+  Int i;
+  String P_FixEnergy;
+  String INPUT_CODE;
+  String API;
+  String CompteurTrueNumber;
+  String Formule = "" ;
+  Int Div_POS;
+  Int TF = 0;
+  Int F = 0;
+  Int NestedFlag = 0;
+    Int MAX_Div = 10;
+  String DIV_API;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")"; String Equal = "=";
+
+  String F_SQRT = "Sqrt"; String F_SIN = "Sin"; String F_COS = "Cos";   String F_TAN = "Tan";
+  String F_ABS = "Abs"; String F_ARCSIN = "ArcSin"; String F_ARCCOS = "ArcCos";   String F_ARCTAN = "ArcTan";
+  String F_EXP = "Exp"; String F_LOG = "Log"; String F_ROUND = "Round";   String F_POW = "Pow"; String F_MOD = "Mod";
+  String F_FILS = "F";
+
+  int Pos;
+  String ListFlag = "";
+  String CompteurFlag;
+
+  Int MOY_NBR_COMPTEUR = 0;
+  String MOY_FORMULE;
+  String MOY_OUTPUT_List;
+
+  Init_DIVGATES();
+
+    BUILDLOGFileName = ENV_PATH+"\BuildLOG.txt";
+    BUILDLOGFileHandle=FileOpen(BUILDLOGFileName,"wt");
+
+  ////TestList
+  Pos = StrPos(List,":");
+
+  If ( Pos == 0 ) Then
+    ListFlag = "N";
+    FileWriteLn(WFileHandle,"   List = "+List+";");
+   Else
+       If( StrSubString(List,1,Pos-1) == "IR") Then ListFlag = "R";
+         Else
+            If( StrSubString(List,1,Pos-1) == "M%") Then ListFlag = "M";
+               Else
+                 ListFlag = "C";
+               End
+         End
+
+     List = StrDelete(List,1,Pos);
+  End
+
+  IF (ListFlag == "M") Then
+
+    Pos = StrPos(List,";");
+
+    MOY_OUTPUT_List = StrSubString(List,Pos +1 ,StrLen(List));
+    List = StrSubString(List,1,Pos-1);
+
+
+    //MessageBox(List,MOY_OUTPUT_List);
+    FileWriteLn(WFileHandle,"   List = "+List+";");
+  End
+
+  ////////////////////////////////////////////////////////////////////////////
+  String FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+  Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+  API = "GetCmpGateValue("+CharToStr(34);
+
+//MessageBox("NEw","");
+            TF = 0;
+            F =0 ;
+            NestedFlag = 0;
+
+            While(FileEof(FileHandle)==0)//Formule File
+
+             Ligne = FileReadLn(FileHandle);
+
+
+                if ( Ligne != "") then
+
+                Div_POS = StrPos(Ligne,":");
+
+                 IF ( Div_POS > 0 ) Then
+
+                  TF = StrToInt( StrSubString(Ligne,1,Div_POS-1) );
+
+                  IF ( F == 0 ) Then
+                    F = TF;
+                  Else
+                   IF ( TF < F ) Then
+                        IF ( NestedFlag > 0 ) Then NestedFlag = NestedFlag -1; Else NestedFlag = 1; End
+                         IF ( F <= MAX_Div && ListFlag == "N" ) Then
+                          Write_IF_Expression( F , WFileHandle , NestedFlag );
+                          F = TF ;
+                         Else
+                          FileWriteLn(BUILDLOGFileHandle,"Error Calculatrice : Formule_Ligne : If Conditions == " + F);
+                         End
+                   End
+                   IF ( TF > F ) Then
+                        F = TF ;
+                        NestedFlag = NestedFlag +1;
+                   End
+                  End
+
+                Else // Div_POS == 0
+
+                    IF (Ligne == Compteur) then
+
+                     Formule = "Valeur ";
+                     Else
+
+                         IF (Ligne == Open || Ligne == Add || Ligne == Sub || Ligne == Div || Ligne == Mult || Ligne == Close || Ligne == Equal ||
+                             Ligne == F_SQRT || Ligne == F_SIN || Ligne == F_COS || Ligne == F_TAN || Ligne == F_ABS || Ligne == F_ARCSIN ||
+                             Ligne == F_ARCCOS || Ligne == F_ARCTAN || Ligne == F_EXP || Ligne == F_LOG || Ligne == F_ROUND || Ligne == F_POW ||
+                             Ligne == F_MOD || Ligne == F_FILS) Then
+
+                         Formule = Formule + Ligne ;
+                         IF ( F > 0 ) Then Construct_IF_Part( F , Ligne ) ; End
+
+                           Else
+                        // Compteur Found
+                            If ( StrSubString(Ligne,1,1) != "#" ) then
+
+
+                               if ( ListFlag == "N" ) then
+                                 //If ( CmpGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+                                 DIV_API = API + Ligne + CharToStr(34) + ",List )" ;
+                                  Formule = Formule + DIV_API ;
+
+                                  IF ( F > 0 ) Then
+                                  //MessageBox(DIV_API,"");
+                                    Construct_IF_Part( F , DIV_API ) ;
+                                  End
+                                 //End
+                               End//ListFlag == "N"
+
+                               if ( ListFlag == "M" ) then
+
+                                 DIV_API = API + Ligne + CharToStr(34) + ",List )" ;
+                                  Formule = Formule + DIV_API ;
+
+                                  MOY_NBR_COMPTEUR = MOY_NBR_COMPTEUR +1;
+
+                                  IF ( F > 0 ) Then
+
+                                    Construct_IF_Part( F , DIV_API ) ;
+                                  End
+
+                               End//ListFlag == "M"
+
+
+                             Else//Ligne == Num
+                                //if ( ListFlag != "M" ) then
+                                   Formule = Formule + StrDelete(Ligne,1,1);
+                                   IF ( F > 0 ) Then Construct_IF_Part( F , StrDelete(Ligne,1,1) ) ; End
+                                //End
+
+                          End //Ligne == Num
+                      End//Ligne == Operateur
+                    End//Ligne == Compteur
+                  End // DivPos != 0
+                End//Ligne != ""
+            End//Formule File
+
+
+           If ( ListFlag == "N" ) then
+
+               FileWriteLn(WFileHandle,Formule+";");
+
+                For i = 1 to GetNumGateValue("EnergyMax",0) do
+
+                  IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                    P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                    CompteurTrueNumber = StrDelete(Compteur,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+                  End
+
+                End
+
+
+               API = "SetNumGateValue("+CharToStr(34);
+               INPUT_CODE = StrConcat(P_FixEnergy,CompteurTrueNumber);
+
+
+              If ( NumGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+               //Formule = "Valeur = GetCmpGateValue( " + CharToStr(34) + Compteur + CharToStr(34) +"," + List +") + Valeur ;";
+               //FileWriteLn(WFileHandle,Formule);
+               Formule = API + INPUT_CODE + CharToStr(34)+"," + List + ",Valeur);" ;
+               FileWriteLn(WFileHandle,Formule);
+              Else
+
+                FileWriteLn(BUILDLOGFileHandle,"Error Calculatrice : Formule_Ligne : NUMERIC Gate "+ INPUT_CODE + " of Compteur " + Compteur+ " not Exist");
+              end
+
+
+
+           End// ListFlag == N
+           /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+           If ( ListFlag == "M" ) then
+
+               FileWriteLn(WFileHandle,Formule+";");
+
+               ////////////////////////////////////
+                MOY_FORMULE = "Valeur = Valeur / " + IntToStr( MOY_NBR_COMPTEUR ) + ";" ;
+                FileWriteLn(WFileHandle,MOY_FORMULE);
+               ////////////////////////////////////
+
+                For i = 1 to GetNumGateValue("EnergyMax",0) do
+
+                  IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                    P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                    CompteurTrueNumber = StrDelete(Compteur,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+                  End
+
+                End
+
+               API = "SetNumGateValue("+CharToStr(34);
+               INPUT_CODE = StrConcat(P_FixEnergy,CompteurTrueNumber);
+
+
+              If ( NumGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+               Formule = API + INPUT_CODE + CharToStr(34)+"," + MOY_OUTPUT_List + ",Valeur);" ;
+               FileWriteLn(WFileHandle,Formule);
+              Else
+
+                FileWriteLn(BUILDLOGFileHandle,"Error Calculatrice : Formule_Ligne : NUMERIC Gate "+ INPUT_CODE + " of Compteur " + Compteur+ " not Exist");
+              end
+
+
+
+           End// ListFlag == M
+           /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+   FileClose(FileHandle);
+   FileClose(BUILDLOGFileHandle);
+   Return INPUT_CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.3
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  Fetch_CAL
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_CAL(string Ligne, int Col, string Seperator)
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+////                            Calcule Nbr Alarme
+///////////////////////////////////////////////////////////////////////////////
+function void Calcul_NBR_ALR( int WFileHandle ,string Compteur, String InputCode , String List)
+
+  String Formule = "" ;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")"; String Equal = "=";
+  String Ligne;
+
+
+
+  String FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+  Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+
+
+   While(FileEof(FileHandle)==0)//Formule File
+     Ligne = FileReadLn(FileHandle);
+       if ( Ligne != "") then
+           IF ( Ligne != "" || Ligne != Compteur || Ligne != Open || Ligne != Add || Ligne != Sub ||
+                Ligne != Div || Ligne != Mult || Ligne != Close || Ligne != Equal ) then
+
+
+                    Formule = "if ( GetEvnGateValue("  +CharToStr(34)+ InputCode +CharToStr(34)+","+List+  ") == True ) Then NBR = NBR +1 ; End";
+
+                    FileWriteLn(WFileHandle,Formule);
+
+           End
+       End
+  End//Formule File
+
+  FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  Dterminer Reel ou calculer
+///////////////////////////////////////////////////////////////////////////////
+function String Reel_And_Calcul( String CodeCompteur )
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+
+     CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    While ( i <= CompteurMax && found == false )
+
+       if ( CodeCompteur == GetStrGateValue("Compteur_Code",i)) then
+        found = True;
+       Else
+        i = i +1;
+       end
+
+    end
+
+    //Compteur_Formule
+    if ( found == True ) then
+
+     If ( GetStrGateValue("Compteur_Formule",i) == "*" || GetStrGateValue("Compteur_Formule",i) == "" ) Then Return "*"; End
+
+      If ( GetStrGateValue("Compteur_Formule",i) == "Reel" ) Then
+       Return "R";
+       Else
+       return "C";
+      End
+
+    End
+
+
+    //Compteur_Not found
+    Return "*";
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String InPutGates( String CompteurCode , String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+          While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CompteurCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+
+
+             Else
+             i = i +1;
+            End
+
+         End
+
+        if ( found == True ) then
+         //API = "SetNumGateValue("+CharToStr(34);
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+
+        Else
+        Return "*" ;
+        End
+end
+///////////////////////////////////////////////////////////////////////////////
+function String CompteurExist( String CompteurCode)
+Int CompteurMax;
+Int i;
+Bool Found = False;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    for i = 1 to CompteurMax do
+        if ( CompteurCode == GetStrGateValue("Compteur_Code",i)) then
+            Return GetStrGateValue("Compteur_Name",i);
+        end
+   end
+
+   IF ( Found == False ) Then
+    Return "*" ;
+   End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Compteur_ReelAlarme( String CodeCompteur , String Energy)
+    String FileListName;
+    String FullPathFileName;
+
+    String BUILD_FullPathFileName;
+    Int BUILD_FileHandle;
+
+    Int List_FileHandle;
+    Int PROG_FileHandle;
+    String INPUT_CODE;
+    String List;
+    String List_Ligne;
+    String IFLIGNE;
+    Int Pos;
+    String IR;
+    Int IRCounter = 0;
+
+
+    BUILD_FullPathFileName = ENV_PATH+"\BuildLOG.txt";
+    BUILD_FileHandle=FileOpen(BUILD_FullPathFileName,"at");
+
+    FileListName = ENV_PATH+"\Files\AllCompteur\Calcule\L_"+Energy+".txt";
+    List_FileHandle = FileOpen(FileListName,"rt");
+
+    If ( List_FileHandle == 0 ) Then
+       FileWriteLn(BUILD_FileHandle, "Calculatrice : Compteur_ReelAlarme  "+FileListName + "Doesn't exist");
+       FileClose(BUILD_FileHandle);
+       Return;
+    End
+
+   FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Compteur_ReelAlarme_V" +GetStrGateValue("version",0)+ ".wll";
+   PROG_FileHandle = FileOpen(FullPathFileName,"at");
+
+   INPUT_CODE = InPutGates(CodeCompteur,Energy);
+
+
+   While(FileEof(List_FileHandle)==0)//List File
+     List_Ligne = FileReadLn(List_FileHandle) ;
+
+     IF ( List_Ligne != "") Then
+       Pos = StrPos(List_Ligne,":");
+       IR = StrSubString(List_Ligne,1,Pos-1);
+
+       If ( Pos != 0 &&  IR == "IR") Then
+            If (IRCounter == 0) then
+               FileWriteLn(PROG_FileHandle,"////////////////////////////////////////////////////////////////////");
+               FileWriteLn(PROG_FileHandle,"  CompteurCode = " +CharToStr(34)+"A"+INPUT_CODE +CharToStr(34) +";");
+               FileWriteLn(PROG_FileHandle,"  NBR = 0;" );
+            End
+         List = StrDelete(List_Ligne,1,Pos);
+         IFLIGNE =  "if ( GetEvnGateValue( CompteurCode,"+  List  +") == True ) Then NBR = NBR +1 ; End"+Eol();
+         FileWriteLn(PROG_FileHandle,IFLIGNE);
+         IRCounter = IRCounter +1 ;
+
+       End//Pos !=0
+     End//ListLigne != ""
+
+   End// While
+
+    If (IRCounter > 0) then
+      IFLIGNE =  "SetNumGateValue("+CharToStr(34) + INPUT_CODE + CharToStr(34) + ",49,NBR);" ;
+      FileWriteLn(PROG_FileHandle,IFLIGNE);
+    End
+    FileClose(List_FileHandle);
+    FileClose(PROG_FileHandle);
+    FileClose(BUILD_FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Formula_STR_TO_FILE( String Ligne, String Compteur_Code, String Process)
+
+    String FullPathFileName;
+    Int FileHandle;
+
+    String Formula = Ligne;
+    String Search = "~";
+    String Part;
+    String NEXTPart;
+    Int Pos;
+    String Query;
+    int i = 0;
+    Int DIV_Counter = 0;
+    Int Open_Counter = 0;
+
+    Bool Fils_Flag = False;
+    Bool Open_Flag = False;
+    Bool WRITE_Flag = False;
+
+    FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+    FileHandle=FileOpen(FullPathFileName,"wt");
+
+    If ( Process == "Calculatrice") Then
+      FileWriteLn(FileHandle,Compteur_Code);
+      FileWriteLn(FileHandle,"=");
+    End
+    If ( Process == "ALARME") Then
+      Pos = StrPos(Formula,"=");
+      NEXTPart = StrSubString(Formula,1,Pos-1);
+      Formula = StrDelete(Formula,1,Pos);
+      FileWriteLn(FileHandle,NEXTPart);
+      FileWriteLn(FileHandle,"=");
+    End
+
+
+    Pos = StrPos(Formula,Search);
+
+    While( Pos !=  0 )
+      Part = StrSubString(Formula,1,Pos-1);
+
+
+        If ( Part == "F" ) Then
+
+           Formula = StrDelete(Formula,1,Pos);
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1);
+
+           IF (NEXTPart == "(") Then
+            Fils_Flag = True;
+           Else
+            Fils_Flag = False;
+           End
+
+        End
+
+        IF ( Fils_Flag == True ) Then
+
+            FileWriteLn(FileHandle,NEXTPart);
+
+           Formula = StrDelete(Formula,1,Pos);
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1); // parent Compteur dans le cas d' alarme avec sa list cc1$5 si nn parent compteur seul
+           Formula = StrDelete(Formula,1,Pos);
+
+           if ( Process == "ALARME" ) Then
+
+               Pos = StrPos(NEXTPart,"$");
+
+               Query = "*"+","+StrSubString(NEXTPart,1,Pos-1) +","+ "*"+","+"*"+","+"*"+"/"+"*"+"/"+"*";
+
+               i = AnalyseQuerryCompteur(Query,FileHandle,"Fils"+StrSubString(NEXTPart,Pos,StrLen(NEXTPart)) ,"");
+
+           Else // CAlculatrice
+            Query = "*"+","+NEXTPart +","+ "*"+","+"*"+","+"*"+"/"+"*"+"/"+"*";
+
+            i = AnalyseQuerryCompteur(Query,FileHandle,"Fils","");
+           End
+
+            If (i == 0) Then
+             //FileWriteLn(BUILD_FileHandle,"Error Calculatrice : Parse_Compteur("+Compteur+")  " + Code_Compteur + " Pas de fils trouvés Doesn't exist");
+              FileWriteLn(FileHandle,"#0");
+            End
+
+
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1);
+
+           //MessageBox(Formula,NEXTPart);
+
+           FileWriteLn(FileHandle,NEXTPart);
+
+           Fils_Flag = False;
+        Else
+
+            IF ( Part == "/" ) Then
+            DIV_Counter = DIV_Counter + 1;
+            //FileWriteLn(FileHandle,DIV_Counter +":");
+            WRITE_Flag = True;
+            End
+
+            If ( Part == "(" ) Then
+            Open_Counter = Open_Counter + 1;
+            End
+
+            If ( Part == ")" ) Then
+            Open_Counter = Open_Counter - 1;
+
+             IF ( DIV_Counter > 0 ) Then
+              DIV_Counter = DIV_Counter - 1;
+              //FileWriteLn(FileHandle,DIV_Counter +":");
+              WRITE_Flag = True;
+             End
+
+            End
+
+            If ( DIV_Counter > 0 && Open_Counter == 0 ) Then
+                IF ( Part == "+" || Part == "-" || Part == "*") Then
+                DIV_Counter = DIV_Counter - 1;
+                FileWriteLn(FileHandle,DIV_Counter +":");
+                WRITE_Flag = False;
+                End
+            End
+
+
+            FileWriteLn(FileHandle,Part);
+            IF ( WRITE_Flag == True ) Then
+             FileWriteLn(FileHandle,DIV_Counter +":");
+             WRITE_Flag = False;
+            End
+
+
+        End
+
+
+      Formula = StrDelete(Formula,1,Pos);
+      Pos = StrPos(Formula,Search);
+    End
+
+      IF ( DIV_Counter >= 1 ) Then
+        DIV_Counter = DIV_Counter - 1;
+        FileWriteLn(FileHandle,DIV_Counter +":");
+
+      End
+
+    FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Construct_IF_Part( int IFNumber, String IFCondition )
+    int i;
+    String Part;
+    Int Open_C;
+    Int Close_C;
+
+    Part = "";
+
+    For i = 1 to IFNumber do
+
+    Part =  Get_DIVGATES( i );
+
+     IF ( IFCondition == ")" ) Then
+        Open_C = Formule_Occurence_operateur(Part,"(");
+        Close_C = Formule_Occurence_operateur(Part,")");
+            If ( Open_C > Close_C ) Then
+            Part = Part + ")";
+            SET_DIV_Condition( Part , i );
+
+            End
+     Else
+
+        Part = Part + IFCondition;
+        SET_DIV_Condition( Part , i );
+     End
+
+    End
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Write_IF_Expression( int IFNumber, Int FileHandle, Int NestedFlag )
+
+    Int i;
+    Int Counter;
+    String WriteLigne;
+    String IFExpression = "IF (";
+    String ThenExpression =" == 0 ) Then Return; End";
+    String GateExpression;
+    Int Open_C = 0;
+    Int Close_C = 0;
+    Int Diff;
+
+    GateExpression = "";
+
+     GateExpression =  Get_DIVGATES( IFNumber );
+      //MessageBox(GateExpression,"GateExpression");
+      WriteLigne = IFExpression + GateExpression + ThenExpression;
+      FileWriteLn( FileHandle,CharToStr(9) + WriteLigne);
+      Reset_DIVGATES( IFNumber );
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Init_DIVGATES()
+    Int Max = 10;
+    Int i;
+    For i = 1 to Max do
+      //IF ( StrGateExists("Div_Condition",i) == True) Then
+        SetStrGateValue("Div_Condition_80",i,"");
+        SetStrGateValue("Div_Condition_160",i,"");
+        SetStrGateValue("Div_Condition_240",i,"");
+        SetStrGateValue("Div_Condition_320",i,"");
+        SetStrGateValue("Div_Condition_400",i,"");
+      //End
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Reset_DIVGATES( Int List )
+
+        SetStrGateValue("Div_Condition_80",List,"");
+        SetStrGateValue("Div_Condition_160",List,"");
+        SetStrGateValue("Div_Condition_240",List,"");
+        SetStrGateValue("Div_Condition_320",List,"");
+        SetStrGateValue("Div_Condition_400",List,"");
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Get_DIVGATES( Int List )
+    String Part;
+
+    Part = GetStrGateValue("Div_Condition_80",List) +
+           GetStrGateValue("Div_Condition_160",List) +
+           GetStrGateValue("Div_Condition_240",List) +
+           GetStrGateValue("Div_Condition_320",List) +
+           GetStrGateValue("Div_Condition_400",List) ;
+   Return Part;
+end
+///////////////////////////////////////////////////////////////////////////////
+Function int Formule_Occurence_operateur(String STR,String op)
+
+    int compteur = 0;
+    int i;
+    int L;
+
+    L=strlen(STR);
+
+    for i =1 to L do
+        if( StrSubString(STR,i,1)==op)then
+            compteur=compteur+1;
+        end
+    end
+
+    return compteur;
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function int SET_DIV_Condition( String Part , Int List )
+
+    Int Start;
+    Int i;
+    Int PartCount;
+    Int MaxLen = 80;
+    Int MaxPart = 5;
+    String GateName ;
+
+    PartCount = StrLen(Part) / MaxLen;
+
+    If ( Mod(StrLen(Part),MaxLen) > 0 ) Then PartCount = PartCount + 1; End
+
+    If (PartCount > MaxPart) Then Return -1;    End
+
+    For i = 1 to PartCount do
+     Start = (i-1) * MaxLen+1;
+     GateName = "Div_Condition_" + IntToStr( i*MaxLen );
+
+     SetStrGateValue( GateName , List , StrSubString(Part,Start,MaxLen) );
+
+    End
+
+    Return 1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Test_STRFILE()
+    Formula_STR_TO_FILE( "CC1~/~(~CC2~+~#5~)~+~CC4~/~(~CC5~+~(~CC6~/~CC7~)~+~CC5~)~+~CC8~/~CC9~" , "CC0", "Calculatrice");
+    Formule_Ligne( 0 , "CC0" , "1", "Electrique" );
+end
+
+

@@ -1,0 +1,4 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C112;Plumage Elec;Electrique;CC11;Abattoir Elec;4;S200;*;M219;STEG;*;Plumage;CC1I25;Process;*;*;Abattoir;*;*;CC1I25~;Plumeuse~;;;0;Plumage Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C114;Ressuage Elec;Electrique;CC11;Abattoir Elec;4;S200;*;M215;STEG;*;Ressuage;CC11D+CC1C6+CC1O4;Process;*;*;Abattoir;*;*;CC11D~+~CC1C6~+~CC1O4~;ventilo res 1+2~+~ventilo ress3 ~+~Chaine Ressuage~;;;0;Ressuage Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C117;Abattage Elec;Electrique;CC11;Abattoir Elec;4;S200;*;M213;STEG;*;Abattage;CC1I21;Process;*;*;Abattoir;*;*;CC1I21~;Abattage TR2~;;;0;Abattage Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C118;DECOUPE Elec;Electrique;CC11;Abattoir Elec;4;S200;*;M217;STEG;*;Decoupe;CC1I23+CC1K33;Process;*;*;Abattoir;*;*;CC1I23~+~CC1K33~;Decoupe~+~Pompe a Vide D~;;;0;DECOUPE Electrique;*

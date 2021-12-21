@@ -1,0 +1,385 @@
+
+Global String LISTTYPE;
+function void Bouton_Slector_ML()
+
+    // Display
+    LISTTYPE="ML";
+    EVM_LIST_FILE = REPORT_PATH_ML+"Lists\ML.CSV";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+
+    ShowPoPUPs( "Select_List_Measure_PBI" );
+
+end
+function void Bouton_Slector_CL()
+
+    // Display
+    LISTTYPE="CL";
+    EVM_LIST_FILE = REPORT_PATH_CL+"Lists\CL.CSV";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_List_Compteur_PBI" );
+
+end
+function void Bouton_Slector_ML_Add()
+
+    // Display
+    LISTTYPE="ML";
+    EVM_LIST_FILE = REPORT_PATH_ML+"Lists\ML.CSV";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+
+    ShowPoPUPs( "Select_List_Measure" );
+
+end
+function void Bouton_Slector_CL_Add()
+
+    // Display
+    LISTTYPE="CL";
+    EVM_LIST_FILE = REPORT_PATH_CL+"Lists\CL.CSV";
+    EVM_Max_Items = scanfile(EVM_LIST_FILE);
+    View_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPs( "Select_List_Compteur" );
+
+end
+////////////////////////////////////////////////
+
+function void ML_CL_SelectRow_1()
+String S;
+String C;
+    C = GetStrGateValue("EmailView1",0);
+    S = GetStrGateValue("EmailView1",1);
+    IF ( S != "" ) Then
+       If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+                               if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+      end
+
+    End
+end
+function void ML_CL_SelectRow_2()
+String S;
+String C;
+    C = GetStrGateValue("EmailView2",0);
+    S = GetStrGateValue("EmailView2",1);
+    IF ( S != "" ) Then
+         If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    End
+end
+function void ML_CL_SelectRow_3()
+String S;
+String C;
+    C = GetStrGateValue("EmailView3",0);
+    S = GetStrGateValue("EmailView3",1);
+    IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void ML_CL_SelectRow_4()
+String S;
+String C;
+    C = GetStrGateValue("EmailView4",0);
+    S = GetStrGateValue("EmailView4",1);
+    IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    End
+end
+
+function void ML_CL_SelectRow_5()
+String S;
+String C;
+    C = GetStrGateValue("EmailView5",0);
+    S = GetStrGateValue("EmailView5",1);
+    IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+    End
+                           if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+end
+function void ML_CL_SelectRow_6()
+String S;
+String C;
+    C = GetStrGateValue("EmailView6",0);
+    S = GetStrGateValue("EmailView6",1);
+     IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void ML_CL_SelectRow_7()
+String S;
+String C;
+    C = GetStrGateValue("EmailView7",0);
+    S = GetStrGateValue("EmailView7",1);
+    IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                               if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void ML_CL_SelectRow_8()
+String S;
+String C;
+    C = GetStrGateValue("EmailView8",0);
+    S = GetStrGateValue("EmailView8",1);
+      IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void ML_CL_SelectRow_9()
+String S;
+String C;
+    C = GetStrGateValue("EmailView9",0);
+    S = GetStrGateValue("EmailView9",1);
+    IF ( S != "" ) Then
+     If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+function void ML_CL_SelectRow_10()
+String S;
+String C;
+
+    C = GetStrGateValue("EmailView10",0);
+    S = GetStrGateValue("EmailView10",1);
+    IF ( S != "" ) Then
+      If(LISTTYPE=="ML")then
+            SetStrGateValue("AlarmeEventModifer",2,C);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,6);
+            Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,8);
+
+            TPageCloseByName("Select_List_Measure_PBI");
+      end
+       If( LISTTYPE=="CL") then
+            SetStrGateValue("AlarmeEventModifer",1,C);
+       Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,S,5);
+           Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,C,7);
+
+       TPageCloseByName("Select_List_Compteur_PBI");
+      end
+                       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+/////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function void CL_ML_Add()
+int  ReguliersTotalItems = EVM_Max_Items;
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+     PBI_Master_Display(CurrentPage);
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void CL_ML_Sub()
+int CurrentPage= GetNumGateValue("PageAllCommpteurView",0);
+bool Continue;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentPage);
+    PBI_Master_Display(CurrentPage );
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void CL_ML_First()
+bool Continue;
+
+     SetNumGateValue("PageAllCommpteurView",0,1);
+    PBI_Master_Display(1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void CL_ML_End()
+bool Continue;
+int ReguliersTotalItems = EVM_Max_Items;
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     SetNumGateValue("PageAllCommpteurView",0,MaxPage);
+     PBI_Master_Display(MaxPage);
+end

@@ -1,0 +1,1 @@
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CG05;Ecart D/C Gaz;Gaz;CG2;Dick Gaz;1;*;*;*;*;*;*;CG06-CG01;Site;*;*;VMZ;*;*;CG06~-~CG01~;VMZ Distrib Gaz~-~VMZ Conso Gaz~;;;0;Ecart Distribution/Consommation Gaz;*

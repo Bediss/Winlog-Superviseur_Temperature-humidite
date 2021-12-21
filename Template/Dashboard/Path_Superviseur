@@ -1,0 +1,155 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 0,110
+#Size: 1350,40
+#BkColor: 226,226,226
+#Gates: 4
+  #STR: AlarmeEventModifer,0
+  #STR: AlarmeEventModifer,1
+  #STR: AlarmeEventModifer,2
+  #STR: AlarmeEventModifer,3
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 27,5
+  #Size: 70,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,9,0000
+  #Label: Tableaux : 
+  #Align: 37
+  #Frame: 1
+  #Access: 32767
+  #NewOnClick: StartF,Bouton_Tableaux()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1064,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,9,0000
+  #Label: Périodicités :
+  #Align: 37
+  #Frame: 1
+  #Access: 32767
+  #NewOnClick: StartF,Bouton_View()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 869,5
+  #Size: 80,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,9,0000
+  #Label: Capteur :
+  #Align: 37
+  #Frame: 1
+  #Access: 32767
+  #NewOnClick: StartF,Bouton_Energy()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 649,5
+  #Size: 60,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,9,0000
+  #Label: Unités :
+  #Align: 37
+  #Frame: 1
+  #Access: 24576
+  #NewOnClick: StartF,Bouton_BU()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 92,5
+  #Size: 250,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,88,94
+  #Font: Gotham Book,9,0001
+  #Gate: 0
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Tableaux()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1154,5
+  #Size: 100,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,88,94
+  #Font: Gotham Book,9,0000
+  #Gate: 1
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_View()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 944,5
+  #Size: 120,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,88,94
+  #Font: Gotham Book,9,0000
+  #Gate: 2
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Energy()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 704,5
+  #Size: 166,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: 0,88,94
+  #Font: Gotham Book,9,0000
+  #Gate: 3
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_BU()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1258,5
+  #Size: 65,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,9,0000
+  #Label: Imprimer
+  #Align: 38
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Report()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1254,10
+  #Size: 1,20
+  #BkColor: clBlack
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,20,0001
+  #Label: |
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj

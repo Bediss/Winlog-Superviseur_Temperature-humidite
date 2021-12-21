@@ -1,0 +1,29 @@
+
+///// NOt used 2-9-2020
+
+function void PROCEDURE_DE_NUIT()
+//#Startup
+
+int Frequence = GetNumGateValue("ReportingListenF",0);
+    int live = GetDigGateValue("LiveReporting",0);
+    int STARTTIME_S = DateTimeToSeconds(GetDayOfMonth(),GetMonth(),GetYear(),GetHour(),GetMinute(),GetSecond());
+    int CURRENTTIME_S;
+    INT StartUPDATE;
+    int EndUPDATE;
+    int CURRENTTIME;
+    bool Go = false;
+    Frequence =30;
+
+ Sleep(60000);
+
+GET_SystemEvents();
+
+    while (WindowIsOpen())
+
+     ListenHistory();
+     Sleep(30000);
+     UpdateInPeriode("DAILY");
+
+      Sleep(900000);
+    end
+end

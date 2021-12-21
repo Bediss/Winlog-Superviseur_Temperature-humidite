@@ -1,0 +1,5 @@
+User_Master_Code;User_Master_Name;User_Master_Pseudo;Email_User_Master;SMS_User_Master;User_Tel;Fax_User_Master;Access_Groupe User;BU_Master;Fonction_Master;Password;remot access
+UM1;marouene;login;bizeyes@yandex.com;;;;16383;;;;1;;;;;;;;
+UM2;test1;test1;test1@email.com;55225522@sms.com;55225522;;;;;;1;;;;;;;;
+UM3;test2;test2;test2@email.com;test2@sms.com;test255225522;;16383;;;;1;;;;;;;;
+UM4;test3;test3;test3@email.com;test3@sms.com;test355225522;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

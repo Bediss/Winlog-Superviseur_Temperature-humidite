@@ -1,0 +1,7 @@
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC13;BER_Process;Humidite;CHC1G;Beurrerie;3;D64;*;D271;T軏  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC14;BER_Cond;Humidite;CHC1G;Beurrerie;3;D64;*;D272;T軏  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC1G;Beurrerie;Humidite;CHC1;2;*;*;D27;*;*;Beurrerie
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC13;BER_Process;Humidite;CHC1G;Beurrerie;3;D64;*;D271;T軏  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC14;BER_Cond;Humidite;CHC1G;Beurrerie;3;D64;*;D272;T軏  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC13;BER_Process;Humidite;CHC1G;Beurrerie;3;D64;*;D271;T軏  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC14;BER_Cond;Humidite;CHC1G;Beurrerie;3;D64;*;D272;T軏  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

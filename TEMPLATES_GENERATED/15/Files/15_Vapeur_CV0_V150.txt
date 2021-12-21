@@ -1,0 +1,6 @@
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V06;VMZ Distrib Vap;Vapeur;CV0;VMZ Vapeur;1;*;V100;*;*;VMZ;*;Reel;Site;*;*;VMZ;!~*;!~*;;;;;2;VMZ Distribution Vapeur;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V01;VMZ Conso Vap;Vapeur;CV0;VMZ Vapeur;1;*;*;V100;*;*;VMZ;F(CV01);Site;*;CPT0;VMZ;*;*;F~(~CV01~)~;F~(~VMZ Conso Vap~)~;;;0;VMZ Consommation Vapeur;VMZ Tonnage
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V02;VMZ Prod Vap;Vapeur;CV0;VMZ Vapeur;1;V100;*;*;VMZ;*;*;CV021;Site;*;*;VMZ;*;*;CV021~;Cogen Vapeur~;;;0;VMZ Production Vapeur;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V03;Ecart P/C Vap;Vapeur;CV0;VMZ Vapeur;1;*;*;*;*;*;*;CV02-CV01;Site;*;*;VMZ;*;*;CV02~-~CV01~;VMZ Prod Vap~-~VMZ Conso Vap~;;;0;Ecart Production/Consommation Vapeur;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V04;Ecart P/D Vap;Vapeur;CV0;VMZ Vapeur;1;*;*;*;*;*;*;CV02-CV06;Site;*;*;VMZ;*;*;CV02~-~CV06~;VMZ Prod Vap~-~VMZ Distrib Vap~;;;0;Ecart Production/Distribution Vapeur;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V05;Ecart D/C Vap;Vapeur;CV0;VMZ Vapeur;1;*;*;*;*;*;*;CV06-CV01;Site;*;*;VMZ;*;*;CV06~-~CV01~;VMZ Distrib Vap~-~VMZ Conso Vap~;;;0;Ecart Distribution/Consommation Vapeur;*

@@ -1,0 +1,1500 @@
+Function Void Button_MesureList()
+ int i;
+ String GATE;
+ if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+    Position=2;
+     LenPrefix=2;
+Confirme_Save();
+PageOpen="MesureList";
+
+SelectEnergy_ListMesure();
+SetNumGateValue("Show_Temp_Pointer",0,1073742336);
+    SetStrGateValue("AlarmeEventModifer",1,"");
+    SetStrGateValue("AlarmeEventModifer",2,"");
+    SetStrGateValue("AlarmeEventModifer",3,"");
+    SetStrGateValue("AlarmeEventModifer",4,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+      SetStrGateValue("AlarmeEventModifer",17,"");
+ SetNumGateValue("PageView",2,1);
+ SetNumGateValue("PageView",1,1);
+ Path_File= REPORT_PATH_ML;
+ Operateur=",";
+   Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+        Admin_View_Original_File=REPORT_PATH_ML+"Lists\ML.CSV";
+        Admin_View_Recycle_Code=REPORT_PATH_ML+"Lists\Recycler_ML_Code.txt";
+           FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+  Highest_Code_Initialisation(Admin_View_Original_File,Admin_View_Recycle_Code);
+
+        //Highest_Code2_Initialisation(Admin_View_Original_File,Admin_View_Recycle_Code);
+
+    for i = 1 to MaxRow do
+        GATE = "ROW"+i;
+        SetStrGateValue(GATE,1,"");
+        SetStrGateValue(GATE,0,"");
+        SetStrGateValue(GATE,2,"");
+        SetStrGateValue(GATE,3,"");
+     end
+       SetStrGateValue("AlarmeEventModifer",17,"");
+ //Display_C(1,"",1,"ROW",1,",");
+    SetNumGateValue("AdminTotalItems",2,0);
+     SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+GetStrGateValue("BU_Energy",0) );
+
+    SetNumGateValue("AdminTotalItems",1,EVM_Max_Items);
+
+ SelectEnergy_ListMesure();
+ ShowPage("MesureList");
+ FlagUses=False;
+
+End
+///////////
+
+function void Delete_MeasureList()
+   String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+ bool Exist=False;
+  bool Exist2=False;
+ String GATE;
+ int i;
+ bool QB;
+ bool A;
+
+    String FullPathFileName = REPORT_PATH_ML+NameFile+".txt";
+    String BackPath=REPORT_PATH_ML+"Lists\BackML.CSV";
+    String WPath=REPORT_PATH_ML+"Lists\WML.CSV";
+
+    int FileHandle=FileOpen(FullPathFileName,"rt");
+
+    FileClose(FileHandle);
+A = FileExist(FullPathFileName);
+
+        if (FileExist(FullPathFileName))then
+  Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","PBI.CSV",ENV_PATH + "\Files\DATAMODELFiles\Power BI\",NameFile,8,0);
+  sleep(500);
+
+   Exist2 = ExistingInFileWithPS( "C:\Winlog\PowerShell\","Reporting.CSV",ENV_PATH + "\Files\DATAMODELFiles\Rapport\",NameFile,17,0);
+
+   If Exist2 == True then
+        Exist=Exist2;
+   end
+    if Exist == False then
+            QB=QuestionBox("  Voulez-vous vraiment Supprimer La Measure List selectionner?","Attention:");
+    //MessageBox(QB,"QB");
+        if QB==True then
+        //MessageBox(FullPathFileName,"");
+             FileDelete(FullPathFileName);
+             Delete_File_Liste("MesureList",WPath,BackPath,NameFile);
+             SetStrGateValue("AlarmeEventModifer",2,"");
+             SetStrGateValue("AlarmeEventModifer",17,"La liste "+NameFile+" est supprimer avec succée");
+                   for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            //SetStrGateValue(GATE,0,"");
+            SetStrGateValue(GATE,1,"");
+                    end
+                 else return; end
+
+         else
+        SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer La liste "+NameFile);
+    end
+
+        end
+
+end
+
+////////
+Function Bool Verif_Exist_EVM(String EmailToAdd,String FullPathFileName)
+
+//String FullPathFileName;
+int FileHandle;
+bool Exist=False;
+String LEMAIL;
+String Email;
+String  NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+  //  FullPathFileName = "\Files\DATAMODELFiles\MailingList\";
+    FileHandle=FileOpen(FullPathFileName+NameFile,"rt");
+
+    if (FileHandle==0) then
+      MessageBox("Fichier "+FullPathFileName+NameFile+" n'existe Pas","Erreur Verif");  Return;
+    end
+     While ( FileEof( FileHandle ) == 0)
+
+     Email=FileReadLn(FileHandle);
+
+
+
+        if Email==EmailToAdd then Exist=True;end
+     End
+   FileClose(FileHandle);
+  // MessageBox(Exist,"Verif_Exist");
+   return Exist;
+
+End
+//////////////////////////////////////
+Function Void AddAllToListEVM()
+String EmailToAdd;
+String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+String NameFile_To=GetStrGateValue("AlarmeEventModifer",1);
+
+int FileHandle;
+bool Exist=False;
+int RFileHandle;
+String Email;
+int CurrentPage;
+String NEWTO;
+int TotalItem=0;
+String Master="Master Measure " + GetStrGateValue("BU_Energy",0);
+   TotalItem=GetNumGateValue("AdminTotalItems",2);
+ SetStrGateValue("AlarmeEventModifer",17,"");
+
+  if NameFile_To == "" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez une liste Source"); return; end
+  if NameFile_To == Master then SetStrGateValue("AlarmeEventModifer",17,"Tu ne peut pas ajoutez la Master List entiere"); return; end
+
+     if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+    EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+
+
+
+    if Exist==False || EmailToAdd !="" then
+         Confirme_Save=True;
+         RFileHandle=FileOpen(REPORT_PATH_ML+NameFile_To+".txt","rt");
+        //MessageBox(ENV_PATH+FullPathFileName+NameFile_To,"NameFile_To");
+          //MessageBox(ENV_PATH+FullPathFileName+NameFile,"NameFile");
+         FileHandle=FileOpen(REPORT_PATH_ML+NameFile+".txt","at");
+        if (RFileHandle==0) then
+                MessageBox("Fichier "+REPORT_PATH_ML+NameFile_To+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+        if (FileHandle==0) then
+                MessageBox("Fichier "+REPORT_PATH_ML+NameFile+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+
+         While ( FileEof( RFileHandle ) == 0)
+             EmailToAdd=FileReadLn(RFileHandle);
+             Exist=Verif_Exist_EVM(EmailToAdd,REPORT_PATH_ML);
+               //MessageBox(EmailToAdd,Exist);
+             if Exist==False then
+                FileWriteLn(FileHandle,EmailToAdd);
+                //MessageBox(EmailToAdd,TotalItem);
+
+                TotalItem=TotalItem+1;
+             end
+
+        end
+            SetNumGateValue("AdminTotalItems",2,TotalItem);
+            CurrentPage =  TotalItem/MaxRow;
+            //MessageBox(CurrentPage,"TotalItem "+TotalItem);
+            If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+            SetNumGateValue("PageView",2,CurrentPage);
+                FileClose(FileHandle);
+                  FileClose(RFileHandle);
+            Display_M(CurrentPage,REPORT_PATH_ML+NameFile+".txt",2,"ROW",1,",");
+
+         End
+
+
+//end
+End
+
+
+
+////////////////////////////////////////////////////////////////////
+function void SelectEnergy_ListMesure()
+    String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+    Energy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+    Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+end
+
+//////////////////////////////////////////
+Function void save_MesureList()
+
+String NameFile;
+String CLFullPathFileName;
+String WCLFullPathFileName;
+int CLFileHandle;
+int WCLFileHandle;
+String Code_ML;
+int privilege=0;
+String Ligne;
+bool Exist=False;
+String Path;
+int All=32767;
+int i=0;
+int j=0;
+Confirme_Save=False;
+  NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    if NameFile== "" then   SetStrGateValue("AlarmeEventModifer",17,"Selectionner ou crée une Liste pour l'Enregistrer");return ; end
+        if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+ //MessageBox(FlagUses,"FlagUses");
+if NameFile!= "" then
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    CLFullPathFileName=REPORT_PATH_ML+"Lists\ML.CSV";
+    CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+ //MessageBox(FlagUses,"FlagUses");
+     While ( FileEof( CLFileHandle ) == 0)
+        Ligne=FileReadLn(CLFileHandle);
+        i=i+1;
+
+            if Fetch_Email(Ligne,2,";") == NameFile then
+                Exist=True;
+                j=i;
+
+            end
+     end
+
+      FileClose(CLFileHandle);
+ //MessageBox(FlagUses,"FlagUses");
+    if Exist==False then
+        CLFileHandle=FileOpen(CLFullPathFileName,"at");
+
+        privilege=Calcul_Privilege(NameFile,REPORT_PATH_ML,All,4);
+         Code_ML=FetchCodeAdd(REPORT_PATH_ML+"Lists","ML");
+
+        FileWriteLn(CLFileHandle,Code_ML+";"+NameFile+";"+REPORT_PATH_ML+";"+privilege+";Compteur List");
+        FileClose(CLFileHandle);
+ //MessageBox(FlagUses,"FlagUses");
+       else
+ //MessageBox(FlagUses,"aaaaaFlagUses");
+             privilege=Calcul_Privilege(NameFile,REPORT_PATH_ML,All,4);
+
+        WCLFullPathFileName=REPORT_PATH_ML+"Lists\WML.CSV";
+        WCLFileHandle=FileOpen(WCLFullPathFileName,"wt");
+            CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+
+   i=0;
+   // MessageBox(FlagUses,"bbbbbFlagUses");
+          While ( FileEof( CLFileHandle ) == 0)
+                Ligne=FileReadLn(CLFileHandle);
+                i=i+1;
+
+                if i==j-1 then
+                      Ligne=FR_Formule(Ligne,privilege,4);
+                      FileWriteLn(WCLFileHandle,Ligne);
+
+                  else
+                                   if Ligne!="" then
+                    FileWriteLn(WCLFileHandle,Ligne);
+                   end
+
+                end
+          end
+          // MessageBox(FlagUses,"FlagUses");
+                      FileClose(WCLFileHandle);
+                       FileClose(CLFileHandle);
+                       SetStrGateValue("AlarmeEventModifer",17,"Enregistrement avec Succee");
+              FileCopy(WCLFullPathFileName,CLFullPathFileName,false);
+
+              FileDelete(WCLFullPathFileName);
+ //MessageBox(FlagUses,"FlagUses");
+    end
+ end
+ //MessageBox(FlagUses,"FlagUses");
+FlagUses=False;
+End
+//////////////////////////////////////
+///////
+Function Void Fill_Select_List_EVM_ADD()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     //MessageBox(pathNEWTO,"");
+     pathNEWTO = Path_Display_Popup+NEWTO+".txt";
+     SetNumGateValue("PageView",1,1);
+     LoadBouton_MailingList("ROW",0);
+     TotalItem=scanfile(pathNEWTO);
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+     Display_M(1,pathNEWTO,2,"ROW",0,",");
+
+    end
+End
+
+
+/////////////////////////////////////////////////////////////////
+Function Void Fill_Select_List_EVM()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+     NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_Display_Popup+NEWTO+".txt";
+
+     LoadBouton_MailingList("ROW",1);
+    SetNumGateValue("PageView",2,1);
+     TotalItem=scanfile(pathNEWTO);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+     Display_MA(1,pathNEWTO,2,"ROW",1,",");
+
+    end
+End
+
+function void Display_M(Int Page,String File,int Pos,String Gate, int List,String Sep)
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    String Part;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+         SetStrGateValue("AlarmeEventModifer",3,"");
+             SetStrGateValue("AlarmeEventModifer",4,"");
+           For i = 1 to 10 do
+              EVM = Gate+i;
+              SetStrGateValue(EVM,List,"");
+             // SetStrGateValue(EVM,2,"");
+             // SetStrGateValue(EVM,3,"");
+             // SetStrGateValue(EVM,4,"");
+           End
+
+    FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+        Return;
+    end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+
+    StartDisplay = Row_Start -1;
+     if GetStrGateValue("AlarmeEventModifer",1)=="User Master List"  then
+     StartDisplay=StartDisplay+1;
+     end
+
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Part=Fetch_Email(TextRow,Pos,Sep);
+              j = j+1;
+                EVM = Gate+j;
+                    // For Display
+                      SetStrGateValue(EVM,List,Part);
+
+                    //SetStrGateValue(EVM,4,Part);
+
+                //Part=Fetch_Email(TextRow,Pos+1,Sep);
+                //SetStrGateValue(EVM,2,Part);
+                //Part=Fetch_Email(TextRow,Pos+2,Sep);
+                Part=Fetch_Email(TextRow,Pos-1,Sep);
+                SetStrGateValue(EVM,3,Part);
+                        //MessageBox(TextRow, GetStrGateValue(EVM,3));
+                //MessageBox(TextRow,Pos);
+                //MessageBox(SetStrGateValue(EVM,2,Part),Page);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,Gate);
+      else
+        CleanEmptyRows(j+1,Gate);
+     end
+
+end
+
+function void Display_MA(Int Page,String File,int Pos,String Gate, int List,String Sep)
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    String Part;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+         SetStrGateValue("AlarmeEventModifer",3,"");
+             SetStrGateValue("AlarmeEventModifer",4,"");
+           For i = 1 to 10 do
+              EVM = Gate+i;
+              SetStrGateValue(EVM,List,"");
+              SetStrGateValue(EVM,2,"");
+              //SetStrGateValue(EVM,3,"");
+                 SetStrGateValue(EVM,4,"");
+           End
+
+    FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+        Return;
+    end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+
+    StartDisplay = Row_Start -1;
+     if GetStrGateValue("AlarmeEventModifer",1)=="User Master List"  then
+     StartDisplay=StartDisplay+1;
+     end
+
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Part=Fetch_Email(TextRow,Pos,Sep);
+              j = j+1;
+                EVM = Gate+j;
+                    // For Display
+                      SetStrGateValue(EVM,List,Part);
+
+                    //SetStrGateValue(EVM,4,Part);
+
+                SetStrGateValue(EVM,2,Fetch_Email(TextRow,Pos+1,Sep));
+                //Part=Fetch_Email(TextRow,Pos+2,Sep);
+                SetStrGateValue(EVM,4,Fetch_Email(TextRow,Pos-1,Sep));
+
+                       // MessageBox(TextRow, GetStrGateValue(EVM,4));
+                       //MessageBox(GetStrGateValue(EVM,1),"EVM,1");
+               // MessageBox(GetStrGateValue(EVM,2),"EVM,2");
+               // MessageBox(GetStrGateValue(EVM,4),"EVM,4");
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,Gate);
+      else
+        CleanEmptyRows(j+1,Gate);
+     end
+
+end
+///////////////////////////////
+Function Void Bouton_NewEVmList()
+SetStrGateValue("AlarmeEventModifer",20,"");
+    ShowPoPUPs("POPUP_NewListEVM");
+End
+
+//////////////////////////////////////////////////////////////////////////////
+Function Void NewListCreation_EVM()
+String NameFile;
+String FullPathFileName;
+bool Exist;
+
+int TotalItem;
+int FileHandle;
+
+
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",20);
+    NameFile=FR_Speciale_CHar(NameFile);
+    If (NameFile=="") then// MessageBox("Le nom de file est vide impossible de creer!!","Info");
+    SetStrGateValue("AlarmeEventModifer",17,"Le nom de file est vide impossible de creer!!");
+    return ;end
+
+    FullPathFileName = REPORT_PATH_ML+NameFile+".txt";
+   Exist=UniqueNameFile(FullPathFileName);
+     IF Exist== False then
+    SetStrGateValue("AlarmeEventModifer",2,NameFile);
+    FileHandle=FileOpen(FullPathFileName,"wt");
+
+
+     LoadBouton_MailingList("ROW",1);
+     TotalItem=scanfile(FullPathFileName);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+
+     Display_MA(1,FullPathFileName,Position,"ROW",1,",");
+     FileClose(FileHandle);
+        ShowPoPUPs("");
+      Confirme_Save=True;
+     end
+
+End
+///////////////////////////////////////////////////////////////////////
+Function Void Bouton_Selected_List_Mesure()
+
+    SetStrGateValue("PopUpList_Path",0,"");
+   // SetStrGateValue("PopUpList_Root",0,"\Files\Display_Templates\MesureList");
+    POPUPList_Extension = ".txt";
+     Path_Display_Popup=REPORT_PATH_ML;
+    PopupList_MaxPAGES();
+
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Mesure Liste");
+    ShowPoPUPs("PopUp_List");
+End
+
+Function Void Bouton_Select_List_Mesure()
+
+    SetStrGateValue("PopUpList_Path",0,"");
+    //SetStrGateValue("PopUpList_Root",0,"\Files\Display_Templates\MesureList");
+    POPUPList_Extension = ".txt";
+    Path_Display_Popup=REPORT_PATH_ML;
+    PopupList_MaxPAGES();
+
+    PopupList_Display(1);
+    SetStrGateValue("PopUpList_Path",0,"Measure_ADD");
+    ShowPoPUPs("PopUp_List");
+End
+
+
+///////////////////////////////////////////////////////////
+
+
+
+
+function void SelectRowEVM_1()
+String S;
+String L;
+    S = GetStrGateValue("ROW1",0);
+    L= GetStrGateValue("ROW1",3);
+        //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+          SetStrGateValue("AlarmeEventModifer",8,L);
+              //MessageBox(L,"L");
+       //MessageBox(S,"");
+       //AddToListEVM();
+
+    End
+end
+function void SelectRowEVM_2()
+String S;
+String L;
+    S = GetStrGateValue("ROW2",0);
+       L= GetStrGateValue("ROW2",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+      //  MessageBox(S,"");
+      // AddToListEVM();
+    End
+end
+function void SelectRowEVM_3()
+String S;
+String L;
+    S = GetStrGateValue("ROW3",0);
+       L= GetStrGateValue("ROW3",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+       // MessageBox(S,"");
+       // AddToListEVM();
+    End
+end
+function void SelectRowEVM_4()
+String S;
+String L;
+    S = GetStrGateValue("ROW4",0);
+       L= GetStrGateValue("ROW4",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+       // MessageBox(S,"");
+     //   AddToListEVM();
+    End
+end
+function void SelectRowEVM_5()
+String S;
+String L;
+    S = GetStrGateValue("ROW5",0);
+       L= GetStrGateValue("ROW5",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+      //  AddToListEVM();
+    End
+end
+function void SelectRowEVM_6()
+String S;
+String L;
+    S = GetStrGateValue("ROW6",0);
+       L= GetStrGateValue("ROW6",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+        //AddToListEVM();
+    End
+end
+function void SelectRowEVM_7()
+String S;
+String L;
+    S = GetStrGateValue("ROW7",0);
+       L= GetStrGateValue("ROW7",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+       // AddToListEVM();
+    End
+end
+function void SelectRowEVM_8()
+String S;
+String L;
+    S = GetStrGateValue("ROW8",0);
+       L= GetStrGateValue("ROW8",3);
+    //MessageBox(L,"L");
+    IF ( S != "" ) Then
+     SetStrGateValue("AlarmeEventModifer",3,S);
+       SetStrGateValue("AlarmeEventModifer",8,L);
+           //MessageBox(L,"L");
+      //AddToListEVM();
+    End
+end
+function void SelectRowEVM_9()
+String S;
+String L;
+    S = GetStrGateValue("ROW9",0);
+       L= GetStrGateValue("ROW9",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+         SetStrGateValue("AlarmeEventModifer",8,L);
+             //MessageBox(L,"L");
+      //  AddToListEVM();
+
+    End
+end
+function void SelectRowEVM_10()
+String S;
+String L;
+    S = GetStrGateValue("ROW10",0);
+       L= GetStrGateValue("ROW10",3);
+           //MessageBox(L,"L");
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",3,S);
+        SetStrGateValue("AlarmeEventModifer",8,L);
+            //MessageBox(L,"L");
+      // AddToListEVM();
+
+    End
+end
+
+
+//////////////////////////////////////////////////////////////////////////////
+Function Void AddToListEVM()
+
+String EVMToAdd;
+String NameFile;
+String FullPathFileName;
+int FileHandle;
+bool Exist=False;
+String EVM;
+int CurrentPage;
+int TotalItem=0;
+String Part1;
+String Part2;
+String Part3;
+int Privilege;
+int PrivilegeV;
+int PrivilegeE;
+String V;
+    int i;
+ SetStrGateValue("AlarmeEventModifer",17,"");
+         if GetStrGateValue("AlarmeEventModifer",2)=="" then //MessageBox("Selectionnez ou creez une liste","information");
+         SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste!!!");
+         return; end
+    EVMToAdd=GetStrGateValue("AlarmeEventModifer",3);
+
+  //MessageBox(EVMToAdd,"1");
+    //MessageBox(EVMToAdd,"");
+   Part1= GetStrGateValue("AlarmeEventModifer",8);
+    Part2=Fetch_Gateway(EVMToAdd,2,";");
+    Part3=GetStrGateValue("BU_Energy",0);
+    V=StrSubString(Fetch_BU(Part2,2,"~"),1,1);
+
+    for i =0 to GetNumGateValue("MaxView",1)-1 do
+        if GetStrGateValue("ReportViewNames",i) == V then
+            PrivilegeV=  GetNumGateValue("Access_Views",i);
+         end
+    end
+
+       for i =1 to GetNumGateValue("MaxEnergy",0) do
+        if GetStrGateValue("Energy_Name",i) == Part3 then
+            PrivilegeE=  GetNumGateValue("Energy_Acces",i);
+         end
+    end
+    Privilege=BitOr(PrivilegeE,PrivilegeV);
+     if Part2 != "" then
+    EVMToAdd=Part1+","+Part2+","+Part3+","+Privilege;
+    end
+   // MessageBox(EVMToAdd,"EVMToAdd");
+        NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+
+
+
+  //MessageBox(EVMToAdd,"");
+    FileHandle=FileOpen(REPORT_PATH_ML+NameFile,"rt");
+     While ( FileEof( FileHandle ) == 0)
+        EVM=FileReadLn(FileHandle);
+
+//MessageBox(EVMToAdd,"1");
+        if EVM==EVMToAdd then Exist=True;// MessageBox(EVM + " deja exist","Info");
+          SetStrGateValue("AlarmeEventModifer",17,"Mesure Existe deja"); EVMToAdd="" ;  return; end
+     End
+   // MessageBox(Exist,"");
+
+    FileClose(FileHandle);
+
+    if Exist==False && EVMToAdd !="" then
+     Confirme_Save=True;
+    FileHandle=FileOpen(REPORT_PATH_ML+NameFile,"at");
+
+        FileWriteLn(FileHandle,EVMToAdd);
+         //MessageBox(EVMToAdd,"2");
+
+        TotalItem=GetNumGateValue("AdminTotalItems",2);
+
+        TotalItem=TotalItem+1;
+        SetNumGateValue("AdminTotalItems",2,TotalItem);
+        CurrentPage =  TotalItem/MaxRow;
+        If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+        SetNumGateValue("PageView",2,CurrentPage);
+        FileClose(FileHandle);
+         Display_MA(CurrentPage,REPORT_PATH_ML+NameFile,2,"ROW",1,",");
+      End
+
+
+End
+
+
+
+
+////////////////////////////////////////////
+function int Delete_M( String Path, String File, String Code,String Energie, Int Pos,String Sep)
+
+    string  FullPathFileName =  Path + File;
+    int     FileHandle;
+    string  WFullPathFileName = Path + "W" + File;
+    int     WFileHandle;
+    String  BackFullPathFileName =  Path + "Back_" + File;
+    String  Line ;
+    String SearchCode;
+    int WCount = 0;
+    Int TotReport = 0;
+    String CLine;
+    String ELine;
+    Int DELETED_Count = 0;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+        //FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+      MessageBox("Fichier "+FullPathFileName+" n'existe Pas","Erreur");  Return;
+    end
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+            //FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+      MessageBox("Fichier "+WFullPathFileName+" n'existe Pas","Erreur");  Return;
+    end
+
+
+    While ( FileEof( FileHandle ) == 0  )
+
+      Line = FileReadLn( FileHandle );
+      //MessageBox(Line,Code);
+      CLine=Fetch_User_Master(Line,2, ",");
+      ELine=Fetch_User_Master(Line,3, ",");
+        // MessageBox(Code+"_"+CLine,Energie+"_"+ELine);
+      TotReport = TotReport+1;
+      IF ( CLine != Code ) || (ELine != Energie) Then
+        FileWriteLn(WFileHandle,Line);
+        WCount = WCount+1;
+      End
+
+    End
+
+    FileClose( FileHandle );
+    FileClose( WFileHandle );
+
+
+    If (FileExist(BackFullPathFileName)) then   FileDelete(BackFullPathFileName);   End
+
+    Filecopy(FullPathFileName,BackFullPathFileName,False);
+    Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+     FileDelete(BackFullPathFileName);
+    DELETED_Count = TotReport - WCount;
+
+    Return DELETED_Count ;
+
+end
+Function Void DeleteFromListEVM()
+
+String EmailToDelete;
+String NameFile;
+int TotalItem;
+String FullPathFileName;
+int CurrentPage;
+String Energie;
+//MessageBox(NameFile,GetStrGateValue("AlarmeEventModifer",2));
+    EmailToDelete=GetStrGateValue("AlarmeEventModifer",5);
+    //MessageBox(NameFile,GetStrGateValue("AlarmeEventModifer",2));
+    NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+     if GetStrGateValue("AlarmeEventModifer",2) == "" then SetStrGateValue("AlarmeEventModifer",17,"Il faut selectionnez une fichier ou le cree avant"); return; end
+
+    Energie=GetStrGateValue("AlarmeEventModifer",6);
+
+    Delete_M(REPORT_PATH_ML,NameFile,EmailToDelete,Energie,2,",");
+
+
+    TotalItem=scanfile(REPORT_PATH_ML+NameFile);
+
+    SetNumGateValue("AdminTotalItems",2,TotalItem);
+
+    CurrentPage =  TotalItem/MaxRow;
+
+    If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+    SetNumGateValue("PageView",2,CurrentPage);
+
+    Display_MA(CurrentPage,REPORT_PATH_ML+NameFile,2,"ROW",1,",");
+         Confirme_Save=True;
+
+End
+/////////////////////////////////////////////////////////////
+function void SelectedRowEVM_1()
+String S;
+String E;
+String L;
+   L = GetStrGateValue("ROW1",4);
+    S = GetStrGateValue("ROW1",1);
+    E = GetStrGateValue("ROW1",2);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",5,S);
+         SetStrGateValue("AlarmeEventModifer",6,E);
+
+
+
+       //DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_2()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW2",3);
+      E = GetStrGateValue("ROW2",2);
+    S = GetStrGateValue("ROW2",1);
+
+    IF ( S != "" ) Then
+       //SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+           SetStrGateValue("AlarmeEventModifer",5,S);
+           SetStrGateValue("AlarmeEventModifer",6,E);
+      // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_3()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW3",3);
+      E = GetStrGateValue("ROW3",2);
+    S = GetStrGateValue("ROW3",1);
+    IF ( S != "" ) Then
+       //SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+           SetStrGateValue("AlarmeEventModifer",5,S);
+                    SetStrGateValue("AlarmeEventModifer",6,E);
+      // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_4()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW4",3);
+      E = GetStrGateValue("ROW4",2);
+    S = GetStrGateValue("ROW4",1);
+    IF ( S != "" ) Then
+       //SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+           SetStrGateValue("AlarmeEventModifer",5,S);
+                    SetStrGateValue("AlarmeEventModifer",6,E);
+     // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_5()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW5",3);
+      E = GetStrGateValue("ROW5",2);
+    S = GetStrGateValue("ROW5",1);
+    IF ( S != "" ) Then
+      // SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+          SetStrGateValue("AlarmeEventModifer",5,S);
+                   SetStrGateValue("AlarmeEventModifer",6,E);
+      // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_6()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW6",3);
+      E = GetStrGateValue("ROW6",2);
+    S = GetStrGateValue("ROW6",1);
+    IF ( S != "" ) Then
+       //SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+           SetStrGateValue("AlarmeEventModifer",5,S);
+                    SetStrGateValue("AlarmeEventModifer",6,E);
+      // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_7()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW7",3);
+      E = GetStrGateValue("ROW7",2);
+    S = GetStrGateValue("ROW7",1);
+    IF ( S != "" ) Then
+      // SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+          SetStrGateValue("AlarmeEventModifer",5,S);
+                   SetStrGateValue("AlarmeEventModifer",6,E);
+       //DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_8()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW8",3);
+      E = GetStrGateValue("ROW8",2);
+    S = GetStrGateValue("ROW8",1);
+    IF ( S != "" ) Then
+   //  SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+       SetStrGateValue("AlarmeEventModifer",5,S);
+                SetStrGateValue("AlarmeEventModifer",6,E);
+    // DeleteFromListEVM();
+    End
+end
+function void SelectedRowEVM_9()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW9",3);
+      E = GetStrGateValue("ROW9",2);
+    S = GetStrGateValue("ROW9",1);
+    IF ( S != "" ) Then
+      // SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+          SetStrGateValue("AlarmeEventModifer",5,S);
+                   SetStrGateValue("AlarmeEventModifer",6,E);
+      // DeleteFromListEVM();
+
+    End
+end
+function void SelectedRowEVM_10()
+String S;
+String E;
+String L;
+    L = GetStrGateValue("ROW10",3);
+      E = GetStrGateValue("ROW10",2);
+    S = GetStrGateValue("ROW10",1);
+    IF ( S != "" ) Then
+     // SetStrGateValue("AlarmeEventModifer",5,E+","+S+","+L);
+         SetStrGateValue("AlarmeEventModifer",5,S);
+                  SetStrGateValue("AlarmeEventModifer",6,E);
+   // DeleteFromListEVM();
+
+    End
+end
+
+/////////////////////////////////////
+function void MeasureListSelectedAdd()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",2);
+
+int MaxPage ;
+int CurrentPage = GetNumGateValue("PageView",2);
+bool Continue;
+String NEWTO;
+String pathNEWTO;
+String FileName;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+
+     SetNumGateValue("PageView",2,CurrentPage);
+
+             NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+          //MessageBox(pathNEWTO,CurrentPage);
+     Display_MA(CurrentPage,pathNEWTO,Position,"ROW",1,Operateur);
+        end
+end
+//////////////////////////////////////////////////////////////////////////////
+function void MeasureListSelectedSub()
+int CurrentPage= GetNumGateValue("PageView",2);
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+
+     SetNumGateValue("PageView",2,CurrentPage);
+             NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+         Display_MA(CurrentPage,pathNEWTO,Position,"ROW",1,Operateur);
+        // MessageBox(CurrentPage,"");
+             end
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void MeasureListSelectedFirst()
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     SetNumGateValue("PageView",2,1);
+           NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+     Display_MA(1,pathNEWTO,Position,"ROW",1,Operateur);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void MeasureListSelectedEnd()
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",2);
+int MaxPage =  ReguliersTotalItems/MaxRow+1;
+
+String FileName;
+String NEWTO;
+String pathNEWTO;
+//MessageBox(ReguliersTotalItems,MaxPage);
+     SetNumGateValue("PageView",2,MaxPage);
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+      Display_MA(MaxPage,pathNEWTO,Position,"ROW",1,Operateur);
+end
+//////////////////////////////
+function void ViewVMAdd()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+int CurrentPage = GetNumGateValue("PageView",1);
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+int List=1;
+int MaxPage =  ReguliersTotalItems/MaxRow;
+
+          If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageView",1,CurrentPage);
+      NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+        if NEWTO=="Master Measure "+GetStrGateValue("BU_Energy",0) then
+     pathNEWTO = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+       Display_M(CurrentPage,pathNEWTO,2,"ROW",0,";");
+    else
+     pathNEWTO = Path_File+NEWTO+".txt";
+       Display_M(CurrentPage,pathNEWTO,2,"ROW",0,",");
+     end
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewVMSub()
+int CurrentPage= GetNumGateValue("PageView",1);
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageView",1,CurrentPage);
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+             if NEWTO=="Master Measure "+GetStrGateValue("BU_Energy",0) then
+     pathNEWTO = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+     Display_M(CurrentPage,pathNEWTO,2,"ROW",0,";");
+    else
+     pathNEWTO = Path_File+NEWTO+".txt";
+       Display_M(CurrentPage,pathNEWTO,2,"ROW",0,",");
+     end
+
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewVMFirst()
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+int List=1;
+
+     SetNumGateValue("PageView",1,1);
+
+      NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+             if NEWTO=="Master Measure "+GetStrGateValue("BU_Energy",0) then
+     pathNEWTO = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+     Display_M(1,pathNEWTO,2,"ROW",0,";");
+    else
+     pathNEWTO = Path_File+NEWTO+".txt";
+     Display_M(1,pathNEWTO,2,"ROW",0,",");
+     end
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewVMEnd()
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+int MaxPage =  ReguliersTotalItems/MaxRow;
+//MessageBox(MaxPage,ReguliersTotalItems);
+          If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+String NEWTO;
+String pathNEWTO;
+String FileName;
+int List=1;
+
+     SetNumGateValue("PageView",1,MaxPage);
+         NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+             if NEWTO=="Master Measure "+GetStrGateValue("BU_Energy",0) then
+     pathNEWTO = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+      Display_M(MaxPage,pathNEWTO,2,"ROW",0,";");
+    else
+     pathNEWTO = Path_File+NEWTO+".txt";
+     Display_M(MaxPage,pathNEWTO,2,"ROW",0,",");
+     end
+
+
+end
+////////////////////////////
+
+
+
+////////////////////////////
+function Void Measure_Energy_POPUP()
+    // Display
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    //MessageBox(EVM_Max_Items,"EVM_Max_Items");
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    SetNumGateValue("PageView",1,1);
+    ShowPoPUPs("Select_ENERGY_Measure");
+
+End
+////////////////////////////
+
+function void Energy_ListEVM_SelectRow_1()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+    int TotalItem;
+
+
+    Energy = GetStrGateValue("EmailView1",0);
+     //SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+        if Energy=="" then return; end
+
+ SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+         EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+     TotalItem=scanfile(EVM_LIST_FILE);
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+    Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+function void Energy_ListEVM_SelectRow_2()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+    int TotalItem;
+
+    Energy = GetStrGateValue("EmailView2",0);
+
+
+
+        if Energy=="" then return; end
+ SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+          EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+     EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+  TotalItem=scanfile(EVM_LIST_FILE);
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+   Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_3()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+
+    Energy = GetStrGateValue("EmailView3",0);
+
+
+        if Energy=="" then return; end
+
+ SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+          EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+   Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_4()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView4",0);
+       //SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+        if Energy=="" then return; end
+ SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_5()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView5",0);
+
+
+        if Energy=="" then return; end
+ SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_6()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView6",0);
+
+
+    if Energy=="" then return; end
+
+    SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+          EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_7()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+  Energy = GetStrGateValue("EmailView7",0);
+
+
+        if Energy=="" then return; end
+         SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_8()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView8",0);
+    //   SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+        if Energy=="" then return; end
+
+          SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_9()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView9",0);
+
+
+        if Energy=="" then return; end
+          SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end
+
+function void Energy_ListEVM_SelectRow_10()
+   String PDV;
+    string Energy;
+    String Query;
+    String Ligne;
+    String PostCode;
+    int i;
+    String EVMLigne;
+
+
+    Energy = GetStrGateValue("EmailView10",0);
+
+    if Energy=="" then return; end
+   SetStrGateValue("AlarmeEventModifer",1,"Master Measure "+Energy);
+
+       EVMLigne = GET_EVM_Ligne( Energy );
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+    EVM_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+ Display_M(1,EVM_LIST_FILE,2,"ROW",0,";");
+
+
+end

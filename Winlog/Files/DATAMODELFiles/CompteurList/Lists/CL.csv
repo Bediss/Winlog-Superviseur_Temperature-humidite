@@ -1,0 +1,10 @@
+CompteurList_Code;CompteurListI_Name;Path_List;Groupe_Acess;Description
+CL1;production ;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;32767;Compteur List
+CL2;PRODUCTION TEMPERATURE;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;32767;Compteur List
+CL3;CH F COMMERCIALE;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;32767;Compteur List
+CL4;QUERY PROD PARENT T;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List
+CL5;QUERY PROD H  TYPE;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List
+CL6;QUERY PROD CAPTEUR H ;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List
+CL7;QUERY PROD FILS T;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List
+CL8;QUERY FILS SALLE DE FERMITURE T;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List
+CL9;QUERY FILS SALLE DE FERMITURE;C:\ProgramData\Winlog Pro 3\Projects\RealTimeMonitoring_CLC_V150\Winlog\Files\DATAMODELFiles\CompteurList\;0;Compteur List

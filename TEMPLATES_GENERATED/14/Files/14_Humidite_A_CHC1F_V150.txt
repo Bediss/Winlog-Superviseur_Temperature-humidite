@@ -1,0 +1,7 @@
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC11;Galdi_A&B;Humidite;CHC1F;Galdi;3;D64;*;D261;T軏  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC12;Galdi_C;Humidite;CHC1F;Galdi;3;D64;*;D262;T軏  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC1F;Galdi;Humidite;CHC1;2;*;*;D26;*;*;Galdi
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC11;Galdi_A&B;Humidite;CHC1F;Galdi;3;D64;*;D261;T軏  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC12;Galdi_C;Humidite;CHC1F;Galdi;3;D64;*;D262;T軏  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC11;Galdi_A&B;Humidite;CHC1F;Galdi;3;D64;*;D261;T軏  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~A#7;<HR%>~A#3;HR%max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;低HC12;Galdi_C;Humidite;CHC1F;Galdi;3;D64;*;D262;T軏  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

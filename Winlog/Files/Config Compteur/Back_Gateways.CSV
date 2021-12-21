@@ -1,0 +1,7 @@
+Gateway Id;Gateway Name;Adresse IP;COMsType;Emplacement;Post Code;Nomber Port;;P1;P2;P3;P4;P5;P6;P7;P8;P9;P10;P11;P12;P13;P14;P15;P16
+R4;digital to RTU dans production;192.168.2.23;R;Production;D2;15;10;80:5101;80:5102;80:5103;80:5104;80:5105;80:5106;80:5107;80:5108;80:5109;80:5110;80:5111;*
+R5;Analogue to TRU dans Lab Physicochimique;192.168.3.3;R;LAB_PhysicoChimique;D42;15;15;80:5000;80:5001;80:5002;80:5003;80:5004;80:5005;80:5006;80:5007;80:5008;80:5009;80:5010;*
+A6;Digital to Analogue dans Salle de fermontation;192.168.3.12;A;Salle_De_Fermentation;D5;9;9;80:5020;80:5021;80:5022;80:5023;80:5024;80:5025;80:5026;80:5027;80:5028;*;*;*
+R14;digital to RTU dans clc;192.168.3.23;R;CLC;D1;12;12;80:5110;80:5111;80:5112;80:5113;80:5114;80:5115;80:5116;80:5117;80:5118;80:5119;80:5120;*
+A16;Digital to Analogue dans Salle de fermontation;192.168.3.12;A;Salle_De_Fermentation;D5;9;9;80:5020;80:5021;80:5022;80:5023;80:5024;80:5025;80:5026;80:5027;80:5028;*;*;*
+R15;Digital to RTU dans Production;192.168.4.12;R;Production;D2;5;12;80:5021;80:5022;80:5023;80:5024;80:5025;*;*;*;*;*;*;*

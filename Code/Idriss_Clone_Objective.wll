@@ -1,0 +1,520 @@
+///////////////////////////////////////////////////////////////////////////////
+Function Void CloneObjective()
+
+String RFullPathFileName;
+String ToClounFullPathFileName;
+String ClounedFullPathFileName;
+String TempFullPathFileName;
+int RFileHandle;
+int ToClounFileHandle;
+int ClounedFileHandle;
+int TempFileHandle;
+String LevelFullPathFileName;
+int LevelFileHandle;
+int KOP;
+int Pos;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String PCD="";
+String PCC="";
+String Energy;
+String FileCloned;
+bool Exist;
+int i;
+int Sp;
+int K;
+
+   CCode=Fetch_Alarm_search(Admin_View_CurrentLine,1,";");
+   Energy=Fetch_Alarm_search(Admin_View_CurrentLine,3,";");
+
+        int f;
+          if CCode=="" then MessageBox("Selectionnez un Compteur pour cloner l'objective SVP","info"); return ; end
+            FileCloned  = ENV_PATH+"\Data\Objective\"+Energy+"\"+CCode+"_Ob.txt";
+
+    Exist=FileExist(FileCloned);
+    //MessageBox(FileCloned,Exist);
+    if Exist== False then MessageBox("Il faut ajouter les objectives du compteur a cloner avant","Info"); return ;end
+        for i =1 to do
+            SetDigGateValue("QuerrySelect",f,0);
+            end
+
+
+
+
+
+
+
+
+    //Query Variable
+
+     Pos=GET_COMPTEUR(CCode);
+
+
+   //MessageBox(Pos,"");
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);//Code level
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+    //Query Display
+    CName=GetStrGateValue("Compteur_Name",Pos);
+    SetStrGateValue("ROW0",1,CName);//Compteur Name
+           Sp=StrToInt(CCodeL);
+
+        LevelFullPathFileName = ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+
+    LevelFileHandle=FileOpen(LevelFullPathFileName,"rt");
+
+     if ( LevelFileHandle == 0 ) then MessageBox(LevelFullPathFileName," File Note found");return ; end
+
+
+            FileReadLn(LevelFileHandle);
+
+            for i =0 to Sp do
+
+
+                Ligne=FileReadLn(LevelFileHandle);
+
+                LName=Fetch_Alarm_search(Ligne,2,";");
+
+            end
+             FileClose(LevelFileHandle);
+
+            SetStrGateValue("ROW0",2,LName);
+
+
+        K=GET_COMPTEUR(CParent);
+  If K==0 then  MessageBox("Ce compteur n'a pas d'objectif. Veuillez créer un objectif à partir duquel vous pouvez en cloner d'autres!","info"); return; end
+
+
+        CParentN=GetStrGateValue("Compteur_Name",K);
+
+    SetStrGateValue("ROW0",3,CParentN);//Compteur Parent name
+
+    SetStrGateValue("ROW0",4,CCodeE);//Compteur energy
+    PCP=GetStrGateValue("Compteur_NameP",Pos);
+    SetStrGateValue("ROW0",5,PCP);//Post Code Production
+    PCD=GetStrGateValue("Compteur_NameD",Pos);
+    SetStrGateValue("ROW0",6,PCD);//Post Code Distribution
+    PCC=GetStrGateValue("Compteur_NameC",Pos);
+    SetStrGateValue("ROW0",7,PCC);//Post Code Consommation
+    ShowPoPUPs("POPUPQuery_Clone_Objective");
+
+
+     //FileClose(TempFileHandle);
+
+
+End
+
+///////////////////////////////////////////////////////////////////////////////
+
+Function Void CheckQueryObjective()
+
+String ToClounFullPathFileName;
+int ToClounFileHandle;
+String CCode="";
+String CParent="";
+String CCodeE="";
+String CCodeD="";
+String CCodeC="";
+String CCodeP="";
+String CCodeL="";
+String Ligne="";
+String Query="";
+String CName="";
+String CParentN="";
+String PCP="";
+String LName="";
+String CodePos="";
+String Code="";
+bool Exist;
+String Energy;
+String FileCloned;
+
+int KOP;
+int Pos;
+   if GetDigGateValue("QuerrySelect",0)==0 && GetDigGateValue("QuerrySelect",1) == 0 && GetDigGateValue("QuerrySelect",2)== 0 && GetDigGateValue("QuerrySelect",3)== 0 && GetDigGateValue("QuerrySelect",4)== 0 && GetDigGateValue("QuerrySelect",5)== 0 && GetDigGateValue("QuerrySelect",6)== 0 then
+            MessageBox("Pour Cloner il faut selectionner au moin un seul filtre ","Info");return; end
+   Code=Fetch_Alarm_search(Admin_View_CurrentLine,1,";");
+   Energy=Fetch_Alarm_search(Admin_View_CurrentLine,3,";");
+
+    if Code=="" THEN MessageBox("Selectionnez un Compteur pour cloner l'objective SVP","info");end
+    ToClounFullPathFileName = ENV_PATH+"\Files\AllCompteur\TOCloneOBJList.txt";
+    ToClounFileHandle=FileOpen(ToClounFullPathFileName,"wt");
+
+     if ( ToClounFileHandle == 0 ) then MessageBox(ToClounFullPathFileName," File Note found");return ; end
+    Pos=GET_COMPTEUR(Code);
+    CCodeL=GetStrGateValue("Compteur_Level",Pos);//Code level
+    CParent=GetStrGateValue("Compteur_Parent",Pos);//Compteur Parent
+    CCodeE=GetStrGateValue("Compteur_Energy",Pos);//Energy
+    CCodeP=GetStrGateValue("Compteur_PCP",Pos);//Code Compteur_PCP
+    CCodeD=GetStrGateValue("Compteur_PCD",Pos);//Code Compteur_PCD
+    CCodeC=GetStrGateValue("Compteur_PCC",Pos);//Code Compteur_PCC
+
+  if GetDigGateValue("QuerrySelect",0)==0 then
+       CCode="*";
+       else
+
+       CParent=Code;
+
+    end
+     if GetDigGateValue("QuerrySelect",1)==0 then
+       CCodeL="*";
+    end
+     if GetDigGateValue("QuerrySelect",0)==0 && GetDigGateValue("QuerrySelect",2)==0 then
+       CParent="*";
+
+    end
+     if GetDigGateValue("QuerrySelect",3)==0 then
+       CCodeE="*";
+    end
+     if GetDigGateValue("QuerrySelect",4)==0 then
+       CCodeP="*";
+    end
+     if GetDigGateValue("QuerrySelect",5)==0 then
+       CCodeD="*";
+    end
+     if GetDigGateValue("QuerrySelect",6)==0 then
+       CCodeC="*";
+    end
+
+
+    Query=ConstractQuerry(CCodeE,CParent,CCodeL,"*",CCodeP+"/"+CCodeD+"/"+CCodeC);
+
+
+    KOP=OBjAnalyseQuerryCompteur(Query, ToClounFileHandle ,"TVE","",Energy);
+
+
+        FileClose(ToClounFileHandle);
+
+    AddClonedObj(KOP,Code,Energy);
+
+    end
+
+
+Function void AddClonedObj(int KOP,String CCode,String Energy)
+
+
+String ToClounFullPathFileName;
+String FileCloned;
+String Ligne;
+String NewEnergy;
+String NewCode;
+String NewFileCloned;
+String LigneC;
+int ClounedFileHandle;
+int ToClounFileHandle;
+String NameCmp;
+String Code;
+String Part;
+String Cloned="";
+int i;
+int j=0;
+
+
+    ToClounFullPathFileName = ENV_PATH+"\Files\AllCompteur\TOCloneOBJList.txt";
+    ToClounFileHandle=FileOpen(ToClounFullPathFileName,"rt");
+
+        FileCloned = ENV_PATH+"\Data\Objective\"+Energy+"\"+CCode+"_Ob.txt";
+    If ( ToClounFileHandle == 0 ) Then MessageBox(ToClounFullPathFileName,"File Not Found "); Return ; End
+
+        for i = 1 to KOP do
+            Ligne =FileReadLn(ToClounFileHandle);
+
+            if (Ligne != "" ) then
+           //  MessageBox(Ligne,"ok");
+                NewEnergy=Fetch_Formule(Ligne,3,",");
+                NameCmp=Fetch_Formule(Ligne,2,",");
+                NewCode=Fetch_Formule(Ligne,1,",");
+    //MessageBox(NameCmp,NewCode+"_"+NewEnergy);
+                if NewEnergy == Energy then
+                //MessageBox(NewEnergy,"ok");
+                j=j+1;
+                    Cloned=Cloned+Eol()+NameCmp ;
+                    NewFileCloned= ENV_PATH+"\Data\Objective\"+NewEnergy+"\"+NewCode+"_Ob.txt";
+                  //  MessageBox(j + "Objective Compteur Clonner est ","info ");
+
+                   // if FileExist(NewFileCloned)!= True then
+
+                        FileCopy(FileCloned,NewFileCloned,False);
+                         intial_Gates_Obj( NewCode+"_Ob.txt", NewEnergy);
+                       // MessageBox(FileCloned+"_"+NewFileCloned,"ok5");
+                       // MessageBox(j + "Objective Compteur Clonner est "+Cloned,"info ");
+                   // end
+                end
+            end
+        end
+    MessageBox(j + " clones ont été créés avec succès "+Eol()+"Voir la liste détaillée ci-dessous " +Cloned,"Information");
+
+    FileClose(ToClounFileHandle);
+
+End
+
+/***************************************************************************/
+function int OBjAnalyseQuerryCompteur( string CompteurQuery, int FileHandle , String From , String HeaderLigne_BU,String Energy)
+   int P;   int i;     int nb_Compteur = 0;
+   String LIST_NUMBER ="";
+   BOOL FILS_Flag;
+
+   string CnString;
+    bool CompteurFound = false;
+   string V;
+   string PCP;  string PCD; string PCC;
+   string NameCompteur;
+   CompteurMax = GetNumGateValue("MaxCompteur",0);
+   bool E_OK = true;    bool Cp_OK = true;   bool Cl_OK = true;
+   bool Cpc_OK = true;  bool PCD_OK = true;  bool PCC_OK = true; bool PCP_OK = true;
+   bool Cn_OK = true;
+   Bool Q_Result = False;
+
+   IF ( From == "TVE" || From == "BU_S") THEN FILS_Flag = False;
+   Else
+    FILS_Flag = True;
+     P = StrPos(From,"$");
+        IF ( P != 0 ) Then
+            LIST_NUMBER = StrSubString(From,P+1,StrLen(From));
+          Else
+            LIST_NUMBER = "" ;
+        End
+    End
+
+
+
+   CompteurQuerry( CompteurQuery );
+
+/**********************************************************************/
+
+/**********         Post Code Production        ************************/
+        P = StrPos(Cpc,"/");
+        PCP = StrSubString(Cpc,1,P-1);
+        Cpc=StrDelete(Cpc,1,P);
+/**********         Post Code Distribution      ************************/
+        P = StrPos(Cpc,"/");
+        PCD = StrSubString(Cpc,1,P-1);
+        PCC=StrDelete(Cpc,1,P);
+
+/**********************************************************************/
+
+
+        if ( Cn != "*" ) then
+
+          CnString = Cn;
+          P = StrPos(CnString,"/");
+
+             While (   P != 0 )
+
+                        V = StrSubString(CnString,1,P-1);
+                        CnString=StrDelete(CnString,1,P);
+
+                            for i = 1 to CompteurMax do
+                                if ( V == GetStrGateValue("Compteur_Code",i)) then
+
+                                    //Query_OUTPUT
+
+                                    nb_Compteur = Query_OUTPUT_Obj(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU,Energy);
+                                    CompteurFound = true;
+                                    i = CompteurMax+1;
+                                end
+                            end
+                        P = StrPos(CnString,"/");
+             end// end While
+
+               if ( CompteurFound == false ) then
+                    MessageBox("Compteur Not found ","Information");
+               end
+        else
+
+
+
+           for i = 1 to CompteurMax do
+
+             E_OK = True;
+             Cp_OK = True;
+             Cl_OK = True;
+             Cpc_OK = True;
+
+             NameCompteur = GetStrGateValue("Compteur_Code",i);
+
+
+
+                if (E   != "*" ) then
+                    if (E   ==  GetStrGateValue("Compteur_Energy",i)) then
+                    E_OK = true;
+                    else  E_OK = false; end
+
+                end
+
+
+                if (Cp   != "*" ) then
+                    if (Cp   ==  GetStrGateValue("Compteur_Parent",i)) then
+                    Cp_OK = true;
+                    else  Cp_OK = false; end
+
+                end
+
+                if (Cl   != "*" ) then
+                    if (Cl   ==  GetStrGateValue("Compteur_Level",i)) then
+                    Cl_OK = true;
+                    else  Cl_OK = false; end
+                end
+
+                if (PCP   != "*" ) then
+                    if (PCP   ==  GetStrGateValue("Compteur_PCP",i)) then
+                        PCP_OK = true;
+                    else  PCP_OK = false; end
+                end
+
+                if (PCD   != "*" ) then
+                    if (PCD   ==  GetStrGateValue("Compteur_PCD",i)) then
+                        PCD_OK = true;
+                    else  PCD_OK = false; end
+                end
+
+                if (PCC   != "*" ) then
+                    if (PCC   ==  GetStrGateValue("Compteur_PCC",i)) then
+                        PCC_OK = true;
+                    else  PCC_OK = false; end
+                end
+
+
+               IF ( E_OK == True && Cp_OK == True && Cl_OK == True && PCP_OK == True && PCD_OK == True && PCC_OK == True )then Q_Result = True;
+               Else Q_Result = false;
+               End
+
+               IF (Q_Result == True ) Then
+
+               nb_Compteur = Query_OUTPUT_Obj(i,FileHandle,From,FILS_Flag,LIST_NUMBER,nb_Compteur,HeaderLigne_BU,Energy);
+
+               END // Query == True
+
+           end//end for
+      end // end if (cn)
+
+
+  return (nb_Compteur);
+
+end // end fonction*
+
+
+///////////////////////////////////////////////////////////////////////////////////
+function Int Query_OUTPUT_Obj( int i, Int FileHandle, String From , Bool FILS_Flag, String LIST_NUMBER, int nb_Compteur , String HeaderLigne_BU,String Energy)
+
+
+String NameCompteur;
+int Pos;
+String CPName = "";
+String CCodeL;
+String LName;
+String Ligne;
+String LevelFullPathFileName;
+int j;
+int Sp;
+int LevelFileHandle;
+
+   LevelFullPathFileName = ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+
+                    If ( FILS_Flag == TRUE ) Then
+
+                      if (LIST_NUMBER == "") Then // Form Calculatrice
+
+                            If (nb_Compteur == 0) Then
+                             FileWriteLn(FileHandle,GetStrGateValue("Compteur_Code",i));
+                            Else
+                             FileWriteLn(FileHandle,"+");
+                             FileWriteLn(FileHandle,GetStrGateValue("Compteur_Code",i));
+                            End
+
+                      Else // From ALARME
+
+                           If (nb_Compteur == 0) Then
+                             FileWriteLn(FileHandle,GetStrGateValue("Compteur_Code",i) +"$"+LIST_NUMBER);
+                            Else
+                             FileWriteLn(FileHandle,"+");
+                             FileWriteLn(FileHandle,GetStrGateValue("Compteur_Code",i) +"$"+LIST_NUMBER);
+                           End
+
+                      End // LIST_NUMBER == "" Calculatrice / ALARME
+
+                    End// FILS_Flag == True
+
+
+
+                    If ( FILS_Flag == False ) Then
+
+                        //MessageBox(nb_Compteur,From);
+
+                        If ( From == "TVE" ) Then
+                            NameCompteur = GetStrGateValue("Compteur_Code",i)+","+GetStrGateValue("Compteur_Name",i)+","+Energy;
+                            FileWriteLn(FileHandle,NameCompteur);
+                        Else
+
+                            LevelFileHandle=FileOpen(LevelFullPathFileName,"rt");
+                            CCodeL=GetStrGateValue("Compteur_Level",i);//Code level
+                            Sp=StrToInt(CCodeL);
+
+                            FileReadLn(LevelFileHandle);
+
+                            for j =0 to Sp do
+                                Ligne=FileReadLn(LevelFileHandle);
+
+                                LName=Fetch_Alarm_search(Ligne,2,";");
+
+                            end
+                            FileClose(LevelFileHandle);
+                               Pos=GET_COMPTEUR(GetStrGateValue("Compteur_Parent",i));
+                               If (Pos != 0) Then CPName=GetStrGateValue("Compteur_Name",Pos);  End
+
+
+                            If ( From == "BU_S" ) Then
+                                       NameCompteur = HeaderLigne_BU +";"+
+                                       GetStrGateValue("Compteur_Parent",i) +";"+
+                                       GetStrGateValue("Compteur_Code",i) +";"+
+                                       GetStrGateValue("Compteur_Name",i) +";"+
+                                       GetStrGateValue("Compteur_Energy",i) +";"+
+                                       GetStrGateValue("Compteur_NameP",i) +";"+
+                                       GetStrGateValue("Compteur_NameD",i) +";"+
+                                       GetStrGateValue("Compteur_NameC",i) +";"+
+                                       GetStrGateValue("Compteur_PCP",i) +";"+
+                                       GetStrGateValue("Compteur_PCD",i) +";"+
+                                       GetStrGateValue("Compteur_PCC",i) +";"+
+                                       CPName+";"+LName+";"+GetStrGateValue("Compteur_Access",i)+";";
+
+                                FileWriteLn(FileHandle,NameCompteur);
+                            Else
+                              If ( From == "PBI" ) Then
+
+                                 NameCompteur = GetStrGateValue("Compteur_Code",i)   +";"+
+                                                    GetStrGateValue("Compteur_Name",i)   +";"+
+                                                    GetStrGateValue("Compteur_Energy",i) +";"+
+                                                    GetStrGateValue("Compteur_Parent",i) +";"+
+                                                    CPName +";;"+//Parent Name
+                                                    GetStrGateValue("Compteur_PCP",i)    +";"+
+                                                    GetStrGateValue("Compteur_PCD",i)    +";"+
+                                                    GetStrGateValue("Compteur_PCC",i)    +";"+
+                                                    GetStrGateValue("Compteur_NameP",i)  +";"+
+                                                    GetStrGateValue("Compteur_NameD",i)  +";"+
+                                                    GetStrGateValue("Compteur_NameC",i)  +";;"+
+                                                    LName +";"+GetStrGateValue("Compteur_Access",i)+";;;;;;;;;;;;;" ; // //Type Level
+
+                                    FileWriteLn(FileHandle,NameCompteur);
+                              End // From ==PBI
+                            End // From ==BU_S
+
+                        End // From == TVE
+
+                    End // FILS_Flag == False
+
+  nb_Compteur = nb_Compteur+1;
+
+  Return (nb_Compteur);
+
+end

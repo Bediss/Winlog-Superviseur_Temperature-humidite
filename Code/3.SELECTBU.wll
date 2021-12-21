@@ -1,0 +1,57 @@
+function void Create_DrillDouwn( String PF_PDV, String Query)
+
+    int i = 1;
+    int K;
+    int Pos;
+    Bool Match = False;
+    Bool BDrill = false;
+    INT DrillFlag;
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    string WriteLigne;
+    string ReadLigne;
+    string Path = ENV_PATH+"\Files\AllCompteur\BU\";
+    String LEVELPathFileName;
+    int LEVELFileHandle;
+    String PathFileName;
+    int FileHandle;
+    String SplitPath = ENV_PATH+"\Files\AllCompteur\BU\TempList\";
+    String SplitPathFileName;
+    int SplitFileHandle;
+    String Gate_Name;
+    String Gate_Code;
+    string PathCode;
+    String PathName;
+    String HeaderLigne_BU;
+    BOOL QUERRY;
+    Bool EXIT = False;
+
+    FOR i=1 to 15 do
+     SetStrGateValue("RowList",i,"");
+    END
+    i = 1;
+
+    //Gate_Name = "Compteur_Name" + PF_PDV;
+    //Gate_Code = "Compteur_PC" + PF_PDV;
+
+
+    LEVELPathFileName = ENV_PATH+"\Files\AllCompteur\BU\WBU.txt";
+    PathFileName = ENV_PATH+"\Files\AllCompteur\BU\BU.txt";
+
+        If ( PF_PDV == "C" )then FlagDrillC = "*"; End
+        If ( PF_PDV == "D" )then FlagDrillD = "*"; End
+        If ( PF_PDV == "P" )then FlagDrillP = "*"; End
+        If ( PF_PDV == "R" )then FlagDrillR = "*"; End
+
+        HeaderLigne_BU = PF_PDV +";"+ DrillLevel +";"+ FlagDrillP +";"+ FlagDrillD +";"+ FlagDrillC +";"+ FlagDrillR;
+
+        FileHandle   = FileOpen(PathFileName,"wt");
+        TOTALROW = 0;
+        NB_FILS = 0;
+        TOTALROW = AnalyseQuerryCompteur( Query, FileHandle , "BU_S" , HeaderLigne_BU);
+        NB_FILS = TOTALROW;
+   FileClose(FileHandle);
+end

@@ -1,0 +1,8 @@
+Function void Update_Input()
+#startup
+    While(WindowIsOpen())
+        SetStrGateValue("ToDay",0,GetDateString("/",true));
+        Sleep(900000);
+    End
+end
+

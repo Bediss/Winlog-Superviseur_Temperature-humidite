@@ -1,0 +1,2 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1J11;compresseur3_3;Electrique;CC1J1;EXT IMEF2 TR3;7;S200;M180;MA04C;STEG;PosteTR3;compresseur3_3;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur3_3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1J12;compresseur4_3;Electrique;CC1J1;EXT IMEF2 TR3;7;S200;M180;MA04D;STEG;PosteTR3;compresseur4_3;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur4_3;*

@@ -1,0 +1,315 @@
+17_CTC2A_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2B_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2C_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2D_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC21_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC22_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC23_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC24_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2I_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2J_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC31_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC32_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4H_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4I_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4J_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2E_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4R_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4L_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4N_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4M_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4P_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4O_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5A_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5B_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5C_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5D_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5E_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5F_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5I_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5G_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC6_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2H_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4K_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4B_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4C_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4D_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4E_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4F_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4G_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC7_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1A_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1B_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1D_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1C_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC12_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC11_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC13_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1J_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1I_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC22_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC21_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1E_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC1H_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC41_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC5_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC3_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC4A_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC5H_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CHC14_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D2_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D4_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D5_Live_V47;11_#&#&D1_V47.txt_Live_V47;SY_FC_11_35383538D1_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D1 | Consommation | 
+17_CTC2A_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2B_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2C_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2D_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC21_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC22_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC23_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC24_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2I_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2J_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC31_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC32_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4H_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4I_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4J_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2E_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4R_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4L_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4N_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4M_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4P_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4O_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5A_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5B_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5C_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5D_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5E_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5F_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5I_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5G_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC6_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2H_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4K_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4B_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4C_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4D_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4E_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4F_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4G_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC7_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1A_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1B_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1D_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1C_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC12_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC11_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC13_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1J_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1I_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC22_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC21_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1E_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC1H_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC41_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC5_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC3_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC4A_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC5H_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CHC14_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+11_Temperature_#&#&D2_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+11_Temperature_#&#&D4_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+11_Temperature_#&#&D5_J_V47;11_#&#&D1_V47.txt_J_V47;SY_FC_11_35383538D1_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D1 | Consommation | 
+17_CTC2A_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2B_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2C_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2D_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC21_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC22_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC23_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC24_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2I_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2J_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC31_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC32_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4H_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4I_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4J_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2E_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4R_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4L_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4N_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4M_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4P_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4O_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5A_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5B_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5C_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5D_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5E_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5F_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5I_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5G_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC6_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2H_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4K_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4B_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4C_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4D_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4E_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4F_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4G_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC7_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1A_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1B_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1D_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1C_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC12_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC11_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC13_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1J_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1I_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC22_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC21_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1E_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC1H_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC41_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC5_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC3_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC4A_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC5H_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CHC14_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+11_Temperature_#&#&D2_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+11_Temperature_#&#&D4_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+11_Temperature_#&#&D5_S_V47;11_#&#&D1_V47.txt_S_V47;SY_FC_11_35383538D1_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D1 | Consommation | 
+17_CTC2A_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2B_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2C_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2D_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC21_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC22_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC23_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC24_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2I_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2J_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC31_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC32_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4H_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4I_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4J_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2E_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4R_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4L_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4N_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4M_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4P_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4O_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5A_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5B_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5C_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5D_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5E_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5F_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5I_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5G_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC6_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2H_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4K_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4B_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4C_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4D_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4E_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4F_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4G_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC7_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1A_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1B_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1D_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1C_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC12_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC11_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC13_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1J_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1I_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC22_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC21_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1E_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC1H_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC41_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC5_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC3_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC4A_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC5H_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CHC14_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D2_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D4_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D5_M_V47;11_#&#&D1_V47.txt_M_V47;SY_FC_11_35383538D1_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D1 | Consommation | 
+17_CTC2A_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2B_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2C_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2D_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC21_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC22_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC23_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC24_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2I_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2J_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC31_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC32_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4H_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4I_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4J_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2E_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4R_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4L_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4N_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4M_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4P_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4O_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5A_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5B_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5C_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5D_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5E_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5F_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5I_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5G_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC6_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC2H_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4K_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4B_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4C_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4D_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4E_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4F_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4G_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC7_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1A_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1B_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1D_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1C_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC12_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC11_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC13_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1J_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1I_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC22_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC21_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1E_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC1H_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC41_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC5_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC3_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC4A_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CTC5H_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+17_CHC14_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D2_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D4_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D5_A_V47;11_#&#&D1_V47.txt_A_V47;SY_FC_11_35383538D1_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D1 | Consommation | 
+11_Temperature_#&#&D1_Live_V47;11_#&#&D2_V47.txt_Live_V47;SY_FC_11_35383538D2_V47.txt_Live_V47();Suivi conformite unite | Temps Réel | #&#&D2 | Consommation | 
+11_Temperature_#&#&D1_J_V47;11_#&#&D2_V47.txt_J_V47;SY_FC_11_35383538D2_V47.txt_J_V47();Suivi conformite unite | Journalier | #&#&D2 | Consommation | 
+11_Temperature_#&#&D1_S_V47;11_#&#&D2_V47.txt_S_V47;SY_FC_11_35383538D2_V47.txt_S_V47();Suivi conformite unite | Hebdomadaire | #&#&D2 | Consommation | 
+11_Temperature_#&#&D1_M_V47;11_#&#&D2_V47.txt_M_V47;SY_FC_11_35383538D2_V47.txt_M_V47();Suivi conformite unite | Mensuel | #&#&D2 | Consommation | 
+11_Temperature_#&#&D1_A_V47;11_#&#&D2_V47.txt_A_V47;SY_FC_11_35383538D2_V47.txt_A_V47();Suivi conformite unite | Annuel | #&#&D2 | Consommation | 

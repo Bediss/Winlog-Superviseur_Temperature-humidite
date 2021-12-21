@@ -1,0 +1,8 @@
+16,HR%^LIVE
+1,[HR%]^S
+19,[HR%]^S-1
+35,C %^S
+39,C %^S-1
+5,HR%min^S
+9,HR%max^S
+13,Inc^S

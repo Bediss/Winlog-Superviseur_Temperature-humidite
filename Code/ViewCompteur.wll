@@ -1,0 +1,45 @@
+
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllRowAdd()
+int MaxRowPage = TotalRow/max_Row_Items+1;
+
+int CurrentRowPage= GetNumGateValue("PageAllCommpteurView",0);
+     if (CurrentRowPage >= MaxRowPage) then
+     CurrentRowPage = MaxRowPage;
+     else
+     CurrentRowPage = CurrentRowPage+1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentRowPage);
+     Display(CurrentRowPage,1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllRowSub()
+int CurrentRowPage= GetNumGateValue("PageAllCommpteurView",0);
+     if (CurrentRowPage <= 1) then
+     CurrentRowPage = 1;
+     else
+     CurrentRowPage = CurrentRowPage -1;
+     end
+     SetNumGateValue("PageAllCommpteurView",0,CurrentRowPage);
+     Display(CurrentRowPage,1);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllRowFirst()
+int CurrentRowPage;
+     SetNumGateValue("PageAllCommpteurView",0,1);
+     CurrentRowPage = GetNumGateValue("PageAllCommpteurView",0);
+     Display(CurrentRowPage,1);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllRowEnd()
+
+int MaxRowPage =  TotalRow/max_Row_Items+1;
+
+int CurrentRowPage;
+     SetNumGateValue("PageAllCommpteurView",0,MaxRowPage);
+     CurrentRowPage = GetNumGateValue("PageAllCommpteurView",0);
+     Display(CurrentRowPage,1);
+end
+//////////////////////////////////////////////////////////////////////////////
+

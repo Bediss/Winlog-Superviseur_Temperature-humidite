@@ -1,0 +1,276 @@
+
+
+
+function void InitialiseGates()
+
+//*****************************************************************************
+// Reading Recover File
+//*****************************************************************************
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Settings\INITIALGATES.txt";
+   string TextRow;
+   Bool Empty = false;
+///////////////////////////////////////////////////////////////
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File INITIALGATES not Found","Error");  return;  end
+//////////////////////////////////////////////////////////////
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 && Empty == false)
+
+    TextRow = FileReadLn(FileHandle);
+      if ( TextRow == "") then Empty = true;
+      else
+         if (StrSubString(TextRow,1,2) != "/*") then
+         Analyse_InitialiseGates(TextRow);
+         end
+      end
+
+   end
+     FileClose(FileHandle);
+end
+               /////   AnalyseData() "CSV File"    /////
+ function void Analyse_InitialiseGates(string TextRow)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+String GATETYPE;
+String GATENAME;
+String GATEID;
+String GATEVALUE;
+
+            P = StrPos(txt,";");
+            GATETYPE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATENAME=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEID=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEVALUE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            if ( GATETYPE == "Num" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+            else
+                if ( GATETYPE == "Real" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToReal(GATEVALUE));
+                else
+                    if ( GATETYPE == "Dig" ) then
+                    SetDigGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+                    else
+                        if ( GATETYPE == "Str" ) then
+                        SetStrGateValue(GATENAME,StrToInt(GATEID),GATEVALUE);
+                        end
+                    end
+                end
+            end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//                          Read Tableau File
+///////////////////////////////////////////////////////////////////////////////
+function void Read_Tableau()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\Display_Templates\Tableaux.csv";
+   string TextRow;
+   Int List;
+   //Bool Empty = false;
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Tableaux not Found","Error");  return;  end
+
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( TextRow != "") then
+
+            if (StrToInt(Fetch(TextRow, 1)) > 2 ) then
+
+            List = StrToInt(Fetch(TextRow, 1));
+
+                SetStrGateValue("Tableau_ShortName" , List ,Fetch(TextRow, 2));
+
+                SetStrGateValue("TableauNames"      , List ,Fetch(TextRow,3));
+
+                SetStrGateValue("Tableau_VEPC"      , List ,Fetch(TextRow, 4));
+
+                SetStrGateValue("Tableau_TVE"       , List ,Fetch(TextRow, 5));
+
+                SetStrGateValue("Tableau_Query"     , List ,Fetch(TextRow, 6));
+
+                SetNumGateValue("Access_Tableaux"   , List ,StrToInt(Fetch(TextRow,7)));
+
+            end
+        end
+   end
+     FileClose(FileHandle);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//                          Read BU Setting & Congif
+///////////////////////////////////////////////////////////////////////////////
+function void Bu_Access()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Files\AllCompteur\BU\Bu_Setting.csv";
+   string TextRow;
+   String PDV;
+   //Bool Empty = false;
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File Bu_Setting not Found","Error");  return;  end
+
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 )
+    TextRow = FileReadLn(FileHandle);
+
+        if ( Fetch(TextRow,1) != "") then
+                SetStrGateValue("Setting_User",0,Fetch(TextRow,1));
+                SetStrGateValue("Setting_Tableau",0,Fetch(TextRow,2));
+                SetStrGateValue("Setting_View",0,Fetch(TextRow,3));
+                SetStrGateValue("Setting_Energy",0,Fetch(TextRow,4));
+                SetStrGateValue("Setting_PC",0,Fetch(TextRow,5));
+                SetStrGateValue("Setting_BUName",0,Fetch(TextRow,6));
+                SetStrGateValue("Setting_CCode",0,Fetch(TextRow,7));
+                SetStrGateValue("Setting_Bu_init",0,Fetch(TextRow,8));
+                SetStrGateValue("Setting_COM_Parent",0,Fetch(TextRow,9));
+                SetStrGateValue("Setting_CLevel",0,Fetch(TextRow,11));
+                PDV = Fetch(TextRow,10);
+
+
+                If (PDV == "C") Then  SetNumGateValue("Select_PDV",0,1); End
+                If (PDV == "D") Then  SetNumGateValue("Select_PDV",0,2); End
+                If (PDV == "P") Then  SetNumGateValue("Select_PDV",0,3); End
+                If (PDV == "R") Then  SetNumGateValue("Select_PDV",0,4); End
+
+
+                SetNumGateValue("SelectTableau",0,StrToInt( Fetch(TextRow, 2) ));
+                SetNumGateValue("SelectView",0,StrToInt( Fetch(TextRow, 3) ));
+                SetNumGateValue("SelectEnergie",0,StrToInt( Fetch(TextRow, 4) ) );
+
+                /*SetStrGateValue("AlarmeEventModifer",0,Fetch(TextRow, 2) );
+                SetStrGateValue("AlarmeEventModifer",1,Fetch(TextRow, 3) );
+                SetStrGateValue("AlarmeEventModifer",2,Fetch(TextRow, 4) );
+                SetStrGateValue("AlarmeEventModifer",3,Fetch(TextRow,6));*/
+
+    /*SetStrGateValue("AlarmeEventModifer",0,GetStrGateValue("TableauNames",GetNumGateValue("SelectTableau",0)) );
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("ViewNames", GetNumGateValue("SelectView",0)) );
+    SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0)) );
+    SetStrGateValue("AlarmeEventModifer",3,"" );*/
+        end
+   end
+   SetStrGateValue("Setting_CParent",0,"");
+     FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+//                          Initialisation Version
+///////////////////////////////////////////////////////////////////////////////
+
+
+function void Read_Version()
+
+   int FileHandle;
+
+   string FullPathFileName = GetProjectPath()+"\CurrentVersion.txt";
+   string TextRow;
+
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File CurrentVersion not Found","Error");  return;  end
+
+
+   TextRow = FileReadLn(FileHandle);// Read file
+   SetStrGateValue("Nom_Version",0,Fetch(TextRow, 2));
+   SetStrGateValue("Version",0,Fetch(TextRow, 1));
+   FileClose(FileHandle);
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//                          Initialisation DATASource
+///////////////////////////////////////////////////////////////////////////////
+function void Get_DATASource()
+
+   int FileHandle;
+
+   string FullPathFileName = GetProjectPath()+"\Config_DB_CNX.txt";
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+   IF (FileHandle==0) then
+        MessageBox("File Config_DB_CNX not Found","Error");
+        DATASOURCE = "FILE";
+   Else
+
+
+        If ( FileReadLn(FileHandle) == "FILE" ) Then
+            DATASOURCE = "FILE";
+        Else
+            DATASOURCE = "DB";
+        End
+
+      FileClose(FileHandle);
+
+   end
+
+  Return ;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                          Get_BootMode
+///////////////////////////////////////////////////////////////////////////////
+function String Get_BootMode()
+
+   int FileHandle;
+   String ReturnedVal ="";
+
+   string FullPathFileName = GetProjectPath()+"\Winlog\Settings\REBOOT_MODE.txt";
+
+    If ( FileExist(FullPathFileName) == true ) Then
+
+        FileHandle=FileOpen(FullPathFileName,"rt");
+
+        If( FileEof(FileHandle) == 0 )Then
+            ReturnedVal = FileReadLn(FileHandle);
+        End
+
+        FileClose(FileHandle);
+    //Else
+       // MessageBox(" FullPathFileName ","BootMode File Not File");
+    End
+
+
+  Return ReturnedVal ;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                          Set_BootMode
+///////////////////////////////////////////////////////////////////////////////
+function void Set_BootMode( String NewMode )
+
+   int FileHandle;
+
+   string FullPathFileName = GetProjectPath()+"\Winlog\Settings\REBOOT_MODE.txt";
+
+      FileHandle=FileOpen(FullPathFileName,"wt");
+
+      FileWriteLn(FileHandle,NewMode);
+
+      FileClose(FileHandle);
+
+end

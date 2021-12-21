@@ -1,0 +1,3 @@
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CG04;Ecart P/D Gaz;Gaz;CG1;ElMazeraa Gaz;1;*;*;*;*;*;*;CG02-CG06;Site;*;*;VMZ;*;*;CG02~-~CG06~;VMZ Prod Gaz~-~VMZ Distrib Gaz~;;;0;Ecart Production/Distribution Gaz;*
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGC;Production Gaz;Gaz;CG1;ElMazeraa Gaz;2;S200;M200;Z100;STEG;ElMazeraa;Production;F(CGB);Type de Site;*;*;*;*;*;F~(~CGB~)~;F~(~Utilitaire Gaz~)~;;;0;Production Gaz;*
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGB;Utilitaire Gaz;Gaz;CG1;ElMazeraa Gaz;2;S200;M200;Z200;STEG;ElMazeraa;Utilitaire;F(CGB);Type de Site;*;*;*;*;*;F~(~CGB~)~;F~(~Utilitaire Gaz~)~;;;0;Utilitaire Gaz;*

@@ -1,0 +1,242 @@
+///////////////////////////////////////////////////////////////////////////////
+// Create Level File
+///////////////////////////////////////////////////////////////////////////////
+function void Create_LevelFile()
+
+    int MaxLevel = GetNumGateValue("BU_Level_Max",0);
+    int i;
+    string LigneWrite;
+
+    String FullPathFileName = ENV_PATH+"\Files\AllCompteur\AllCompteur.csv" ;
+    int FileHandle;
+
+    String LEVELPathFileName = ENV_PATH+"\Files\AllCompteur\BU\";
+    int LEVELFileHandle;
+    string Ligne;
+
+   for i = 0 to MaxLevel do
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0) then MessageBox("BU File not Found","Error");   return; end
+
+    LEVELPathFileName = ENV_PATH+"\Files\AllCompteur\BU\"+ i + ".txt";
+
+    LEVELFileHandle=FileOpen(LEVELPathFileName,"wt");
+        if (LEVELFileHandle == 0) then MessageBox("BU File not Found","Error");   return; end
+
+    FileReadLn(FileHandle); //  HEADER
+
+         while(FileEof(FileHandle)==0)
+          Ligne = FileReadLn(FileHandle);
+
+            if ( StrToInt(Fetch_BU(Ligne, 5,";")) == i ) then
+                LigneWrite = Fetch_BU(Ligne, 3,";") + "," + Fetch_BU(Ligne, 2,";");   // Parent,BU
+                FileWriteLn( LEVELFileHandle , LigneWrite );
+            end// end if
+
+         end// end WHILE
+         FileClose(LEVELFileHandle);
+   end// END FOR
+   FileClose(FileHandle);
+
+end // END FUNCTION
+///////////////////////////////////////////////////////////////////////////////
+// Create Directery
+///////////////////////////////////////////////////////////////////////////////
+function void Create_Directery()
+    int LEVEL;
+    String BU_Path = ENV_PATH+"\Files\AllCompteur\BU";
+    string Ligne;
+    int i;
+
+    String PathFileName;
+    int FileHandle;
+    //Create_Level();
+    for i = 0 to GetNumGateValue("BU_Level_Max",0) do
+
+
+        PathFileName = ENV_PATH+"\Files\AllCompteur\BU\L"  + i + ".txt";
+        FileHandle=FileOpen(PathFileName,"rt");
+        if (FileHandle == 0) then MessageBox("LEVEL File not Found","Error");   return; end
+
+
+         while(FileEof(FileHandle)==0)
+            Ligne = FileReadLn(FileHandle);
+
+                if ( Ligne != "" ) then
+
+                    DirectoryCreate(BU_Path +"\"+ Ligne);
+
+                end
+
+           end // END while
+     end // END For
+     FileClose(FileHandle);
+
+
+end// END FUNCTION
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_BU(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+function void Create_BU()
+    Create_Level(0,"Consommation", "C",8);
+    Create_Level(0,"Distribution", "D",7);
+    Create_Level(0,"Production", "P",6);
+     MessageBox("Fin de creation","");
+end
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+function void Create_Level(int LEVEL,string PDV, string PF_PDV ,int COL_PDV)
+
+    int i;
+    int Last;
+    string LigneWrite;
+    string Ligne;
+    string LASTLigne;
+    string LEVELLigne;
+    string Parent;
+    string WriteLigne;
+    string Path = "C:\Users\ASUS\Desktop\Gate\";
+    String FullPathFileName = ENV_PATH+"\Files\AllCompteur\AllCompteur.csv" ;
+    int FileHandle;
+
+    String LEVELPathFileName;
+    int LEVELFileHandle;
+
+    String LASTPathFileName ;
+    int LASTFileHandle;
+
+    LEVELPathFileName = Path+PF_PDV+LEVEL+".txt";
+
+
+    LEVELFileHandle = FileOpen(LEVELPathFileName,"wt");
+
+   for i = 1 to 9 do//1
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0) then MessageBox("BU File not Found","Error");   return; end
+
+        if( LEVEL <= 0 ) then//2
+           FileReadLn(FileHandle);
+           while(FileEof(FileHandle)==0)       // lire BU postcode .csv 3
+              Ligne = FileReadLn(FileHandle);
+
+                If ( Ligne != "" ) then
+                    If ( Fetch_BU(Ligne, 3 ,";") ==  GetStrGateValue("Energy_Name",i)) then
+                        if ( StrToInt(Fetch_BU(Ligne, 5 ,";")) == 1  &&  Fetch_BU(Ligne, 4 ,";") == "*" ) then   //4
+                            WriteLigne = PDV+"\"+Fetch_BU(Ligne, 3 ,";")+"\"+Fetch_BU(Ligne, COL_PDV ,";");
+
+                            FileWriteLn(LEVELFileHandle,WriteLigne);
+                        end// end if    4
+                    end
+                end
+
+           end  //3
+             FileClose(FileHandle);
+
+        else
+
+              Last = i-1;
+              LASTPathFileName = ENV_PATH+"\Files\AllCompteur\BU\L" + Last + ".txt";
+              LASTFileHandle=FileOpen(LASTPathFileName,"rt");
+
+                if ( LASTFileHandle == 0) then MessageBox("LAST File not Found","Error");   return; end
+
+
+
+              while( FileEof(LASTFileHandle)== 0 )    //  lire last file .txt
+               LASTLigne = FileReadLn(LASTFileHandle);
+                    Parent = Analyse_LastFile(LASTLigne);
+                      if ( Parent != "" ) then
+                        Find_Child(Parent , LEVELFileHandle , LASTLigne );
+                      end
+              end //  end lire last file .txt*/
+
+
+
+       end  //2
+
+
+      FileClose(FileHandle);
+   end// END FOR
+
+      FileClose(LEVELFileHandle);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+function string Analyse_LastFile(string Ligne)
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+
+        P = StrPos(txt,"\");
+              While ( P != 0 )
+                    P = StrPos(txt,"\");
+                    txt=StrDelete(txt,1,P);
+              end
+        return txt;
+end
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+function string Find_Child(string Parent , int LEVELFileHandle , string LASTLigne )
+    string Ligne;
+    string WriterLigne;
+    String FullPathFileName = ENV_PATH+"\Files\AllCompteur\BU_PosteCode.csv" ;
+    int FileHandle;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0) then MessageBox("BU File not Found","Error");   return; end
+
+    while(FileEof(FileHandle)==0)       // lire BU postcode .csv
+      Ligne = FileReadLn(FileHandle);
+            if ( Fetch_BU(Ligne, 3 ,";") == Parent ) then
+
+                    if ( Fetch_BU(Ligne, 5 ,";") == "*" ) then
+
+                        WriterLigne = LASTLigne + "\" + Fetch_BU(Ligne, 2, ";");
+
+                     else
+
+                        if ( Fetch_BU(Ligne, 5 ,";") == "S" ) then
+
+                           WriterLigne = LASTLigne + "\Secteur";
+                           FileWriteLn( LEVELFileHandle , WriterLigne );
+                           WriterLigne = WriterLigne + "\" + Fetch_BU(Ligne, 2, ";");
+
+                        end
+                        if ( Fetch_BU(Ligne, 5 ,";") == "U" ) then
+
+                           WriterLigne = LASTLigne + "\Utilitaire";
+                           FileWriteLn( LEVELFileHandle , WriterLigne );
+                           WriterLigne = WriterLigne + "\" + Fetch_BU(Ligne, 2, ";");
+
+                        end
+
+                    end
+                FileWriteLn( LEVELFileHandle , WriterLigne );
+            end
+
+    end
+    FileClose(FileHandle);
+
+end
+

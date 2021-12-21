@@ -1,0 +1,244 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,150
+#Size: 1350,720
+#BkColor: 235,240,239
+#Gates: 1
+  #STR: Business_unit,0
+#Style: Standard
+#StayOnTop: 0
+#Object: Frame
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1350,70
+  #BkColor: 0,200,150
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 30,10
+    #Size: 170,50
+    #Cursor: 0
+    #PBmpFile: 0,LOGO BIZEYES BLANC.png
+    #TabOrder: 0
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 218,3
+    #Size: 530,62
+    #BkColor: 0,200,150
+    #Cursor: 0
+    #TxtColor: clWhite
+    #Font: Gotham Medium,22,0000
+    #Label: REAL TIME MONITORING SYSTEM : 
+    #Align: 37
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 743,3
+    #Size: 550,62
+    #BkColor: 0,200,150
+    #Cursor: 0
+    #TxtColor: clWhite
+    #Font: Gotham Medium,22,0000
+    #Gate: 0
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,70
+  #Size: 1350,40
+  #BkColor: 204,255,232
+  #Style: 1
+  #TabOrder: 1
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 40,5
+    #Size: 100,30
+    #BkColor: 204,255,232
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,10,0000
+    #Label: Navigateur
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+    #NewOnClick: Template,Site
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,110
+  #Size: 1350,40
+  #BkColor: 226,226,226
+  #Style: 1
+  #TabOrder: 2
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,150
+  #Size: 1350,3
+  #BkColor: 111,115,114
+  #Style: 1
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 1081,153
+  #Size: 268,30
+  #BkColor: 111,115,114
+  #Style: 1
+  #TabOrder: 4
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,5
+    #Size: 242,20
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBtnFace
+    #Font: Gotham Medium,11,0000
+    #Label: (5) PERIODICITE
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 811,153
+  #Size: 268,60
+  #BkColor: 235,240,239
+  #Style: 1
+  #TabOrder: 5
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,5
+    #Size: 242,20
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Gotham Medium,11,0000
+    #Label: (4) CAPTEUR
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,30
+    #Size: 242,25
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBlack
+    #Font: Gotham Medium,11,0000
+    #Label:  Sélectionnez ci-dessous :
+    #Align: 20
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 541,153
+  #Size: 268,30
+  #BkColor: 111,115,114
+  #Style: 1
+  #TabOrder: 6
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,5
+    #Size: 242,20
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBtnFace
+    #Font: Gotham Medium,11,0000
+    #Label: (3) TABLEAU
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 5,105
+    #Size: 242,25
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWhite
+    #Font: Courier New,12,0001
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 271,153
+  #Size: 268,30
+  #BkColor: 111,115,114
+  #Style: 1
+  #TabOrder: 7
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,5
+    #Size: 242,20
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBtnFace
+    #Font: Gotham Medium,11,0000
+    #Label: (2) POINT DE MESURE
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 1,153
+  #Size: 268,30
+  #BkColor: 111,115,114
+  #Style: 1
+  #TabOrder: 8
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 5,5
+    #Size: 242,20
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBtnFace
+    #Font: Gotham Medium,11,0000
+    #Label: (1) UNITE
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+  #Object: Button
+    #ID: 0
+    #Pos: 811,221
+    #Size: 268,25
+    #Cursor: 0
+    #Label: ¤ Tout Capteur.         
+    #Font: Courier New,12,0001
+     #TabOrder: 0
+     #Access: 32
+     #OnClick: Template,5_1_1_1_View
+   #EndObj
+

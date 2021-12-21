@@ -1,0 +1,11 @@
+CTC2;Production;Temperature;CTCA;CLC;;*;*;D2;*;*;Production;;Unite;*;Production Temperature
+CTC2A;Process_Pasto;Temperature;CTC2;Production;;D67;*;D21;T°c  Ambiante;*;Process_Pasto;;Point de mesure;;Process_Pasto Temperature
+CTC2B;Process_Sterilo;Temperature;CTC2;Production;;D67;*;D22;T°c  Ambiante;*;Process_Sterilo;;Point de mesure;;Process_Sterilo Temperature
+CTC2C;Cond_UHT1_P1;Temperature;CTC2;Production;;D67;*;D23;T°c  Ambiante;*;Cond_UHT1_P1;;Point de mesure;;Cond_UHT1_P1 Temperature
+CTC2D;Cond_UHT1_P2;Temperature;CTC2;Production;;D67;*;D24;T°c  Ambiante;*;Cond_UHT1_P2;;Point de mesure;;Cond_UHT1_P2 Temperature
+CTC2E;Process_Lait_Fermente;Temperature;CTC2;Production;;D67;*;D25;T°c  Ambiante;*;Process_Lait_Fermente;;Point de mesure;;Process_Lait_Fermente Temperature
+CTC2F;Galdi;Temperature;CTC2;Production;;*;*;D26;*;*;Galdi;;Atelier;;Galdi Temperature
+CTC2G;Beurrerie;Temperature;CTC2;Production;;*;*;D27;*;*;Beurrerie;;Atelier;;Beurrerie Temperature
+CTC2H;CH_Chaud_P1;Temperature;CTC2;Production;;D66;*;D28;T°c  chaude;*;CH_Chaud_P1;;Point de mesure;;CH_Chaud_P1 Temperature
+CTC2I;CH_Froid_P1;Temperature;CTC2;Production;;D64;*;D2A;T°c  positive;*;CH_Froid_P1;;Point de mesure;;CH_Froid_P1 Temperature
+CTC2J;CH_Froid_P2;Temperature;CTC2;Production;;D64;*;D2B;T°c  positive;*;CH_Froid_P2;;Point de mesure;;CH_Froid_P2 Temperature

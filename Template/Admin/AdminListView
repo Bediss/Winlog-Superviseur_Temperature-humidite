@@ -1,0 +1,74 @@
+#Version: 0x030216
+#Access: 0
+#Pos: 575,150
+#Size: 200,165
+#BkColor: 0,28,0
+#Gates: 1
+  #NUM: AdminListView,0
+#Style: Standard
+#StayOnTop: 0
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 13,7
+  #Size: 173,27
+  #BkColor: 215,255,215
+  #Font: Calibri,14,0000
+  #Cursor: 0
+  #Label: Journalier
+  #NeedApply: 0
+  #OnMask: 0,001F,0002
+  #TabOrder: 0
+  #Access: 0
+#EndObj
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 13,67
+  #Size: 173,27
+  #BkColor: 215,255,215
+  #Font: Calibri,14,0000
+  #Cursor: 0
+  #Label: Mensuel
+  #NeedApply: 0
+  #OnMask: 0,001F,0004
+  #TabOrder: 1
+  #Access: 0
+#EndObj
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 13,37
+  #Size: 173,27
+  #BkColor: 215,255,215
+  #Font: Calibri,14,0000
+  #Cursor: 0
+  #Label: Hebdomadaire
+  #NeedApply: 0
+  #OnMask: 0,000F,0003
+  #TabOrder: 2
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 62,132
+  #Size: 75,25
+  #Cursor: 0
+  #Label: Ok
+  #Font: Segoe UI,9,0000
+  #FunctionKey: -1
+  #TabOrder: 3
+  #Access: 0
+  #OnClick: StartF,AdminListViewChoice()
+  #OnClick: Close
+#EndObj
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 13,97
+  #Size: 173,27
+  #BkColor: 215,255,215
+  #Font: Calibri,14,0000
+  #Cursor: 0
+  #Label: Annuel
+  #NeedApply: 0
+  #OnMask: 0,000F,0005
+  #TabOrder: 4
+  #Access: 0
+#EndObj

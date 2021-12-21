@@ -1,0 +1,273 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clWhite
+#Gates: 6
+  #CMP: CTC22,4
+  #CMP: CTC22,0
+  #CMP: CTC22,8
+  #CMP: CTC22,12
+  #CMP: CTC22,16
+  #CMP: CTC22,34
+#PBkBmp: 5,5,1350,530,Background.png
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Chart
+  #ID: 0
+  #Pos: 27,170
+  #Size: 1296,355
+  #TimeRange: 86400
+  #SetName: CTC22
+  #EnableGroups: 0
+  #TimeRangeOptions: 20
+  #SaveGroupModification: 1
+  #Autorange: 20
+  #ShowSelGraphLegend: 1
+  #EnableGrid: 1
+  #YGridDivision: 10
+  #EnablePoints: 0
+  #LineWidth: 3
+  #Interpolation: 3
+  #EnableOnLine: 0
+  #showTimeCursorButton: 1
+  #showOnlineButton: 1
+  #ZoomEnabled: 1
+  #showResetZoomButton: 1
+  #ScaleSwitchingEnabled: 1
+  #MouseRightButtonEnabled: 1
+  #showYAxisLabels: 1
+  #showRxAxis: 1
+  #showOnlyTime: 0
+  #showServerButton: 0
+  #DefaultServer: Local
+  #showGroupsButton: 0
+  #showTimeAxisButton: 0
+  #showAspectButton: 0
+  #ChartsWndBkgndColor: 245,245,245
+  #GrWndBkgndColor: clWhite
+  #GridLineColor: clBtnShadow
+  #ScaleColor: clTeal
+  #DateScaleColor: clBlack
+  #TimeScaleColor: clInfoText
+  #showCursorWindowNew: 0
+  #showLegendWindow: 2
+  #LegendStyle: 7
+  #LegendColorBox: 1
+  #ShowLabelDescription: 1
+  #LegendFont: Calibri,8,0000
+  #LegendTxtColor: clWindowText
+  #LegendBkgndColor: clBtnFace
+  #LegendMaxItems: 4
+  #LegendColumns: 2
+  #CursorType: 1
+  #CursorStyle: 7
+  #CursorColorBox: 0
+  #CursorFont: Segoe UI,8,0000
+  #CursorTxtColor: clWindowText
+  #CursorBkgndColor: clBtnFace
+  #CursorMaxItems: 10
+  #CursorColumns: 1
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 1223,20
+  #Size: 100,30
+  #Cursor: 0
+  #Label: Synoptique
+  #Font: Gotham Book,12,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,SY_FC_11_D2()
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 27,140
+  #Size: 1296,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,12,0000
+  #Label: Variations au cours des dernières 24 heures
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 475,5
+  #Size: 400,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,16,0001
+  #Label: Galdi_C
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 520,60
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Minimum (°C) :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 710,60
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 0
+  #Label: %.*f
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 105,90
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Moyenne (°C) :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 295,90
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 1
+  #Label: %.*f
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 520,90
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Maximum (°C) :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 710,90
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 2
+  #Label: %.*f
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 935,60
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Incidents :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1125,60
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 3
+  #Label: %5.0lf
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 295,60
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 4
+  #Label: %.*f
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 105,60
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Temperature (°C) :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 935,90
+  #Size: 185,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Label: Conformité (%) :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 1125,90
+  #Size: 120,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,14,0000
+  #Gate: 5
+  #Label: %5.1lf
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+

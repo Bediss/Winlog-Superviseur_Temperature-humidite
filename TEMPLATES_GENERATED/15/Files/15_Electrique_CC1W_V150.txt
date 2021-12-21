@@ -1,0 +1,2 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1C7;SMF Ress3 TR5;Electrique;CC1W;Froid TR5;5;S200;M1A0;MA05A;STEG;PosteTR5;SMF Ress3 TR5;F(CC1C7);Atelier;*;*;Froid;*;*;F~(~CC1C7~)~;F~(~SMF Ress3 TR5~)~;;;0;SalleMachine Froid Ressuage3 TR5;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1Q10;SDM2 (RES+PETF);Electrique;CC1W;Froid TR5;5;S200;M1A0;MA05D;STEG;PosteTR5;SDM2(RES+PETF);Reel;Atelier;*;*;Froid;!~*;!~*;;;;;2;sdm2 (RESSUAGE+PETFOOD);*

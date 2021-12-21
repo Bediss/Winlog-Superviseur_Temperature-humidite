@@ -1,0 +1,42 @@
+0;[T°c ]^J;55
+1;[T°c ]^S;0
+2;[T°c ]^M;0
+3;[T°c ]^A;0
+4;T°c min^J;0
+5;T°c min^S;0
+6;T°c min^M;0
+7;T°c min^A;0
+8;T°c Max^J;0
+9;T°c max^S;0
+10;T°c max^M;0
+11;T°c max^A;0
+12;Inc^J;0
+13;Inc^S;0
+14;Inc^M;0
+15;Inc^A;0
+16;T°c ^LIVE;0
+17;Inc LIVE;0
+18;[T°c ]^J-1;0
+19;[T°c ]^S-1;0
+20;[T°c ]^M-1;0
+21;[T°c ]^A-1;0
+22;T°c min^J-1;0
+23;T°c min^S-1;0
+24;T°c min^M-1;0
+25;T°c min^A-1;0
+26;T°c Max^J-1;0
+27;T°c max^S-1;0
+28;T°c max^M-1;0
+29;T°c max^A-1;0
+30;Inc^J-1;0
+31;Inc^S-1;0
+32;Inc^M-1;0
+33;Inc^A-1;0
+34;C %^J;0
+35;C %^S;0
+36;C %^M;0
+37;C %^A;0
+38;C %^J-1;0
+39;C %^S-1;0
+40;C %^M-1;0
+42;C %^A-1;0

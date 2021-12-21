@@ -1,0 +1,399 @@
+Global String CompteurC_EV;
+Global String CompteurN_EV;
+Global String CompteurINPUT_EV;
+Global String Objective_Set_Get;
+
+///////////////////////////////////////////////////////////////////////////////
+
+function void EVM_Objective()
+
+   //Objective_Set_Get="GET";
+    String Energy;
+    String EVMLigne;
+    int i;
+    Int Energy_Number;
+    Int CompteurMax = GetNumGateValue("MaxCompteur",0);
+    String Part;
+    bool exit;
+    bool found=False;
+
+    String Gate;
+    //MessageBox(Admin_View_CurrentLine,"Admin_View_CurrentLine");
+
+        SetNumGateValue("PageInsert",0,1);
+    Objective_Set_Get="Get";
+
+    if GetStrGateValue("AlarmeEventModifer",1)=="" then
+        MessageBox("Choisissez un compteur SVP!","Info");
+        return;
+    end
+
+     Part=Fetch_Formule(Admin_View_CurrentLine,2,";");
+     CompteurC_EV=Fetch_Formule(Part,1,"$");
+     Part=Fetch_Formule(Admin_View_CurrentLine,11,";");
+     CompteurN_EV=Fetch_Formule(Part,1,"$");
+    //MessageBox(CompteurC_EV,"0101");
+     //ObjectCompteur=Objective_Gates(CompteurC_EV);
+     SetStrGateValue("SetObjective_CCode",0,CompteurN_EV);
+    //MessageBox(CompteurC_EV,CompteurMax);
+
+   // for i = 1 to CompteurMax do
+   i = 1;
+   exit = False;
+    while (exit == False )
+//MessageBox(GetStrGateValue("Compteur_Code",i) +" // "+CompteurC_EV,i);
+        If (GetStrGateValue("Compteur_Code",i) == CompteurC_EV ) Then
+            Energy=GetStrGateValue("Compteur_Energy",i);
+             exit = True;
+             found = True;
+        End
+
+        i = i + 1;
+
+        if i > CompteurMax && found == False then
+            exit = True;
+        end
+
+    end
+    //Energy="Electrique";
+    if found == True then
+        //MessageBox(EVMLigne,"1");
+        EVMLigne = GET_EVM_Ligne( Energy );
+        //MessageBox(EVMLigne,"2");
+        SetStrGateValue("BU_Energy",0,Energy);
+        //MessageBox(EVMLigne,Energy);
+        ////////////////////
+        //MessageBox(EVM_LIST_FILE,"");
+
+        CompteurINPUT_EV = CompteurINPUTCODE_EV( CompteurC_EV, Energy );
+        //MessageBox(CompteurINPUT_EV,"");
+        If (CompteurINPUT_EV != "-1") Then
+            CompteurINPUT_EV = "O" + CompteurINPUT_EV;
+         Else
+            MessageBox("Le Compteur N'exist pas","Erreur");
+        End
+     ////////////////////
+
+        //
+        EVM_LIST_FILE = ENV_PATH+"\Files\DATAMODELFiles\Event\EVM_LIST.txt";
+        EVM_StringValToFile( EVMLigne , ";" ,  EVM_LIST_FILE,CompteurINPUT_EV);
+       // MessageBox(EVMLigne,EVM_LIST_FILE);
+
+        EVM_Display( 1 );
+        TPageOpen("EVM_SELECTOR_OBJECTIVE");
+
+    end
+
+
+end
+////
+Function Void MODIF_OBJECTIF_FROM_ALARME()
+String EVMLigne;
+String Energy=GetStrGateValue("BU_Energy",0);
+
+
+      //  Objective_StringToFile( EVMLigne , ";" ,  EVM_LIST_FILE);
+
+  EVMLigne = GET_EVM_Compteur( Energy );
+            CompteurINPUT_EV = CompteurINPUTCODE_EV( CompteurC_EV, Energy );
+            CompteurINPUT_EV = "O" + CompteurINPUT_EV;
+            ObjectCompteur=Objective_Gates( CompteurC_EV);
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\EVM_LIST_Compteur.txt";
+        EVM_StringValToFile( EVMLigne , ";" ,  EVM_LIST_FILE,CompteurINPUT_EV);
+       // MessageBox(EVMLigne,EVM_LIST_FILE);
+
+        Objective_Display( 1 );
+        TPageOpen("POPUP_Set_Objective");
+End
+
+////
+function Void EVM_StringValToFile( String Ligne , String Search ,  String FullPathFileName  , String CompteurINPUT_EV)
+    String EVM = Ligne;
+    String Part;
+
+    Int Pos;
+    Int i =0;
+    Int Len = 0;
+      Int FileHandle=FileOpen(FullPathFileName,"wt");
+
+    Len = StrLen(EVM);
+    Pos = StrPos(EVM,Search);
+    EVM = StrDelete(EVM,1,Pos); // Energy header
+    Pos = StrPos(EVM,Search);
+    While( Pos !=  0 && Len != 0)
+      Part = StrSubString(EVM,1,Pos-1);
+
+
+         FileWriteLn(FileHandle,i+";"+Part+";"+GetNumGateValue(CompteurINPUT_EV,i));
+
+
+      EVM = StrDelete(EVM,1,Pos);
+      Pos = StrPos(EVM,Search);
+      Len = StrLen(EVM);
+      i=i+1;
+    End
+
+    If ( Pos == 0 && Len != 0) Then
+        Part = StrSubString(EVM,1,Len);
+        IF (StrSubString(Part,1,2) != "  " ) Then
+          i=i+1;
+          FileWriteLn(FileHandle,i+";"+Part+";"+GetNumGateValue(CompteurINPUT_EV,i));
+        End
+    End
+
+    FileClose(FileHandle);
+    EVM_Max_Items =  i+1;
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_1()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView1",1);
+    IF ( S != "" ) Then
+         EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+                        if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_2()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView2",1);
+
+    IF ( S != "" ) Then
+
+        EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+       SetStrGateValue("Operande_Formule",0,Res);
+      TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+                         if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_3()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView3",1);
+    IF ( S != "" ) Then
+         EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+     //SetStrGateValue("PageAllCommpteurView",0,1);
+	                   if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_4()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView4",1);
+    IF ( S != "" ) Then
+         EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+     //SetStrGateValue("PageAllCommpteurView",0,1);
+	                   if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_5()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView5",1);
+    IF ( S != "" ) Then
+        EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+     //SetStrGateValue("PageAllCommpteurView",0,1);
+	                   if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_6()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView6",1);
+    IF ( S != "" ) Then
+         EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+    // SetStrGateValue("PageAllCommpteurView",0,1);
+	                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_7()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView7",1);
+    IF ( S != "" ) Then
+        EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+     //SetStrGateValue("PageAllCommpteurView",0,1);
+	                   if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_8()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView8",1);
+    IF ( S != "" ) Then
+          EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+     //SetStrGateValue("PageAllCommpteurView",0,1);
+	                   if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_9()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView9",1);
+    IF ( S != "" ) Then
+        EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     //MessageBox(Res,"res");
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+    // SetStrGateValue("PageAllCommpteurView",0,1);
+	                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void EVM_SelectRow_OBJ_10()
+String S;
+String EV;
+String Res;
+String L;
+    S = GetStrGateValue("EmailView10",1);
+    IF ( S != "" ) Then
+         EV=Fetch_Formule(S,2,";");
+     L=Fetch_Formule(S,1,";");
+     Res="O:"+CompteurC_EV+"$"+L+":"+CompteurN_EV+"_"+EV;
+     SetStrGateValue("Operande_Formule",0,Res);
+     TPageCloseByName("EVM_SELECTOR_OBJECTIVE");
+    // SetStrGateValue("PageAllCommpteurView",0,1);
+	                  if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+     End
+end
+///////////////////////////////////////////////////////////////////////////////
+function string CompteurINPUTCODE_EV(string CCCode, String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+//MessageBox(CompteurMax,"1");
+
+          While ( i <= CompteurMax && found == false )
+//MessageBox(CompteurMax,"2");
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CCCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+
+
+             Else
+             i = i +1;
+         //MessageBox(i,"1");
+            End
+
+         End
+//MessageBox(CompteurMax,"5");
+        if ( found == True ) then
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+        // MessageBox(INPUT_CODE,"1");
+
+        Else
+        Return "-1" ;
+        End
+end
+////

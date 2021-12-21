@@ -1,0 +1,783 @@
+//// declaration des variable Globaux
+    Global String SA_BUILDER_PATH =  GetProjectPath() + "\TEMPLATES_GENERATED\SmartApp\";
+    Global int SA_ID =0;
+
+///////////////////////////////////////////////////////////////////////////////
+//////      Main Function   ///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function void SA_GENERATOR()
+
+    Int MAX_STEP1 = 0; Int S1 = 0; // Site
+    Int MAX_STEP2 = 0; Int S2 = 0; // Unite
+    Int MAX_STEP3 = 0; Int S3 = 0; // Energy
+    Int MAX_STEP4 = 0; Int S4 = 0; // View
+    Int MAX_STEP5 = 0; Int S5 = 0; // Compteur
+
+    string DATA_FILE_S1= SA_BUILDER_PATH +  "Source\S1.txt";
+    string DATA_FILE_S2= SA_BUILDER_PATH +  "Source\S2.txt";
+    string DATA_FILE_S3= SA_BUILDER_PATH +  "Source\S4.txt";
+    string DATA_FILE_S4= SA_BUILDER_PATH +  "Source\S3.csv";
+    string DATA_FILE_S5= SA_BUILDER_PATH +  "Source\S5.csv";
+    string DATA_FILE_ALLCOMPTEUR = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    string DATA_FILE_SUB_ALLCOMPTEUR = SA_BUILDER_PATH +  "Source\SUB_AllCompteur.csv";
+
+    String S1_LIGNE;    String S1_CODE;     String S1_NAME;  String S1_ACCESS;
+    String S2_LIGNE;    String S2_CODE;     String S2_NAME;  String S2_ACCESS;
+    String S3_LIGNE;    String S3_CODE;     String S3_NAME;  String S3_ACCESS;
+    String S4_LIGNE;    String S4_CODE;     String S4_NAME;  String S4_ACCESS;
+    String S5_LIGNE;    String S5_CODE;     String S5_NAME;  String S5_ACCESS;
+
+    String Generated_File   = SA_BUILDER_PATH + "Default.json";
+    String Header_File      = SA_BUILDER_PATH + "Source\SA_Project_HEADER.json";
+    String Footer_File      = SA_BUILDER_PATH + "Source\SA_Project_FOOTER.json";
+
+    Int Generated_FileHandle;
+    Int Footer_FileHandle;
+
+    //// 1. Create Header
+      FileCopy(Header_File , Generated_File , False);
+    //// 1. End Creation Header
+    SA_ID = 0;
+
+    Generated_FileHandle = FileOpen(Generated_File,"at");
+    //// 2. Create Body
+    //// 2.1 Step 1 ///////////////////////////////////////////////////////////
+    //// 2.1.1 Initatisation Step 1
+      MAX_STEP1 = Initialisation_S1( DATA_FILE_S1 );
+
+    //// 2.1.2 Create Step 1
+    OPEN_SHOW( Generated_FileHandle , "Sites" );
+//MAX_STEP1 = 1;
+    For S1 = 1 to MAX_STEP1 do
+     S1_LIGNE = Get_Label( DATA_FILE_S1 , S1 , True );
+     IF (S1_LIGNE != "") Then
+
+       S1_CODE     = Fetch_SmartApp(S1_LIGNE,1,";");
+       S1_NAME     = Fetch_SmartApp(S1_LIGNE,2,";");
+       S1_ACCESS   = Fetch_SmartApp(S1_LIGNE,3,";");
+
+        OPEN_ID( Generated_FileHandle , S1_NAME , "Site.jpg" );
+        //// 2.2 Step 2 ///////////////////////////////////////////////////////
+        //// 2.2.1 Initatisation Step 2
+        MAX_STEP2 = Initialisation_S2( DATA_FILE_S2 , S1_CODE);
+        //// 2.2.2 Create Step 2
+        OPEN_SHOW( Generated_FileHandle , "Unites" );
+//MAX_STEP2 = 1;
+        For S2 = 1 to MAX_STEP2 do
+          S2_LIGNE = Get_Label( DATA_FILE_S2 , S2 , True );
+           IF (S2_LIGNE != "") Then
+
+            S2_NAME     = Fetch_SmartApp(S2_LIGNE,2,";");
+            S2_CODE     = Fetch_SmartApp(S2_LIGNE,1,";");
+            IF (S2_CODE == "*") Then
+                S2_CODE = S1_CODE;
+                S2_ACCESS = S1_ACCESS;
+            Else
+             S2_ACCESS   = Fetch_SmartApp(S2_LIGNE,3,";");
+            End
+
+            OPEN_ID( Generated_FileHandle , S2_NAME ,"Unite.jpg" );
+
+            //// 2.3 Step 3 ///////////////////////////////////////////////////
+            //// 2.3.1 Initatisation Step 3
+               MAX_STEP3 = Initialisation_S3(DATA_FILE_S3);
+               //( DATA_FILE_ALLCOMPTEUR ,DATA_FILE_SUB_ALLCOMPTEUR, DATA_FILE_S3, S2_CODE );
+            //// 2.3.2 Create Step 3
+            OPEN_SHOW( Generated_FileHandle , "Periodicites" );
+//MAX_STEP3 = 0;
+            For S3 = 1 to MAX_STEP3 do
+
+             S3_LIGNE = Get_Label( DATA_FILE_S3 , S3 , True );
+               //MessageBox(Fetch_SmartApp(S3_LIGNE,4,";"),S3_LIGNE+"//"+S3);
+              IF (S3_LIGNE != "" && S3_LIGNE != "*" && Fetch_SmartApp(S3_LIGNE,4,";")!="Live" ) Then
+
+                S3_CODE     = Fetch_SmartApp(S3_LIGNE,1,";");
+                S3_NAME     = Fetch_SmartApp(S3_LIGNE,2,";");
+                S3_ACCESS   = Fetch_SmartApp(S3_LIGNE,3,";");
+
+                OPEN_ID( Generated_FileHandle , S3_NAME , "View.jpg");
+
+                //// 2.4 Step 4 ///////////////////////////////////////////////
+                //// 2.4.1 Initatisation Step 4
+              //  messageBox(DATA_FILE_ALLCOMPTEUR+"//"+DATA_FILE_SUB_ALLCOMPTEUR,DATA_FILE_S4);
+                    MAX_STEP4 = Initialisation_S4( DATA_FILE_ALLCOMPTEUR ,DATA_FILE_SUB_ALLCOMPTEUR, DATA_FILE_S4, S2_CODE );
+
+                //// 2.4.2 Create Step 4
+                //OPEN_SHOW( Generated_FileHandle , "Capteur" );
+//MAX_STEP4 = 0;
+                For S4 = 1 to MAX_STEP4 do
+
+                    S4_LIGNE = Get_Label( DATA_FILE_SUB_ALLCOMPTEUR , S4 , True );
+
+
+                    S4_CODE     = Fetch_SmartApp(S4_LIGNE,1,";");
+                                //MessageBox(S4_CODE,"");
+                     IF ( S4_LIGNE != ""  ) Then
+                       //MessageBox(S4_LIGNE,"");
+                        S4_CODE     = Fetch_SmartApp(S4_LIGNE,1,";");
+                        S4_NAME     = Fetch_SmartApp(S4_LIGNE,3,";");
+                        S4_ACCESS   = Fetch_SmartApp(S4_LIGNE,27,";");
+
+                        //OPEN_ID( Generated_FileHandle , S4_NAME , "Energy.jpg" );
+                        //S4_NAME = Fetch_SmartApp(S4_LIGNE,4,";");
+
+                        //// 2.5 Step 5 ///////////////////////////////////////
+                        //// 2.5.1 Initatisation Step 5
+                          //MAX_STEP5 = Initialisation_S5( DATA_FILE_S5 , DATA_FILE_SUB_ALLCOMPTEUR , S3_NAME);
+                        //// 2.5.2 Create Step 5
+
+                              //OPEN_SHOW( Generated_FileHandle , "Compteurs" );
+                              //For S5 = 1 to MAX_STEP5 do
+                               // S5_LIGNE = Get_Label( DATA_FILE_S5 , S5 , True );
+                                //IF (S5_LIGNE != "") Then
+                                  //S5_CODE     = Fetch_SmartApp(S5_LIGNE,1,";");
+                                  //S5_NAME     = Fetch_SmartApp(S5_LIGNE,2,";");
+                                  //S5_ACCESS   = Fetch_SmartApp(S5_LIGNE,3,";");
+                                    //MessageBox(DATA_FILE_S5 , S5_NAME);
+                                  //OPEN_ID( Generated_FileHandle , S5_NAME, "Compteur.png" );
+
+                                    // Create Compteur DATA
+
+                                      //IF (Fetch_SmartApp(S5_LIGNE,3,";") == S3_NAME) Then
+                                       Create_CompteurDATA( Generated_FileHandle , S4_CODE , S4_NAME , Fetch_SmartApp(S3_LIGNE,4,";"),Fetch_SmartApp(S4_LIGNE,2,";") );
+                                     // End
+                                    ///////////////////////
+                                //End // S5_LIGNE != ""
+                                //CLOSE_ID( Generated_FileHandle ); // Id S5
+
+                              //End // End For Step5
+                              //CLOSE_SHOW( Generated_FileHandle ); // Show S5
+                            /*Else
+
+                                S5_LIGNE = Get_Label( DATA_FILE_S5 , S5 , True );
+                                 //IF (S5_LIGNE != "") Then
+                                   S5_CODE     = Fetch_SmartApp(S5_LIGNE,1,";");
+                                   S5_NAME     = Fetch_SmartApp(S5_LIGNE,2,";");
+                                MessageBox(S5_LIGNE,S5_CODE);
+                                    // Create Compteur DATA
+                                      //IF (Fetch_SmartApp(S5_LIGNE,3,";") == S3_NAME) Then
+                                        Create_CompteurDATA( Generated_FileHandle , S5_CODE , S3_NAME , S4_NAME );
+                                      //End
+                                    ///////////////////////
+                                 // End // S5_LIGNE != ""
+                            End //IF MAX_STEP5 > 1*/
+
+                        ///////////////////////////////////////////////////////
+                        //CLOSE_ID( Generated_FileHandle ); // Id S4
+                     End// IF S4_LIGNE != "" && S4_CODE > 0
+
+                End // End For Step4
+                //CLOSE_SHOW( Generated_FileHandle ); // Show S4
+                ///////////////////////////////////////////////////////////////
+             CLOSE_ID( Generated_FileHandle ); // Id S3
+             End // IF S3_LIGNE != ""
+            End // End For Step3
+            CLOSE_SHOW( Generated_FileHandle ); // Show S3
+            ///////////////////////////////////////////////////////////////////
+          CLOSE_ID( Generated_FileHandle ); // Id S2
+          End // IF S2_LIGNE != ""
+        End // End For Step2
+        CLOSE_SHOW( Generated_FileHandle ); // Show S2
+        ///////////////////////////////////////////////////////////////////////
+       CLOSE_ID( Generated_FileHandle ); // Id S1
+      End // IF S1_LIGNE != ""
+    End // End For Step1
+    CLOSE_SHOW( Generated_FileHandle ); // Show S1
+    //// 2. End Creation Body
+
+
+
+
+    //// 3. Create Footer
+      Footer_FileHandle = FileOpen( Footer_File , "rt" );
+        While ( FileEof(Footer_FileHandle) == 0)
+
+            FileWriteLn( Generated_FileHandle, FileReadLn(Footer_FileHandle) );
+
+        end
+      FileClose( Footer_FileHandle );
+    //// 3. End Creation Footer
+
+
+    FileClose( Generated_FileHandle );
+    MessageBox("End Generation","");
+end
+///////////////////////////////////////////////////////////////////////////////
+//////      Function de Generation  ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+function Int Initialisation_S1( String RESULT_FILE )
+
+    Int Total_S1 = 0;
+    Total_S1 = SA_FileBY_LEVEL( "0" , "2" , RESULT_FILE );
+
+    Return Total_S1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Initialisation_S2( String RESULT_FILE , String ParentCode)
+
+    Int Total_S2 = 0;
+    Total_S2 = SA_FileBY_PCODE( ParentCode , RESULT_FILE );
+
+    Return Total_S2;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Initialisation_S3( String RESULT_FILE )
+
+
+    Int Total_S3 = 0;
+    If (PostCode == "*") Then  Return 0;     End
+
+     Total_S3 = SA_FileVIEW( RESULT_FILE );
+     //SA_FileENERGY( DATA_FILE_ALLCOMPTEUR ,DATA_FILE_SUB_ALLCOMPTEUR, DATA_FILE_S3, PostCode );
+    Return Total_S3;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Initialisation_S4( String DATA_FILE_ALLCOMPTEUR ,String DATA_FILE_SUB_ALLCOMPTEUR, String DATA_FILE_S3, String PostCode)
+
+    Int Total_S4 = 0;
+    //String IN_FILE = ENV_PATH + "\Files\AllCompteur\Views.csv";
+     Total_S4 = SA_FileENERGY( DATA_FILE_ALLCOMPTEUR ,DATA_FILE_SUB_ALLCOMPTEUR, DATA_FILE_S3, PostCode );
+     //SA_FileVIEW( RESULT_FILE );
+    Return Total_S4;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Initialisation_S5( String RESULT_FILE , String DATA_IN ,String Energy)
+
+    Int Total_S5 = 0;
+
+     Total_S5 = SA_CountFile( RESULT_FILE ,DATA_IN,Energy);
+    Return Total_S5;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Get_Label( string file , int Current_LIGNE , Bool Header)
+
+    String FullPathFileName = file ;
+    Int FileHandle;
+    String Ligne ="";
+    int i;
+
+
+
+    FileHandle = FileOpen(FullPathFileName, "rt");
+
+    If ( FileHandle == 0) Then
+        MessageBox(FullPathFileName,"SA GET Label File not found");
+        Return "";
+    End
+
+    If ( Header == True ) Then FileReadLn(FileHandle);    End
+
+
+    For i = 1  to Current_LIGNE do
+       Ligne = FileReadLn(FileHandle);
+    end
+
+    FileClose(FileHandle);
+
+    Return Ligne;
+end
+///////////////////////////////////////////////////////////////////////////////
+//////      Smart App Function  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+function void OPEN_SHOW( Int FileHandle , String Titre )
+ String L0 = CharToStr(34) + "categories" +CharToStr(34)+ ": [";
+ String L1 = "{";
+ String L2 = CharToStr(34) + "show" +CharToStr(34)+ ": 1,";
+ String L3 = CharToStr(34) + "title" + CharToStr(34) + ": " + CharToStr(34) + Titre + CharToStr(34) + ",";
+ String L4 = CharToStr(34) + "access"+CharToStr(34)+ ": 0,";
+ String L5 = CharToStr(34) + "items" + CharToStr(34) + ": [";
+
+    FileWriteLn(FileHandle,L0);
+    FileWriteLn(FileHandle,L1);
+    FileWriteLn(FileHandle,L2);
+    FileWriteLn(FileHandle,L3);
+    FileWriteLn(FileHandle,L4);
+    FileWriteLn(FileHandle,L5);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CLOSE_SHOW( Int FileHandle )
+    FileWriteLn(FileHandle,"]");
+    FileWriteLn(FileHandle,"}");
+    FileWriteLn(FileHandle,"]");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void OPEN_ID( Int FileHandle , String Titre , String ICON )
+
+ String ID = "E_"+SA_ID;
+ String L1 = "{";
+ String L2 = CharToStr(34) + "id" +CharToStr(34)+ ": " +CharToStr(34)+ ID +CharToStr(34)+ ",";
+ String L3 = CharToStr(34) + "label" + CharToStr(34) + ": " + CharToStr(34) + Titre + CharToStr(34) + ",";
+ String L4 = CharToStr(34) + "access"+CharToStr(34)+ ": 0,";
+ String L5 = CharToStr(34) + "icon"+ CharToStr(34) + ": " + CharToStr(34) + ICON + CharToStr(34)+ ","; //"icon": "Site.jpg",
+ String L6 = CharToStr(34) + "items" + CharToStr(34) + ": [";
+    FileWriteLn(FileHandle,L1);
+    FileWriteLn(FileHandle,L2);
+    FileWriteLn(FileHandle,L3);
+    FileWriteLn(FileHandle,L4);
+    FileWriteLn(FileHandle,L5);
+    FileWriteLn(FileHandle,L6);
+    SA_ID = SA_ID +1;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CLOSE_ID( Int FileHandle )
+     FileWriteLn(FileHandle,"},");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_CompteurDATA( Int FileHandle , String CompteurCODE , String Energy , String View , String CompteurName )
+
+
+    String ListFile = SA_BUILDER_PATH +  "Source\" + Energy + "_" + View + ".txt";
+    Int List_FileHandle;
+    String LIGNE = "";
+    String Indicator = "";
+    String IndicatorLABEL = "";
+    Int NBR_List = 0;
+    String ALL_Listes = "";
+    Int List ;
+    String ROW_LIST_LABELS = "";
+    String Icon="Measure.jpg";
+    Int i;
+    String LABEL_LIST;
+
+    ROW_LIST_LABELS = GET_ROW_LIST_LABELS( Energy );
+
+  // MessageBox(CompteurCODE+"///"+Energy,View);
+
+//MessageBox(CompteurCODE,Energy+"///"+View);
+    List_FileHandle = FileOpen(ListFile,"rt");
+    //MessageBox(ListFile,List_FileHandle);
+    If (List_FileHandle != 0) Then
+
+    //MessageBox(CompteurCODE,"Create_CompteurDATA");
+
+        While ( FileEof(List_FileHandle) == 0 )
+          LIGNE = FileReadLn(List_FileHandle);
+           IF (LIGNE!= "") Then
+            Indicator = Fetch_SmartApp(LIGNE,1,":");
+            NBR_List = StrToInt( Fetch_SmartApp(LIGNE,2,":") );
+            ALL_Listes = Fetch_SmartApp(LIGNE,3,":");
+
+                IF (Indicator == "C") Then IndicatorLABEL = "Consommation";     End
+                IF (Indicator == "R") Then IndicatorLABEL = "Ratio";     End
+                IF (Indicator == "I") Then IndicatorLABEL = "Incidents";     End
+                IF (Indicator == "T") Then IndicatorLABEL = "Temperature";     End
+                IF (Indicator == "H") Then IndicatorLABEL = "Humidité";     End
+
+                OPEN_SHOW( FileHandle , CompteurName+" : "+ IndicatorLABEL );
+
+                  For i = 1 to NBR_List do
+                    List = StrToInt( Fetch_SmartApp(ALL_Listes,i,";") );
+                    LABEL_LIST = Fetch_SmartApp(ROW_LIST_LABELS, List +2 ,";");
+
+                     //MessageBox(ROW_LIST_LABELS ,LABEL_LIST + "/"+ List);
+
+                    Create_SingleCompteurDATA( FileHandle , LABEL_LIST ,CompteurCODE , List ,Icon );
+                  End // For
+
+                CLOSE_SHOW(FileHandle);
+
+           End //LIGNE!= ""
+        End  // While
+
+    End // If List_FileHandle != 0
+    FileClose(List_FileHandle);
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Create_SingleCompteurDATA( Int FileHandle , String LABEL ,String CompteurCODE , String List,String Icon )
+
+ String ID = "E_"+SA_ID;
+
+ String L1 = "{";
+ String L2 = CharToStr(34) + "id" +CharToStr(34)+ ": " +CharToStr(34)+ ID +CharToStr(34)+ ",";
+ String L3 = CharToStr(34) + "label" + CharToStr(34) + ": " + CharToStr(34) + LABEL + CharToStr(34) + ",";
+
+  String L4 = CharToStr(34) + "gate" + CharToStr(34) + ": " + CharToStr(34)
+                            + "CMP," + CompteurCODE  + ","  + List + CharToStr(34) + ",";
+
+  String L5 = CharToStr(34) + "type"+CharToStr(34)+ ": " + CharToStr(34)+"text"+ CharToStr(34) + ",";
+  String L6 = CharToStr(34) + "value"+CharToStr(34)+ ": " + CharToStr(34)+"%.*f"+ CharToStr(34) + ",";
+
+ String L7 = CharToStr(34) + "access"+CharToStr(34)+ ": 0,";
+ String L8 = CharToStr(34) + "icon" + CharToStr(34) + ": " +CharToStr(34)+Icon+CharToStr(34);
+ //MessageBox(L8,CharToStr(34));
+ String L9 = "},";
+
+ //MessageBox(LABEL,CompteurCODE + "," + List);
+
+    FileWriteLn(FileHandle,L1);
+    FileWriteLn(FileHandle,L2);
+    FileWriteLn(FileHandle,L3);
+    FileWriteLn(FileHandle,L4);
+    FileWriteLn(FileHandle,L5);
+    FileWriteLn(FileHandle,L6);
+    FileWriteLn(FileHandle,L7);
+    FileWriteLn(FileHandle,L8);
+    FileWriteLn(FileHandle,L9);
+    SA_ID = SA_ID +1;
+
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function int SA_FileBY_LEVEL( String LEVELMIN , String LEVELMAX , String RESULT_FILE )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+
+    Num_LEVEL_MIN = StrToInt(LEVELMIN);
+    Num_LEVEL_MAX = StrToInt(LEVELMAX);
+    Int NUM_LEVEL;
+    String LABEL;
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+    FileHandle   = FileOpen(FullPathFileName,"rt");
+    If (FileHandle == 0) Then Return 0; End
+
+    ListFullPathFileName = RESULT_FILE;
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS");
+
+    While ( FileEof(FileHandle) == 0 )
+       Ligne = FileReadLn(FileHandle);
+        If ( Ligne != "" ) Then
+        LEVEL = Fetch_SmartApp(Ligne,5,";");
+
+        NUM_LEVEL = StrToInt(LEVEL);
+
+            If ( LEVEL >= Num_LEVEL_MIN && LEVEL <= Num_LEVEL_MAX ) Then
+                Code = Fetch_SmartApp(Ligne,1,";");
+                Name = Fetch_SmartApp(Ligne,2,";");
+                //LABEL = TRIM_NAV_NAME22( Name );
+                Access = Fetch_SmartApp(Ligne,8,";");
+                i=i+1;
+                FileWriteLn(ListFileHandle,Code+";"+Name+";"+ Access);
+
+            End
+
+        End
+
+    End
+
+    FileClose(ListFileHandle);
+    FileClose(FileHandle);
+
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function int SA_FileBY_PCODE( String PCode , String RESULT_FILE )
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    //String PCode;
+    String Code;
+    String Name;
+    String READ_LEVEL;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    String Access;
+    //Int NUM_LEVEL = StrToInt( LEVEL );
+    Int NUm_READLEVEL;
+    String LABEL;
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+    FileHandle   = FileOpen(FullPathFileName,"rt");
+    If (FileHandle == 0) Then Return 0; End
+
+    ListFullPathFileName = RESULT_FILE;
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+       FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS");
+
+     FileWriteLn(ListFileHandle,"*;Tous les Unites;" + AccessALL);
+     i=i+1;
+
+    While ( FileEof(FileHandle) == 0 )
+       Ligne = FileReadLn(FileHandle);
+        If ( Ligne != "" ) Then
+        Code = FetchBU(Ligne,3,";");
+         READ_LEVEL = Fetch_SmartApp(Ligne,5,";");
+         NUm_READLEVEL = StrToInt( READ_LEVEL );
+
+         //READ_LEVEL = Fetch_SmartApp(Ligne,5,";");
+
+            If ( Code == PCode && NUm_READLEVEL >= 3) Then
+                Code = Fetch_SmartApp(Ligne,1,";");
+                Name = Fetch_SmartApp(Ligne,2,";");
+                //LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,8,";");
+                i=i+1;
+                FileWriteLn(ListFileHandle,Code+";"+Name+";"+Access);
+
+            End
+
+        End
+
+    End
+
+    FileClose(ListFileHandle);
+    FileClose(FileHandle);
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int SA_FileENERGY( String DATA_FILE_ALLCOMPTEUR ,String DATA_FILE_SUB_ALLCOMPTEUR, String DATA_FILE_S3, String PCC)
+
+    String ConfigFile = "C:\Winlog\PowerShell\Query_CONFIG.txt";
+    Int FileHandle;
+
+    //String INPUT_File = ENV_PATH + "\Files\AllCompteur\AllCompteur.csv";
+    String INPUT_File = DATA_FILE_ALLCOMPTEUR ;
+    //String OUTPUT_File = SA_BUILDER_PATH +  "Source\SUB_AllCompteur.csv" ;
+    String OUTPUT_File = DATA_FILE_SUB_ALLCOMPTEUR;
+    String NBR_Parameters = "1";
+    String Parameters = "PC_Consommation:"+PCC;
+    int i;
+    String P;
+
+    If ( FileExist( OUTPUT_File ) == True ) Then FileDelete(OUTPUT_File);  End
+    ///////////////////////////////////////////////////////////////////////////
+    // Create Config File For Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+    FileHandle = FileOpen(ConfigFile,"wt");
+
+    FileWriteLn(FileHandle,INPUT_File);
+    FileWriteLn(FileHandle,OUTPUT_File);
+    FileWriteLn(FileHandle,NBR_Parameters);
+    FileWriteLn(FileHandle,Parameters);
+    /*For i = 1 to NBR_Parameters do
+        P = Fetch_Unite(Parameters,i,";");
+        FileWriteLn(FileHandle,P);
+    End*/
+
+    FileClose(FileHandle);
+    ///////////////////////////////////////////////////////////////////////////
+    // Execute Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+
+      ShellExec("Query.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Waite Powershell Search Complete
+    ///////////////////////////////////////////////////////////////////////////
+        Sleep(500);
+        While (FileExist( OUTPUT_File ) == False )
+         Sleep(500);
+        End
+
+    ConfigFile = "C:\Winlog\PowerShell\GET_UNIQUE.txt";
+    INPUT_File = DATA_FILE_SUB_ALLCOMPTEUR;
+    //OUTPUT_File = SA_BUILDER_PATH +  "\Source\S3.csv" ;
+    OUTPUT_File = DATA_FILE_S3;
+    Parameters = "Energie";
+
+    If ( FileExist( OUTPUT_File ) == True ) Then FileDelete(OUTPUT_File);  End
+
+    FileHandle = FileOpen(ConfigFile,"wt");
+
+    FileWriteLn(FileHandle,INPUT_File);
+    FileWriteLn(FileHandle,OUTPUT_File);
+    FileWriteLn(FileHandle,Parameters);
+
+    FileClose(FileHandle);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Execute Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+
+      ShellExec("UNIQUE Fields.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Waite Powershell Search Complete
+    ///////////////////////////////////////////////////////////////////////////
+        Sleep(500);
+        While (FileExist( OUTPUT_File ) == False )
+         Sleep(500);
+        End
+     i = 0;
+     FileHandle = FileOpen(OUTPUT_File,"rt");
+
+     While ( FileEof(FileHandle) == 0 )
+       P = FileReadLn(FileHandle);
+       //IF ( P != "" && P != "*" ) Then
+         i = i+1;
+       //End
+     End
+     FileClose(FileHandle);
+
+     Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int SA_FileVIEW( String RESULT_FILE)
+
+    String FullPathFileName;
+    String ListFullPathFileName;
+    String Ligne;
+    String PCode;
+    String LEVEL;
+    String Code;
+    String Name;
+    String Access;
+    String Shortname;
+    Int i =0;
+    Int FileHandle;
+    Int ListFileHandle;
+    Int Num_LEVEL_MIN;
+    Int Num_LEVEL_MAX;
+    String LABEL;
+
+
+    FullPathFileName = ENV_PATH + "\Files\AllCompteur\Views.csv";
+   //FullPathFileName = ReadFILE;
+
+    ListFullPathFileName = RESULT_FILE;
+    ListFileHandle   = FileOpen(ListFullPathFileName,"wt");
+
+
+    FileWriteLn(ListFileHandle,"CODE;NAME;ACCESS;SHORTNAME");
+
+        FileHandle   = FileOpen(FullPathFileName,"rt");
+
+        If (FileHandle == 0) Then
+          FileClose(ListFileHandle);
+            Return 0;
+        End
+
+        Ligne = FileReadLn(FileHandle); // header
+
+        While ( FileEof(FileHandle) == 0 )
+            Ligne = FileReadLn(FileHandle);
+
+                IF ( Ligne != "" ) Then
+
+                Code = Fetch_SmartApp(Ligne,1,";");
+                Name = Fetch_SmartApp(Ligne,2,";");
+                //LABEL = TRIM_NAV_NAME22( Name );
+                Access = FetchBU(Ligne,4,";");
+                Shortname = FetchBU(Ligne,3,";");
+                i=i+1;
+                If ( Access == "*" || Access == "" ) then  Access = AccessALL;    End
+                FileWriteLn(ListFileHandle,Code+";"+Name+";"+ Access+";"+ Shortname);
+
+                End
+
+        End
+
+    FileClose(FileHandle);
+    FileClose(ListFileHandle);
+
+    Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int SA_CountFile( String FILE ,String DATA_IN , String Energy)
+
+    String ConfigFile = "C:\Winlog\PowerShell\Query_CONFIG.txt";
+    Int FileHandle;
+
+    String INPUT_File = DATA_IN;
+    //String OUTPUT_File = SA_BUILDER_PATH +  "Source\WUB_AllCompteur.csv" ;
+    String OUTPUT_File = FILE;
+    String NBR_Parameters = "1";
+    String Parameters = "Energie:"+Energy;
+    int i;
+    String P;
+
+    If ( FileExist( OUTPUT_File ) == True ) Then FileDelete(OUTPUT_File);  End
+    ///////////////////////////////////////////////////////////////////////////
+    // Create Config File For Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+    FileHandle = FileOpen(ConfigFile,"wt");
+
+    FileWriteLn(FileHandle,INPUT_File);
+    FileWriteLn(FileHandle,OUTPUT_File);
+    FileWriteLn(FileHandle,NBR_Parameters);
+    FileWriteLn(FileHandle,Parameters);
+
+    FileClose(FileHandle);
+    ///////////////////////////////////////////////////////////////////////////
+    // Execute Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+
+      ShellExec("Query.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Waite Powershell Search Complete
+    ///////////////////////////////////////////////////////////////////////////
+        Sleep(500);
+        While (FileExist( OUTPUT_File ) == False )
+         Sleep(500);
+        End
+
+     //FileCopy(OUTPUT_File,INPUT_File,False);
+     //OUTPUT_File = INPUT_File;
+
+      FileHandle = FileOpen(OUTPUT_File,"rt");
+    i=0;
+    FileReadLn(FileHandle);
+     While ( FileEof(FileHandle) == 0 )
+       P = FileReadLn(FileHandle);
+       IF ( P != ""  ) Then
+         i = i+1;
+       End
+     End
+     FileClose(FileHandle);
+
+     Return i;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String GET_ROW_LIST_LABELS( String Energy )
+
+   String EVM_File = ENV_PATH+"\Files\AllCompteur\EnergyMeasureView.csv";
+
+   Int EVM_FileHandle = FileOpen(EVM_File,"rt");
+   Bool Found = False ;
+   Bool Exit = False;
+   String TextRow = "";
+
+   If (EVM_FileHandle ==0) then MessageBox("Energy Not found","EVM"); Return ""; End
+
+    While( Exit == False )
+      TextRow=FileReadLn(EVM_FileHandle);
+        If ( Fetch_SmartApp(TextRow,1,";") == Energy) Then
+
+         Found = True;
+        End
+
+        If (Found == True) Then Exit = True; End
+        If (FileEof(EVM_FileHandle)!=0) Then Exit = True; End
+    End
+
+    FileClose(EVM_FileHandle);
+
+    IF (Found == True) Then
+        Return TextRow;
+    Else
+        Return "";
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Fetch_SmartApp(string Item, int Col,string op)
+string txt = Item;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,op);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end

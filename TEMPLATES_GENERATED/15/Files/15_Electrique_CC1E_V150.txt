@@ -1,0 +1,2 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1P11;EXT IMEF1 TR1;Electrique;CC1E;Froid TR1;6;S200;M160;MA02A;STEG;PosteTR1;EXT IMEF1 TR1;F(CC1P11);SubAtelier;*;*;Froid;*;*;F~(~CC1P11~)~;F~(~EXT IMEF1 TR1~)~;;;0;Extension IMEF1 TR1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1P12;York TR1;Electrique;CC1E;Froid TR1;6;S200;M160;M11D1;STEG;PosteTR1;York TR1;F(CC1P12);SubAtelier;*;*;Froid;*;*;F~(~CC1P12~)~;F~(~York TR1~)~;;;0;York TR1;*

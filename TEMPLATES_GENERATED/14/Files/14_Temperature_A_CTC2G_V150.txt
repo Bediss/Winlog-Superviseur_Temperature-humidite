@@ -1,0 +1,7 @@
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC23;BER_Process;Temperature;CTC2G;Beurrerie;3;D64;*;D271;T°c  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC24;BER_Cond;Temperature;CTC2G;Beurrerie;3;D64;*;D272;T°c  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC2G;Beurrerie;Temperature;CTC2;2;*;*;D27;*;*;Beurrerie
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC23;BER_Process;Temperature;CTC2G;Beurrerie;3;D64;*;D271;T°c  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC24;BER_Cond;Temperature;CTC2G;Beurrerie;3;D64;*;D272;T°c  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC23;BER_Process;Temperature;CTC2G;Beurrerie;3;D64;*;D271;T°c  positive;*;BER_Process;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~A#7;<T°c >~A#3;T°c max~A#11;Inc~A#15;Inc~A-1#33;C %~A#37;§CTC24;BER_Cond;Temperature;CTC2G;Beurrerie;3;D64;*;D272;T°c  positive;*;BER_Cond;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

@@ -1,0 +1,8 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1M11;ARM Surgele TR6;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M25H;STEG;PosteTR6;ARM-Surgele TR6;F(CC1M11);SubAtelier;*;*;Surgele;*;*;F~(~CC1M11~)~;F~(~ARM Surgele TR6~)~;;;0;Armoires Surgele TR6;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C156;MONTE CHARGE;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M256;STEG;PosteTR6;MONTE CHARGE;Reel;SubAtelier;*;*;Surgele;!~*;!~*;;;;;3;MONTE CHARGE;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C15A;surgelateur 1;Electrique;CC1M1;Surgele TR6;7;S200;M1B0;M25A;STEG;PosteTR6;surgelateur 1;Reel;Machine;*;*;Surgele;!~*;!~*;;;;;3;surgelateur 1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C15B;surgelateur 2;Electrique;CC1M1;Surgele TR6;7;S200;M1B0;M25B;STEG;PosteTR6;surgelateur 2;Reel;Machine;*;*;Surgele;!~*;!~*;;;;;3;surgelateur 2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C15C;vestiere;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M25C;STEG;PosteTR6;vestiere;Reel;SubAtelier;*;*;Surgele;!~*;!~*;;;;;2;vestiere;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C15D;baratte;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M25D;STEG;PosteTR6;baratte;Reel;SubAtelier;*;*;Surgele;!~*;!~*;;;;;2;baratte;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C15E;ChargeB Chariot;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M25E;STEG;PosteTR6;chargeB chariot;Reel;SubAtelier;*;*;Surgele;!~*;!~*;;;;;2;charge batterie chariot;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1Q2;DIVER SURG -SK-;Electrique;CC1M1;Surgele TR6;6;S200;M1B0;M25F;STEG;PosteTR6;Osmose Surgele2;Reel;SubAtelier;*;*;Surgele;!~*;!~*;;;;;2;DIVER SURGELE SAUF SKID NEGATIF;*

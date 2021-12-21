@@ -1,0 +1,9 @@
+DATE;GATEWAY;IPADDRESS;COMMINATION CHECKs
+01/28/2021 07:28:17;Convertisseur RTU-TCP Local Habillement;10.10.14.10;False
+01/28/2021 07:28:17;Convertisseur RTU-TCP Local Beurrerie;10.10.14.11;False
+01/28/2021 07:28:17;Convertisseur RTU-TCP Local Serveur Process;10.10.14.12;False
+01/28/2021 07:28:17;Convertisseur RTU-TCP Local Matiere Premiere;10.10.14.13;False
+01/28/2021 07:28:17;Convertisseur ANA-TCP LABO PHY-Chimique;10.10.14.16;False
+01/28/2021 07:28:17;Convertisseur ANA-TCP LABO Bacterio 1;10.10.14.15;False
+01/28/2021 07:28:17;Convertisseur ANA-TCP LABO Bacterio 2;10.10.14.17;False
+01/28/2021 07:28:17;Convertisseur ANA-TCP Salle Fermentation;10.10.14.18;False

@@ -1,0 +1,9 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O1;Hachoir CB160;Electrique;CC1O;Poste TRX;7;S200;MX00;M225;STEG;Poste TRX;Hachoir CB 160 ;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Hachoir CB160;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O2;Skid;Electrique;CC1O;Poste TRX;7;S200;MX00;M11M;STEG;Poste TRX;skid;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;Skid;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O3;Restaurant Elec;Electrique;CC1O;Poste TRX;5;S200;MX00;Z300;STEG;Poste TRX;Facility;Reel;Atelier;*;*;Refectoires;!~*;!~*;;;;;2;Restaurant Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O4;Chaine Ressuage;Electrique;CC1O;Poste TRX;6;S200;MX00;M21H;STEG;Poste TRX;Hydro nettoyeur;Reel;SubAtelier;*;*;Abattoir;!~*;!~*;;;;;2;Chaine Ressuage;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O5;Atelier O-B;Electrique;CC1O;Poste TRX;5;S200;MX00;M21E;STEG;Poste TRX;Atelier-OB;Reel;Atelier;*;*;Abattoir;!~*;!~*;;;;;2;Atelier Osso Bucoo;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O6;Cutteur N1;Electrique;CC1O;Poste TRX;7;S200;MX00;M22B;STEG;Poste TRX;cutteru N1;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Cutteur N1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O7;Cutteur N2;Electrique;CC1O;Poste TRX;7;S200;MX00;M22C;STEG;Poste TRX;cutteur N2;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Cutteur N2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O8;ElMazraa Eclair;Electrique;CC1O;Poste TRX;5;S200;MX00;Z300;STEG;Poste TRX;Facility;Reel;Atelier;*;*;ElMazeraa;!~*;!~*;;;;;2;Elairage ElMazraa;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1O9;LChariot+GRP-EL;Electrique;CC1O;Poste TRX;5;S200;MX00;M156;STEG;Poste TRX;Lchariot+GRP-EL;Reel;Atelier;*;*;Chaufferie;!~*;!~*;;;;;2;Local Chariot +Grp electrogene;*

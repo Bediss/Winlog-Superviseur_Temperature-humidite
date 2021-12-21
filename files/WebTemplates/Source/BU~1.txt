@@ -1,0 +1,10 @@
+CODE;NAME;ACCESS
+D1;¤ CLC.                  ;14
+D2;¤ Production.           ;2
+D26;¤ Galdi.                ;2
+D27;¤ Beurrerie.            ;2
+D3;¤ CH_F_Commerciale.     ;32
+D4;¤ Laboratoire.          ;4
+D41;¤ LAB_Bacterio.         ;4
+D42;¤ LAB_PhysicoChimique.  ;4
+D5;¤ Salle_De_Fermentatio. ;8

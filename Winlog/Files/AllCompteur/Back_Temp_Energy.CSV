@@ -1,0 +1,16 @@
+Code_Energy;Name_Energy;Parent_Energy;OUTP_Prefix_Energy;INP_Prefix_Energy;NBR_PREFIX;NB_C_INP;NBR_List_Energy;Last_Code_Energy;Acces_Energy;Energy_LIVEInc_List
+1;Temperature;*;CTC;TC;3;2;32;0;;27
+2;Humidite;*;CHPC;HPC;4;3;32;0;;27
+3;Humidite;*;CHPC;HPC;4;3;32;0;;27
+4;Temperature;*;CTC;TC;3;2;32;0;;27
+5;Temperature;*;CTC;TC;3;2;32;0;;27
+6;Humidite;*;CHPC;HPC;4;3;32;0;;27
+7;Humidite;*;CHPC;HPC;4;3;32;0;;27
+8;Temperature;*;CTC;TC;3;2;32;0;;27
+9;Temperature;*;CTC;TC;3;2;32;0;;27
+10;Humidite;*;CHPC;HPC;4;3;32;0;;27
+11;Humidite;*;CHPC;HPC;4;3;32;0;;27
+12;Temperature;*;CTC;TC;3;2;32;0;;27
+13;Temperature;*;CTC;TC;3;2;32;0;;27
+14;Humidite;*;CHPC;HPC;4;3;32;0;;27
+15;Humidite;*;CHPC;HPC;4;3;32;0;;27

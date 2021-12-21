@@ -1,0 +1,3 @@
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF04;Ecart P/D Froid;Froid;CF1;ElMazeraa Froid;1;*;*;*;*;*;*;CF02-CF06;Site;*;*;VMZ;*;*;CF02~-~CF06~;VMZ Prod F~-~VMZ Distrib F~;;;0;Ecart Production/Distribution Froid;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF12;Production F;Froid;CF1;ElMazeraa Froid;2;*;*;Z100;*;*;Production;F(CF12);Type de Site;*;*;*;*;*;F~(~CF12~)~;F~(~Production F~)~;;;0;Production Froid;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;§CF11;Utilitaire F;Froid;CF1;ElMazeraa Froid;2;*;*;Z200;*;*;Utilitaire;F(CF11);Type de Site;*;*;*;*;*;F~(~CF11~)~;F~(~Utilitaire F~)~;;;0;Utilitaire Froid;*

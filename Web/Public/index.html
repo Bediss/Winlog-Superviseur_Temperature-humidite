@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<title>Real Time Monitoring</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="simplegrid.css" rel="stylesheet" type="text/css">
+	<link href="styles.css" rel="stylesheet" type="text/css">
+	<script src="script.js"></script>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', indexPage);
+	</script>
+</head>
+<body>
+	<div class="grid grid-pad">
+		<div id="header-div" class="col-1-1">
+			<img id="splash" src="splash.png"/>
+			<p id="description"></p>
+		</div>
+		<div class="col-1-1">
+			<div id="icons-div">
+				<div id="webclient" class="col-1-3 mobile-col-1-3 icon-container">
+					<a id="webclient-link" class="link"><img src="webclient.png" class="icon" alt="Java Web Client" /></a>
+				</div>
+				<div id="smartclient" class="col-1-3 mobile-col-1-3 icon-container">
+					<a id="smartclient-link" class="link" href="smartclient"><img src="smartclient.png" class="icon" alt="Smart Client" /></a>
+				</div>
+				<div id="shareddir" class="col-1-3 mobile-col-1-3 icon-container">
+					<a id="shareddir-link" class="link" href="shared"><img src="shared-dir.png" class="icon" alt="Public folder" /></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

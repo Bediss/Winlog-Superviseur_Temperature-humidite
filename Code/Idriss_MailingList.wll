@@ -1,0 +1,1534 @@
+Global int Position ;
+Global String Admin_View_Temp_File_UP;
+Global String SMS_ERR;
+Global String Path_File;
+
+
+function void Bouton_MailingList()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+MaxRow = 10 ;
+MaxCol = 1;
+int i;
+String GATE;
+String FileName;
+
+Confirme_Save();
+PageOpen="MailingList";
+LenPrefix=3;
+
+Admin_View_Temp_File=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+Admin_View_CurrentLine=";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+Path_File= REPORT_PATH_MailingList;
+    SetNumGateValue("Show_Temp_Pointer",0,1073741952);
+    SetStrGateValue("AlarmeEventModifer",1,"");
+    SetStrGateValue("AlarmeEventModifer",2,"");
+    SetStrGateValue("AlarmeEventModifer",3,"");
+    SetStrGateValue("AlarmeEventModifer",4,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    SetNumGateValue("AP_Value",0,0);
+       // Position=2;
+        //Operateur=";";
+            Temp_Admin_View_Recycle_Code=ENV_PATH+"\Files\DATAMODELFiles\Temp_Code_Recycler.txt";
+         Admin_View_Temp_File_UP=REPORT_PATH_MailingList+"Lists\Temp_MailingList.CSV";
+         Admin_View_Original_File=REPORT_PATH_MailingList+"Lists\MailingList.CSV";
+        Admin_View_Recycle_Code=REPORT_PATH_MailingList+"Lists\Recycle_EML_Code.txt";
+
+           LenPrefix=3;
+           FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,False);
+           Initfile(Admin_View_Original_File,Admin_View_Temp_File_UP);
+           //Highest_Code_Initialisation(Admin_View_Original_File,Admin_View_Recycle_Code);
+        //Highest_Code2_Initialisation(Admin_View_Temp_File_UP,Admin_View_Recycle_Code);
+
+
+        for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            SetStrGateValue(GATE,0,"");
+            SetStrGateValue(GATE,1,"");
+        end
+     Position=1;
+     Operateur=";";
+
+     SetNumGateValue("EmailPageView",0,1);
+     SetNumGateValue("AdminTotalItems",1,0);
+     SetNumGateValue("AdminTotalItems",2,0);
+     SetNumGateValue("EditPosition",0,0);
+      ShowPage("MailingList");
+      FlagUses=False;
+
+end
+
+
+function void Display_D(Int Page,String File,int Pos,String Gate, int List,String Sep)
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    String Part;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+
+   // SetStrGateValue("AlarmeEventModifer",1,"");
+     //  SetStrGateValue("AlarmeEventModifer",2,"");
+          SetStrGateValue("AlarmeEventModifer",3,"");
+             SetStrGateValue("AlarmeEventModifer",4,"");
+              //  SetStrGateValue("AlarmeEventModifer",1,"");
+
+
+           For i = 1 to 10 do
+              EVM = Gate+i;
+              SetStrGateValue(EVM,List,"");
+              SetStrGateValue(EVM,2,"");
+              SetStrGateValue(EVM,3,"");
+           End
+
+    FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+      /*MessageBox("Fichier"+File+"n'existe Pas","Erreur");*/  Return;
+    end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+
+    StartDisplay = Row_Start -1;
+    /* if GetStrGateValue("AlarmeEventModifer",1)=="User Master List"  then
+     StartDisplay=StartDisplay+1;
+     end*/
+
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Part=Fetch_Email(TextRow,Pos,Sep);
+              j = j+1;
+                EVM = Gate+j;
+                    // For Display
+                SetStrGateValue(EVM,List,Part);
+                Part=Fetch_Email(TextRow,Pos-1,Sep);
+                SetStrGateValue(EVM,2,Part);
+                Part=Fetch_Email(TextRow,Pos+2,Sep);
+                SetStrGateValue(EVM,3,Part);
+                //MessageBox(SetStrGateValue(EVM,2,Part),Page);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,Gate);
+      else
+        CleanEmptyRows(j+1,Gate);
+     end
+
+end
+
+
+/////////////////////////////////////////////////////////
+Function Void NewListCreation()
+String NameFile;
+String FullPathFileName;
+
+ bool Exist;
+int TotalItem;
+int FileHandle;
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",20);
+    NameFile=FR_Speciale_CHar(NameFile);
+    Confirme_Save=True;
+    If (NameFile=="") then MessageBox("Nom de file est vide impossible de le creer!!","Info"); return ;end
+
+    FullPathFileName =REPORT_PATH_MailingList+NameFile+".txt";
+     Exist= UniqueNameFile(FullPathFileName);
+       IF Exist== False then
+    SetStrGateValue("AlarmeEventModifer",2,NameFile);
+    FileHandle=FileOpen(FullPathFileName,"wt");
+
+     LoadBouton_MailingList("ROW",1);
+     TotalItem=scanfile(FullPathFileName);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+     Display_C(1,FullPathFileName,1,"ROW",1,";");
+     FileClose(FileHandle);
+      ShowPoPUPs("");
+    end
+End
+////////////////////////////////////
+Function void save_MailingList()
+
+String NameFile;
+String CLFullPathFileName;
+String WCLFullPathFileName;
+int CLFileHandle;
+int WCLFileHandle;
+String Code_CL;
+int privilege=0;
+String Ligne;
+bool Exist=False;
+BOOL Exist2=False;
+String Path;
+int All=8191;
+int i=1;
+int j=0;
+String S;
+Confirme_Save=False;
+ SetStrGateValue("AlarmeEventModifer",17,"");
+  NameFile=GetStrGateValue("AlarmeEventModifer",2);
+  if NameFile== "" then   SetStrGateValue("AlarmeEventModifer",17,"Selectionner ou crée une Liste pour l'Enregistrer");return ; end
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+if NameFile!= "" then
+   Path=REPORT_PATH_MailingList;
+
+    NameFile=GetStrGateValue("AlarmeEventModifer",2);
+    CLFullPathFileName=Path+"Lists\MailingList.CSV";
+    CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+    Exist2 = ExistingInFileWithPS( "C:\Winlog\PowerShell\","Email.CSV",ENV_PATH + "\Files\DATAMODELFiles\EMail\",NameFile,3,4);
+
+    //MessageBox(ENV_PATH + "\Files\DATAMODELFiles\EMail\",NameFile);
+
+      if ( CLFileHandle == 0 ) then MessageBox(CLFullPathFileName," File Note found");return ; end
+
+
+     While ( FileEof( CLFileHandle ) == 0)
+        Ligne=FileReadLn(CLFileHandle);
+        i=i+1;
+            if Fetch_Email(Ligne,2,";")== NameFile then
+                Exist=True;
+                j=i;
+            end
+     end
+     i=0;
+      FileClose(CLFileHandle);
+
+
+    if Exist==False then
+        CLFileHandle=FileOpen(CLFullPathFileName,"at");
+
+        privilege=Calcul_Privilege(NameFile,Path,All,2);
+        Code_CL=FetchCodeAdd(Path+"Lists","EML");
+        FileWriteLn(CLFileHandle,Code_CL+";"+NameFile+";"+Path+";"+privilege+";Mailing List");
+        FileClose(CLFileHandle);
+
+       else
+             privilege=Calcul_Privilege(NameFile,Path,All,2);
+
+            WCLFullPathFileName=Path+"Lists\WMailingList.CSV";
+            WCLFileHandle=FileOpen(WCLFullPathFileName,"wt");
+            CLFileHandle=FileOpen(CLFullPathFileName,"rt");
+
+          While ( FileEof( CLFileHandle ) == 0)
+                Ligne=FileReadLn(CLFileHandle);
+                i=i+1;
+
+                if i==j-1 then
+                      Ligne=FR_Formule(Ligne,privilege,4);
+                      FileWriteLn(WCLFileHandle,Ligne);
+                  else
+                   if Ligne!="" then
+                    FileWriteLn(WCLFileHandle,Ligne);
+                   end
+
+                end
+          end
+                      FileClose(WCLFileHandle);
+                       FileClose(CLFileHandle);
+
+              FileCopy(WCLFullPathFileName,CLFullPathFileName,false);
+              FileDelete(WCLFullPathFileName);
+
+
+    end
+
+ end
+
+
+  if Exist2==True then
+  //MessageBox(Exist2,"In");
+
+     S=contruct_line(Path+NameFile+".txt",",");
+
+    UpdateInFileWithPS( "C:\Winlog\PowerShell\" ,"Email.CSV",NameFile,S,3,9,4,10 );
+
+    end
+            SetStrGateValue("AlarmeEventModifer",17,"Enregistrement avec Succee");
+            FlagUses=False;
+End
+
+
+function void Delete_MaillingList()
+   String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+ bool Exist;
+ String GATE;
+ int i;
+ bool QB;
+
+    String FullPathFileName = REPORT_PATH_MailingList+NameFile+".txt";
+    String BackPath=REPORT_PATH_MailingList+"Lists\BackMailingList.CSV";
+    String WPath=REPORT_PATH_MailingList+"Lists\WMailingList.CSV";
+
+    int FileHandle=FileOpen(FullPathFileName,"rt");
+
+    FileClose(FileHandle);
+    if(NameFile=="0-LAISSEZ VIDE" || NameFile=="URGENT_MailingList" )then
+       SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer La liste "+NameFile);
+       return;
+    end
+
+        if (FileExist(FullPathFileName))then
+  Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","Email.CSV",ENV_PATH + "\Files\DATAMODELFiles\EMail\",NameFile,3,4);
+    if Exist == False then
+            QB=QuestionBox("  Voulez-vous vraiment Supprimer La MailingList List selectionner?","Attention:");
+
+        if QB==True then
+             FileDelete(FullPathFileName);
+             Delete_File_Liste("MailingList",WPath,BackPath,NameFile);
+             SetStrGateValue("AlarmeEventModifer",2,"");
+             SetStrGateValue("AlarmeEventModifer",17,"La liste "+NameFile+" est supprimer avec succée");
+                   for i = 1 to MaxRow do
+            GATE = "ROW"+i;
+            //SetStrGateValue(GATE,0,"");
+            SetStrGateValue(GATE,1,"");
+                    end
+                 else return; end
+
+         else
+        SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer La liste "+NameFile);
+    end
+
+        end
+
+end
+
+
+
+Function Void Delete_File_Liste(String Type,String WPath,String BackPath,String FileName)
+
+String TempFullPathFileName;
+String RFullPathFileName;
+String WFullPathFileName;
+String BackFullPathFileName;
+String CodeEvent="";
+String CodeLigne="";
+String Ligne="";
+String Code="";
+int  MaxRow=10;
+int MaxPage;
+int FileHandle;
+int RFileHandle;
+int WFileHandle;
+int CurrentPage;
+int AlarmsTotalItems;
+String Nom;
+
+
+int lastPage;
+
+    AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+
+      Nom=GetStrGateValue("AlarmeEventModifer",2);
+             if Nom=="" then MessageBox("Il faut selectionnez une "+Type+" List pour supprimer!","erreur"); return ; end
+
+        FileHandle=FileOpen(Admin_View_Original_File,"rt");
+
+        WFullPathFileName = WPath;
+        WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+        BackFullPathFileName=BackPath;
+
+        RFullPathFileName = Admin_View_Recycle_Code;
+
+
+
+        RFileHandle=FileOpen(Temp_Admin_View_Recycle_Code,"at");
+
+
+        scanfile(RFullPathFileName);
+
+                while (FileEof(FileHandle)==0)
+                    Ligne=FileReadLn(FileHandle);
+                    FileWriteLn(RFileHandle,Code);
+
+                    if Fetch_Formule(Ligne,2,";")==FileName then
+                         CodeEvent=Fetch_Formule(Ligne,1,";");
+                         Code=StrDelete(CodeEvent,1,LenPrefix);
+                            Ligne=FileReadLn(FileHandle);
+
+                         CodeLigne=Fetch_Formule(Ligne,1,";");
+
+                    else
+                        if Ligne!="" then
+                            FileWriteLn(WFileHandle,Ligne);
+                        end
+
+                     End
+                end
+
+
+
+     FileClose(WFileHandle);
+     FileClose(FileHandle);
+     FileClose(RFileHandle);
+
+
+  //SetStrGateValue("AlarmeEventModifer",2,"");
+     //Swap Files
+      if (FileExist(BackFullPathFileName)) then
+             FileDelete(BackFullPathFileName);
+      end
+
+          FileCopy(Admin_View_Original_File,BackFullPathFileName,false);
+
+          FileCopy(WFullPathFileName,Admin_View_Original_File,false);
+
+          FileDelete(WFullPathFileName);
+          //end
+
+End
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+Function Void Bouton_Select_List()
+            POPUPList_Extension = ".txt";
+            SetStrGateValue("PopUpList_Path",0,"");
+            //SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\MailingList");
+             Path_Display_Popup=REPORT_PATH_MailingList;
+             PopupList_MaxPAGES();
+             PopupList_Display(1);
+             SetStrGateValue("PopUpList_Path",0,"MailingList");
+             ShowPoPUPs("PopUp_List");
+End
+/////////////////////////////////////////////////////////////////////////////////////////
+Function Void Bouton_Selected_List()
+            POPUPList_Extension = ".txt";
+            SetStrGateValue("PopUpList_Path",0,"");
+           // SetStrGateValue("PopUpList_Root",0,"\Files\DATAMODELFiles\MailingList");
+                Path_Display_Popup=REPORT_PATH_MailingList;
+             PopupList_MaxPAGES();
+             PopupList_Display(1);
+             SetStrGateValue("PopUpList_Path",0,"MailingList Existant");
+             ShowPoPUPs("PopUp_List");
+End
+/////////////////////////////////////////////////////
+Function Void Bouton_NewName()
+        SetStrGateValue("AlarmeEventModifer",20,"");
+    ShowPoPUPs("POPUP_NewName");
+End
+/////////////////////////////////////////////////////
+Function Void Fill_Select_List()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = Path_Display_Popup +NEWTO+".txt";
+
+     LoadBouton_MailingList("ROW",0);
+     TotalItem=scanfile(pathNEWTO);
+      SetNumGateValue("PageView",1,1);
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+     Display_C(1,pathNEWTO,1,"ROW",0,";");
+
+    end
+End
+///////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////
+Function Void Fill_Selected_List()
+string NEWTO;
+String TO_INTERNAL;
+string pathNEWTO;
+int TotalItem;
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+    SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_Display_Popup +NEWTO+".txt";
+
+     LoadBouton_MailingList("ROW",1);
+     TotalItem=scanfile(pathNEWTO);
+
+     SetNumGateValue("PageView",2,1);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+
+     Display_D(1,pathNEWTO,1,"ROW",1,";");
+
+    end
+End
+    //          EditFonctions
+/*****************************************************************************/
+///////////////////////////////////////////////////////////////////////////////
+
+function void Display_C(Int Page,String File,int Pos,String Gate, int List,String Sep)
+
+
+    int FileHandle; int j=0;
+    string TextRow; string txt;
+    int ReadRowPos=0;
+    int Row_Start;  int Row_End;     bool RowHeader = false;
+    String EVM;
+    String Part;
+    MaxRow = 10;
+    Int StartDisplay;
+    int i;
+         SetStrGateValue("AlarmeEventModifer",3,"");
+             SetStrGateValue("AlarmeEventModifer",4,"");
+           For i = 1 to 10 do
+              EVM = Gate+i;
+              SetStrGateValue(EVM,List,"");
+              SetStrGateValue(EVM,2,"");
+              SetStrGateValue(EVM,3,"");
+           End
+
+    FileHandle=FileOpen(File,"rt");
+    if (FileHandle==0) then
+        Return;
+    end
+
+     Row_Start = (Page - 1)*MaxRow+1;
+     Row_End =  Page*MaxRow;
+
+
+
+    StartDisplay = Row_Start -1;
+     if GetStrGateValue("AlarmeEventModifer",1)=="User Master List"  then
+     StartDisplay=StartDisplay+1;
+     end
+
+    For i = 1 to StartDisplay do
+     FileReadLn(FileHandle);
+    End
+
+
+    j = 0;
+    For i = Row_Start to Row_End do
+
+        TextRow = FileReadLn(FileHandle);
+        Part=Fetch_Email(TextRow,Pos,Sep);
+              j = j+1;
+                EVM = Gate+j;
+                    // For Display
+                SetStrGateValue(EVM,List,Part);
+                Part=Fetch_Email(TextRow,Pos-1,Sep);
+
+                SetStrGateValue(EVM,2,Part);
+              //  MessageBox(EVM,Part);
+
+                Part=Fetch_Email(TextRow,Pos+2,Sep);
+                SetStrGateValue(EVM,3,Part);
+
+                //MessageBox(SetStrGateValue(EVM,2,Part),Page);
+     end //for display
+
+     FileClose(FileHandle);
+
+     if ( j== 0 ) then
+        MessageBox("Il n'y a plus de pages disponibles","Information");
+        CleanEmptyRows(j+1,Gate);
+      else
+        CleanEmptyRows(j+1,Gate);
+     end
+
+end
+/*****************************************************************************/
+
+function void SelectRowEmail_1()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+          SetStrGateValue("AlarmeEventModifer",20,1);
+          SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+         // ShowPoPUPs("POPUP_Select_Type");
+
+      else
+
+        S = GetStrGateValue("ROW1",0);
+        IF ( S != "" ) Then
+            SetStrGateValue("AlarmeEventModifer",3,S);
+            //AddToList();
+
+        End
+    end
+end
+
+function void SelectRowEmail_2()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+               SetStrGateValue("AlarmeEventModifer",20,2);
+                 SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+       //   ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW2",0);
+    IF ( S != "" ) Then
+
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_3()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+               SetStrGateValue("AlarmeEventModifer",20,3);
+                 SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+         // ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW3",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_4()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+               SetStrGateValue("AlarmeEventModifer",20,4);
+                 SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+         // ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW4",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_5()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+
+         SetNumGateValue("AP_Value",0,0);
+               SetStrGateValue("AlarmeEventModifer",20,5);
+                 SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+                    SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+
+        //  ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW5",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_6()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+               SetStrGateValue("AlarmeEventModifer",20,6);
+                 SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+       //   ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW6",0);
+
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_7()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+                    SetStrGateValue("AlarmeEventModifer",20,7);
+                      SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+       //   ShowPoPUPs("POPUP_Select_Type");
+
+      else
+    S = GetStrGateValue("ROW7",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_8()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+                   SetStrGateValue("AlarmeEventModifer",20,8);
+                     SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+         SetNumGateValue("AP_Value",0,0);
+         // ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW8",0);
+    IF ( S != "" ) Then
+     SetStrGateValue("AlarmeEventModifer",3,S);
+      //AddToList();
+    End
+    end
+end
+function void SelectRowEmail_9()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+                       SetStrGateValue("AlarmeEventModifer",20,9);
+                         SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+         // ShowPoPUPs("POPUP_Select_Type");
+      else
+    S = GetStrGateValue("ROW9",0);
+    IF ( S != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",3,S);
+        //AddToList();
+
+    End
+    end
+end
+function void SelectRowEmail_10()
+String S;
+String NEWTO;
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+         SetNumGateValue("AP_Value",0,0);
+                       SetStrGateValue("AlarmeEventModifer",20,10);
+                         SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",1));
+          Admin_View_CurrentLine=Lecture_Admin_View_Line();
+           SetStrGateValue("AlarmeEventModifer",3,Fetch_Email(Admin_View_CurrentLine,2,";"));
+
+      else
+    S = GetStrGateValue("ROW10",0);
+    IF ( S != "" ) Then
+      SetStrGateValue("AlarmeEventModifer",3,S);
+       //AddToList();
+
+    End
+    end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_Email(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+
+
+/*****************************************************************************/
+function void LoadBouton_MailingList(String GATE ,int List)
+MaxRow = 10 ;
+MaxCol = 1;
+int i;
+String FileName;
+
+
+     for i = 1 to MaxRow do
+        GATE = "ROW"+i;
+        SetStrGateValue(GATE,List,"");
+     end
+
+
+
+end
+/////////////////////////////////////
+function void ViewListAdd()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("PageView",1);
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+int List=1;
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("PageView",1,CurrentPage);
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     if NEWTO=="User Master List" then
+
+        pathNEWTO=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+        Display_C(CurrentPage,pathNEWTO,2,"ROW",0,";");
+      else
+        pathNEWTO = Path_File+NEWTO+".txt";
+         Display_D(CurrentPage,pathNEWTO,1,"ROW",0,";");
+
+     end
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListSub()
+int CurrentPage= GetNumGateValue("PageView",1);
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("PageView",1,CurrentPage);
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+          if NEWTO=="User Master List" then
+
+        pathNEWTO=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+
+        Display_C(CurrentPage,pathNEWTO,2,"ROW",0,";");
+      else
+       pathNEWTO = Path_File+NEWTO+".txt";
+     Display_D(CurrentPage,pathNEWTO,1,"ROW",0,";");
+
+     end
+
+
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListFirst()
+bool Continue;
+String FileName;
+String pathNEWTO;
+String NEWTO;
+int List=1;
+
+     SetNumGateValue("PageView",1,1);
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+     pathNEWTO = GetStrGateValue("PathEmailListTO",0)+NEWTO+".txt";
+
+               if NEWTO=="User Master List" then
+
+        pathNEWTO=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+
+        Display_C(1,pathNEWTO,2,"ROW",0,";");
+      else
+       pathNEWTO = Path_File+NEWTO+".txt";
+        Display_D(1,pathNEWTO,1,"ROW",0,";");
+     end
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListEnd()
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",1);
+int MaxPage =  ReguliersTotalItems/MaxRow+1;
+String NEWTO;
+String pathNEWTO;
+String FileName;
+int List=1;
+
+     SetNumGateValue("PageView",1,MaxPage);
+
+     NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+
+    // if NEWTO!="" then
+   //  pathNEWTO = GetStrGateValue("PathEmailListTO",0)+NEWTO+".txt";
+
+     if NEWTO=="User Master List" then
+
+        pathNEWTO=ENV_PATH+"\Files\DATAMODELFiles\Users\User_Master.CSV";
+   // MessageBox(pathNEWTO,MaxPage);
+        Display_C(MaxPage,pathNEWTO,2,"ROW",0,";");
+      else
+       pathNEWTO = Path_File+NEWTO+".txt";
+        Display_D(MaxPage,pathNEWTO,1,"ROW",0,";");
+
+     end
+    // end
+
+end
+
+/////////////////////////////////////
+function void ViewListSelectedAdd()
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",2);
+
+int MaxPage ;
+int CurrentPage = GetNumGateValue("PageView",2);
+bool Continue;
+String NEWTO;
+String pathNEWTO;
+String FileName;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+
+     SetNumGateValue("PageView",2,CurrentPage);
+
+             NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+          //MessageBox(pathNEWTO,CurrentPage);
+     Display_D(CurrentPage,pathNEWTO,Position,"ROW",1,Operateur);
+        end
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListSelectedSub()
+int CurrentPage= GetNumGateValue("PageView",2);
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+
+     SetNumGateValue("PageView",2,CurrentPage);
+             NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+         Display_D(CurrentPage,pathNEWTO,Position,"ROW",1,Operateur);
+        // MessageBox(CurrentPage,"");
+             end
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListSelectedFirst()
+bool Continue;
+String FileName;
+String NEWTO;
+String pathNEWTO;
+
+
+     SetNumGateValue("PageView",2,1);
+           NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+     Display_D(1,pathNEWTO,Position,"ROW",1,Operateur);
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewListSelectedEnd()
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",2);
+int MaxPage =  ReguliersTotalItems/MaxRow+1;
+
+String FileName;
+String NEWTO;
+String pathNEWTO;
+//MessageBox(ReguliersTotalItems,MaxPage);
+     SetNumGateValue("PageView",2,MaxPage);
+     NEWTO=GetStrGateValue("AlarmeEventModifer",2);
+     pathNEWTO = Path_File+NEWTO+".txt";
+      Display_D(MaxPage,pathNEWTO,Position,"ROW",1,Operateur);
+end
+///////////////////////////////////////////////////////////////////////////////
+function int Delete_C( String Path, String File, String Code, Int Pos,String Sep)
+
+    string  FullPathFileName =Path + File;
+    int     FileHandle;
+    string  WFullPathFileName =Path + "W" + File;
+    int     WFileHandle;
+    String  BackFullPathFileName =Path + "Back_" + File;
+    String  Line ;
+    //String  Code ;
+    String SearchCode;
+    int WCount = 0;
+    Int TotReport = 0;
+    Int DELETED_Count = 0;
+
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    While ( FileEof( FileHandle ) == 0  )
+
+      Line = FileReadLn( FileHandle );
+      TotReport = TotReport+1;
+
+      SearchCode = Fetch_TEMP_GENERATOR(Line,Pos,Sep);
+      //MessageBox(SearchCode,TotReport);
+       //MessageBox(SearchCode,"1111"+Code);
+      IF ( Code != SearchCode ) Then
+        FileWriteLn(WFileHandle,Line);
+        WCount = WCount+1;
+        //MessageBox(SearchCode,Code);
+      End
+
+    End
+
+    FileClose( FileHandle );
+    FileClose( WFileHandle );
+
+
+    If (FileExist(BackFullPathFileName)) then   FileDelete(BackFullPathFileName);   End
+
+    Filecopy(FullPathFileName,BackFullPathFileName,False);
+    Filecopy(WFullPathFileName,FullPathFileName,False);
+    FileDelete(WFullPathFileName);
+    FileDelete(BackFullPathFileName);
+    DELETED_Count = TotReport - WCount;
+    Return DELETED_Count ;
+
+end
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+
+
+function void SelectedRowEmail_1()
+String S;
+    S = GetStrGateValue("ROW1",1);
+    IF ( S != "" ) Then
+    SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+      // //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_2()
+String S;
+    S = GetStrGateValue("ROW2",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_3()
+String S;
+    S = GetStrGateValue("ROW3",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_4()
+String S;
+    S = GetStrGateValue("ROW4",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_5()
+String S;
+    S = GetStrGateValue("ROW5",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_6()
+String S;
+    S = GetStrGateValue("ROW6",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_7()
+String S;
+    S = GetStrGateValue("ROW7",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_8()
+String S;
+    S = GetStrGateValue("ROW8",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+     SetStrGateValue("AlarmeEventModifer",5,S);
+     //DeleteFromList();
+    End
+end
+function void SelectedRowEmail_9()
+String S;
+    S = GetStrGateValue("ROW9",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+       SetStrGateValue("AlarmeEventModifer",5,S);
+       //DeleteFromList();
+
+    End
+end
+function void SelectedRowEmail_10()
+String S;
+    S = GetStrGateValue("ROW10",1);
+    IF ( S != "" ) Then
+        SetNumGateValue("EmailPageView",0,GetNumGateValue("PageView",2));
+      SetStrGateValue("AlarmeEventModifer",5,S);
+      //DeleteFromList();
+
+    End
+end
+
+
+/////////////////////////////
+Function void Ajouter_To_Bouton()
+ String NEWTO=GetStrGateValue("AlarmeEventModifer",1);
+ String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+          if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+
+     if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+         if(NameFile=="0-LAISSEZ VIDE")then
+       SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de remplir La liste "+NameFile);
+       return;
+    end
+     if NEWTO=="User Master List" then
+
+       ShowPoPUPs("POPUP_Select_Type");
+     else
+    // MessageBox("AddToList","");
+     AddToList();
+     end
+End
+
+//////////////////////////////**********************///////////////////////////
+Function Void AddToList()
+String EmailToAdd;
+String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+
+int FileHandle;
+bool Exist=False;
+String Email;
+int CurrentPage;
+String NEWTO;
+int TotalItem=0;
+ SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+
+    EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+     Exist=Verif_Exist(EmailToAdd,REPORT_PATH_MailingList,1,";");
+
+
+     //MessageBox(Email,EmailToAdd+"__"+Exist);
+              if Exist==True then
+       SetStrGateValue("AlarmeEventModifer",17,"Existe deja"); return;
+      End
+
+  // FileClose(FileHandle);
+    if Exist==False || EmailToAdd !="" then
+           Confirme_Save=True;
+
+    FileHandle=FileOpen(REPORT_PATH_MailingList+NameFile+".txt","at");
+
+        if (FileHandle==0) then
+      MessageBox("Fichier "+REPORT_PATH_MailingList+NameFile+".txt"+" n'existe Pas","Erreur Add");  Return;
+    end
+
+        FileWriteLn(FileHandle,EmailToAdd);
+        TotalItem=GetNumGateValue("AdminTotalItems",2);
+        TotalItem=TotalItem+1;
+        SetNumGateValue("AdminTotalItems",2,TotalItem);
+        CurrentPage =  TotalItem/MaxRow;
+        If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+            SetNumGateValue("PageView",2,CurrentPage);
+                FileClose(FileHandle);
+            Display_D(CurrentPage,REPORT_PATH_MailingList+NameFile+".txt",1,"ROW",1,";");
+         End
+
+
+//end
+End
+
+
+///////////////////////
+
+
+//////////////////////////////**********************///////////////////////////
+Function Void AddAllToList()
+String EmailToAdd;
+String NameFile=GetStrGateValue("AlarmeEventModifer",2);
+String NameFile_To=GetStrGateValue("AlarmeEventModifer",1);
+String FullPathFileName="\Files\DATAMODELFiles\MailingList\";
+int FileHandle;
+bool Exist=False;
+int RFileHandle;
+String Email;
+int CurrentPage;
+String NEWTO;
+int TotalItem=0;
+   TotalItem=GetNumGateValue("AdminTotalItems",2);
+ SetStrGateValue("AlarmeEventModifer",17,"");
+               if(NameFile=="0-LAISSEZ VIDE")then
+       SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de remplir La liste "+NameFile);
+       return;
+    end
+
+
+  if NameFile_To == "" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez une liste Source"); return; end
+  if NameFile_To == "User Master List" then SetStrGateValue("AlarmeEventModifer",17,"Tu ne peut pas ajoutez d'un Master List"); return; end
+
+     if NameFile=="" then SetStrGateValue("AlarmeEventModifer",17,"Selectionnez ou creez une liste"); return; end
+EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+
+
+
+    if Exist==False || EmailToAdd !="" then
+         Confirme_Save=True;
+         RFileHandle=FileOpen(REPORT_PATH_MailingList+NameFile_To+".txt","rt");
+       //  MessageBox(ENV_PATH+FullPathFileName+NameFile_To,"");
+         // MessageBox(ENV_PATH+FullPathFileName+NameFile,"");
+         FileHandle=FileOpen(REPORT_PATH_MailingList+NameFile+".txt","at");
+        if (RFileHandle==0) then
+                MessageBox("Fichier "+REPORT_PATH_MailingList+NameFile_To+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+        if (FileHandle==0) then
+                MessageBox("Fichier "+REPORT_PATH_MailingList+NameFile+".txt"+" n'existe Pas","Erreur Add");  Return;
+        end
+
+         While ( FileEof( RFileHandle ) == 0)
+             EmailToAdd=FileReadLn(RFileHandle);
+             Exist=Verif_Exist(EmailToAdd,REPORT_PATH_MailingList,1,";");
+               //MessageBox(EmailToAdd,Exist);
+             if Exist==False then
+                FileWriteLn(FileHandle,EmailToAdd);
+
+                TotalItem=TotalItem+1;
+             end
+
+        end
+            SetNumGateValue("AdminTotalItems",2,TotalItem);
+            CurrentPage =  TotalItem/MaxRow;
+            If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+            SetNumGateValue("PageView",2,CurrentPage);
+                FileClose(FileHandle);
+                  FileClose(RFileHandle);
+            Display_D(CurrentPage,REPORT_PATH_MailingList+NameFile+".txt",1,"ROW",1,";");
+
+         End
+
+
+//end
+End
+
+
+
+
+
+///////////
+
+Function Bool Verif_Exist(String EmailToAdd,String FullPathFileName,int Pos,String Del)
+
+//String FullPathFileName;
+int FileHandle;
+bool Exist=False;
+String LEMAIL;
+String Email;
+String  NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+  //  FullPathFileName = "\Files\DATAMODELFiles\MailingList\";
+    FileHandle=FileOpen(FullPathFileName+NameFile,"rt");
+
+    if (FileHandle==0) then
+      MessageBox("Fichier "+FullPathFileName+NameFile+" n'existe Pas","Erreur Verif");  Return;
+    end
+     While ( FileEof( FileHandle ) == 0)
+
+     LEMAIL=FileReadLn(FileHandle);
+        Email=Fetch_BU(LEMAIL,Pos,Del);
+        EmailToAdd=Fetch_BU(EmailToAdd,Pos,Del);
+       //MessageBox(Email,EmailToAdd);
+        if Email==EmailToAdd then Exist=True;end
+     End
+   FileClose(FileHandle);
+  // MessageBox(Exist,"Verif_Exist");
+   return Exist;
+
+End
+
+/////////////////////////////**********************////////////////////////////
+Function Void DeleteFromList()
+
+String EmailToDelete;
+String NameFile;
+int TotalItem;
+String FullPathFileName;
+int CurrentPage;
+
+    EmailToDelete=GetStrGateValue("AlarmeEventModifer",5);
+    NameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+    if NameFile == "" then SetStrGateValue("AlarmeEventModifer",17,"Il faut selectionnez une fichier ou le cree avant"); return; end
+    if EmailToDelete == "" then SetStrGateValue("AlarmeEventModifer",17,"Il faut selectionnez un email pour le supprimer"); return; end
+   // FullPathFileName = "\Files\DATAMODELFiles\MailingList\";
+    Confirme_Save=True;
+    Delete_C(REPORT_PATH_MailingList, NameFile,EmailToDelete,1,";");
+    TotalItem=scanfile(REPORT_PATH_MailingList+NameFile);
+    SetNumGateValue("AdminTotalItems",2,TotalItem);
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    SetStrGateValue("AlarmeEventModifer",5,"");
+    CurrentPage =  TotalItem/MaxRow;
+    If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+    SetNumGateValue("PageView",2,CurrentPage);
+    Display_D(CurrentPage,REPORT_PATH_MailingList+NameFile,1,"ROW",1,";");
+End
+////////////////////////////
+//
+Function Void Diplay_Master_User()
+String FullPathFileName;
+int FileHandle;
+int TotalItem;
+FullPathFileName=Admin_View_Temp_File;
+          TotalItem=scanfile(FullPathFileName);
+     SetNumGateValue("AdminTotalItems",1,TotalItem);
+     SetNumGateValue("PageView",1,1);
+     SetNumGateValue("PageView",1,1);
+     SetStrGateValue("AlarmeEventModifer",1,"User Master List" );
+Display_C(1,FullPathFileName,2,"ROW",0,";");
+
+end
+////////////////////
+
+Function Void Select_Type_Mmailinglist()
+int R;
+String EMail;
+String EM;
+String WNameFile;
+int TotalItem=GetNumGateValue("AdminTotalItems",2);
+int CurrentPage=GetNumGateValue("PageView",2);
+int k=0;
+String WFullPathFileName;
+String FullFileName=REPORT_PATH_MailingList+"Lists\EmailToAdd.txt";
+int FileHandle=FileOpen(FullFileName,"wt");
+int WFileHandle;
+bool Exist;
+R=GetNumGateValue("AP_Value",0);
+SMS_ERR=" n'existe pas";
+    if R==1 then
+         EM=Fetch_BU(Admin_View_CurrentLine,4,";");
+         EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+        // FileWriteLn(FileHandle,EMail);
+
+           if EM != "" then
+                FileWriteLn(FileHandle,EMail);
+             else
+        SMS_ERR=" EMail; "+SMS_ERR;
+        k=1;
+     //  SetStrGateValue("AlarmeEventModifer",17,);
+                    //MessageBox("","info");
+                end
+    end
+        if R==2 then
+        EM=Fetch_BU(Admin_View_CurrentLine,5,";");
+         EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+         //FileWriteLn(FileHandle,EMail);
+
+                  if EM != "" then
+                FileWriteLn(FileHandle,EMail);
+                else
+                    SMS_ERR=" N° Tel; "+SMS_ERR;
+                            k=1;
+                  //SetStrGateValue("AlarmeEventModifer",17,"N° Tel n'existe pas");
+                  //  MessageBox("N° Tel n'existe pas","info");
+                end
+
+
+    end
+        if R==3 then
+                 EM=Fetch_BU(Admin_View_CurrentLine,4,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+            //FileWriteLn(FileHandle,EMail);
+                     if EM != "" then
+                FileWriteLn(FileHandle,EMail);
+               else
+                            SMS_ERR=" N° Tel; "+SMS_ERR;
+                                    k=1;
+                 //SetStrGateValue("AlarmeEventModifer",17,"N° Tel n'existe pas");
+                   // MessageBox("N° Tel n'existe pas","info");
+                end
+ EM=Fetch_BU(Admin_View_CurrentLine,5,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+            //FileWriteLn(FileHandle,EMail);
+             if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+            else
+                         SMS_ERR=" N° fax; "+SMS_ERR;
+                                 k=1;
+          //  SetStrGateValue("AlarmeEventModifer",17,"N° fax n'existe pas");
+                end
+
+
+    end
+        if R==4 then
+EM=Fetch_BU(Admin_View_CurrentLine,7,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+           // FileWriteLn(FileHandle,EMail);
+            if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                else
+                             SMS_ERR=" N° fax; "+SMS_ERR;
+                                     k=1;
+                end
+    end
+        if R==5 then
+        EM=Fetch_BU(Admin_View_CurrentLine,4,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+               if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+        else
+                 SMS_ERR=" Email; "+SMS_ERR;
+                         k=1;
+                end
+            //FileWriteLn(FileHandle,EMail);
+            EM=Fetch_BU(Admin_View_CurrentLine,7,";");
+            EMail=Fetch_BU(Admin_View_CurrentLine,7,";")+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+           // FileWriteLn(FileHandle,EMail);
+              if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                else
+                   SMS_ERR=" N° Tel; "+SMS_ERR;
+                           k=1;
+                   //eBox("N° fax n'existe pas","info");
+                end
+    end
+        if R==6 then
+        EM=Fetch_BU(Admin_View_CurrentLine,5,";");
+            EMail=Fetch_BU(Admin_View_CurrentLine,5,";")+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+                          if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                   //MessageBox(EMail,"info");
+                else
+                  SMS_ERR=" N° Tel; "+SMS_ERR;
+                          k=1;
+
+                end
+           // FileWriteLn(FileHandle,EMail);
+            EM=Fetch_BU(Admin_View_CurrentLine,7,";");
+            EMail=Fetch_BU(Admin_View_CurrentLine,7,";")+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+                                      if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                  //MessageBox(EMail,"info");
+               else
+                                  SMS_ERR=" N° fax; "+SMS_ERR;
+                                          k=1;
+                end
+            //FileWriteLn(FileHandle,EMail);
+    end
+        if R==7 then
+        EM=Fetch_BU(Admin_View_CurrentLine,4,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+           // FileWriteLn(FileHandle,EMail);
+                     if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+
+               else
+             SMS_ERR=" Email; "+SMS_ERR;
+                     k=1;
+                end
+                EM=Fetch_BU(Admin_View_CurrentLine,5,";");
+            EMail=Fetch_BU(Admin_View_CurrentLine,5,";")+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+                                      if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                else
+        SMS_ERR=" N° Tel; "+SMS_ERR;
+                k=1;
+                   // MessageBox("N° tel n'existe pas","info");
+                end
+            //FileWriteLn(FileHandle,EMail);
+               EM=Fetch_BU(Admin_View_CurrentLine,7,";");
+            EMail=EM+";"+Fetch_BU(Admin_View_CurrentLine,8,";");
+            //FileWriteLn(FileHandle,EMail);
+                   if EM != "" then
+                  FileWriteLn(FileHandle,EMail);
+                else
+        SMS_ERR=" N° fax; "+SMS_ERR;
+                k=1;
+                   // MessageBox("N° fax n'existe pas","info");
+                end
+        end
+    FileClose(FileHandle);
+      //EmailToAdd=GetStrGateValue("AlarmeEventModifer",3);
+        WNameFile=GetStrGateValue("AlarmeEventModifer",2)+".txt";
+   //WFullPathFileName = "\Files\DATAMODELFiles\MailingList\";
+    WFileHandle=FileOpen(REPORT_PATH_MailingList+WNameFile,"at");
+    FileHandle=FileOpen(FullFileName,"rt");
+SetStrGateValue("AlarmeEventModifer",17,SMS_ERR);
+         While ( FileEof( FileHandle ) == 0)
+
+             EMail=FileReadLn(FileHandle);
+             Exist=Verif_Exist(EMail,REPORT_PATH_MailingList,1,";");
+             //MessageBox(EMail,Exist);
+             if Exist == False then
+                    FileWriteLn(WFileHandle,EMail);
+                    TotalItem=TotalItem+1;
+
+              end
+               //SetStrGateValue("AlarmeEventModifer",5,Fetch_BU(Admin_View_CurrentLine,2,";"));
+           //  SetStrGateValue("AlarmeEventModifer",3,EMail);
+            // MessageBox(EMail,"")
+         //    AddToList();
+
+
+         End
+         if k==1 then
+                  SetStrGateValue("AlarmeEventModifer",17,SMS_ERR);
+                  else
+                  SMS_ERR="";
+                  SetStrGateValue("AlarmeEventModifer",17,SMS_ERR);
+                  end
+
+
+
+ FileClose(WFileHandle);
+ FileClose(FileHandle);
+     SetNumGateValue("AdminTotalItems",2,TotalItem);
+    CurrentPage =  TotalItem/MaxRow;
+    If (Mod(TotalItem,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+    SetNumGateValue("PageView",2,CurrentPage);
+  Display_D(CurrentPage,REPORT_PATH_MailingList+WNameFile,1,"ROW",1,";");
+end
+
+

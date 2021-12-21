@@ -1,0 +1,2 @@
+Alarme_Code;Compteur Incident;Formule;Parsed_Formule;Operateur;Objectif;Frequence;Next Check;U_Alarme_Name;Description;U_Compteur;U_Formule;Nbr Error;Tag
+A16;CTCA$17;9*F(CTC2$0);TCA$17=#9~*~F~(~CTC2$0~)~;==;O:CTCA$0:CLC_[T°c ]^J;11_Min;01/03/2021_10:10;AUTO CI 10 min ;CLC$Inc LIVE==O:CTCA$0:CLC_[T°c ]^J;CLC$Inc LIVE;CLC$Inc LIVE=#9~*~F~(~Production$[T°c ]^J~)~;0;;;;;;;

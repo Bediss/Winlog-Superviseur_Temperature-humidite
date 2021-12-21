@@ -1,0 +1,12 @@
+0,[HR%]^J,Humidite,0
+4,HR%min^J,Humidite,0
+8,HR%Max^J,Humidite,0
+12,Inc^J,Humidite,0
+18,[HR%]^J-1,Humidite,0
+22,HR%min^J-1,Humidite,0
+26,HR%Max^J-1,Humidite,0
+30,Inc^J-1,Humidite,0
+34,C %^J,Humidite,0
+38,C %^J-1,Humidite,0
+16,HR%^LIVE,Humidite,0
+17,Inc LIVE,Humidite,0

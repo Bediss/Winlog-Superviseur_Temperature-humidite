@@ -1,0 +1,454 @@
+//
+///////////////////////////////////////////////////////////////////////////////
+Global Bool   BOOT_OK                       = False;
+Global Bool   CNX_STATUS                    = False;
+Global String DATASOURCE                    = "";
+Global String BOOTSTRAP                     = "BOOTSTRAP";
+Global String METABOOT                      = "METABOOT";
+Global String SYSTEMBOOT                    = "SYSTEMBOOT";
+Global String ACTIONBOOT                    = "ACTIONBOOT";
+Global String REPORT_PATH_OUT               = "REPORT_PATH_OUT";
+Global String REPORT_PATH_DEFAULT           = "REPORT_PATH_DEFAULT";
+Global String REPORT_PATH_LAYOUT_SOURCE     = "REPORT_PATH_LAYOUT_SOURCE";
+Global String REPORT_PATH_LAYOUT_DESTINATION= "REPORT_PATH_LAYOUT_DESTINATION";
+Global String REPORT_PATH_CHART             = "REPORT_PATH_CHART";
+Global String REPORT_PATH_CL                = "REPORT_PATH_CL";
+Global String REPORT_PATH_ML                = "REPORT_PATH_ML";
+Global String REPORT_PATH_CLML_TEMP         = "REPORT_PATH_CLML_TEMP";
+Global String POWERSHELL_PATH_CONFIG        = "POWERSHELL_PATH_CONFIG";
+Global String POWERSHELL_PATH_EXECUTION     = "POWERSHELL_PATH_EXECUTION";
+Global String REPORT_PATH_FB                = "REPORT_PATH_FB";
+Global String REPORT_PATH_MailingList       = "REPORT_PATH_MailingList";
+Global String ALARME_Q3_PATH                = "ALARME_Q3_PATH";
+Global String ALARME_Q3_BACK_PATH           = "ALARME_Q3_BACK_PATH";
+Global String ALARME_Q1_PATH                = "ALARME_Q1_PATH";
+Global String ALARME_Q1_BACK_PATH           = "ALARME_Q1_BACK_PATH";
+Global String ALARME_Q2_PATH                = "ALARME_Q2_PATH";
+Global String MAIL_SETUP_CRYTED_FILE        = "MAIL_SETUP_CRYTED_FILE";
+Global String MAIL_SETUP_UNCRYTED_FILE      = "MAIL_SETUP_UNCRYTED_FILE";
+Global String REPORT_PATH_Email             = "REPORT_PATH_Email";
+Global String PSG_POWERSHELL_PATH           = "PSG_POWERSHELL_PATH";
+///////////////////////////////////////////////////////////////////////////////
+
+function void Initialisation()
+
+    Int i;
+    String BootMode;
+    String CHEK_FILE = "C:\Winlog\CHECK_WAKEUP_WINLOG.txt";
+    String ConfigSystemFile = "C:\Winlog\SystemConfig.txt";
+    Int ConfigSystemFileHandle;
+
+    BootMode = Get_BootMode();
+
+    ConfigSystemFileHandle = FileOpen(ConfigSystemFile,"wt");
+      FileWriteLn(ConfigSystemFileHandle, GetProjectPath() + "\" );
+    FileClose(ConfigSystemFileHandle);
+
+    ShowPage("StartPage");
+
+     While ( BootMode == "" )
+        Sleep(2000);
+        BootMode = Get_BootMode();
+        SetStrGateValue("AlarmeEventModifer",5,"Le fichier du mode de demarrage n'est pas present SVP le verifier");
+     End
+
+            For i = 0 to 20 do
+              SetStrGateValue("AlarmeEventModifer",i,"");
+            End
+
+     INIT_GLOBAL_PATHS( GetProjectPath() + "\Winlog\Settings\Paths.txt");
+     GET_MAIL_SETUP();
+     OpenChart();
+
+     InitialiseGates();
+     Get_DATASource();
+
+     Create_Compteur_TemperatureFILE();
+     Create_Compteur_HumiditeFILE();
+     Create_Conformite_CompteurFILE();
+
+     SetStrGateValue("UserName",0,"");
+     SetNumGateValue("LOGIN_SUP_ADMIN",0,0);
+
+     If ( BootMode == ACTIONBOOT ) Then
+        Set_BootMode( SYSTEMBOOT );
+        Return;
+     End
+
+     If ( BootMode == METABOOT || BootMode == SYSTEMBOOT ||  BootMode == BOOTSTRAP ) Then
+
+        If ( DATASOURCE == "DB" ) Then
+            //Init_DB_PS( BootMode );
+        End
+
+        For i = 0 to 20 do
+          SetStrGateValue("AlarmeEventModifer",i,"");
+        End
+            Set_BootMode( SYSTEMBOOT );
+
+        SetNumGateValue("Show_Temp_Pointer",0,0);
+        SetNumGateValue("SelectCompteur",0,0);
+        SetNumGateValue("PageAllCommpteurView",0,1);
+        SetNumGateValue("PageInsert",0,1);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("Select_PDV",0,1);
+        SetNumGateValue("Select_Drill",0,2);
+        SetNumGateValue("LOGIN_SUP_ADMIN",0,1);
+        SetStrGateValue("Errors_AllCompteur",0,"");
+        SetStrGateValue("Errors_Formule",0,"");
+        SetStrGateValue("Errors_GTemplates",0,"");
+
+        SetNumGateValue("Show_Temp_Pointer",0,0);
+        SetNumGateValue("SelectCompteur",0,0);
+        SetNumGateValue("PageAllCommpteurView",0,1);
+        SetNumGateValue("PageInsert",0,1);
+        SetNumGateValue("EmailPageView",0,1);
+        SetNumGateValue("Select_PDV",0,1);
+        SetNumGateValue("Select_Drill",0,2);
+        SetNumGateValue("LOGIN_SUP_ADMIN",0,1);
+        SetStrGateValue("Errors_AllCompteur",0,"");
+        SetStrGateValue("Errors_Formule",0,"");
+        SetStrGateValue("Errors_GTemplates",0,"");
+
+        InitialiseGates();
+
+        Init_DeCrypto_File();
+
+        Init_DeCrypto_Admin_File();
+
+        Read_Version();
+
+        GetListLabels();
+
+        READCompteurNameType();
+
+        InitialisationRow();
+
+        Read_Tableau();
+
+        Read_Tableau_BU();
+
+        Read_Tableau_Energy();
+
+        Read_Tableau_Views();
+
+        Init_Moy_temperature();
+
+        intialise_Objective();
+
+        Bu_Access();
+
+        CHECK_AND_CREATION_ALARMFILECODE();
+
+     End
+
+
+///////////////////////////////////////////////////////////////////////////////
+end
+///////////////////////////////////////////////////////////////////////////////
+function void ResetCompteur()
+    int i;
+    int K;
+    String P_FixEnergy;
+    String CompteurTrueNumber;
+    String INPUTCODE;
+    String INPUT;
+    int ListCons;
+
+    for i = 1 to GetNumGateValue("MaxCompteur",0) do
+
+            For K = 1 to GetNumGateValue("EnergyMax",0) do
+                IF ( GetStrGateValue("Compteur_Energy",i) == GetStrGateValue("Energy_Name",K)) then
+                    P_FixEnergy = GetStrGateValue("PreFix_InPut",K);
+                    CompteurTrueNumber = StrDelete(GetStrGateValue("Compteur_Code",i),1,GetNumGateValue("NBR_PRFIX_OUTP",K));
+                End
+            End
+
+         INPUTCODE = P_FixEnergy+CompteurTrueNumber;
+
+         INPUT = INPUTCODE+"_J-1";
+
+         If ( GetStrGateValue("Compteur_Energy",i) =="Electrique" ) Then
+              SetNumGateValue(INPUTCODE,24,0);
+              SetNumGateValue(INPUTCODE,28,0);
+         End
+
+         If (  GetStrGateValue("Compteur_Energy",i) == "Gaz" ||
+              GetStrGateValue("Compteur_Energy",i) == "Eau Brute" || GetStrGateValue("Compteur_Energy",i) == "Eau" ||
+              GetStrGateValue("Compteur_Energy",i) == "Eau Forage" || GetStrGateValue("Compteur_Energy",i) == "Eau Traite" ||
+              GetStrGateValue("Compteur_Energy",i) == "Eau Sonede" || GetStrGateValue("Compteur_Energy",i) == "Eau Rejet" ) Then
+              SetNumGateValue(INPUTCODE,24,0);
+              SetNumGateValue(INPUTCODE,25,0);
+         End
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Air Comprime"  ) Then
+              SetNumGateValue(INPUTCODE,25,0);
+              SetNumGateValue(INPUTCODE,26,0);
+         End
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Vapeur" || GetStrGateValue("Compteur_Energy",i) == "Froid (+)  Eau Glycolee" ||
+              GetStrGateValue("Compteur_Energy",i) == "Froid" || GetStrGateValue("Compteur_Energy",i) == "Froid (-)  Ammoniac" ) Then
+              SetNumGateValue(INPUTCODE,26,0);
+              SetNumGateValue(INPUTCODE,27,0);
+         End
+
+         If ( GetStrGateValue("Compteur_Energy",i) == "Tonnage" ) Then
+              SetNumGateValue(INPUTCODE,0,0);
+              SetNumGateValue(INPUTCODE,17,0);
+         End
+
+    End// End For
+    MessageBox("Fin d'operation","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void InitialisationRow()
+int j;  int i;   string RowName;
+    for i = 1 to 10 do
+        RowName = "ROW"+i;
+        for j = 0 to 8 do
+        SetStrGateValue(RowName,j,"");
+        end
+        SetStrGateValue("ROW0",i,"");
+    end
+end
+
+function void InitialisationCol()
+int i;
+    for i = 0 to 8 do
+        SetStrGateValue("Display",i,"");
+    end
+end
+
+///////////////////////////////////////////////////////////////////////////////
+function void Init_Moy_temperature()
+
+    Int i = 0;  Int K = 0;
+    String P_FixEnergy;
+    String CompteurTrueNumber;
+    String INPUTCODE;
+
+    For i = 1 to GetNumGateValue("MaxCompteur",0) do
+
+     For K = 1 to GetNumGateValue("EnergyMax",0) do
+      IF ( GetStrGateValue("Compteur_Energy",i) == GetStrGateValue("Energy_Name",K)) then
+       P_FixEnergy = GetStrGateValue("PreFix_InPut",K);
+       CompteurTrueNumber = StrDelete(GetStrGateValue("Compteur_Code",i),1,GetNumGateValue("NBR_PRFIX_OUTP",K));
+      End
+     End
+
+
+     INPUTCODE = P_FixEnergy+CompteurTrueNumber;
+     //MessageBox(INPUTCODE,"INPUTCODE");
+
+      If ( GetStrGateValue("Compteur_Energy",i) == "Temperature" ) Then
+        // Initailise Sampling Nbr
+        SetNumGateValue(INPUTCODE,101,0);
+        SetNumGateValue(INPUTCODE,102,0);
+        SetNumGateValue(INPUTCODE,103,0);
+        SetNumGateValue(INPUTCODE,104,0);
+        // Initialise Total
+        SetNumGateValue(INPUTCODE,105,0);
+        SetNumGateValue(INPUTCODE,106,0);
+        SetNumGateValue(INPUTCODE,107,0);
+        SetNumGateValue(INPUTCODE,108,0);
+
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,4,1000);
+        SetNumGateValue(INPUTCODE,5,1000);
+        SetNumGateValue(INPUTCODE,6,1000);
+        SetNumGateValue(INPUTCODE,7,1000);
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,8,-1000);
+        SetNumGateValue(INPUTCODE,9,-1000);
+        SetNumGateValue(INPUTCODE,10,-1000);
+        SetNumGateValue(INPUTCODE,11,-1000);
+      End
+
+      If ( GetStrGateValue("Compteur_Energy",i) == "Humidite" ) Then
+        // Initailise Sampling Nbr
+        SetNumGateValue(INPUTCODE,101,0);
+        SetNumGateValue(INPUTCODE,102,0);
+        SetNumGateValue(INPUTCODE,103,0);
+        SetNumGateValue(INPUTCODE,104,0);
+        // Initialise Total
+        SetNumGateValue(INPUTCODE,105,0);
+        SetNumGateValue(INPUTCODE,106,0);
+        SetNumGateValue(INPUTCODE,107,0);
+        SetNumGateValue(INPUTCODE,108,0);
+
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,4,100);
+        SetNumGateValue(INPUTCODE,5,100);
+        SetNumGateValue(INPUTCODE,6,100);
+        SetNumGateValue(INPUTCODE,7,100);
+        ////// INTI MIN GATES
+        SetNumGateValue(INPUTCODE,8,0);
+        SetNumGateValue(INPUTCODE,9,0);
+        SetNumGateValue(INPUTCODE,10,0);
+        SetNumGateValue(INPUTCODE,11,0);
+      End
+
+    End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CHECK_AND_CREATION_ALARMFILECODE()
+
+    String File_Name = "Alarme_EXECUTION_V"+ GetStrGateValue("Version",0) +".wll";
+
+    String NEWFILECODE = ENV_PATH+"\Files\DATAMODELFiles\Event\Create_ALARME\" + File_Name;
+
+    String CURRCODEFILE = GetProjectPath()+"\Code\" + File_Name ;
+
+    String CONFIG_FILE = "C:\Winlog\PowerShell\Compare2File.txt" ;
+    String RESULTFILE = "C:\Winlog\PowerShell\Compare2File_RESULT.txt" ;
+    INT FileHandle;
+    String result_Returned = "";
+    String IDENTICAL = "1";
+    String NOT_IDENTICAL = "2";
+    String SAME = "0";
+    String ERROR = "-1";
+    Bool CopyANDRestart = False;
+
+    // 1. Delete new file code if exist
+    IF ( FileExist( NEWFILECODE ) == True ) Then    FileDelete(NEWFILECODE);   End
+    IF ( FileExist( RESULTFILE ) == True )  Then    FileDelete(RESULTFILE);    End
+    // 2. Build nex file code
+        BUILD_ALARME();
+    // 3. End creation test if new file code exist
+    IF ( FileExist( NEWFILECODE ) == True ) Then
+        // Compare 2 files
+        IF ( FileExist( CURRCODEFILE ) == False ) Then
+        ///////// Current file code not exist
+        // 1.Copy file
+
+         CopyANDRestart = True;
+         Event_Runtime_LOG( " "+ File_Name + " : Not exist" );
+        Else //CURRCODEFILE exist
+        ///////// Current file code exist
+            result_Returned = Compare2File( NEWFILECODE , CURRCODEFILE );
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
+            If ( result_Returned == NOT_IDENTICAL) Then //NOT_IDENTICAL
+            // 2.2 if not identical
+                CopyANDRestart = True;
+            End
+
+            ///////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////
+        End//CURRCODEFILE exist
+     Else //NEWFILECODE not exist
+        Event_Runtime_LOG( " "+ File_Name + " :Can not generated");
+     End
+     If ( CopyANDRestart == True ) Then
+        Event_Runtime_LOG( " "+ File_Name + " : Copy & Restart Runtime" );
+        FileCopy(NEWFILECODE,CURRCODEFILE,False);
+        Set_BootMode( ACTIONBOOT );
+        ShellExec("RestartWinlog.exe" , "open" , POWERSHELL_PATH_EXECUTION,1,"","");
+     End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Compare2File( String File_1 , String File_2 )
+
+    String CONFIG_FILE = "C:\Winlog\PowerShell\Compare2File.txt" ;
+    String RESULTFILE = "C:\Winlog\PowerShell\Compare2File_RESULT.txt" ;
+    INT FileHandle;
+    String result_Returned = "";
+    Int MaxWait = 60;
+    Int NbrWait = 0;
+    Bool Exit = False;
+
+        // 1.1 create file config
+             FileHandle = FileOpen(CONFIG_FILE,"wt");
+             FileWriteLn(FileHandle,File_1);
+             FileWriteLn(FileHandle,File_2);
+             FileClose(FileHandle);
+            // 1.2 Compare & wait finish
+            ShellExec("compare2file.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+                NbrWait = 0;
+                Exit = False ;
+                While ( Exit == False )
+                    Sleep(250); // wait 0.25 sec to find resulet file
+                    NbrWait = NbrWait+1;
+                    IF (FileExist( RESULTFILE ) == True) Then Exit = True ; End
+                    IF (NbrWait > MaxWait) Then Exit = True ;               End
+
+                End
+        // 2. read result
+            // 2.1 read result
+            FileHandle = FileOpen(RESULTFILE,"rt");
+            result_Returned = FileReadLn(FileHandle);
+            FileClose(FileHandle);
+
+        // result_Returned Can be : IDENTICAL or
+        //                          Not-IDENTICAL or
+        //                          SAME-FILE or
+        //                          Missing-File-Error
+
+
+    IF ( FileExist( CONFIG_FILE ) == True ) Then    FileDelete(CONFIG_FILE);   End
+    IF ( FileExist( RESULTFILE ) == True ) Then    FileDelete(RESULTFILE);   End
+     Return result_Returned;
+end
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function void INIT_GLOBAL_PATHS( String GlobalPathsFile)
+
+    Int FileHandle;
+
+    String LINE = "";
+    String Commentaire = "//";
+    String GlobalPath;
+    String Value;
+
+    FileHandle = FileOpen(GlobalPathsFile,"rt");
+    //MessageBox(GlobalPathsFile,FileHandle);
+    If ( FileHandle == 0 ) Then
+     Event_Runtime_LOG( " Init GlobalPathsFile Not Found :" + GlobalPathsFile );
+     Return;
+    End
+    While ( FileEof(FileHandle) == 0)
+      LINE = FileReadLn(FileHandle);
+      //MessageBox( StrSubString(LINE,1,2),"");
+        IF ( StrSubString(LINE,1,2) != Commentaire && LINE != "" ) Then
+
+          GlobalPath = FETCH_REPORT_GENERATOR(LINE,1,";");
+          Value      = FETCH_REPORT_GENERATOR(LINE,2,";");
+
+          IF ( StrSubString(Value,1,1) == "*" ) Then
+            Value = StrDelete(Value,1,1);
+            Value = GetProjectPath() + Value;
+          End
+
+          IF ( GlobalPath == REPORT_PATH_OUT )           Then       REPORT_PATH_OUT                 = Value; End
+          IF ( GlobalPath == REPORT_PATH_DEFAULT )       Then       REPORT_PATH_DEFAULT             = Value; End
+          IF ( GlobalPath == REPORT_PATH_LAYOUT_SOURCE ) Then       REPORT_PATH_LAYOUT_SOURCE       = Value; End
+          IF ( GlobalPath == REPORT_PATH_LAYOUT_DESTINATION ) Then  REPORT_PATH_LAYOUT_DESTINATION  = Value; End
+          IF ( GlobalPath == REPORT_PATH_CHART )         Then       REPORT_PATH_CHART               = Value; End
+          IF ( GlobalPath == REPORT_PATH_CL )            Then       REPORT_PATH_CL                  = Value; End
+          IF ( GlobalPath == REPORT_PATH_ML )            Then       REPORT_PATH_ML                  = Value; End
+          IF ( GlobalPath == REPORT_PATH_CLML_TEMP )     Then       REPORT_PATH_CLML_TEMP           = Value; End
+          IF ( GlobalPath == POWERSHELL_PATH_CONFIG )    Then       POWERSHELL_PATH_CONFIG          = Value; End
+          IF ( GlobalPath == POWERSHELL_PATH_EXECUTION ) Then       POWERSHELL_PATH_EXECUTION       = Value; End
+          IF ( GlobalPath == REPORT_PATH_FB )            Then       REPORT_PATH_FB                  = Value; End
+          If ( GlobalPath == REPORT_PATH_MailingList)    Then       REPORT_PATH_MailingList         = Value; End
+          IF ( GlobalPath == MAIL_SETUP_UNCRYTED_FILE )  Then       MAIL_SETUP_UNCRYTED_FILE        = Value; End
+          IF ( GlobalPath == MAIL_SETUP_CRYTED_FILE )    Then       MAIL_SETUP_CRYTED_FILE          = Value; End
+          IF ( GlobalPath == ALARME_Q3_BACK_PATH )       Then       ALARME_Q3_BACK_PATH             = Value; End
+          IF ( GlobalPath == ALARME_Q3_PATH )            Then       ALARME_Q3_PATH                  = Value; End
+          IF ( GlobalPath == ALARME_Q1_BACK_PATH )       Then       ALARME_Q1_BACK_PATH             = Value; End
+          IF ( GlobalPath == ALARME_Q1_PATH )            Then       ALARME_Q1_PATH                  = Value; End
+          IF ( GlobalPath == ALARME_Q2_PATH )            Then       ALARME_Q2_PATH                  = Value; End
+          IF ( GlobalPath == REPORT_PATH_Email)          Then       REPORT_PATH_Email               = Value; End
+          IF ( GlobalPath == PSG_POWERSHELL_PATH)        Then       PSG_POWERSHELL_PATH             = Value; End
+
+        End // If not Comment and not empty
+
+    End // While
+
+    FileClose(FileHandle);
+
+end

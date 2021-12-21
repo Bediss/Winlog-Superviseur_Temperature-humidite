@@ -1,0 +1,7 @@
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC21;CH1_F_Commerciale_P1;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D31;T軏  positive;*;CH1_F_Commerciale_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC22;CH2_F_Commerciale_P2;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D32;T軏  positive;*;CH2_F_Commerciale_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC2;CH_F_Commerciale;Humidite;CHCA;1;*;*;D3;*;*;CH_F_Commerciale
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC21;CH1_F_Commerciale_P1;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D31;T軏  positive;*;CH1_F_Commerciale_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC22;CH2_F_Commerciale_P2;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D32;T軏  positive;*;CH2_F_Commerciale_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC21;CH1_F_Commerciale_P1;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D31;T軏  positive;*;CH1_F_Commerciale_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~S#5;<HR%>~S#1;HR%max~S#9;Inc~S#13;Inc~S-1#31;C %~S#35;低HC22;CH2_F_Commerciale_P2;Humidite;CHC2;CH_F_Commerciale;3;D64;*;D32;T軏  positive;*;CH2_F_Commerciale_P2;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

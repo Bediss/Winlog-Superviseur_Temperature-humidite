@@ -1,0 +1,7 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P121;compresseur1;Electrique;CC1P12;York TR1;7;S200;M160;M11N;STEG;PosteTR1;compresseur1;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P122;compresseur2;Electrique;CC1P12;York TR1;7;S200;M160;M11O;STEG;PosteTR1;compresseur2;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P123;compresseur3;Electrique;CC1P12;York TR1;7;S200;M160;M11P;STEG;PosteTR1;compresseur3;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P124;compresseur4;Electrique;CC1P12;York TR1;7;S200;M160;M11Q;STEG;PosteTR1;compresseur4;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur4;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P125;compresseur5;Electrique;CC1P12;York TR1;7;S200;M160;M11R;STEG;PosteTR1;compresseur5;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur5;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P126;compresseur6;Electrique;CC1P12;York TR1;7;S200;M160;M11S;STEG;PosteTR1;compresseur6;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;compresseur6;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1P127;SDM1 comp sk;Electrique;CC1P12;York TR1;7;S200;M160;MA02E;STEG;PosteTR1;SDM1 comp sk;Reel;Machine;*;*;Froid;!~*;!~*;;;;;2;sdm1 comp sk(imef)+sk(-16)+sk(-40);*

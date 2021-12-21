@@ -1,0 +1,393 @@
+function void DateTimeButton()
+
+
+   int     DD=GetDayOfMonth();
+   int     MM=GetMonth();
+   int     YYYY=GetYear();
+   int     HH=GetHour();
+   int     mm=GetMinute();
+   String SDD=DD;
+   String SMM=MM;
+   String SHH=HH;
+   String Smm=mm;
+
+
+
+
+    SetStrGateValue("AlarmeEventModifer",11,SDD);
+    SetStrGateValue("AlarmeEventModifer",12,SMM);
+
+    SetStrGateValue("AlarmeEventModifer",13,YYYY);
+
+    SetStrGateValue("AlarmeEventModifer",14,SHH);
+    SetStrGateValue("AlarmeEventModifer",15,Smm);
+    ShowPoPUPs("POPUP_Calender");
+
+end
+//////////////////////////////////////////////////////////////
+function void AlarmeDateTimeButton()
+   int     DD=GetDayOfMonth();
+   int     MM=GetMonth();
+   int     YYYY=GetYear();
+   int     HH=GetHour();
+   int     mm=GetMinute();
+   String SDD=DD;
+   String SMM=MM;
+   String SHH=HH;
+   String Smm=mm;
+
+
+
+
+
+    SetStrGateValue("AlarmeEventModifer",11,SDD);
+    SetStrGateValue("AlarmeEventModifer",12,SMM);
+
+    SetStrGateValue("AlarmeEventModifer",13,YYYY);
+
+    SetStrGateValue("AlarmeEventModifer",14,SHH);
+    SetStrGateValue("AlarmeEventModifer",15,Smm);
+
+    ShowPoPUPs("POPUP_Alarme_Calender");
+
+end
+/***************************************************************************/
+function Void JourPlus()
+ int MaxNbJ;
+ int MS;
+ int AS;
+ int NbJr;
+ MS=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+ AS=StrToInt(GetStrGateValue("AlarmeEventModifer",13));
+ NbJr=StrToInt(GetStrGateValue("AlarmeEventModifer",11));
+
+    if MS==1 || MS==3 || MS==5 || MS==7 || MS==8 || MS==10 || MS==12 then
+            MaxNbJ=31;
+    end
+
+    if MS==9 || MS==4 || MS==6 || MS==11 then
+             MaxNbJ=30;
+    end
+
+    if MS==2 then
+        if Mod(AS,4)==0 then
+            MaxNbJ=28;
+         else
+            MaxNbJ=29;
+        end
+    end
+
+    if MaxNbJ>NbJr then
+        NbJr=NbJr+1;
+        else if NbJr==MaxNbJ then
+            NbJr=1;
+            end
+    end
+
+    SetStrGateValue("AlarmeEventModifer",11,NbJr);
+
+
+end
+/////////////////////////////////////
+function Void JourMoin()
+    int NbJr;
+    int MinJr=1;
+   int     DD=GetDayOfMonth();
+   int     MM=GetMonth();
+   int     YYYY=GetYear();
+   int MaxNbJ;
+    int MS=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+    int  AS=StrToInt(GetStrGateValue("AlarmeEventModifer",13));
+   if YYYY==GetStrGateValue("AlarmeEventModifer",13) && MM==GetStrGateValue("AlarmeEventModifer",12) then
+        MinJr=DD;
+   end
+
+
+    if MS==1 || MS==3 || MS==5 || MS==7 || MS==8 || MS==10 || MS==12 then
+            MaxNbJ=31;
+    end
+
+    if MS==9 || MS==4 || MS==6 || MS==11 then
+             MaxNbJ=30;
+    end
+
+    if MS==2 then
+        if Mod(AS,4)==0 then
+            MaxNbJ=28;
+         else
+            MaxNbJ=29;
+        end
+    end
+
+     NbJr=StrToInt(GetStrGateValue("AlarmeEventModifer",11));
+
+    if NbJr>1 then
+             NbJr=NbJr-1;
+        else if NbJr == 1 then
+            NbJr = MaxNbJ;
+        end
+    end
+
+    SetStrGateValue("AlarmeEventModifer",11,NbJr);
+end
+
+////////////////////////////////////////////////////
+
+/***************************************************************************/
+function Void MoisPlus()
+int MS;
+ int MaxMois=12;
+ int     YYYY=GetYear();
+ MS=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+
+
+
+
+    if MaxMois>MS then
+        MS=MS+1;
+         else
+          if MaxMois == MS  then
+            MS=1;
+            end
+       end
+
+    SetStrGateValue("AlarmeEventModifer",12,MS);
+
+
+end
+/////////////////////////////////////
+function Void MoisMoin()
+int MS;
+int MinMois=1;
+ MS=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+
+   int     DD=GetDayOfMonth();
+   int     MM=GetMonth();
+   int     YYYY=GetYear();
+   if YYYY==GetStrGateValue("AlarmeEventModifer",13)  then
+        MinMois=MM;
+   end
+    if MS>MinMois then
+        MS=MS-1;
+       else
+            if MS==1 then
+                 MS=12;
+            end
+
+     end
+
+    SetStrGateValue("AlarmeEventModifer",12,MS);
+
+
+end
+////////////////////////////////////////////
+function Void AnPlus()
+ int MaxAn=2099;
+ int AS;
+
+ AS=StrToInt(GetStrGateValue("AlarmeEventModifer",13));
+
+    if MaxAn>AS then
+        AS=AS+1;
+    end
+
+    SetStrGateValue("AlarmeEventModifer",13,AS);
+
+
+end
+/////////////////////////////////////
+function Void AnMoin()
+ int MinAn=GetYear();
+ int AS;
+
+ AS=StrToInt(GetStrGateValue("AlarmeEventModifer",13));
+
+    if AS>MinAn then
+        AS=AS-1;
+    end
+
+    SetStrGateValue("AlarmeEventModifer",13,AS);
+
+end
+
+////////////////////////////////////////////
+function Void HeurePlus()
+ int MaxHr=23;
+ int HrS;
+
+ HrS=StrToInt(GetStrGateValue("AlarmeEventModifer",14));
+
+    if MaxHr>HrS then
+        HrS=HrS+1;
+    else
+        if HrS ==23 then
+            HrS=0;
+        end
+    end
+
+    SetStrGateValue("AlarmeEventModifer",14,HrS);
+
+
+end
+/////////////////////////////////////
+function Void HeureMoin()
+
+ int HrS;
+
+ HrS=StrToInt(GetStrGateValue("AlarmeEventModifer",14));
+
+    if HrS>=1 then
+        HrS=HrS-1;
+        //MessageBox(HrS,"-1");
+     else
+         if HrS == 0 then
+            HrS=23;
+        end
+    end
+
+
+    SetStrGateValue("AlarmeEventModifer",14,HrS);
+
+
+end
+
+//////////////////////
+////////////////////////////////////////////
+function Void MinutePlus()
+ int MaxMin=59;
+ int MinS;
+
+ MinS=StrToInt(GetStrGateValue("AlarmeEventModifer",15));
+
+    if MaxMin>MinS then
+        MinS=MinS+1;
+    else
+        if 59 == MinS then
+        MinS=0;
+        end
+    end
+
+
+    SetStrGateValue("AlarmeEventModifer",15,MinS);
+
+
+end
+/////////////////////////////////////
+function Void MinuteMoin()
+
+ int MinS;
+
+ MinS=StrToInt(GetStrGateValue("AlarmeEventModifer",15));
+
+    if 1<=MinS then
+        MinS=MinS-1;
+
+    else if MinS == 0 then
+        MinS=59;
+        end
+    end
+
+
+    SetStrGateValue("AlarmeEventModifer",15,MinS);
+
+
+end
+///////////////////////
+function Void DateTimeOK()
+
+String JJ;
+String MM;
+String AAAA;
+String HH;
+String Min;
+String DateTime;
+
+
+    JJ=getStrGateValue("AlarmeEventModifer",11);
+    MM=getStrGateValue("AlarmeEventModifer",12);
+    AAAA=getStrGateValue("AlarmeEventModifer",13);
+    HH=getStrGateValue("AlarmeEventModifer",14);
+    Min=getStrGateValue("AlarmeEventModifer",15);
+   if StrToInt(JJ)<10 then
+    JJ="0"+JJ;
+   end
+      if StrToInt(MM)<10 then
+    MM="0"+MM;
+   end
+
+      if StrToInt(HH)<10 then
+    HH="0"+HH;
+   end
+
+      if StrToInt(Min)<10 then
+    Min="0"+Min;
+
+   end
+
+    DateTime=JJ+"/"+MM+"/"+AAAA+"_"+HH+":"+Min;
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,DateTime,4);//Date
+    SetStrGateValue("AlarmeEventModifer",2,DateTime);
+           if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+    TPageCloseByName("POPUP_Calender");
+end
+///////////////////////////////////////
+function Void AlarmeDateTimeOK()
+String JJ;
+String MM;
+String AAAA;
+String HH;
+String Min;
+String DateTime;
+
+
+    JJ=getStrGateValue("AlarmeEventModifer",11);
+    MM=getStrGateValue("AlarmeEventModifer",12);
+    AAAA=getStrGateValue("AlarmeEventModifer",13);
+    HH=getStrGateValue("AlarmeEventModifer",14);
+    Min=getStrGateValue("AlarmeEventModifer",15);
+
+
+
+   if StrToInt(JJ)<10 then
+    JJ="0"+JJ;
+   end
+      if StrToInt(MM)<10 then
+    MM="0"+MM;
+   end
+
+      if StrToInt(HH)<10 then
+    HH="0"+HH;
+   end
+
+      if StrToInt(Min)<10 then
+    Min="0"+Min;
+
+   end
+
+    DateTime=JJ+"/"+MM+"/"+AAAA+"_"+HH+":"+Min;
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,DateTime,8);//Date
+    SetStrGateValue("AlarmeEventModifer",6,DateTime);
+          if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+    TPageCloseByName("POPUP_Alarme_Calender");
+
+end
+////////////////////////
+function Void DateTimeCancel()
+    TPageCloseByName("POPUP_Calender");
+end
+////////////////////////
+function Void AlarmeDateTimeCancel()
+    TPageCloseByName("POPUP_Alarme_Calender");
+end

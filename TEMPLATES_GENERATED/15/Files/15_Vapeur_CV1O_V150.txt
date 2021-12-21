@@ -1,0 +1,7 @@
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O1;ECHAUDOIRE;Vapeur;CV1O;Chaudiere 1+2+C;5;M2C0;M200;M213;Chaudiere 1+2+C;ElMazeraa;Abattage;Reel;Atelier;*;*;Abattoir;!~*;!~*;;;;;2;ECHAUDOIRE;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O2;LAVEUSE CAISSE;Vapeur;CV1O;Chaudiere 1+2+C;7;M2C0;M200;M213;Chaudiere 1+2+C;ElMazeraa;Abattage;Reel;Machine;*;*;Abattoir;!~*;!~*;;;;;2;LAVEUSE CAISSE;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O3;BAINS CUISSON;Vapeur;CV1O;Chaudiere 1+2+C;7;M2C0;M200;M22I;Chaudiere 1+2+C;ElMazeraa;BAINS-CUISSON;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;BAINS CUISSON;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O4;ATL CONSERVE;Vapeur;CV1O;Chaudiere 1+2+C;5;M2C0;M200;M233;Chaudiere 1+2+C;ElMazeraa;ATL-conserve;Reel;Atelier;*;*;Conserve;!~*;!~*;;;;;2;Atelier CONSERVE;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O5;AUTOCLAVE PetFd;Vapeur;CV1O;Chaudiere 1+2+C;7;M2C0;M200;M241;Chaudiere 1+2+C;ElMazeraa;Autoclave PetFd;Reel;Machine;*;*;PetFood;!~*;!~*;;;;;2;AUTOCLAVE petfood;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O6;ATL PETFOOD;Vapeur;CV1O;Chaudiere 1+2+C;5;M2C0;M200;M243;Chaudiere 1+2+C;ElMazeraa;Atelier PETFOOD;Reel;Atelier;*;*;PetFood;!~*;!~*;;;;;2;Atelier PETFOOD;*
+F:Kg/h J#0;Kg/h M#2;Kg/h A#3;Kg/h / T J-1#18;Kg/h / T A-1#21;低V1O7;bache eau+four;Vapeur;CV1O;Chaudiere 1+2+C;7;M2C0;M200;MC00;Chaudiere 1+2+C;ElMazeraa;Chaufferie;Reel;Machine;*;*;Surgele;!~*;!~*;;;;;2;bache a eau et four;*

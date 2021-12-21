@@ -1,0 +1,1076 @@
+Global String LigneAlarme;
+Global String AdminCopyAdd;
+Global Bool AlarmeFormuleEdit_FLAG = False;
+Global int KAL=0;
+Global int SaveFlag=2;
+
+///////////////////////////////////////////////////////////////////////////////////////////
+Function Void Delete_Alarm()
+
+String TempFullPathFileName;
+String RFullPathFileName;
+String WFullPathFileName;
+String BackFullPathFileName;
+String CodeAlarme="";
+String CodeLigne="";
+String Ligne="";
+String Code="";
+int MaxRow=10;
+int MaxPage;
+int TempFileHandle;
+int RFileHandle;
+int WFileHandle;
+int CurrentPage;
+int AlarmsTotalItems;
+int THandle;
+int Handle;
+String TextRow;
+bool QB;
+String Name;
+
+bool Exist=False;
+ SetStrGateValue("AlarmeEventModifer",17,"");
+    AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+   AlarmsTotalItems=AlarmsTotalItems-1;
+    SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+        Name=Fetch_Alarm_search(Admin_View_CurrentLine,9,";");
+            Code=Fetch_Alarm_search(Admin_View_CurrentLine,1,";");
+
+
+      Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","EventEMail.CSV",ENV_PATH + "\Files\DATAMODELFiles\EventEMail\",Code,7,0);
+
+     // MessageBox(Exist,"Name");
+    if Exist == False then
+      QB=QuestionBox("  Voulez-vous vraiment Supprimer l'alarme selectionner?","Attention:");
+
+        if QB==False then return; end
+                 SetStrGateValue("AlarmeEventModifer",17,"l'event "+Name+" est supprimer avec succée");
+
+    TempFullPathFileName = Admin_View_Temp_File;
+    TempFileHandle=FileOpen(TempFullPathFileName,"rt");
+    If ( TempFileHandle == 0 ) Then MessageBox(TempFullPathFileName,"File Not Found "); Return ; End
+
+    WFullPathFileName = ENV_PATH+"\Files\DATAMODELFiles\Event\WTEMP_Alarme_F_Reporting.csv";
+    WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+    BackFullPathFileName= ENV_PATH+"\Files\DATAMODELFiles\Event\BACK_TEMP_Alarme_F_Reporting.csv";
+   //FileCopy(Admin_View_Recycle_Code,Temp_Admin_View_Recycle_Code,true);
+    RFullPathFileName = Admin_View_Recycle_Code;
+    RFileHandle=FileOpen(Temp_Admin_View_Recycle_Code,"at");
+
+    CurrentPage=GetNumGateValue("EmailPageView",0);
+    CurrentPage=AlarmsTotalItems/MaxRow;
+    CodeAlarme=Fetch_Alarm_search(Admin_View_CurrentLine,1,";");
+    Code=StrDelete(CodeAlarme,1,1);
+    FileWriteLn(RFileHandle,Code);
+     //DBFileQuerry(3);
+    while (FileEof(TempFileHandle)==0)
+        Ligne=FileReadLn(TempFileHandle);
+
+        CodeLigne=Fetch_Alarm_search(Ligne,1,";");
+
+        IF CodeLigne!=CodeAlarme && Ligne!="" then
+            FileWriteLn(WFileHandle,Ligne);
+        End
+    end
+
+          FileClose(WFileHandle);
+          FileClose(TempFileHandle);
+          FileClose(RFileHandle);
+
+          BackFullPathFileName= ENV_PATH+"\Files\DATAMODELFiles\Event\BACK_TEMP_Alarme_F_Reporting.csv";
+
+          if (FileExist(BackFullPathFileName)) then
+                FileDelete(BackFullPathFileName);
+          end
+
+          FileCopy(TempFullPathFileName,BackFullPathFileName,false);
+      THandle=FileOpen(WFullPathFileName,"rt");
+          Handle=FileOpen(TempFullPathFileName,"wt");
+          while(FileEof(THandle)==0)
+            TextRow = FileReadLn(THandle);
+            if TextRow!="" then
+                FileWriteLn(Handle,TextRow);
+            end
+          end
+
+          FileClose(WFileHandle);
+          FileClose(TempFileHandle);
+         FileCopy(WFullPathFileName,TempFullPathFileName,false);
+
+         CurrentPage=AlarmsTotalItems/MaxRow;
+          If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+
+
+          FileDelete(WFullPathFileName);
+
+          SetNumGateValue("EmailPageView",0,CurrentPage);
+           AlarmeFormuleEdit_FLAG = True;
+          Admin_View_Display(CurrentPage,"Alarme");
+
+           Confirme_Save=True;
+            SetNumGateValue("Template_Control",0,0);
+            SetNumGateValue("E15min",0,1);
+
+       else
+
+         SetStrGateValue("AlarmeEventModifer",17,"Tu n'a pas le droit de supprimer L'event "+Name);
+           Clean_Formulaire();
+      end
+
+
+End
+
+/*****************************************************************************/
+function void NameAlarmeBouton()
+    SetStrGateValue("AlarmeEventModifer",19,GetStrGateValue("AlarmeEventModifer",0));
+    ShowPoPUPs("Alarme_Name");
+End
+
+
+function void FillNameAlarme()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//V=FR_Speciale_CHar(V);
+//MessageBox(V,"Nom");
+
+     if ( V != "") then
+    // MessageBox(V,"Nom");
+
+        SetStrGateValue("AlarmeEventModifer",0,V);
+      Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,9);
+          SetStrGateValue("AlarmeEventModifer",19,"");
+            if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+        ShowPoPUPs("");
+         NameUses=UniqueName(ENV_PATH+"\Files\DATAMODELFiles\Event\","TEMP_Alarme_F_Reporting.CSV",V ,9);
+        end
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+Function String FetchCodeAddAlarme(String PathC,String Prefix)
+
+String RFullPathFileName;
+String RBackFullPathFileName;
+String WRFullPathFileName;
+String CodeNewAlarme="";
+int LCFileHandle;
+String Ligne="";
+int RFileHandle;
+int WRFileHandle;
+int i=0;
+int Code;
+String LigneNOW="";
+bool Exist=False;
+
+
+//MessageBox(PathC,Prefix);
+     Code=GetNumGateValue("LastCodeAdd",0);
+     // MessageBox(Code,"" );
+
+     //FileClose(LCFileHandle);
+
+
+
+
+
+
+    RFileHandle=FileOpen(Temp_Admin_View_Recycle_Code,"rt");
+
+         WRFullPathFileName = PathC+"\WTemp_Recycler_Code.txt";
+         WRFileHandle=FileOpen(WRFullPathFileName,"wt");
+         RBackFullPathFileName= PathC+"\Back_Temp_Recycler_Code.txt";
+
+         Ligne=FileReadLn(RFileHandle);
+        // MessageBox(Ligne,"" );
+            if  Ligne!=""  then
+          // MessageBox(Ligne,"Ligne");
+            CodeNewAlarme=Prefix+Ligne;
+            LigneNOW=Ligne;
+          //  MessageBox(CodeNewAlarme,"CodeNewAlarme");
+
+            while(FileEof(RFileHandle)==0)
+              //  MessageBox(RFileHandle,"ééé");
+
+                Ligne=FileReadLn(RFileHandle);
+                if Ligne!=LigneNOW then
+              //  MessageBox("LigneNOW="LigneNOW,"Ligne="+Ligne);
+                    FileWriteLn(WRFileHandle,Ligne);
+                end
+            end
+
+
+          //end
+            if (FileExist(RBackFullPathFileName)) then
+                FileDelete(RBackFullPathFileName);
+            end
+
+
+          FileCopy(Temp_Admin_View_Recycle_Code,RBackFullPathFileName,false);
+
+          FileCopy(WRFullPathFileName,Temp_Admin_View_Recycle_Code,false);
+
+
+          FileDelete(WRFullPathFileName);
+
+    else
+//MessageBox(Code,"" );
+        Code=GetNumGateValue("LastCodeAdd",0);
+        Code=Code+1;
+
+        CodeNewAlarme=Prefix+Code;
+        SetNumGateValue("LastCodeAdd",0,Code);
+        //MessageBox(Code,CodeNewAlarme);
+         //MessageBox(Code,"" );
+           //FileClose(LCFileHandle);
+    end
+
+                Exist = ExistingInFileWithPS( "C:\Winlog\PowerShell\","TEMP_Alarme_F_Reporting.CSV",ENV_PATH + "\Files\DATAMODELFiles\Event\",CodeNewAlarme,1,0);
+
+               if Exist == True then
+
+                        Code=GetNumGateValue("LastCodeAdd",0);
+                        Code=Code+1;
+                          SetNumGateValue("LastCodeAdd",0,Code);
+                    CodeNewAlarme=Prefix+Code;
+                    // MessageBox(Code,CodeNewAlarme);
+                 end
+    //MessageBox(CodeNewAlarme,"code Ajout");
+       FileClose(WRFileHandle);
+            FileClose(RFileHandle);
+   return CodeNewAlarme;
+    // MessageBox(CodeNewAlarme,"CodeNewReport");
+end
+/////////////
+
+Function Void Add_New_Alarm()
+
+String CodeNewAlarme;
+Bool QB;
+String FullPathFileName;
+int FileHandle;
+int CurrentPage;
+int AlarmsTotalItems;
+int L;
+String NomAlarme;
+NomAlarme=GetStrGateValue("AlarmeEventModifer",0);
+
+             if NameUses== True then   SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");  return; end
+ if NameUses == False then
+    SetStrGateValue("AlarmeEventModifer",17,"");
+   end
+    if NomAlarme=="" then  MessageBox("Veuillez saisir une valeur pour le 'NOM DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,2,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'COMPTEUR CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,5,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'L'OPERATEUR CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,6,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'L'OBJECTIF DU CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,7,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'LE FREQUENCE DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    if Fetch_Formule(Admin_View_CurrentLine,8,";")=="" then  MessageBox("Veuillez saisir une valeur pour le 'LA DATE SUIVANTE DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention"); return; end
+    QB=QuestionBox("  Voulez-vous vraiment Ajouter Une nouvelle alarme?","Attention:");
+    if QB==False then return; end
+        AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+    AlarmsTotalItems=AlarmsTotalItems+1;
+    SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+
+    CodeNewAlarme=FetchCodeAddAlarme(ENV_PATH+"\Files\DATAMODELFiles\Event","A");
+        FullPathFileName = Admin_View_Temp_File;
+
+    FileHandle=FileOpen(FullPathFileName,"at");
+
+    AlarmsTotalItems=GetNumGateValue("AdminTotalItems",0);
+
+
+          Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,CodeNewAlarme,1);
+
+          Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,NomAlarme,9);
+            L=StrLen(Admin_View_CurrentLine);
+
+            FileWriteLn(FileHandle,Admin_View_CurrentLine);
+
+
+            CurrentPage=AlarmsTotalItems/MaxRow;
+            If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+                FileClose(FileHandle);
+            AlarmeFormuleEdit_FLAG = True;
+         SetNumGateValue("EmailPageView",0,CurrentPage);
+          Admin_View_Display(CurrentPage,"Alarme");
+           // SaveFlag=SaveFlag+1;
+               SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+           Confirme_Save=True;
+
+end
+
+/*****************************************************************************/
+Function Void CopyAlarme()
+
+int  AlarmsTotalItems ;
+int  MaxRow=10;
+int TempFileHandle;
+int WFileHandle;
+String TempFullPathFileName;
+String WFullPathFileName;
+String BackFullPathFileName;
+String CodeNewAlarme;
+String Ligne;
+int CurrentPage;
+Bool QB;
+
+String Nom=GetStrGateValue("AlarmeEventModifer",0);
+
+if Nom=="" then MessageBox("Selectionez une ligne SVP","Attention" );return ;end
+
+    QB=QuestionBox("  Voulez-vous vraiment Copier l'alarme selectionner?","Attention:");
+    if QB==False then return; end
+
+    AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+    AlarmsTotalItems=AlarmsTotalItems+1;
+
+    SetNumGateValue("AdminTotalItems",0,AlarmsTotalItems);
+
+    TempFullPathFileName = Admin_View_Temp_File;
+
+    TempFileHandle=FileOpen(TempFullPathFileName,"at");
+
+    CodeNewAlarme=FetchCodeAddAlarme(ENV_PATH+"\Files\DATAMODELFiles\Event","A");
+ Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"Copie "+Nom ,9);
+
+    AdminCopyAdd=Admin_View_CurrentLine;
+
+
+    AdminCopyAdd=FR_Formule(AdminCopyAdd,CodeNewAlarme ,1);
+
+        FileWriteLn(TempFileHandle,AdminCopyAdd);
+
+
+     FileClose(TempFileHandle);
+
+       CurrentPage=AlarmsTotalItems/MaxRow;
+          If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then CurrentPage =  CurrentPage +1; end
+
+  AlarmeFormuleEdit_FLAG = True;
+    SetNumGateValue("EmailPageView",0,CurrentPage);
+
+              Admin_View_Display(CurrentPage,"Alarme");
+                  //  SaveFlag=SaveFlag+1;
+                SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+//MessageBox(SaveFlag,"");
+               Confirme_Save=True;
+
+
+End
+
+
+///////////////////////////////////////////////////////////////////////////
+Function String SearchAndReplace_code(String LigneC,String CurrentCompteur,String NewCompteur,String op)
+
+int L=0;
+int P=0;
+int P1=0;
+int LSI;
+int SIP;
+String Part1="";
+String Part2="";
+String SI;
+String TempLigneC;
+TempLigneC=LigneC;
+
+if  ( NewCompteur == CurrentCompteur) then return "" ; end
+
+    SI=CurrentCompteur+op;
+    LSI=StrLen(SI);
+    P1=StrPos(TempLigneC,SI);
+
+    while (P1 != 0 )
+
+        L=StrLen(TempLigneC);
+
+        Part1=StrSubString(TempLigneC,1,P1-1);
+
+        SIP=P1+LSI;
+        Part2=StrSubString(TempLigneC,SIP,L-SIP+1);
+        TempLigneC=Part1+NewCompteur+op+Part2;
+        P1=StrPos(TempLigneC,SI);
+    end
+    return TempLigneC;
+End
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+function void Save_Alarme()
+
+String  NomAlarme   = GetStrGateValue("AlarmeEventModifer",0);
+
+    IF (NameUses == True) then
+        SetStrGateValue("AlarmeEventModifer",17,"Le nom choisi est déjà utilisé. Veuillez en choisir un autre");
+        return;
+    Else
+        SetStrGateValue("AlarmeEventModifer",17,"");
+    end
+
+    IF (NomAlarme == "") then
+        MessageBox("Veuillez saisir une valeur pour le 'NOM DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+    IF (Fetch_Formule(Admin_View_CurrentLine,2,";")=="") then
+        MessageBox("Veuillez saisir une valeur pour le 'COMPTEUR CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+    IF (Fetch_Formule(Admin_View_CurrentLine,5,";")=="") then
+        MessageBox("Veuillez saisir une valeur pour le 'L'OPERATEUR CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+    IF (Fetch_Formule(Admin_View_CurrentLine,6,";")=="") then
+        MessageBox("Veuillez saisir une valeur pour le 'L'OBJECTIF DU CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+    IF (Fetch_Formule(Admin_View_CurrentLine,7,";")=="") then
+        MessageBox("Veuillez saisir une valeur pour le 'LE FREQUENCE DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+    IF (Fetch_Formule(Admin_View_CurrentLine,8,";")=="") then
+        MessageBox("Veuillez saisir une valeur pour le 'LA DATE SUIVANTE DE CAS INCIDENT' Vous ne pouvez pas continuer tant que cela n'est pas fait!","Attention");
+        return;
+    end
+
+
+
+Admin_modifier(ENV_PATH+"\Files\DATAMODELFiles\Event\","TEMP_Alarme_F_Reporting.csv" );
+
+End
+
+
+
+
+/**************************************************************************/
+function String Lecture_Alarme_Ligne()
+    int NumLigne=1;
+    int RowSelect;
+    RowSelect=StrToInt(GetStrGateValue("AlarmeEventModifer",20));
+    String FullPathFileName;
+    int FileHandle;
+    String Ligne;
+
+    FullPathFileName = ENV_PATH+"\Files\AllCompteur\TEMP_Alarme_F_Reporting.csv";
+    FileHandle=FileOpen(FullPathFileName,"rt");
+
+    int i;
+        Ligne = FileReadLn(FileHandle);
+    for i = 1 to RowSelect do
+        Ligne = FileReadLn(FileHandle);
+    end
+
+
+  FileClose(FileHandle);
+   return(Ligne);
+end
+
+///////////////////////////////////////////////////////////
+function void OperandeButton()
+  String Objective;
+  String CA;
+    Number="";
+     SetStrGateValue("Operande_Formule",0,"");
+    Objective=GetStrGateValue("AlarmeEventModifer",4);
+    SetStrGateValue("Operande_Formule",0,"");
+    ShowPoPUPs("POPUP_Operande");
+end
+//////////////////////////////////////////////////////////
+function void OperateurButton()
+     String Operateur;
+     String CA;
+    Operateur=GetStrGateValue("AlarmeEventModifer",3);
+    SetStrGateValue("Operateur_Formule",0,Operateur);
+    ShowPoPUPs("POPUP_Operator");
+end
+////////////////////////////////////////////
+
+function void FrequenceButton()
+    int cp;
+    String Periodicity;
+    String PeriodicityUnit;
+    String PeriodicityMax;
+
+    String CA;
+     cp=0;
+    Periodicity=GetStrGateValue("ViewPeriodicity",cp);
+    SetStrGateValue("AlarmeEventModifer",12,cp);
+    SetStrGateValue("AlarmeEventModifer",15,GetStrGateValue("ViewNames",cp));
+    PeriodicityUnit=Fetch_Formule(Periodicity,1,"_");
+    SetStrGateValue("AlarmeEventModifer",14,PeriodicityUnit);
+    PeriodicityMax=Fetch_Formule(Periodicity,2,"_");
+    SetStrGateValue("AlarmeEventModifer",13,PeriodicityMax);
+    SetStrGateValue("AlarmeEventModifer",11,1);
+
+    ShowPoPUPs("POPUPFrequence");
+
+end
+
+/***************************************************************************/
+function Void UniteTempsPlus()
+    int cp;
+    int MaxV;
+    String Periodicity;
+    String PeriodicityUnit;
+    String PeriodicityMax;
+    MaxV=GetNumGateValue("MaxView",1)-1;
+    cp=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+    if(cp<MaxV)then
+    cp=cp+1;
+    end
+        SetStrGateValue("AlarmeEventModifer",12,cp);
+        Periodicity=GetStrGateValue("ViewPeriodicity",cp);
+        SetStrGateValue("AlarmeEventModifer",15,GetStrGateValue("ViewNames",cp));
+        PeriodicityUnit=Fetch_Formule(Periodicity,1,"_");
+        SetStrGateValue("AlarmeEventModifer",14,PeriodicityUnit);
+        PeriodicityMax=Fetch_Formule(Periodicity,2,"_");
+        SetStrGateValue("AlarmeEventModifer",13,PeriodicityMax);
+        SetStrGateValue("AlarmeEventModifer",11,1);
+end
+
+////////////////////////////////////////////////////
+function Void UniteTempsMoin()
+     int cp;
+    int MaxV;
+    String Periodicity;
+    String PeriodicityUnit;
+    String PeriodicityMax;
+    cp=StrToInt(GetStrGateValue("AlarmeEventModifer",12));
+    if(cp>0)then
+        cp=cp-1;
+    end
+        SetStrGateValue("AlarmeEventModifer",12,cp);
+        Periodicity=GetStrGateValue("ViewPeriodicity",cp);
+        SetStrGateValue("AlarmeEventModifer",15,GetStrGateValue("ViewNames",cp));
+        PeriodicityUnit=Fetch_Formule(Periodicity,1,"_");
+        SetStrGateValue("AlarmeEventModifer",14,PeriodicityUnit);
+        PeriodicityMax=Fetch_Formule(Periodicity,2,"_");
+        SetStrGateValue("AlarmeEventModifer",13,PeriodicityMax);
+        SetStrGateValue("AlarmeEventModifer",11,1);
+end
+
+/////////////////////////////////////
+function Void NbrUniteTempsMoin()
+    int NbUnit;
+    NbUnit=StrToInt(GetStrGateValue("AlarmeEventModifer",11)) ;
+    if NbUnit>1 then
+    NbUnit=NbUnit-1;
+    end
+    SetStrGateValue("AlarmeEventModifer",11,NbUnit);
+end
+////////////////////////////////////
+function Void NbrUniteTempsPlus()
+    int NbUnit;
+    int Max;
+    Max=StrToInt(GetStrGateValue("AlarmeEventModifer",13));
+    NbUnit=StrToInt(GetStrGateValue("AlarmeEventModifer",11)) ;
+    if NbUnit<Max then
+    NbUnit=NbUnit+1;
+
+    end
+        /*MessageBox(NbUnit,"00");
+    if NbUnit == Max then
+    NbUnit=0;
+
+
+    end*/
+    SetStrGateValue("AlarmeEventModifer",11,NbUnit);
+end
+////////////////////////////////
+function Void FrequenceOK()
+    String Frequence;
+    Frequence=getStrGateValue("AlarmeEventModifer",11)+"_"+GetStrGateValue("AlarmeEventModifer",14);
+    SetStrGateValue("AlarmeEventModifer",5,Frequence);
+    Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,Frequence,7);//Frequence
+    TPageCloseByName("PoPupFrequence");
+          if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+end
+
+////////////////////////
+function Void FrequenceCancel()
+    TPageCloseByName("PoPupFrequence");
+end
+
+//////////////////////////////////////////////////////////////////////////////
+function Void Alarm_Formule_POPUP()
+int MaxTu=0;
+int MaxTp=0;
+    int Cp;
+String CC;
+String CEnergy;
+String FirstChar;
+String UserCompteur;
+String UserFormule;
+String ParsedFormule;
+String CompteurIncident;
+String TAG_Formule;
+Number="";
+//GetNumGateValue("CurrentPosition",2,0);
+    UserFormule=Fetch_Formule(Admin_View_CurrentLine,12,";");
+    UserCompteur=Fetch_Formule(Admin_View_CurrentLine,11,";");
+     Formule_User_Complet=Fetch_Formule(UserFormule,2,"=");//Partie 2 formule User alarm apres egale
+     TAG_Formule=Fetch_Formule(Admin_View_CurrentLine,14,";");
+    //MessageBox(Formule_User_Complet,"");
+     ParsedFormule=Fetch_Formule(Admin_View_CurrentLine,4,";");
+     Formule_Parse_Complet=Fetch_Formule(ParsedFormule,2,"=");//Partie 2 formule parsed apres egale
+     CompteurIncident=Fetch_Formule(Admin_View_CurrentLine,2,";");
+     SetStrGateValue("Operande_Formule",0,"");
+      SetStrGateValue("Operateur_Formule",0,"");
+    SetStrGateValue("AlarmeEventModifer",7,UserCompteur);
+    SetStrGateValue("AlarmeEventModifer",8,CompteurIncident);
+
+
+        SetStrGateValue("AlarmeEventModifer",30,TAG_Formule);
+    MaxTu=Occurence_operateur(Formule_User_Complet,"~");
+    MaxTp=Occurence_operateur(Formule_Parse_Complet,"~");
+    FirstChar=StrSubString(Formule_User_Complet,1,2);
+             SetStrGateValue("AlarmeEventModifer",17,"");
+
+   if(MaxTu==0 || FirstChar=="!~" || MaxTu !=MaxTp) then
+
+     SetStrGateValue("AlarmeEventModifer",17,"La formule d'incident est incorrect: Verifiez votre formule SVP.");
+     Formule_User_Complet="";
+     Formule_Parse_Complet="";
+     SetNumGateValue("CurrentPosition",2,0);
+     SetNumGateValue("CurrentPosition",1,1);
+     SetNumGateValue("CurrentPosition",0,1);
+     SetStrGateValue("AlarmeEventModifer",7,"");
+
+     Display_Formule();
+
+   else
+
+    Cp=Fetch_Position(Formule_User_Complet,MaxTu,"~");
+    SetNumGateValue("CurrentPosition",2,MaxTu);
+    SetNumGateValue("CurrentPosition",0,Cp);
+    Cp=Fetch_Position(Formule_Parse_Complet,MaxTu,"~");
+    SetNumGateValue("CurrentPosition",1,Cp);
+    PlacePostion();
+    SetStrGateValue("AlarmeEventModifer",17,"");
+      Display_Formule();
+   end
+    PopUpBU();
+    SetStrGateValue("BU_Selected",0,"");
+    SetStrGateValue("EV_Measure",0,"");
+   ShowPoPUPs("POPUP_Alarme_Formule");
+End
+
+///////////////////////////////////////////////////////////////////////////////
+/*
+function string Fetch_Alarme(string Ligne, int Col, string Seperator)
+
+    String txt = Ligne;
+    String CODE = "*";
+    int i;  int P;
+
+    for i =1  to Col do
+             P = StrPos(txt,Seperator);
+             CODE=StrSubString(txt,1,P-1);
+             txt=StrDelete(txt,1,P);
+                end
+      return CODE;
+end*/
+///////////////////////////////////////////////////////////////////////////////
+
+
+/*********************************AnalyseAlarme*************************************/
+function void SetDisplay_Alarme(string TextRow, String GateName)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+string V; String NomALRPageView;
+String User;
+
+
+    NomALRPageView = GateName;
+                txt = TextRow;
+
+                V=Fetch_Formule(txt,13,";");//Nombre d'erreur
+                SetStrGateValue(NomALRPageView,10,V);
+ //***********************************************************
+                V=Fetch_Formule(txt,9,";");//Alarme Name
+                SetStrGateValue(NomALRPageView,0,V);
+ //***********************************************************
+                 V=Fetch_Formule(txt,11,";");//User Compteur
+                SetStrGateValue(NomALRPageView,1,V);
+ //***********************************************************
+                //V=Fetch_Alarm_search(txt,12,";");//User Formule
+
+                V=Fetch_Formule(txt, 12, ";");
+
+                SetStrGateValue(NomALRPageView,2,ZapTild_Display_All(V));     //  Formule User
+
+                //SetStrGateValue(NomALRPageView,2,V);
+                //PlacePostionDisplay(V,NomALRPageView);
+ //***********************************************************
+                V=Fetch_Formule(txt,5,";");//Operateur
+                SetStrGateValue(NomALRPageView,3,V);
+ //***********************************************************
+                V=Fetch_Formule(txt,6,";");//objective
+                if(Fetch_Formule(V,1,":")=="O") then
+                    User=Fetch_Formule(V,3,":");
+
+                    SetStrGateValue(NomALRPageView,4,User);
+                 else
+                    SetStrGateValue(NomALRPageView,4,V);
+                end
+ //--------------------------------------------------------
+
+                V=Fetch_Formule(txt,7,";");//Frequence
+                SetStrGateValue(NomALRPageView,5,V);
+
+                V=Fetch_Formule(txt,8,";");//Next date
+                SetStrGateValue(NomALRPageView,6,V);
+
+
+
+ //end
+ end
+
+//****************************************************************************/
+function void ViewAlarmesAdd()
+
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+FlagUses=True;
+
+
+int  AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  AlarmsTotalItems/MaxRow;
+
+    If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+        if (CurrentPage >= MaxPage) then
+        CurrentPage = MaxPage;
+        else
+        CurrentPage = CurrentPage+1;
+        end
+
+    SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"Alarme");
+FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAlarmesSub()
+	if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+	int CurrentPage = GetNumGateValue("EmailPageView",0);
+	bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+     Admin_View_Display(CurrentPage,"Alarme");
+	FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAlarmesFirst()
+	if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+bool Continue;
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+     Admin_View_Display(1,"Alarme");
+	 	FlagUses=False;
+end
+
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAlarmesEnd()
+
+	if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+bool Continue;
+int  AlarmsTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage;
+
+
+    MaxPage =  AlarmsTotalItems/MaxRow;
+
+    If (Mod(AlarmsTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"Alarme");
+	 	FlagUses=False;
+end
+
+/*****************************************************************************/
+/*****************************************************************************/
+//          construct EditRow remplacing seuil avec new_seuil
+/*****************************************************************************/
+/*****************************************************************************/
+
+function String AnalyseSave_Alarme(string TextRow)
+
+string txt = TextRow;
+string EditRow;
+
+int P;
+string CODE;
+string NAME;
+string Cincident;
+string FORMULE;
+string op;
+string ob;
+string FR;
+string NChK;
+string Name;
+string UCMP;
+string Des;
+string U_Formule;
+string Parsed_Formule;
+string NbrEr;
+
+
+                txt = TextRow;
+
+                CODE=Fetch_Alarm_search(txt,1,";");
+ //***********************************************************
+                Cincident=Fetch_Alarm_search(txt,2,";");
+ //***********************************************************
+                FORMULE=Fetch_Alarm_search(txt,3,";");
+ //***********************************************************
+                Parsed_Formule=Fetch_Alarm_search(txt,4,";");
+ //***********************************************************
+                op=Fetch_Alarm_search(txt,5,";");
+ //***********************************************************
+                ob=Fetch_Alarm_search(txt,6,";");
+ //***********************************************************
+                FR=Fetch_Alarm_search(txt,7,";");
+
+ //***********************************************************
+                NChK=Fetch_Alarm_search(txt,8,";");
+  //**********************************************************
+                Name=Fetch_Alarm_search(txt,9,";");
+ //***********************************************************
+                Des=Fetch_Alarm_search(txt,10,";");
+                 //***********************************************************
+                UCMP=Fetch_Alarm_search(txt,11,";");
+                 //***********************************************************
+                U_Formule=Fetch_Alarm_search(txt,12,";");
+                                 //***********************************************************
+                NbrEr=Fetch_Alarm_search(txt,13,";");
+
+
+                EditRow=CODE +";"+ Cincident +";"+ FORMULE +";"+ Parsed_Formule +";"+ op +";"+ ob + ";" + FR + ";" + NChK+";" + Name +";"+ Des +";"+ UCMP + ";" + U_Formule +";"+ NbrEr;
+
+
+return(EditRow);
+
+end
+
+//***********************************************************
+//END Analyse'_Alarme
+//***********************************************************
+
+
+/*****************************************************************************/
+/*****************************************************************************/
+//          construct EditRow remplacing seuil avec new_seuil
+/*****************************************************************************/
+/*****************************************************************************/
+
+function String AnalyseSave_Regulier(string TextRow)
+
+string txt = TextRow;
+string EditRow;
+
+int P;
+string CODE;
+string NAME;
+string COND_INT;
+string PERIODICITY;
+string STARTDATE;
+string DES;
+string NOUVEAU_NOM = GetStrGateValue("AlarmeEventModifer",0);
+string NOUVEAU_STARTDATE = GetStrGateValue("AlarmeEventModifer",2);
+String DAY;
+String Month;
+String Year;
+
+
+                txt = TextRow;
+
+                P = StrPos(txt,";");
+                CODE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+ //***********************************************************
+                P = StrPos(txt,";");
+                NAME=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+ //***********************************************************
+                P = StrPos(txt,";");
+                COND_INT=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+ //***********************************************************
+                P = StrPos(txt,";");
+                PERIODICITY=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+ //***********************************************************
+                P = StrPos(txt,";");
+                STARTDATE=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+ //***********************************************************
+                P = StrPos(txt,";");
+                DES=StrSubString(txt,1,P-1);
+
+
+
+                txt = NOUVEAU_STARTDATE;
+                P = StrPos(txt,"/");
+                DAY=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+                P = StrPos(txt,"/");
+                Month=StrSubString(txt,1,P-1);
+                txt=StrDelete(txt,1,P);
+
+                Year = txt;
+
+                SetNumGateValue(COND_INT,0,GetNumGateValue("AdminListView",0));//Periodicity
+                SetNumGateValue(COND_INT,1,StrToInt(Year));
+                SetNumGateValue(COND_INT,2,StrToInt(Month));
+                SetNumGateValue(COND_INT,3,StrToInt(DAY));
+
+EditRow=CODE +";"+ NOUVEAU_NOM +";"+ COND_INT +";"+ PERIODICITY +";"+ NOUVEAU_STARTDATE +";"+ DES;
+
+return(EditRow);
+
+end
+/////////////////////////////////////////////////////////////////////////
+Function void Commit_Alarme()
+
+
+String BackFullPathFileName;
+bool Continue;
+int i = 0;
+String TextRow;
+int FileHandle;
+Confirme_Save=False;
+int THandle;
+int Handle;
+
+        BackFullPathFileName=ENV_PATH+"\Files\DATAMODELFiles\Event\BACK_Alarme_F_Reporting.CSV";
+        SetNumGateValue("User_Privilege",0,2);
+                 FileHandle = FileOpen(Admin_View_Temp_File,"rt");
+           while(FileEof(FileHandle)==0)
+             TextRow = FileReadLn(FileHandle);
+             if TextRow!="" then
+             i=i+1;
+           //  MessageBox(i,"");
+             end
+           end
+   // if i > 1 then
+
+           Continue = QuestionBox("  Voulez-vous enregistrer les nouvelles Alarmes ?","Attention:");
+          if (Continue == False) then return ; end
+
+          SetStrGateValue("AlarmeEventModifer",17,"En train de sauvegarder les modifications. Merci pour votre patience ...");
+          ShowPoPUPs("InfoPopup");
+
+      Set_BootMode( ACTIONBOOT );
+
+
+          if (FileExist(BackFullPathFileName)) then
+                FileDelete(BackFullPathFileName);
+          end
+
+       FileClose(FileHandle);
+          FileCopy(Admin_View_Original_File,BackFullPathFileName,False);
+          FileCopy(Admin_View_Temp_File,Admin_View_Original_File,False);
+          THandle=FileOpen(Temp_Admin_View_Recycle_Code,"rt");
+          Handle=FileOpen(Admin_View_Recycle_Code,"wt");
+          while(FileEof(THandle)==0)
+            TextRow = FileReadLn(THandle);
+            if TextRow!="" then
+                FileWriteLn(Handle,TextRow);
+            end
+          end
+          FileClose(Handle);
+            FileClose(THandle);
+         // FileCopy(Temp_Admin_View_Recycle_Code,Admin_View_Recycle_Code,False);
+
+        If ( AlarmeFormuleEdit_FLAG == True ) Then
+          Admin_Generate_Alarmes_Formule();
+
+          ShowPoPUPs("Redemarrer");
+
+          AlarmeFormuleEdit_FLAG = False;
+        End
+               SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+
+        TPageCloseByName("InfoPopup");
+   /*  else
+        MessageBox("Tableau est vide tu ne peut pas  l'actionner","info");
+        // FileCopy(ENV_PATH+"\Files\DATAMODELFiles\EMail\DB_Alarme_F_Reporting.CSV",ENV_PATH+"\Files\DATAMODELFiles\EMail\DB_Alarme_F_Reporting_"+DateTimeNowPath()+".CSV",False);
+             SetNumGateValue("Template_Control",0,0);
+             SetNumGateValue("E15min",0,0);
+
+     end*/
+
+
+End
+////////////////////////////////////////////////////////////////////////////////////
+function void Admin_Generate_Alarmes_Formule()
+
+    String Source;
+    String Destination;
+    String File_Name = "Alarme_EXECUTION_V"+ GetStrGateValue("Version",0) +".wll";
+
+
+            SetStrGateValue("Errors_Formule",0,"Generating Alarms Formulae. Please wait ...");
+            BUILD_ALARME();
+
+            ///////Copy Files
+
+            Source = ENV_PATH+"\Files\DATAMODELFiles\Event\Create_ALARME\" + File_Name;
+           Destination = GetProjectPath()+"\Code\" + File_Name ;
+            FileCopy(Source,Destination,False);
+            SetStrGateValue("Errors_Formule",0,"Generatinon of alarms logic is Complete.");
+
+end

@@ -1,0 +1,13 @@
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC1;Production;Humidite;CHCA;CLC;1;*;*;D2;*;*;Production;F(CHC1);Unite;*;*;*;*;*;F~(~CHC1~)~;F~(~Production~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC2;CH_F_Commerciale;Humidite;CHCA;CLC;1;*;*;D3;*;*;CH_F_Commerciale;F(CHC2);Unite;*;*;*;*;*;F~(~CHC2~)~;F~(~CH_F_Commerciale~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC3;Matiere_Premiere_P1;Humidite;CHCA;CLC;3;D65;*;D6;T軏  negativre;*;Matiere_Premiere_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC5;CH_CHAUD_LABO;Humidite;CHCA;CLC;3;D66;*;D7;T軏  chaude;*;CH_CHAUD_LABO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HCA;CLC;Humidite;*;0;*;*;D1;*;*;CLC
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC1;Production;Humidite;CHCA;CLC;1;*;*;D2;*;*;Production;F(CHC1);Unite;*;*;*;*;*;F~(~CHC1~)~;F~(~Production~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC2;CH_F_Commerciale;Humidite;CHCA;CLC;1;*;*;D3;*;*;CH_F_Commerciale;F(CHC2);Unite;*;*;*;*;*;F~(~CHC2~)~;F~(~CH_F_Commerciale~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC3;Matiere_Premiere_P1;Humidite;CHCA;CLC;3;D65;*;D6;T軏  negativre;*;Matiere_Premiere_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC5;CH_CHAUD_LABO;Humidite;CHCA;CLC;3;D66;*;D7;T軏  chaude;*;CH_CHAUD_LABO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC1;Production;Humidite;CHCA;CLC;1;*;*;D2;*;*;Production;F(CHC1);Unite;*;*;*;*;*;F~(~CHC1~)~;F~(~Production~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC2;CH_F_Commerciale;Humidite;CHCA;CLC;1;*;*;D3;*;*;CH_F_Commerciale;F(CHC2);Unite;*;*;*;*;*;F~(~CHC2~)~;F~(~CH_F_Commerciale~)~;;;0;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC3;Matiere_Premiere_P1;Humidite;CHCA;CLC;3;D65;*;D6;T軏  negativre;*;Matiere_Premiere_P1;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:HR%~LIVE#16;HR%min~M#6;<HR%>~M#2;HR%max~M#10;Inc~M#14;Inc~M-1#32;C %~M#36;低HC5;CH_CHAUD_LABO;Humidite;CHCA;CLC;3;D66;*;D7;T軏  chaude;*;CH_CHAUD_LABO;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

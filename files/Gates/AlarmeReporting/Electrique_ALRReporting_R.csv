@@ -1,0 +1,17 @@
+Alarme_Code;Alarme_Name;AlarmeCondition_Interne;AlarmeCondition_Externe;Seuil;Description;Frequence ;Next Trigger
+AINTPUT_0;Name_ALR SurConsommation_J;INPUT,28/PINPUT,28;Consommation_J superieur au seuil;0;Name_ALR SurConsommation_J;J;
+AINTPUT_1;Name_ALR SurConsommation_S;INPUT,28/PINPUT,28;Consommation_S superieur au seuil;0;Name_ALR SurConsommation_S;S;
+AINTPUT_2;Name_ALR SurConsommation_M;INPUT,28/PINPUT,28;Consommation_M superieur au seuil;0;Name_ALR SurConsommation_M;M;
+AINTPUT_3;Name_ALR SurConsommation_A;INPUT,28/PINPUT,28;Consommation_A superieur au seuil;0;Name_ALR SurConsommation_A;A;
+AINTPUT_8;Name_ALR Ratio_J;INPUT,28/PINPUT,28;Ratio_J superieur au seuil;0;Name_ALR Ratio_J;J;
+AINTPUT_9;Name_ALR Ratio_S;INPUT,28/PINPUT,28;Ratio_S superieur au seuil;0;Name_ALR Ratio_S;S;
+AINTPUT_10;Name_ALR Ratio_M;INPUT,28/PINPUT,28;Ratio_M superieur au seuil;0;Name_ALR Ratio_M;M;
+AINTPUT_11;Name_ALR Ratio_A;INPUT,28/PINPUT,28;Ratio_A superieur au seuil;0;Name_ALR Ratio_A;A;
+AINTPUT_29;Name_ALR Inc_J;INPUT,28/PINPUT,28;Inc_J superieur au seuil;0;Name_ALR Inc_J;J;
+AINTPUT_30;Name_ALR Inc_S;INPUT,28/PINPUT,28;Inc_S superieur au seuil;0;Name_ALR Inc_S;S;
+AINTPUT_31;Name_ALR Inc_M;INPUT,28/PINPUT,28;Inc_M superieur au seuil;0;Name_ALR Inc_M;M;
+AINTPUT_32;Name_ALR Inc_A;INPUT,28/PINPUT,28;Inc_A superieur au seuil;0;Name_ALR Inc_A;A;
+AINTPUT_18;Name_ALR SurIntensité L1;INPUT,28/PINPUT,28;Courant L1 superieur au seuil;0;Name_ALR SurIntensité L1;LIVE;
+AINTPUT_19;Name_ALR SurIntensité L2;INPUT,28/PINPUT,28;Courant L2 superieur au seuil;0;Name_ALR SurIntensité L2;LIVE;
+AINTPUT_20;Name_ALR SurIntensité L3;INPUT,28/PINPUT,28;Courant L3 superieur au seuil;0;Name_ALR SurIntensité L3;LIVE;
+AINTPUT_27;Name_ALR Cos Total Minimal;INPUT,28/PINPUT,28;CosPhi Inferieur au seuil;1;Name_ALR Cos Total Minimal;LIVE;

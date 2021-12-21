@@ -1,0 +1,8 @@
+nom du compteur;CG_TRT4_ADMIN
+Marque;CARLO GAVAZZI
+Reference;WM14
+Connecion;Modbus RS485
+Adresse;5
+Baude;9600
+Data;8 bit
+Stop;1 bit

@@ -1,0 +1,9 @@
+nom du compteur;C_H2O 2
+Marque;POWOGas
+Valeur de Pulse; 100;
+Connecion;i_7053
+Pin;2
+Protocol;DCON
+Baude;9600
+Data;8 bit
+Stop;1 bit

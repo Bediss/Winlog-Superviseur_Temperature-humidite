@@ -1,0 +1,702 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                  F
+///////////////////////////////////////////////////////////////////////////////
+/*function void Calculatrice()
+
+   String FullPathFileName;
+   Int FileHandle;
+   String Reel_FullPathFileName;
+   Int Reel_FileHandle;
+   String TextRow;
+   String Formule;
+   String Parsed_Formule;
+   String FileList;
+   String WFullPathFileName;
+   Int PROG_FileHandle;
+   Int COMPTEUR_N_EXIST ;
+   Int MaxLevel = 7;
+   int i;
+
+
+   FullPathFileName = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+   WFullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Prog.wll";
+   PROG_FileHandle = FileOpen(WFullPathFileName,"wt");
+
+   FileWriteLn(PROG_FileHandle,"/////////Calculatrice generateur  "+GetDateString("/",True)+"  ////////////////");
+   FileClose(PROG_FileHandle);
+
+   if (FileHandle==0) then  MessageBox("File not Found","Error");  return;  end
+
+   Reel_FullPathFileName = "ENV_PATH+"\Files\AllCompteur\Calcule\Compteur_ReelAlarme.wll";
+   Reel_FileHandle=FileOpen(Reel_FullPathFileName,"wt");
+
+   FileWriteLn(Reel_FileHandle,"function void Reel_Alarme_Calculatrice()");
+   FileWriteLn(Reel_FileHandle,"  String CompteurCode ;");
+   FileWriteLn(Reel_FileHandle,"  Int NBR ;");
+   FileClose(Reel_FileHandle);
+
+   FileReadLn(FileHandle);//Header
+   While(FileEof(FileHandle)==0 )
+
+    TextRow = FileReadLn(FileHandle);
+
+    If (TextRow != "") then
+
+       Formule = Fetch_CAL(TextRow, 13, ";");
+       Parsed_Formule = Fetch_CAL(TextRow, 21, ";");
+
+        If(Formule != "*") Then
+            IF (Formule == "Reel") Then
+
+             Compteur_ReelAlarme( Fetch_CAL(TextRow, 1, ";") , Fetch_CAL(TextRow, 3, ";"));
+
+            Else
+                IF ( StrSubString(Parsed_Formule,1,2) != "!~" ) Then
+                  Formula_STR_TO_FILE(  Fetch_CAL(TextRow, 21, ";") , Fetch_CAL(TextRow, 1, ";"));
+                  FileList = Parse_List(Fetch_CAL(TextRow,3,";"));
+                  Formule_Fonction(FileList , Fetch_CAL(TextRow, 1, ";"), Fetch_CAL(TextRow, 3, ";"));
+                End
+
+            End
+
+        End
+
+    End
+
+   End//While Not End Of Ligne
+   FileClose(FileHandle);
+
+   Reel_FileHandle=FileOpen(Reel_FullPathFileName,"at");
+   FileWriteLn(Reel_FileHandle,"End");// End Of Reel_Alarme_Calculatrice()
+   FileClose(Reel_FileHandle);
+
+
+
+
+
+   //FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+   //FileHandle=FileOpen(FullPathFileName,"rt");
+
+   WFullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Prog.wll";
+   PROG_FileHandle = FileOpen(WFullPathFileName,"at");
+
+   FileWriteLn(PROG_FileHandle,"function void CALCULATOR()");
+   FileWriteLn(PROG_FileHandle,"#StartUp");
+
+   //FileWriteLn(PROG_FileHandle,"String FullPathFileName = "+CharToStr(34)+ENV_PATH+"\Files\AllCompteur\Calcule\BUILD_LOG.txt"+CharToStr(34)+";");
+   //FileWriteLn(PROG_FileHandle,"Int FileHandle;");
+
+   //FileWriteLn(PROG_FileHandle,"FileHandle = FileOpen(FullPathFileName,"+CharToStr(34)+"at"+CharToStr(34)+");");
+
+   FileWriteLn(PROG_FileHandle,"  While(WindowIsOpen())");
+   FileWriteLn(PROG_FileHandle,"    Reel_Alarme_Calculatrice();");
+
+
+    /*While(FileEof(FileHandle)==0 )
+     TextRow = FileReadLn(FileHandle);
+
+      If (TextRow != "") then
+
+         FileWriteLn(PROG_FileHandle,"  "+TextRow);
+
+      End
+
+    End
+    For i = 0 to MaxLevel DO
+      WriteByLevel( PROG_FileHandle ,MaxLevel,  i);
+    End
+
+   //FileWriteLn(PROG_FileHandle,"  Sleep(10000);");
+   //FileWriteLn(PROG_FileHandle,"FileClose(FileHandle);");
+   FileWriteLn(PROG_FileHandle,"  End");
+   FileWriteLn(PROG_FileHandle,"End");
+
+   FileClose(FileHandle);
+   FileClose(PROG_FileHandle);
+   MessageBox("Fin de Creation","");
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  WriteByLevel
+///////////////////////////////////////////////////////////////////////////////
+function void WriteByLevel( int WriteFileHandle ,  int MaxLevel, int Level)
+
+   String FullPathFileName;
+   Int FileHandle;
+   Int SelectedLEVEL;
+   Bool Found = False;
+   string TextRow;
+   Int CompteurMax;
+   int i;
+   Int Pos ;
+   String CompteurCode;
+
+
+   FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+    SelectedLEVEL = MaxLevel-Level;
+    CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    While(FileEof(FileHandle)==0 )
+     TextRow = FileReadLn(FileHandle);
+
+       If (TextRow != "") then
+
+        Pos = StrPos(TextRow,"_");
+        CompteurCode=StrSubString(TextRow,1,Pos-1);
+        i=0;
+        Found = False;
+           While( Found == False && i < CompteurMax)
+            i=i+1;
+           
+              IF (CompteurCode == GetStrGateValue("Compteur_Code",i)) Then
+                IF (SelectedLEVEL == GetStrGateValue("Compteur_Level",i)) Then
+                  Found = True;
+                  FileWriteLn(WriteFileHandle,"  "+TextRow);
+
+                End
+
+              End
+
+
+              IF (i >= CompteurMax && Found == False) Then
+
+              End
+
+          End
+
+       End
+   End
+
+    FileClose(FileHandle);
+end
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  F2
+///////////////////////////////////////////////////////////////////////////////
+function String Parse_List(String Energy)
+    String FileName;
+
+
+    If (Energy != "*") then
+      FileName = ENV_PATH+"\Files\AllCompteur\Calcule\L_"+Energy+".txt";
+
+        if (FileExist(FileName) == True) then
+            Return FileName;
+        end
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3
+///////////////////////////////////////////////////////////////////////////////
+function void Formule_Fonction(String FileListName, String Compteur, String Energy)
+    String List_Ligne;
+    String Formule_Ligne;
+    String FullPathFileName;
+    string Log;
+    String INPUT;
+    String API;
+    string INPUT_CODE;
+    string Formule;
+
+    Int Log_FileHandle;
+    String LogFullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\LOG.txt";
+    Log_FileHandle = FileOpen(LogFullPathFileName,"at");
+
+
+    Int List_FileHandle = FileOpen(FileListName,"rt");
+
+   FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Prog.wll";
+   Int PROG_FileHandle = FileOpen(FullPathFileName,"at");
+
+    Log = Header_Decleration( PROG_FileHandle,Compteur );
+
+
+
+
+      While(FileEof(List_FileHandle)==0)//List File
+       List_Ligne = FileReadLn(List_FileHandle) ;
+
+         INPUT = Formule_Ligne(PROG_FileHandle, Compteur , List_Ligne, Energy);
+
+
+      END//List File
+
+     API = "SetNumGateValue("+CharToStr(34);
+     INPUT_CODE = InPutGates( Compteur,Energy );
+     Formule = API + INPUT_CODE+ CharToStr(34) + ",49,NBR);" ;// insert in LIve Gates List 49
+
+     FileWriteLn(PROG_FileHandle,Formule);
+
+        FileWriteLn(PROG_FileHandle,"END");
+        FileWriteLn(PROG_FileHandle,Eol());
+        //FileWriteLn(PROG_FileHandle,"//////////////////////////////////////////");
+
+    FileWriteLn(Log_FileHandle,Log);
+
+    FileClose(Log_FileHandle);
+    FileClose(List_FileHandle);
+    FileClose(PROG_FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.1
+///////////////////////////////////////////////////////////////////////////////
+function String Header_Decleration(Int WFileHandle, String Compteur)
+    String Ligne;
+
+  Ligne = "function void " + Compteur + "_Calculator()";
+  FileWriteLn(WFileHandle,Ligne);
+
+  FileWriteLn(WFileHandle,"    int List;");
+  FileWriteLn(WFileHandle,"    int Valeur;");
+  FileWriteLn(WFileHandle,"    Int NBR = 0;");
+
+  return Compteur + "_Calculator();";
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.2
+///////////////////////////////////////////////////////////////////////////////
+function String Formule_Ligne(Int WFileHandle, String Compteur , String List, string Energy)
+
+  String Ligne;
+  Int i;
+  String P_FixEnergy;
+  String INPUT_CODE;
+  String API;
+  String CompteurTrueNumber;
+  String Formule = "" ;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")"; String Equal = "=";
+  int Pos;
+  String ListFlag = "";
+  String CompteurFlag;
+
+
+
+  ////TestList
+  Pos = StrPos(List,":");
+
+  If ( Pos == 0 ) Then
+    ListFlag = "N";
+    FileWriteLn(WFileHandle,"   List = "+List+";");
+   Else
+       If( StrSubString(List,1,Pos-1) == "IR") Then ListFlag = "R";
+         Else
+           ListFlag = "C";
+         End
+
+     List = StrDelete(List,1,Pos);
+  End
+//MessageBox(Compteur +" / " + ListFlag ,List);
+  ////////////////////////////////////////////////////////////////////////////
+  String FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+  Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+  API = "GetCmpGateValue("+CharToStr(34);
+
+
+
+            While(FileEof(FileHandle)==0)//Formule File
+             Ligne = FileReadLn(FileHandle);
+
+
+                if ( Ligne != "") then
+
+                    IF (Ligne == Compteur) then
+
+                     Formule = "Valeur ";
+                     Else
+
+                         IF (Ligne == Open || Ligne == Add || Ligne == Sub || Ligne == Div || Ligne == Mult || Ligne == Close || Ligne == Equal) Then
+
+                         Formule = Formule + Ligne ;
+
+                           Else
+                        // Compteur Found
+                            If ( StrSubString(Ligne,1,1) != "#" ) then
+
+                              if ( ListFlag == "R" ) then
+
+                               CompteurFlag = Reel_And_Calcul( Ligne );
+                               If (CompteurFlag == "R" ) Then
+
+                                 INPUT_CODE = InPutGates( Ligne,Energy );
+                                  If (INPUT_CODE != "*") Then
+                                 INPUT_CODE = "A" + INPUT_CODE;
+                                  //If ( EvnGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+
+                                   Formule = "if ( GetEvnGateValue("  +CharToStr(34)+ INPUT_CODE  +CharToStr(34)+","+List+  ") == True ) Then NBR = NBR +1 ; End"+Eol();
+                                   FileWriteLn(WFileHandle,Formule);
+                                   Formule = "";
+
+                                  //End
+                                 End// Input != *
+                               End//CompteurFlag == "R"
+                              End//ListFlag == "R"
+
+
+                              if ( ListFlag == "C" ) then
+                               CompteurFlag = Reel_And_Calcul( Ligne );
+                                If (CompteurFlag == "C" ) Then
+
+                                INPUT_CODE = InPutGates( Ligne,Energy );
+
+                                 If (INPUT_CODE != "*") Then
+                                INPUT_CODE = "A" + INPUT_CODE;
+                                 //If ( EvnGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+
+                                   Formule =  "if ( GetEvnGateValue("  +CharToStr(34)+ INPUT_CODE  +CharToStr(34)+","+List+  ") == True ) Then NBR = NBR +1 ; End"+Eol();
+                                   FileWriteLn(WFileHandle,Formule);
+                                   Formule = "";
+
+                                 //End
+                               End
+                                End//CompteurFlag == "C"
+                               End//CompteurFlag == "C"
+
+
+                               if ( ListFlag == "N" ) then
+                                 //If ( CmpGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+                                  Formule = Formule + API + Ligne + CharToStr(34)+",List)" ;
+                                 //End
+                               End//ListFlag == "N"
+
+                             Else//Ligne == Num
+
+                             Formule = Formule + StrDelete(Ligne,1,1);
+                              //  FileWriteLn(WFileHandle,Formule);
+                          End //Ligne == Num
+                      End//Ligne == Operateur
+                    End//Ligne == Compteur
+                End//Ligne != ""
+            End//Formule File
+
+           If ( ListFlag == "N" ) then
+
+               FileWriteLn(WFileHandle,Formule+";");
+
+                For i = 1 to GetNumGateValue("EnergyMax",0) do
+
+                 IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                    P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                    CompteurTrueNumber = StrDelete(Compteur,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+                 End
+
+                End
+
+
+               API = "SetNumGateValue("+CharToStr(34);
+               INPUT_CODE = StrConcat(P_FixEnergy,CompteurTrueNumber);
+
+
+              If ( NumGateExists(INPUT_CODE,StrToInt(List)) == True ) Then
+               Formule = API + INPUT_CODE + CharToStr(34)+"," + List + ",Valeur);" ;
+               FileWriteLn(WFileHandle,Formule);
+              end
+
+
+
+           End// ListFlag == N
+
+
+
+   FileClose(FileHandle);
+   Return INPUT_CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F3.3
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  Fetch_CAL
+///////////////////////////////////////////////////////////////////////////////
+function string Fetch_CAL(string Ligne, int Col, string Seperator)
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+////                            Calcule Nbr Alarme
+///////////////////////////////////////////////////////////////////////////////
+function void Calcul_NBR_ALR( int WFileHandle ,string Compteur, String InputCode , String List)
+
+  String Formule = "" ;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")"; String Equal = "=";
+  String Ligne;
+
+
+
+  String FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+  Int FileHandle = FileOpen(FullPathFileName,"rt");
+
+
+
+   While(FileEof(FileHandle)==0)//Formule File
+     Ligne = FileReadLn(FileHandle);
+       if ( Ligne != "") then
+           IF ( Ligne != "" || Ligne != Compteur || Ligne != Open || Ligne != Add || Ligne != Sub ||
+                Ligne != Div || Ligne != Mult || Ligne != Close || Ligne != Equal ) then
+
+
+                    Formule = "if ( GetEvnGateValue("  +CharToStr(34)+ InputCode +CharToStr(34)+","+List+  ") == True ) Then NBR = NBR +1 ; End";
+
+                    FileWriteLn(WFileHandle,Formule);
+
+           End
+       End
+  End//Formule File
+
+  FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  Dterminer Reel ou calculer
+///////////////////////////////////////////////////////////////////////////////
+function String Reel_And_Calcul( String CodeCompteur )
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+
+     CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    While ( i <= CompteurMax && found == false )
+
+       if ( CodeCompteur == GetStrGateValue("Compteur_Code",i)) then
+        found = True;
+       Else
+        i = i +1;
+       end
+
+    end
+
+    //Compteur_Formule
+    if ( found == True ) then
+
+     If ( GetStrGateValue("Compteur_Formule",i) == "*" || GetStrGateValue("Compteur_Formule",i) == "" ) Then Return "*"; End
+
+      If ( GetStrGateValue("Compteur_Formule",i) == "Reel" ) Then
+       Return "R";
+       Else
+       return "C";
+      End
+
+    End
+
+
+    //Compteur_Not found
+    Return "*";
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String InPutGates( String CompteurCode , String Energy)
+
+Bool found =false;
+Int i = 1;
+Int CompteurMax;
+String P_FixEnergy;
+String CompteurTrueNumber;
+String INPUT_CODE;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+          While ( i <= CompteurMax && found == false )
+
+            IF ( Energy == GetStrGateValue("Energy_Name",i)) then
+                found = True;
+
+                P_FixEnergy = GetStrGateValue("PreFix_InPut",i);
+                CompteurTrueNumber = StrDelete(CompteurCode,1,GetNumGateValue("NBR_PRFIX_OUTP",i));
+
+
+
+             Else
+             i = i +1;
+            End
+
+         End
+
+        if ( found == True ) then
+         //API = "SetNumGateValue("+CharToStr(34);
+         INPUT_CODE =StrConcat(P_FixEnergy,CompteurTrueNumber);
+         Return INPUT_CODE;
+
+        Else
+        Return "*" ;
+        End
+end
+///////////////////////////////////////////////////////////////////////////////
+function String CompteurExist( String CompteurCode)
+Int CompteurMax;
+Int i;
+Bool Found = False;
+
+CompteurMax = GetNumGateValue("MaxCompteur",0);
+
+    for i = 1 to CompteurMax do
+        if ( CompteurCode == GetStrGateValue("Compteur_Code",i)) then
+            Return GetStrGateValue("Compteur_Name",i);
+        end
+   end
+
+   IF ( Found == False ) Then
+    Return "*" ;
+   End
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Compteur_ReelAlarme( String CodeCompteur , String Energy)
+    String FileListName;
+    String FullPathFileName;
+
+    String BUILD_FullPathFileName;
+    Int BUILD_FileHandle;
+
+    Int List_FileHandle;
+    Int PROG_FileHandle;
+    String INPUT_CODE;
+    String List;
+    String List_Ligne;
+    String IFLIGNE;
+    Int Pos;
+    String IR;
+    Int IRCounter = 0;
+
+
+    BUILD_FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\BUILD_LOG.txt";
+    BUILD_FileHandle=FileOpen(BUILD_FullPathFileName,"at");
+
+    FileListName = ENV_PATH+"\Files\AllCompteur\Calcule\L_"+Energy+".txt";
+    List_FileHandle = FileOpen(FileListName,"rt");
+
+    If ( List_FileHandle == 0 ) Then
+       FileWriteLn(BUILD_FileHandle, "Calculatrice : Compteur_ReelAlarme  "+FileListName + "Doesn't exist");
+       FileClose(BUILD_FileHandle);
+       Return;
+    End
+
+   FullPathFileName =  ENV_PATH+"\Files\AllCompteur\Calcule\Compteur_ReelAlarme.wll";
+   PROG_FileHandle = FileOpen(FullPathFileName,"at");
+
+   INPUT_CODE = InPutGates(CodeCompteur,Energy);
+
+
+   While(FileEof(List_FileHandle)==0)//List File
+     List_Ligne = FileReadLn(List_FileHandle) ;
+
+     IF ( List_Ligne != "") Then
+       Pos = StrPos(List_Ligne,":");
+       IR = StrSubString(List_Ligne,1,Pos-1);
+
+       If ( Pos != 0 &&  IR == "IR") Then
+            If (IRCounter == 0) then
+               FileWriteLn(PROG_FileHandle,"////////////////////////////////////////////////////////////////////");
+               FileWriteLn(PROG_FileHandle,"  CompteurCode = " +CharToStr(34)+"A"+INPUT_CODE +CharToStr(34) +";");
+               FileWriteLn(PROG_FileHandle,"  NBR = 0;" );
+            End
+         List = StrDelete(List_Ligne,1,Pos);
+         IFLIGNE =  "if ( GetEvnGateValue( CompteurCode,"+  List  +") == True ) Then NBR = NBR +1 ; End"+Eol();
+         FileWriteLn(PROG_FileHandle,IFLIGNE);
+         IRCounter = IRCounter +1 ;
+
+       End//Pos !=0
+     End//ListLigne != ""
+
+   End// While
+
+    If (IRCounter > 0) then
+      IFLIGNE =  "SetNumGateValue("+CharToStr(34) + INPUT_CODE + CharToStr(34) + ",49,NBR);" ;
+      FileWriteLn(PROG_FileHandle,IFLIGNE);
+    End
+    FileClose(List_FileHandle);
+    FileClose(PROG_FileHandle);
+    FileClose(BUILD_FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Formula_STR_TO_FILE( String Ligne, String Compteur_Code)
+
+    String FullPathFileName;
+    Int FileHandle;
+
+    String Formula = Ligne;
+    String Search = "~";
+    String Part;
+    String NEXTPart;
+    Int Pos;
+    String Query;
+    int i = 0;
+
+    Bool Fils_Flag = False;
+    Bool Open_Flag = False;
+
+    FullPathFileName = ENV_PATH+"\Files\AllCompteur\Calcule\FORMULES.txt";
+    FileHandle=FileOpen(FullPathFileName,"wt");
+
+    FileWriteLn(FileHandle,Compteur_Code);
+    FileWriteLn(FileHandle,"=");
+
+
+    Pos = StrPos(Formula,Search);
+
+    While( Pos !=  0 )
+      Part = StrSubString(Formula,1,Pos-1);
+
+
+        If ( Part == "F" ) Then
+
+           Formula = StrDelete(Formula,1,Pos);
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1);
+
+           IF (NEXTPart == "(") Then Fils_Flag = True;  End
+
+        End
+
+        IF ( Fils_Flag == True ) Then
+
+            FileWriteLn(FileHandle,NEXTPart);
+
+           Formula = StrDelete(Formula,1,Pos);
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1);
+
+
+            Query = "*"+","+NEXTPart +","+ "*"+","+"*"+","+"*"+"/"+"*"+"/"+"*";
+
+            i = AnalyseQuerryCompteur(Query,FileHandle,"Fils");
+
+            If (i == 0) Then
+             //FileWriteLn(BUILD_FileHandle,"Error Calculatrice : Parse_Compteur("+Compteur+")  " + Code_Compteur + " Pas de fils trouvés Doesn't exist");
+              FileWriteLn(FileHandle,"#0");
+            End
+
+           Formula = StrDelete(Formula,1,Pos);
+           Pos = StrPos(Formula,Search);
+           NEXTPart = StrSubString(Formula,1,Pos-1);
+
+           FileWriteLn(FileHandle,NEXTPart);
+
+           Fils_Flag = False;
+        Else
+            FileWriteLn(FileHandle,Part);
+        End
+
+
+      Formula = StrDelete(Formula,1,Pos);
+      Pos = StrPos(Formula,Search);
+    End
+    FileClose(FileHandle);
+
+end*/

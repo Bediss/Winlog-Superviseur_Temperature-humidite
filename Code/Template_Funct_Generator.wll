@@ -1,0 +1,34 @@
+//////////1 . Generateur des Fonctions Open/Close Templates 11 ////////////////
+function void Template_Generator_OC()
+
+end
+//////////2 . Generateur Vue Templates 11 ans Web Templates 11 ////////////////
+
+///////////////////////////////////3 . Test ///////////////////////////////////
+function void T11_Electrique_M210_J()
+    ShowPage("11_Electrique_#&#&M210_J");
+end
+
+function void T11_Electrique_M200_J()
+    ShowPage("11_Electrique_#&#&M200_J");
+end
+
+function void T17_CC11D()
+    ShowPage("17_CC11D");
+end
+
+function void T17_CC119()
+    ShowPage("17_CC119");
+end
+
+function void T17_CC11A()
+    ShowPage("17_CC11A");
+end
+
+function void T17_CC11C()
+    ShowPage("17_CC11C");
+end
+
+function void T17_CC1O4()
+    ShowPage("17_CC1O4");
+end

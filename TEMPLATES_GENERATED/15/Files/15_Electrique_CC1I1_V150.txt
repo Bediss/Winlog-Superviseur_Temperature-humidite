@@ -1,0 +1,5 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I11;Charcuterie 1 ;Electrique;CC1I1;Charcuterie TR2;6;S200;M170;M221;STEG;PosteTR2;Charcuterie-Pro;Reel;SubAtelier;*;*;Charcuterie;!~*;!~*;;;;;2;Charcuterie 1 ;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I12;conditionnement;Electrique;CC1I1;Charcuterie TR2;6;S200;M170;M223;STEG;PosteTR2;conditionnement  ;Reel;SubAtelier;*;*;Charcuterie;!~*;!~*;;;;;2;conditionnement  Charcuterie;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I13;Cutter 500 ;Electrique;CC1I1;Charcuterie TR2;7;S200;M170;M224;STEG;PosteTR2;Cutter 500 ;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Cutter 500 ;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I14;Machine a glace ;Electrique;CC1I1;Charcuterie TR2;7;S200;M170;M227;STEG;PosteTR2;Machine a glace ;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Machine a glace ;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I15;Separateur Rec;Electrique;CC1I1;Charcuterie TR2;7;S200;M170;M228;STEG;PosteTR2;Separateur R;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Separateur Recoscrenn;*

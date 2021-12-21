@@ -1,0 +1,322 @@
+#Version: 0x03021d
+#Name: Objective Selector
+#Access: 0
+#Pos: 750,275
+#Size: 289,380
+#BkColor: clWhite
+#Gates: 23
+  #STR: EmailView1,0
+  #STR: EmailView2,0
+  #STR: EmailView3,0
+  #STR: EmailView4,0
+  #STR: EmailView5,0
+  #STR: EmailView6,0
+  #STR: EmailView7,0
+  #STR: EmailView8,0
+  #STR: EmailView9,0
+  #STR: EmailView10,0
+  #NUM: PageAllCommpteurView,0
+  #STR: BU_Energy,0
+  #STR: EmailView1,1
+  #STR: EmailView2,1
+  #STR: EmailView3,1
+  #STR: EmailView4,1
+  #STR: EmailView5,1
+  #STR: EmailView6,1
+  #STR: EmailView7,1
+  #STR: EmailView8,1
+  #STR: EmailView9,1
+  #STR: EmailView10,1
+  #STR: SetObjective_CCode,0
+#Style: Fixed
+#StayOnTop: 1
+#Object: Label
+  #ID: 0
+  #Pos: 10,75
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 12
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_1()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,100
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 13
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_2()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,125
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 14
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_3()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,150
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 15
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_4()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,175
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 16
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_5()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,200
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 17
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_6()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,225
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 18
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_7()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,250
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 19
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_8()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,275
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 20
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_9()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,300
+  #Size: 270,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Book,10,0000
+  #Gate: 21
+  #Label:   %s
+  #Align: 36
+  #Frame: 4
+  #Access: 0
+  #NewOnClick: StartF,EVM_SelectRow_OBJ_10()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 189,330
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBtnText
+  #Font: Gotham Book,10,0000
+  #Label: >>
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,EVM_End()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 159,330
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBtnText
+  #Font: Gotham Book,10,0000
+  #Label: >
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,EVM_Add()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 129,330
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBtnText
+  #Font: Gotham Book,10,0000
+  #Gate: 10
+  #Label: %.d
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 99,330
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBtnText
+  #Font: Gotham Book,10,0000
+  #Label: <
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,EVM_Sub()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 69,330
+  #Size: 30,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBtnText
+  #Font: Gotham Book,10,0000
+  #Label: <<
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,EVM_First()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 160,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Medium,10,0000
+  #Gate: 11
+  #Label: Capteur :  %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,EVM_SelectRow_1()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,45
+  #Size: 220,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Medium,10,0000
+  #Gate: 1
+  #Label: Selectionner votre Measure :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,EVM_SelectRow_2()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 139,350
+  #Size: 145,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,25
+  #Size: 300,25
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBlack
+  #Font: Gotham Medium,10,0000
+  #Gate: 22
+  #Label: Compteur : %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnDbClk: StartF,EVM_SelectRow_1()
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 4,350
+  #Size: 135,25
+  #Cursor: 0
+  #Label: Modifier
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: StartF,MODIF_OBJECTIF_FROM_ALARME()
+  #OnClick: Close
+#EndObj

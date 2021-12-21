@@ -1,0 +1,6 @@
+Type;Nom;Frequency;Unité
+LIVE;Reel;15;Min
+J;Jour;1;Heure
+S;Semaine;1;Jour
+M;Mois;7;Jour
+A;Ans;1;Mois

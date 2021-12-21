@@ -1,0 +1,2 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1T1;Charcuterie 2  ;Electrique;CC1T;Charcuterie TR3;6;S200;M222;M222;STEG;Charcuterie 2  ;Charcuterie 2  ;Reel;SubAtelier;*;*;Charcuterie;!~*;!~*;;;;;2;Charcuterie 2  ;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1T2;Hachwar GEA  ;Electrique;CC1T;Charcuterie TR3;7;S200;M180;M226;STEG;PosteTR3;Hachwar GEA  ;Reel;Machine;*;*;Charcuterie;!~*;!~*;;;;;2;Hachwar GEA  ;*

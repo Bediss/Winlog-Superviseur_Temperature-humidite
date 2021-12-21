@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<title>Winlog v3.02</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="simplegrid.css" rel="stylesheet" type="text/css">
+	<link href="styles.css" rel="stylesheet" type="text/css">
+	<script src="script.js"></script>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', webClientPage);
+	</script>
+</head>
+<body>
+	<div class="grid grid-pad">
+		<div id="buttons-div" class="col-1-1">
+			<a id="run-webclient" class="button" href="webclient/get-jnlpfile.cgi"></a>
+			<div>
+				<input id="skip-checkbox" type="checkbox">
+				<label id="skip-checkbox-label" for="skip-checkbox"></label>
+			</div>
+		</div>
+
+		<div class="col-1-1">
+			<h2 id="title"></h2>
+			<p id="p1"></p>
+			<ol>
+				<li id="li1"></li>
+				<li id="li2"></li>
+				<img class="screenshot" src="java-screenshot-1.png" />
+				<li id="li3"></li>
+				<li id="li4"></li>
+				<li id="li5"></li>
+				<img class="screenshot" src="java-screenshot-2.png" />
+				<li id="li6"></li>
+				<li id="li7"></li>
+				<img class="screenshot" src="java-screenshot-3.png" />
+			</ol>
+			<p id="p2"></p>
+		</div>
+	</div>
+</body>
+</html>

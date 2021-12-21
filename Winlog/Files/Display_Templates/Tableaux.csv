@@ -1,0 +1,6 @@
+Code;Prefix;Nom;EPVC;TVE (1=Enable/0=Disable);Query C:Energy,C.Parent,C.Level,PCP,PCD,PCC,EnergyParent;Security_Group;;Energy;Post Code;View;Compteur;DESK_NAV;WEB_NAV;ReportNav
+11;SE;Synoptique T_RH;0/C/0/0;0;*;*;;0;0;0;0;1;1;0
+14;PE;Suivi conformite;1/0/1/1;0;C:!=#,!=#,*,*,*,*,*;*;;1;0;0;1;1;1;0
+17;ATC;Lectures pt mesure;0/0/0/1;0;;*;;1;0;0;1;1;1;0
+18;TC;Ad Hoc R-Compteurs C-Mesures;R:C/C:L;1;;*;;0;0;0;0;0;0;1
+19;TC;Ad Hoc R-Mesures C-Compteurs;R:L/C:C;1;;*;;0;0;0;0;0;0;1

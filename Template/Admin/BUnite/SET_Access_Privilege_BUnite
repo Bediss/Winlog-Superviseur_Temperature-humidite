@@ -1,0 +1,438 @@
+#Version: 0x03021e
+#Name: Paramètres de privilège d'accès
+#Access: 0
+#Pos: 700,275
+#Size: 399,275
+#BkColor: clWhite
+#Gates: 16
+  #STR: EmailView1,1
+  #STR: EmailView1,2
+  #STR: EmailView1,3
+  #STR: EmailView1,4
+  #STR: EmailView1,5
+  #STR: EmailView1,6
+  #STR: EmailView1,7
+  #STR: EmailView1,8
+  #STR: EmailView1,9
+  #STR: EmailView1,10
+  #STR: EmailView1,11
+  #STR: EmailView1,12
+  #STR: EmailView1,13
+  #STR: EmailView1,14
+  #STR: EmailView1,15
+  #NUM: AP_Value,0
+#Style: Fixed
+#StayOnTop: 1
+#Object: Button
+  #ID: 0
+  #Pos: 10,240
+  #Size: 190,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 0
+  #Access: 0
+  #OnClick: StartF,AP_Set_Groupes_BUnite()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 380,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: Définition des paramètres de privilège d'accès
+  #Align: 21
+  #Frame: 4
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 199,240
+  #Size: 190,25
+  #Cursor: 0
+  #Label: Annuler
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 1
+  #Access: 0
+  #OnClick: Close
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,70
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 0
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,70
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0001,0001
+  #TabOrder: 2
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,95
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 1
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,120
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 2
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,145
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 3
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,170
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 4
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,95
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0002,0002
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,120
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0004,0004
+  #TabOrder: 4
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,145
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0008,0008
+  #TabOrder: 5
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,170
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0010,0010
+  #TabOrder: 6
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,45
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0040,0040
+  #TabOrder: 7
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,70
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0080,0080
+  #TabOrder: 8
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,95
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0100,0100
+  #TabOrder: 9
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,120
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0200,0200
+  #TabOrder: 10
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,145
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0400,0400
+  #TabOrder: 11
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,170
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0800,0800
+  #TabOrder: 12
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,45
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,3FFF,3FFF
+  #TabOrder: 13
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,45
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 6
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,70
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 7
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,95
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 8
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,120
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 9
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,145
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 10
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,170
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 11
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,195
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Gate: 5
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 20,195
+  #Size: 15,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: CheckBox
+  #NeedApply: 0
+  #OnMask: 15,0020,0020
+  #TabOrder: 14
+  #Access: 0
+#EndObj
+#Object: CheckBox
+  #ID: 0
+  #Pos: 200,195
+  #Size: 20,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #NeedApply: 0
+  #OnMask: 15,3FFF,3FFF
+  #TabOrder: 15
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 215,195
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,10,0000
+  #Gate: 13
+  #Label: %s
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 35,40
+  #Size: 160,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Tous les Groupes
+  #Align: 40
+  #Frame: 1
+  #Access: 0
+#EndObj

@@ -1,0 +1,2601 @@
+Global String  A_C_GateLine;
+Global String  Temp_GateLine;
+Global String Admin_View_Recycle_Code="";
+Global String Type_Display="";
+Global bool Restart_Ok=True;
+//Global String ENV_PATH= ENV_PATH+"";
+//////////////////////////////////////////////////
+function String FR_AllCompteur(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;
+int P = 0;
+
+
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+
+
+////////////////////////////////////////AllCompteur*//////////////////////////////////////////////////////////////////////
+function string Fetch_AllCompteur(string Ligne, int Col, string Seperator)
+
+string txt = Ligne;
+String CODE = "";
+int i;  int P;
+                for i =1  to Col do
+                    P = StrPos(txt,Seperator);
+                    CODE=StrSubString(txt,1,P-1);
+                    txt=StrDelete(txt,1,P);
+                end
+        return CODE;
+end
+///////////////////////////////////////////////////////////////////////////////
+Function String FetchCodeAllCompteur(String Energy)
+
+String FullPathFileName;
+String BackFullPathFileName;
+String WFullPathFileName;
+String CodeNewAllCompteur="";
+String Ligne="";
+int FileHandle;
+int WFileHandle;
+int LastCode;
+String Prefix;
+
+          FullPathFileName=ENV_PATH+"\Files\AllCompteur\Energy.csv";
+          FileHandle=FileOpen(FullPathFileName,"rt");
+          BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\Back_Energy.csv";
+          WFullPathFileName=ENV_PATH+"\Files\AllCompteur\WEnergy.csv";
+          WFileHandle=FileOpen(WFullPathFileName,"wt");
+
+        while(FileEof(FileHandle)==0)
+
+            Ligne=FileReadLn(FileHandle);
+             if Fetch_Email(Ligne,2,";")== Energy then
+
+                Prefix=Fetch_Email(Ligne,4,";");
+                LastCode=StrToInt(Fetch_Email(Ligne,9,";"));
+                LastCode=LastCode+1;
+                Ligne=FR_AllCompteur(Ligne,IntToStr(LastCode),9);
+                CodeNewAllCompteur=Prefix+LastCode;
+              end
+
+             FileWriteLn(WFileHandle,Ligne);
+        end
+
+          FileClose(WFileHandle);
+          FileClose(FileHandle);
+
+          if (FileExist(BackFullPathFileName)) then
+             FileDelete(BackFullPathFileName);
+          end
+
+
+          FileCopy(FullPathFileName,BackFullPathFileName,false);
+
+          FileCopy(WFullPathFileName,FullPathFileName,false);
+
+          FileDelete(WFullPathFileName);
+
+
+   return CodeNewAllCompteur;
+end
+
+//////////////////////////////////////////////////
+function Void Save_Action_New_DATA_Model()
+
+String BackFullPathFileName;
+bool Continue;
+Confirme_Save=False;
+
+
+        BackFullPathFileName=ENV_PATH+"\Files\AllCompteur\Back_AllCompteur.csv";
+        SetNumGateValue("User_Privilege",0,2);
+
+           Continue = QuestionBox("  Voulez-vous enregistrer le nouveau modèle de données - ALLCOMPTEURS?","Attention:");
+          if (Continue == False) then return ; end
+
+
+
+          if (FileExist(BackFullPathFileName)) then
+                FileDelete(BackFullPathFileName);
+          end
+
+          FileCopy(Admin_View_Original_File,BackFullPathFileName,False);
+          FileCopy(Admin_View_Temp_File,Admin_View_Original_File,False);
+             FileDelete(Admin_View_Temp_File);
+          Generate_Formule();
+
+
+          ShowPoPUPs("Redemarrer");
+
+
+
+
+End
+/////////////////////////////////////////////////////////////
+Function Void Redemarer()
+SetStrGateValue("AlarmeEventModifer",17,"S'il vous plaît, attendez. Le système termine les tâches en cours!");
+
+    while (Restart_Ok == False)
+     ShowPoPUPs("InfoPopup");
+     sleep(50);
+    end
+
+ ShowPoPUPs("");
+  Event_Runtime_LOG("Restart From Winlog");
+    ShellExec("RestartWinlog.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+            SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,0);
+
+End
+/////////////////////////////////////////////                                               /////////////////////////
+function void MASTER_View()
+
+    String Energy;
+    String EVMLigne;
+    String CC;
+    String CEnergy;
+        CEnergy=Fetch_Formule(Admin_View_CurrentLine,3,";");
+
+     if CEnergy=="" then MessageBox("Selectionez l'energie du compteur Avant !!","Information"); return; end
+
+    Energy=Fetch_AllCompteur(Admin_View_CurrentLine,3,";");
+    SetStrGateValue("BU_Energy",0,Energy);
+
+    EVMLigne = GET_MASTER_list( Energy );
+    if EVMLigne=="OK" then
+        EVM_Display(1);
+        TPageOpen("MASTER_SELECTOR");
+    else
+    MessageBox("NO MASTER FOUND FOR ENERGY="+Energy,"WARNING");
+    end
+
+end
+
+Function Void  Retour_Get_Objective()
+  if PageOpen== "Alarme" then
+        EVM_Objective();
+   end
+end
+
+////////////////////////////////////////////////////////////
+function void Select_AllCompteur_Parent()
+
+    String Ligne;
+    String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+    if GetStrGateValue("BU_Selected",0)=="" then
+        Code="*";
+        Name="*";
+              //  MessageBox("",Name+"_"+Code);
+    else
+        Ligne = Select_BU();
+        Code=Fetch_Formule(Ligne,7,";");
+        Name=Fetch_Formule(Ligne,9,";");
+      //  MessageBox(Ligne,Name+"_"+Code);
+    end
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Code,4);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Name,5);
+    SetStrGateValue("AlarmeEventModifer",2,Name);
+    TPageCloseByName("Allcompteur_Parent_SELECTOR");
+End
+
+////////////////////////////////////////////////////////////////////
+function Void BoutonZoom()
+/*String CC;
+  CC=Fetch_Formule(Admin_View_CurrentLine,1,";");
+
+    if CC=="" then MessageBox("selectionez une ligne avant:!!!!","info"); return ; end
+
+Formule_User_Complet=Fetch_Formule(Admin_View_CurrentLine,21,";");
+Display_Formule();
+
+ShowPoPUPs("POPUP_ZOOM");*/
+String CC;
+  CC=Fetch_Formule(Admin_View_CurrentLine,1,";");
+
+    if CC=="" then MessageBox("selectionez une ligne avant:!!!!","info"); return ; end
+    Type_Display="modif";
+
+Formule_User_Complet=Fetch_Formule(Admin_View_CurrentLine,21,";");
+Display_Formule();
+    TPageCloseByName("Display_AllCompteur");
+     ShowPage("Display_Zoom");
+      SetNumGateValue("Template_Control",0,2);
+end
+
+///////////////////////////////////////////////////////////////////
+
+function Void BoutonBackZoom()
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+//int EditPosition=GetNumGateValue("EditPosition",1);
+    TPageCloseByName("Display_Zoom");
+            Admin_View_Original_File = ENV_PATH + GetStrGateValue("AllCompteurs_Path",0);
+            Admin_View_Temp_File = ENV_PATH+"\Files\AllCompteur\TEMP_AllCompteur.csv";
+            Admin_View_CurrentLine = "";
+             // SetNumGateValue("EmailPageView",0,CurrentPage);
+     SetNumGateValue("AdminTotalItems",0,GetNumGateValue("MaxCompteur",0));
+   //  SetNumGateValue("EditPosition",1,EditPosition);
+     SetStrGateValue("AlarmeEventModifer",17,"Chargement des compteurs. Attendez SVP!");
+     //ShowPoPUPs("InfoPopup");
+     //Check_AllCompteur();
+     Admin_View_Display(CurrentPage,"AllCompteur");
+     TPageCloseByName("InfoPopup");
+         Type_Display="";
+     ShowPage("Display_AllCompteur");
+
+
+    // ShowPage("omDisplay_AllCompteur");
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Void ChoicePopup_Proceed()
+
+    TPageCloseByName("POPUPchoice");
+    Proceed_AllCompteur( True );
+end
+///////////////////////////////////////////////////////////////////////////////
+function Void ChoicePopup_Cancel()
+
+    TPageCloseByName("POPUPchoice");
+    Proceed_AllCompteur( False );
+end
+///////////////////////////////////////////////////////////////////////////////
+
+function void BoutonViewGateway()
+    String CC;
+    String CEnergy;
+    String FullPathFileName;
+    MaxRow = 10 ;
+    int FileHandle;
+    int WFileHandle;
+    String CName;
+    String WFullPathFileName;
+    String BackFullPathFileName;
+    String CGateway;
+    String Ligne;
+    String RDGateway;
+    String GateType;
+    String CMaster;
+    String Type;
+    String CPortGateway;
+    String LigneR;
+    int P;
+    int NLT;
+    int NLO;
+    int CP;
+    CMaster=Fetch_Formule(Admin_View_CurrentLine,18,";");
+    if CMaster=="*" || CMaster=="" then MessageBox("Selectionnez Le Master du Compteur Avant SVP !!!","Information"); return; end
+    FullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.CSV";
+
+    A_C_GateLine="";
+    Temp_GateLine="";
+    Selection_GateLine="";
+    Desactiver_GateLine="";
+    Place_GateLine="";
+
+    CGateway=Fetch_Formule(Admin_View_CurrentLine,18,";");
+    RDGateway=Fetch_Formule(CGateway,2,":");
+    CCode=Fetch_Formule(Admin_View_CurrentLine,1,";");
+    CName=Fetch_Formule(Admin_View_CurrentLine,2,";");
+    CMaster=Fetch_Formule(Admin_View_CurrentLine,18,";");
+    Type=Fetch_Formule(CMaster,2,":");
+    LigneR=Recherche_device(CCode,Type);
+    P=StrPos(LigneR,"|");
+    NLO=StrToInt(StrSubString(LigneR,1,P-1));
+    LigneR=StrDelete(LigneR,1,P);
+    P=StrPos(LigneR,"|");
+    NLT=StrToInt(StrSubString(LigneR,1,P-1));
+    if LigneR=="" then
+        A_C_GateLine=";;"+CCode+";;"+CMaster+";;;"+CName+";;;;";
+    else
+        A_C_GateLine=StrDelete(LigneR,1,P);
+    end
+    Temp_GateLine=A_C_GateLine;
+    CP=NLT/MaxRow+1;
+    SetStrGateValue("AlarmeEventModifer",21,Fetch_Formule(Temp_GateLine,1,";"));
+    SetStrGateValue("AlarmeEventModifer",22,Fetch_Formule(Temp_GateLine,2,";"));
+    SetStrGateValue("AlarmeEventModifer",23,CName);
+    SetStrGateValue("AlarmeEventModifer",24,CMaster);
+    SetStrGateValue("AlarmeEventModifer",25,Fetch_Formule(Temp_GateLine,11,";"));
+    SetStrGateValue("AlarmeEventModifer",26,Fetch_Formule(Temp_GateLine,9,";"));
+    SetStrGateValue("AlarmeEventModifer",27,Fetch_Formule(Temp_GateLine,7,";"));
+
+    if LigneR=="" then
+        SetStrGateValue("AlarmeEventModifer",18,"Code Compteur n'existe pas");
+        Gateway_View_Display(1);
+        ShowPoPUPsNoClose("Display_AllCompteur_Gateway");
+
+    else
+
+        SetStrGateValue("AlarmeEventModifer",18,"device existant voulez vous desactiver ou Deplacer!! ");
+        Gateway_View_Display(CP);
+        ShowPoPUPsNoClose("Display_AllCompteur_Gateway");
+    end
+end
+/////////////////////////////////////////////////////////////////////////////////
+
+function void Proceed_AllCompteur( Bool NewModelChoice )
+MaxRow = 10 ;
+MaxCol = 10;
+Admin_View_CurrentLine="";
+ SetStrGateValue("AlarmeEventModifer",17,"Chargement des compteurs. Attendez SVP!");
+ShowPoPUPs("InfoPopup");
+    IF ( NewModelChoice == True ) then
+
+            InitialiseGates();
+            Initialisation();
+            Check_AllCompteur();
+    End
+
+     SetNumGateValue("EmailPageView",0,1);
+     SetNumGateValue("AdminTotalItems",0,GetNumGateValue("MaxCompteur",0));
+     SetNumGateValue("EditPosition",0,0);
+     //SetStrGateValue("AlarmeEventModifer",17,"Chargement des compteurs. Attendez SVP!");
+    // MessageBox("hargement des compteurs.","InfoPopup");
+
+
+     Admin_View_Display(1,"AllCompteur");
+      ShowPoPUPs("");
+     ShowPage("Display_AllCompteur");
+end
+///////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_Energy_POPUP()
+    // Display
+
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    ShowPoPUPsNoClose("Select_ENERGY_Compteur");
+
+End
+
+///////////*********************/////////////*Select Energy**************//////////////////////////////////////////////
+
+function void Energy_AllCompteur_1()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView1",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             SetNumGateValue("Template_Control",0,2);
+             TPageCloseByName("Select_ENERGY_Compteur");
+
+end
+function void Energy_AllCompteur_2()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView2",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             SetNumGateValue("Template_Control",0,2);
+             TPageCloseByName("Select_ENERGY_Compteur");
+
+end
+
+function void Energy_AllCompteur_3()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView3",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_4()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView4",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_5()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView1",5);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_6()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView6",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+function void Energy_AllCompteur_7()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView7",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_8()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView8",0);
+
+        if Energy=="" then return; end
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_9()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView9",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+function void Energy_AllCompteur_10()
+int EnergyNumber;
+String Energy;
+
+    Energy = GetStrGateValue("EmailView10",0);
+
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_Compteur");
+              SetNumGateValue("Template_Control",0,2);
+
+end
+
+
+
+////////////////////
+function Void AllCompteur_PCP_POPUP()
+  POPUP_Display_Source = "BU";
+     POPUP_Start();
+    ShowPoPUPsNoClose("UNIT_SELECTOR_PRODUCTION");
+End
+//////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_PCD_POPUP()
+  POPUP_Display_Source = "BU";
+     POPUP_Start();
+    ShowPoPUPsNoClose("UNIT_SELECTOR_DISTRIBUTION");
+End
+//////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_PCC_POPUP()
+  POPUP_Display_Source = "BU";
+
+        POPUP_Start();
+    ShowPoPUPsNoClose("UNIT_SELECTOR_CONSOMATION");
+End
+//////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_Parent_POPUP()
+POPUP_Display_Source = "BU";
+     POPUP_Start();
+    ShowPoPUPsNoClose("Allcompteur_Parent_SELECTOR");
+End
+//////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_Level_POPUP()
+EVM_LIST_FILE=ENV_PATH+"\Files\AllCompteur\Level_PosteCode.CSV";
+Level_Display(1);
+ShowPoPUPsNoClose("Level_BU_Compteur");
+End
+///////////////////////////////////
+////////////
+function void Level_Compteur_SelectRow_1()
+     string Level;
+    String NLevel;
+
+    Level = GetStrGateValue("EmailView1",0);
+    NLevel= GetStrGateValue("EmailView1",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+end
+function void Level_Compteur_SelectRow_2()
+     string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView2",0);
+    NLevel= GetStrGateValue("EmailView2",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+
+
+
+end
+
+function void Level_Compteur_SelectRow_3()
+     string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView3",0);
+    NLevel= GetStrGateValue("EmailView3",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+
+
+
+end
+
+function void Level_Compteur_SelectRow_4()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView4",0);
+    NLevel= GetStrGateValue("EmailView4",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+
+
+end
+
+function void Level_Compteur_SelectRow_5()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView5",0);
+    NLevel= GetStrGateValue("EmailView5",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+
+end
+
+function void Level_Compteur_SelectRow_6()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView6",0);
+    NLevel= GetStrGateValue("EmailView6",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+end
+
+function void Level_Compteur_SelectRow_7()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView7",0);
+    NLevel= GetStrGateValue("EmailView7",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+end
+
+function void Level_Compteur_SelectRow_8()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView8",0);
+    NLevel= GetStrGateValue("EmailView8",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+end
+
+function void Level_Compteur_SelectRow_9()
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView9",0);
+    NLevel= GetStrGateValue("EmailView9",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+
+end
+
+function void Level_Compteur_SelectRow_10()
+
+    string Level;
+    String NLevel;
+
+
+
+
+    Level = GetStrGateValue("EmailView10",0);
+    NLevel= GetStrGateValue("EmailView10",1);
+    if Level=="" then return; end
+
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Level,14);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NLevel,6);
+
+    SetStrGateValue("AlarmeEventModifer",3,Level);
+     SetNumGateValue("Template_Control",0,2);
+        TPageCloseByName("Level_BU_Compteur");
+
+end
+////////////////////////////////////////////////////////////////////
+function Void AllCompteur_Ratio_POPUP()
+
+    ShowPoPUPsNoClose("UNIT_SELECTOR_RATIO");
+End
+//////////////////////////////////////////////////////////////////////////////
+function Void AllCompteur_Formule_POPUP()
+
+int MaxTu=0;
+int MaxTp=0;
+int Cp;
+String CC;
+String CEnergy;
+String FirstChar;
+
+
+
+     Formule_User_Complet=Fetch_Formule(Admin_View_CurrentLine,21,";");
+        Formule_Parse_Complet=Fetch_Formule(Admin_View_CurrentLine,20,";");
+    Formule_Simple_Complet=Fetch_Formule(Admin_View_CurrentLine,13,";");
+
+    MaxTu=Occurence_operateur(Formule_User_Complet,"~");
+    MaxTp=Occurence_operateur(Formule_Parse_Complet,"~");
+    FirstChar=StrSubString(Formule_User_Complet,1,2);
+
+    if(MaxTu==0 || FirstChar=="!~" || MaxTu !=MaxTp) then
+
+        SetStrGateValue("AlarmeEventModifer",17,"Formule Incorrecte!: Verifiez votre formule SVP!");
+        Formule_User_Complet="";
+        Formule_Parse_Complet="";
+        SetNumGateValue("CurrentPosition",2,0);
+        SetNumGateValue("CurrentPosition",1,1);
+        SetNumGateValue("CurrentPosition",0,1);
+
+        Display_Formule();
+     else
+        Cp=Fetch_Position(Formule_User_Complet,MaxTu,"~");
+        SetNumGateValue("CurrentPosition",2,MaxTu);
+        SetNumGateValue("CurrentPosition",0,Cp);
+        Cp=Fetch_Position(Formule_Parse_Complet,MaxTu,"~");
+        SetNumGateValue("CurrentPosition",1,Cp);
+        PlacePostion();
+        SetStrGateValue("AlarmeEventModifer",17,"");
+   end
+    SetStrGateValue("Operande_Formule",0,"");
+    SetStrGateValue("Operateur_Formule",0,"");
+    PopUpBU();
+    ShowPoPUPsNoClose("POPUP_AllCompteur_Formule");
+
+End
+//////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_Energy()
+
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+     SetStrGateValue("AlarmeEventModifer",1,GetStrGateValue("SelectMailingList",0));
+    end
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_PCP_POPUP()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+
+       LigneSelect=Select_BU();
+       CodeBU=Fetch_Email(LigneSelect,8,";");
+       NameBU=Fetch_Email(LigneSelect,9,";");
+
+     SetStrGateValue("AlarmeEventModifer",4,NameBU);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,CodeBU,7);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NameBU,10);
+      SetNumGateValue("Template_Control",0,2);
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_PCD_POPUP()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+
+       LigneSelect=Select_BU();
+       CodeBU=Fetch_Email(LigneSelect,8,";");
+       NameBU=Fetch_Email(LigneSelect,9,";");
+
+     SetStrGateValue("AlarmeEventModifer",5,NameBU);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,CodeBU,8);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NameBU,11);
+      SetNumGateValue("Template_Control",0,2);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_Ratio_POPUP()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+
+       LigneSelect=Select_BU();
+       CodeBU=Fetch_Email(LigneSelect,8,";");
+       NameBU=Fetch_Email(LigneSelect,9,";");
+
+     SetStrGateValue("AlarmeEventModifer",11,NameBU);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,CodeBU,16);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NameBU,26);
+      SetNumGateValue("Template_Control",0,2);
+
+
+end
+//////////////////////////////
+function void Fill_AllCompteur_PCC_POPUP()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+String FullPathFileName;
+String Ligne;
+String Unite;
+int FileHandle;
+        FullPathFileName=ENV_PATH+"\Files\AllCompteur\Unite.CSV";
+        FileHandle=FileOpen(FullPathFileName,"rt");
+       LigneSelect=Select_BU();
+       CodeBU=Fetch_Email(LigneSelect,8,";");
+       NameBU=Fetch_Email(LigneSelect,9,";");
+
+        Ligne=FileReadLn(FileHandle);
+        while(FileEof(FileHandle)==0)
+            Ligne=FileReadLn(FileHandle);
+             if Fetch_Email(Ligne,1,";")== CodeBU then
+                Unite=Fetch_Email(Ligne,4,";");
+             end
+        end
+ SetNumGateValue("Template_Control",0,2);
+     SetStrGateValue("AlarmeEventModifer",6,NameBU);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Unite,17);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,CodeBU,9);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,NameBU,12);
+FileClose(FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_Level_POPUP()
+Int FileHandle;
+String Ligne;
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+
+             FileHandle = FileOpen(ENV_PATH+"\Files\AllCompteur\TempList\" +GetStrGateValue("SelectMailingList",0)+".txt" ,"rt");
+             If (FileHandle==0) then   MessageBox(GetStrGateValue("SelectMailingList",0),"File Not found");  Return; end
+             Ligne=FileReadLn(FileHandle);
+             SetStrGateValue("AlarmeEventModifer",13,Ligne);
+             Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Ligne,6);
+
+             FileClose(FileHandle);
+ SetNumGateValue("Template_Control",0,2);
+       Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,GetStrGateValue("SelectMailingList",0),14);
+      SetStrGateValue("AlarmeEventModifer",3,GetStrGateValue("SelectMailingList",0));
+    end
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Fill_AllCompteur_Parent_POPUP()
+Int FileHandle;
+    if ( GetStrGateValue("SelectMailingList",0) != "") then
+
+             FileHandle = FileOpen(ENV_PATH+"\Files\AllCompteur\TempList\" +GetStrGateValue("SelectMailingList",0)+".txt" ,"rt");
+             If (FileHandle==0) then   MessageBox(GetStrGateValue("SelectMailingList",0),"File Not found");  Return; end
+             SetStrGateValue("AlarmeEventModifer",12,FileReadLn(FileHandle));
+             FileClose(FileHandle);
+ SetNumGateValue("Template_Control",0,2);
+      SetStrGateValue("AlarmeEventModifer",2,GetStrGateValue("SelectMailingList",0));
+            end
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Check_AllCompteur()
+
+    String FullPathFileName;
+    int FileHandle;
+
+    String TEMPFullPathFileName;
+    int TEMPFileHandle;
+
+    String LOGFullPathFileName;
+    int LOGFileHandle;
+
+    String CurrLigne;
+    String Formule;
+    Bool Check_Energy = False;
+    Int Check_BU = 0;
+    String Check_Parent = "";
+    Bool Check_Level = False;
+    String  Check_Formule = "";
+    Bool Empty_Flag = False;
+
+    String NEWLigne;
+
+    Int NBR_Error = 0;
+
+
+    FullPathFileName = Admin_View_Original_File;
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+    if (FileHandle==0) then   MessageBox("AllCompteur","File Not found");  Return; end
+
+        TEMPFullPathFileName = Admin_View_Temp_File;
+        TEMPFileHandle = FileOpen(TEMPFullPathFileName,"wt");
+
+    LOGFullPathFileName = ENV_PATH+"\BuildLOG.txt";
+    LOGFileHandle = FileOpen(LOGFullPathFileName,"at");
+
+    FileWriteLn(LOGFileHandle,"********** Start AllComteur Data Model verification : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+    CurrLigne = FileReadLn(FileHandle); // Header
+    FileWriteLn(TEMPFileHandle,CurrLigne);
+
+
+     While( FileEof(FileHandle)==0 && Empty_Flag == False)
+
+        CurrLigne = FileReadLn(FileHandle);
+        Formule = Fetch_AllCompteur(CurrLigne, 13 , ";");
+
+        IF (Fetch_AllCompteur(CurrLigne, 1, ";") == "") Then
+            Empty_Flag = True;
+         Else
+            Empty_Flag = False;
+        End
+
+
+        IF (Empty_Flag == False) Then
+
+          CurrLigne = FR_CHECK(CurrLigne,0,24); // Reset Error to 0
+
+          CurrLigne = Energy_Control(CurrLigne , LOGFileHandle );
+          CurrLigne = Parent_Control(CurrLigne , LOGFileHandle );
+          CurrLigne = Level_Control( CurrLigne , LOGFileHandle );
+          CurrLigne = BU_Control( CurrLigne , LOGFileHandle);
+
+          IF ( Formule != "*" || Formule != "" ) Then
+
+            IF ( Formule == "Reel") Then
+                CurrLigne = ChannelDevice_Control( CurrLigne, LOGFileHandle );
+            Else
+                CurrLigne = Parse_Formule_Compteur( CurrLigne , LOGFileHandle );
+            End
+
+          End
+
+          FileWriteLn(TEMPFileHandle,CurrLigne);
+
+        End
+
+
+     End
+
+     FileWriteLn(LOGFileHandle,"**********  End AllComteur Data Model Check : " + GetDateString("/",True)+" "+GetTimeString(":") +" **********");
+
+     FileClose(FileHandle);
+     FileClose(TEMPFileHandle);
+     FileClose(LOGFileHandle);
+
+end
+
+
+///////////////////////////////////////////////////////////////////////////////
+function void SetDisplay_AllCompteur( String Line , String GateName)
+String Formule;
+
+                SetStrGateValue(GateName,0,Fetch_AllCompteur(Line, 2, ";"));      //  Nom
+                SetStrGateValue(GateName,1,Fetch_AllCompteur(Line, 3, ";"));      //  Energy
+                SetStrGateValue(GateName,2,Fetch_AllCompteur(Line, 5, ";"));      //  Parent
+                SetStrGateValue(GateName,3,Fetch_AllCompteur(Line, 14, ";"));     // Niveau
+                SetStrGateValue(GateName,4,Fetch_AllCompteur(Line, 10, ";"));     //  Production
+                SetStrGateValue(GateName,5,Fetch_AllCompteur(Line, 11, ";"));     //  Distribustion
+                SetStrGateValue(GateName,6,Fetch_AllCompteur(Line, 12, ";"));     //  Consommation
+
+                Formule=Fetch_AllCompteur(Line, 21, ";");
+
+                SetStrGateValue(GateName,7,ZapTild_Display_All(Formule));     //  Formule User
+
+                SetStrGateValue(GateName,8,Fetch_AllCompteur(Line, 18, ";"));     //  Ratio
+                SetStrGateValue(GateName,9,Fetch_AllCompteur(Line, 19, ";"));     //  Master (Model)
+                SetStrGateValue(GateName,10,Fetch_AllCompteur(Line, 24, ";"));    //  Nbr error
+                    // Back End
+                SetStrGateValue(GateName,11,Fetch_AllCompteur(Line, 16, ";"));      //  Ratio
+                SetStrGateValue(GateName,13,Fetch_AllCompteur(Line, 27, ";"));      //  Groupe Access
+
+
+               SetStrGateValue(GateName,12,Fetch_AllCompteur(Line, 25, ";"));      // Detail
+               /*  SetStrGateValue(GateName,14,Fetch_AllCompteur(Line, 7, ";"));      //  PCP
+                SetStrGateValue(GateName,15,Fetch_AllCompteur(Line, 8, ";"));      //  PCD
+                SetStrGateValue(GateName,16,Fetch_AllCompteur(Line, 9, ";"));      //  PCC*/
+
+end
+//////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function void Modifier_AllCompteur()
+
+
+Admin_modifier(ENV_PATH+"\Files\DATAMODELFiles\AllCompteur\","TEMP_AllCompteur.csv" );
+
+End
+
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function void ViewAllCompteur_Add()
+	if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+int  ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage = ReguliersTotalItems/MaxRow+1;
+int CurrentPage = GetNumGateValue("EmailPageView",0);
+bool Continue;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage >= MaxPage) then
+     CurrentPage = MaxPage;
+     else
+     CurrentPage = CurrentPage+1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+
+     Admin_View_Display(CurrentPage,"AllCompteur");
+
+     //////////////////////////////////////(CurrentPage-1)*10+Nbligneourant;
+	 	FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllCompteur_Sub()
+	if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+int CurrentPage= GetNumGateValue("EmailPageView",0);
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     if (CurrentPage <= 1) then
+     CurrentPage = 1;
+     else
+     CurrentPage = CurrentPage -1;
+     end
+     SetNumGateValue("EmailPageView",0,CurrentPage);
+    Admin_View_Display(CurrentPage,"AllCompteur");
+	FlagUses=False;
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllCompteur_First()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+bool Continue;
+        if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,1);
+    Admin_View_Display(1,"AllCompteur");
+	FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function void ViewAllCompteur_End()
+if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+	FlagUses=True;
+bool Continue;
+int ReguliersTotalItems = GetNumGateValue("AdminTotalItems",0);
+int MaxPage ;
+MaxRow = 10;
+
+    MaxPage =  ReguliersTotalItems/MaxRow;
+
+    If (Mod(ReguliersTotalItems,MaxRow) != 0 ) Then MaxPage =  MaxPage +1; end
+         if (GetStrGateValue("AlarmeEventModifer",0) != "" ) then
+          Continue = QuestionBox(" Si vous changez de page, vous perdrez vos modifications. Voulez-vous vraiment continuer?","Attention:");
+          if (Continue == False) then return ; end
+        end
+
+     SetNumGateValue("EmailPageView",0,MaxPage);
+     Admin_View_Display(MaxPage,"AllCompteur");
+FlagUses=False;
+end
+//////////////////////////////////////////////////////////////////////////////
+function String Energy_Control( String AllCompteur_LIGNE , int BuildLog_FileHandle )
+
+    String ALL_Energy;
+    Int i = 1 ;
+    Int MAXEnergy = GetNumGateValue("EnergyMax",0);
+    Bool Found = False;
+    Bool Exit = False;
+    Int ErrorNBR = StrToInt(Fetch_AllCompteur( AllCompteur_LIGNE, 24, ";"));
+
+        ALL_Energy = Fetch_AllCompteur( AllCompteur_LIGNE, 3, ";");
+
+    While (Exit == False)
+
+        IF ( GetStrGateValue("Energy_Name",i) == ALL_Energy ) Then
+         Found = True;
+        End
+
+        i=i+1;
+
+        IF ( Found == True || i > MAXEnergy ) Then  Exit = True;   End
+    End
+
+    If (Found == False) Then
+        FileWriteLn(BuildLog_FileHandle,"Error All compteur Energie: " + ALL_Energy + " n'est pas declaré dans le fichier (INITIALGATES.txt) ");
+        ErrorNBR = ErrorNBR+1;
+    End
+
+    Return FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+end
+//////////////////////////////////////////////////////////////////////////////
+function String BU_Control( String AllCompteur_LIGNE, Int LOGFileHandle )
+
+    String FullPathFileName;
+    int FileHandle;
+
+    String Prod;
+    String Dist;
+    String Cons;
+
+    String PCP;
+    String PCD;
+    String PCC;
+
+    String Code;
+    String Name;
+
+    String LIGNE;
+
+    Int ErrorNBR = StrToInt(Fetch_AllCompteur( AllCompteur_LIGNE, 24, ";"));
+
+
+    Bool Code_P = False;
+    Bool Code_D = False;
+    Bool Code_C = False;
+
+    Bool Name_P = False;
+    Bool Name_D = False;
+    Bool Name_C = False;
+
+    Bool Exit = False;
+
+    Prod = Fetch_AllCompteur( AllCompteur_LIGNE, 10, ";");
+    Dist = Fetch_AllCompteur( AllCompteur_LIGNE, 11, ";");
+    Cons = Fetch_AllCompteur( AllCompteur_LIGNE, 12, ";");
+    PCP = Fetch_AllCompteur( AllCompteur_LIGNE, 7, ";");
+    PCD = Fetch_AllCompteur( AllCompteur_LIGNE, 8, ";");
+    PCC = Fetch_AllCompteur( AllCompteur_LIGNE, 9, ";");
+    FullPathFileName = ENV_PATH+"\Files\AllCompteur\Unite.csv";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0 ) then   MessageBox("Unite","File Not Found");  Return AllCompteur_LIGNE; end
+
+
+    LIGNE = FileReadLn(FileHandle); //Header
+
+
+    While( Exit == False )
+
+    LIGNE = FileReadLn(FileHandle);
+     Code = Fetch_AllCompteur( LIGNE, 1, ";");
+     Name = Fetch_AllCompteur( LIGNE, 2, ";");
+
+
+      IF ( Code_P == False  ) Then
+            IF ( Code == PCP  ) Then        Code_P = True;
+                If ( Name == Prod ) Then    Name_P = True;  End
+            End
+
+            IF (Code_P == True && Name_P == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCP Name : "+Prod + " n'est pas le vrai nom correspondant au Post code : " + PCP );
+
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Name,10);
+            End
+      End
+
+      IF ( Code_D == False  ) Then
+            IF ( Code == PCD  ) Then        Code_D = True;
+                If ( Name == Dist ) Then    Name_D = True;  End
+            End
+
+            IF (Code_D == True && Name_D == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCD Name : "+Dist + " n'est pas le vrai nom correspondant au Post code : " + PCD );
+
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Name,11);
+            End
+      End
+
+      IF ( Code_C == False  ) Then
+            IF ( Code == PCC  ) Then        Code_C = True;
+                If ( Name == Cons ) Then    Name_C = True;  End
+            End
+
+            IF (Code_C == True && Name_C == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCC Name : "+Cons + " n'est pas le vrai nom correspondant au Post code : " + PCC );
+
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Name,12);
+            End
+      End
+
+
+        IF ( FileEof(FileHandle)!=0 || ( Code_P == True && Code_D == True && Code_C == True ) ) Then Exit = True; End
+
+
+    End
+    FileClose(FileHandle);
+
+            IF (Code_P == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCP Code : n'est pas Trouvé : " + PCP );
+              ErrorNBR = ErrorNBR +1;
+            End
+
+            IF (Code_D == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCD Code : n'est pas Trouvé : " + PCD );
+              ErrorNBR = ErrorNBR +1;
+            End
+
+            IF (Code_C == False) Then
+              FileWriteLn(LOGFileHandle,"Error All compteur PCC Code : n'est pas Trouvé : " + PCC );
+              ErrorNBR = ErrorNBR +1;
+            End
+
+
+      AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+
+    Return AllCompteur_LIGNE;
+
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function String Parent_Control( String AllCompteur_LIGNE , int LOGFileHandle)
+
+    String Compteur;
+    String Name;
+    String GatesCode;
+    String GatesName;
+    Int i = 1 ;
+    Int MAXCOMPTEUR = GetNumGateValue("MaxCompteur",0);
+
+    Bool Exit = False;
+    Bool Code_OK = False;
+    Bool Name_OK = False;
+    Int ErrorNBR = StrToInt(Fetch_AllCompteur( AllCompteur_LIGNE, 24, ";"));
+
+        Compteur = Fetch_AllCompteur( AllCompteur_LIGNE, 4, ";");
+        Name = Fetch_AllCompteur( AllCompteur_LIGNE, 5, ";");
+
+        If (Compteur == "*" && Name == "*" ) Then   Return AllCompteur_LIGNE ; End
+
+    While (Exit == False)
+
+        GatesName = GetStrGateValue("Compteur_Name",i);
+        GatesCode = GetStrGateValue("Compteur_Code",i);
+
+        IF ( GatesCode == Compteur ) Then
+          Code_OK = True;
+
+           If ( GatesName == Name ) then
+              Name_OK = True;
+           End
+
+        End
+
+        i=i+1;
+
+        IF ( Code_OK == True || i > MAXCOMPTEUR ) Then  Exit = True;   End
+
+    End
+
+    IF ( Code_OK == False ) Then
+     FileWriteLn(LOGFileHandle,"Error All compteur Parent : n'est pas Trouvé  " + Compteur +" Parent Not Found");
+     ErrorNBR = ErrorNBR+1;
+
+     Else
+        IF ( Code_OK == True && Name_OK == False) Then
+
+         FileWriteLn(LOGFileHandle,"Error All compteur Parent name " + Name +" n'est pas le vrai nom du compteur. Il est remplcé par le nom : " + GatesName );
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,GatesName,5);
+
+        End
+    End
+
+    AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+
+    Return AllCompteur_LIGNE ;
+end
+//////////////////////////////////////////////////////////////////////////////
+function String Level_Control( String AllCompteur_LIGNE , Int LOGFileHandle )
+
+    String Level;
+    String LevelName;
+    String Code ;
+    String Name;
+
+    Int MAXLEVEL = 7;
+    Bool Code_Falg = False;
+    Bool Name_Falg = False;
+    Bool Exit = False;
+    String FullPathFileName;
+    int FileHandle;
+    String LIGNE;
+
+        Int ErrorNBR = StrToInt(Fetch_AllCompteur( AllCompteur_LIGNE, 24, ";"));
+
+    FullPathFileName = ENV_PATH+"\Files\AllCompteur\Level_PosteCode.csv";
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0 ) then   MessageBox("Level","File Not Found");  Return AllCompteur_LIGNE; end
+
+
+        Level = Fetch_AllCompteur( AllCompteur_LIGNE, 6, ";");
+        LevelName = Fetch_AllCompteur( AllCompteur_LIGNE, 14, ";");
+
+    LIGNE = FileReadLn(FileHandle); //Header
+
+    While (Exit == False)
+
+     LIGNE = FileReadLn(FileHandle);
+     Code = Fetch_AllCompteur( LIGNE, 1, ";");
+     Name = Fetch_AllCompteur( LIGNE, 2, ";");
+
+
+        IF (  Code == Level) Then
+         Code_Falg = True;
+          IF (  Name == LevelName) Then
+           Name_Falg = True;
+          End
+        End
+
+        IF ( FileEof(FileHandle)!=0 || Code_Falg == True ) Then  Exit = True;   End
+
+    End
+    FileClose(FileHandle);
+
+     IF ( Code_Falg == False ) Then
+       FileWriteLn(LOGFileHandle,"Error All compteur Level : n'est pas Trouvé : " + Level +" Parent Not Found");
+       ErrorNBR = ErrorNBR+1;
+
+     Else
+        IF ( Code_Falg == True && Name_Falg == False) Then
+
+         FileWriteLn(LOGFileHandle,"Error All compteur Level name : " + LevelName +" n'est pas le vrai nom du compteur. Il est remplcé par le nom : " + Name );
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Name,14);
+
+        End
+    End
+
+        AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+
+    Return AllCompteur_LIGNE;
+end
+/////////////////////////////////////////////////////////////////////////////
+function String Master_Control( String AllCompteur_LIGNE , String COMsType, Int LOGFileHandle, int ErrorNBR)
+
+    String Master;
+    String Energy_Master;
+    String FullPathFileName;
+    String Compteur;
+    String Error_Master;
+    Int FileHandle;
+    Bool Exit = False;
+    String Ligne;
+    Bool MASTER_Flag = False;
+    Bool MASTER_ENERGY_Flag = False;
+    Bool COMsType_Flag = False;
+
+
+        Master = Fetch_AllCompteur( AllCompteur_LIGNE, 18, ";");
+        Energy_Master = Fetch_AllCompteur( AllCompteur_LIGNE, 3, ";");
+        Compteur = Fetch_AllCompteur( AllCompteur_LIGNE, 1, ";");
+
+          Error_Master = "!~" + Master;
+
+
+    FullPathFileName = ENV_PATH+"\Files\Config Compteur\Energy Masters.csv";
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0 ) then   MessageBox(FullPathFileName,"File Not Found");  Return ErrorNBR; end
+
+    While (Exit == False)
+        Ligne = FileReadLn(FileHandle);
+
+         If (Fetch_AllCompteur( Ligne, 2, ";") == Master) Then
+           MASTER_Flag = True;
+
+           If (Fetch_AllCompteur( Ligne, 1, ";") == Energy_Master) Then
+             MASTER_ENERGY_Flag = True;    //COMsType_Flag
+
+              If (Fetch_AllCompteur( Ligne, 3, ";") == COMsType) Then COMsType_Flag = True;  End
+
+           End
+
+         End
+
+         IF ( FileEof(FileHandle)!=0 || MASTER_Flag == True ) Then  Exit = True;   End
+    End
+
+    FileClose(FileHandle);
+
+     IF ( MASTER_Flag == False ) Then
+
+       FileWriteLn(LOGFileHandle,"Error All compteur Master_Control: "+Compteur+" n'est pas Trouvé : " + Master +" Master Doesn't exisn't in (Energy Masters.csv)");
+       ErrorNBR = ErrorNBR+1;
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_Master ,18);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, ErrorNBR ,24);
+         Return AllCompteur_LIGNE;
+
+     End
+
+     IF ( MASTER_Flag == True ) Then
+
+        IF ( MASTER_ENERGY_Flag == false ) Then
+
+         FileWriteLn(LOGFileHandle,"Error All compteur Master_Control: Compteur " +Compteur + " energy "+  Energy_Master +" is not the same as in (Energy Masters.csv)");
+         ErrorNBR = ErrorNBR +1 ;
+        End
+
+
+        IF ( COMsType_Flag == false ) Then
+
+         FileWriteLn(LOGFileHandle,"Error All compteur Master_Control: Compteur " +Compteur + " COMsType "+  COMsType +" is not the same as in (Energy Masters.csv)");
+         ErrorNBR = ErrorNBR +1 ;
+        End
+
+        IF ( MASTER_ENERGY_Flag == false || COMsType_Flag == false  ) Then
+
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Error_Master,18);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, ErrorNBR ,24);
+        End
+
+
+     End
+
+        Return AllCompteur_LIGNE;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String ChannelDevice_Control( String AllCompteur_LIGNE , Int LOGFileHandle )
+
+    String FullPathFileName;
+    Int FileHandle;
+    String Ligne;
+    String Status;
+    String Compteur;
+    String Master;
+    String ChannelDevice;
+    String GatewayID;
+    String COMsType;
+    //String GatewayID;
+    String ALLC_GATEWAY;
+    String ALLC_Channel;
+    String ALLC_P_TCP;
+    String ALLC_Sortie;
+    String ALLC_DEVICE;
+
+    String GCD_ChannelID;
+    String GCD_DeviceID;
+    String GCD_Status;
+    String GCD_CompteurCode;
+    String GCD_GatewayID;
+    String GCD_Master;
+    String GCD_COMsType;
+    String GCD_Port;
+    String Error_COMs;
+    String Error_Master;
+
+    Bool CHANNEL_FLAG = False;
+    Bool DEVICE_FLAG = False;
+    Bool GATEWAY_FLAG = False;
+    Bool P_TCP_FLAG = False;
+    Bool SORTIE_FLAG = False;
+    Bool ALLC_COMs_FLAG;
+
+    Bool STATUS_FLAG = False;
+    Bool COMsTYPE_FLAG = False;
+    Bool Master_FLAG;
+    Bool ALLC_Master_FLAG;
+    Bool Compteur_FLAG = False;// Compteur Prime Key
+
+    Bool Exit = False;
+
+    Int ErrorNBR = StrToInt(Fetch_AllCompteur( AllCompteur_LIGNE, 24, ";"));
+
+    ChannelDevice = Fetch_AllCompteur( AllCompteur_LIGNE, 19, ";");
+    Master = Fetch_AllCompteur( AllCompteur_LIGNE, 18, ";");
+    Compteur = Fetch_AllCompteur( AllCompteur_LIGNE, 1, ";");
+    Error_COMs = "!~" + ChannelDevice;
+    Error_Master = "!~" + Master;
+
+       IF ( Master == "" || Master == "*" || StrSubString(Master,1,2) == "!~" ) Then
+            ALLC_Master_FLAG = False;
+            FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Master is not defined");
+            ErrorNBR = ErrorNBR+1;
+            If (StrSubString(Master,1,2) != "!~" ) Then
+            AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_Master ,18);
+            End
+
+        Else
+            ALLC_Master_FLAG = true;
+       End
+
+       IF ( ChannelDevice == "" || ChannelDevice == "*" || StrSubString(Master,1,2) == "!~" ) Then
+            ALLC_COMs_FLAG = False;
+            FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" ChannelDevice is not defined");
+            ErrorNBR = ErrorNBR+1;
+            If (StrSubString(Master,1,2) != "!~" ) Then
+            AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+            End
+
+         Else
+            ALLC_COMs_FLAG = True;
+
+       End
+
+       IF ( ALLC_Master_FLAG == False || ALLC_COMs_FLAG == False) Then
+
+            AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, ErrorNBR ,24);
+            Return AllCompteur_LIGNE;
+
+
+       End
+
+
+    ALLC_GATEWAY = Fetch_AllCompteur( ChannelDevice, 1, ":");
+    ALLC_P_TCP  = Fetch_AllCompteur( ChannelDevice, 2, ":");
+    ALLC_Sortie = Fetch_AllCompteur( ChannelDevice, 3, ":");
+    ALLC_Channel  = Fetch_AllCompteur( ChannelDevice, 4, ":");
+    ALLC_DEVICE  = Fetch_AllCompteur( ChannelDevice, 5, ":");
+
+    IF ( FileExist(ENV_PATH+"\Files\Config Compteur\Gateways.csv") == False ) Then
+
+       FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: File Doesn't exisn't (Gateways.csv) Contact BIZEYES system Admin");
+       ErrorNBR = ErrorNBR+1;
+
+    End
+
+    FullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateway_Channel_Device.csv";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    if (FileHandle == 0 ) then   MessageBox("Level","File Not Found");  Return AllCompteur_LIGNE; end
+
+    While (Exit == False)
+        Ligne = FileReadLn(FileHandle);
+
+        GCD_ChannelID = Fetch_AllCompteur( Ligne, 1, ";");
+        GCD_DeviceID = Fetch_AllCompteur( Ligne, 2, ";");
+        GCD_CompteurCode = Fetch_AllCompteur( Ligne, 3, ";");
+        GCD_GatewayID = Fetch_AllCompteur( Ligne, 4, ";");
+        GCD_Master = Fetch_AllCompteur( Ligne, 5, ";");
+        GCD_COMsType = Fetch_AllCompteur( Ligne, 6, ";");
+        GCD_Port = Fetch_AllCompteur( Ligne, 7, ";");
+
+        IF ( GCD_CompteurCode == Compteur ) Then
+         Compteur_FLAG = True;
+        Else
+         Compteur_FLAG = False;
+        End
+
+
+
+       IF ( Compteur_FLAG == True ) Then
+
+         If (GCD_ChannelID == ALLC_Channel) Then
+           CHANNEL_FLAG = True;
+         Else
+           CHANNEL_FLAG = False;
+           FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Channel = " + ALLC_Channel +" Not Found in (Gateway_Channel_Device.csv)");
+           ErrorNBR = ErrorNBR+1;
+         End
+
+         If ( GCD_DeviceID == ALLC_DEVICE) Then
+            DEVICE_FLAG = True;
+          Else
+            DEVICE_FLAG = False;
+            FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Device = " + ALLC_DEVICE +" Not Found in (Gateway_Channel_Device.csv)");
+            ErrorNBR = ErrorNBR+1;
+         End
+
+         If ( GCD_GatewayID == ALLC_GATEWAY) Then
+              GATEWAY_FLAG = True;
+            Else
+              GATEWAY_FLAG = False;
+              FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Gateway = " + ALLC_GATEWAY +" Not Found in (Gateway_Channel_Device.csv)");
+              ErrorNBR = ErrorNBR+1;
+         End
+
+         If (GCD_COMsType == "R") Then
+
+            If (GCD_Port == ALLC_P_TCP) Then
+             P_TCP_FLAG = True;
+            Else
+             P_TCP_FLAG = False;
+             FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Port = " + ALLC_P_TCP +" Not Found in (Gateway_Channel_Device.csv)");
+             ErrorNBR = ErrorNBR+1;
+            End
+
+         Else
+
+            If ( GCD_Port == (ALLC_P_TCP + ":"+ ALLC_Sortie) ) Then
+             P_TCP_FLAG = True;
+            Else
+             P_TCP_FLAG = False;
+             FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: "+Compteur+" Port = " + ALLC_P_TCP + ":"+ ALLC_Sortie +" Not Found in (Gateway_Channel_Device.csv)");
+             ErrorNBR = ErrorNBR+1;
+            End
+
+         End//GCD_COMsType
+
+         If ( GCD_Master == Master ) Then
+          Master_FLAG = True;
+         Else
+          Master_FLAG = False;
+         End
+
+
+      End // Compteur_FLAG
+
+
+         IF ( FileEof(FileHandle)!=0 ||  Compteur_FLAG == True  ) Then  Exit = True;   End
+    End
+
+    FileClose(FileHandle);
+
+
+     IF ( Compteur_FLAG == False ) Then
+         FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: " + Compteur +" Not Found in (Gateway_Channel_Device.csv)");
+         ErrorNBR = ErrorNBR+1;
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_Master ,18);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, ErrorNBR ,24);
+         Return AllCompteur_LIGNE;
+     End
+
+
+
+     IF ( Compteur_FLAG == True ) Then
+
+        IF ( CHANNEL_FLAG == False || DEVICE_FLAG == False || GATEWAY_FLAG == False || P_TCP_FLAG == False || Master_FLAG == False ) Then
+
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,Error_COMs ,19);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, ErrorNBR ,24);
+         Return AllCompteur_LIGNE;
+
+        Else
+
+             AllCompteur_LIGNE = Master_Control( AllCompteur_LIGNE , GCD_COMsType, LOGFileHandle, ErrorNBR);
+             AllCompteur_LIGNE = CHECK_Gateway( Compteur, GCD_GatewayID, GCD_COMsType, LOGFileHandle ,ErrorNBR, AllCompteur_LIGNE, ALLC_P_TCP+ ":"+ ALLC_Sortie );
+        End
+
+     End
+
+        Return AllCompteur_LIGNE;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String CHECK_Gateway( String Compteur, String GatewayID, String COMsTYPE, Int LOGFileHandle , int ErrorNBR, String AllCompteur_LIGNE , String Port)
+
+    String FullPathFileName;
+    Int FileHandle;
+
+    String Ligne;
+    String ChannelDevice;
+    String Error_COMs;
+
+    Bool Exit = False;
+    Bool GATWAYID_Flag = False;
+    Bool COMsTYPE_Flag = False;
+
+    FullPathFileName = ENV_PATH+"\Files\Config Compteur\Gateways.csv";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+    ChannelDevice = Fetch_AllCompteur( Ligne, 19, ";");
+    Error_COMs = "!~" + ChannelDevice;
+
+    if (FileHandle == 0 ) then
+       FileWriteLn(LOGFileHandle,"Error All compteur ChannelDevice_Control: File Doesn't exisn't (Gateways.csv) Contact BIZEYES system Admin");
+       ErrorNBR = ErrorNBR+1;
+       AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+       AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+       Return AllCompteur_LIGNE;
+    end
+
+    While (Exit == False)
+    Ligne = FileReadLn(FileHandle);
+        IF (Fetch_AllCompteur( Ligne, 1, ";") == GatewayID) Then
+         GATWAYID_Flag = True;
+          IF (Fetch_AllCompteur( Ligne, 4, ";") == COMsTYPE) Then
+           COMsTYPE_Flag = True;
+          End
+         End
+
+       IF ( FileEof(FileHandle)!=0 || GATWAYID_Flag == True ) Then  Exit = True;   End
+    End
+
+    FileClose(FileHandle);
+
+     IF ( GATWAYID_Flag == False  ) Then
+
+       FileWriteLn(LOGFileHandle,"Error All compteur CHECK_Gateway :" + GatewayID +" Doesn't exisn't in (Gateways.csv)");
+       ErrorNBR = ErrorNBR+1;
+
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+         AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+       Return AllCompteur_LIGNE;
+
+     End
+
+     IF ( GATWAYID_Flag == True && COMsTYPE_Flag == False )Then
+
+             FileWriteLn(LOGFileHandle,"Error All compteur CHECK_Gateway : COMsType = "+ COMsTYPE+"  Doesn't exisn't in (Gateways.csv)");
+              ErrorNBR = ErrorNBR+1;
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+              Return AllCompteur_LIGNE;
+     End
+
+     IF ( GATWAYID_Flag == True && COMsTYPE_Flag == True ) Then
+
+        If ( StrPos( Ligne,Port) == 0 ) Then
+
+          FileWriteLn(LOGFileHandle,"Error All compteur CHECK_Gateway: "+Compteur+" Le Port : "+ Port +" is not the same as in (Gateways.csv)");
+              ErrorNBR = ErrorNBR+1;
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE,ErrorNBR,24);
+              AllCompteur_LIGNE = FR_CHECK(AllCompteur_LIGNE, Error_COMs ,19);
+              Return AllCompteur_LIGNE;
+
+
+        End
+    End
+
+    Return AllCompteur_LIGNE;
+
+end
+
+///////////////////////////////////////////////////////////////////////////////
+Function void SplitFile_WithSearch( string Path, string FileName, int DisplayCol, int CodeCol, String Search, Int ColTOSearch)
+//*****************************************************************************
+// Read ..\Temporan\SourceFile.txt and for each row, create an empty .bin file
+// with the name found in the row
+//*****************************************************************************
+    int pos=0;
+
+    DeleteTempFiles(Path+ "TempList");
+
+    string SourceFilePath = Path + FileName;
+    int FileHandle = FileOpen(SourceFilePath,"rt");
+    if (FileHandle == 0) then return; end
+    string Row;
+
+    While (FileEOF(FileHandle) == 0)
+        Row = FileReadLn(FileHandle);
+        pos =pos +1;
+        if ( Fetch_AllCompteur( Row, ColTOSearch, ";") == Search) then
+          SaveTempFile(Path, Row , DisplayCol, CodeCol);
+        end
+    end
+    FileClose(FileHandle);
+
+    TObjFunction(123456789,1);
+end
+//////////////////////////////////////////////////////////////////////////////
+Function void SplitFile_AllCompteur_Parent( string Path, string FileName, int DisplayCol, int CodeCol, String Search1, Int ColTOSearch1,String LEVELMAX, Int COLLEVEL)
+    int pos=0;
+    Int LEVEL = StrToInt(LEVELMAX);
+
+    DeleteTempFiles(Path+ "TempList");
+
+    string SourceFilePath = Path + FileName;
+    int FileHandle = FileOpen(SourceFilePath,"rt");
+    if (FileHandle == 0) then return; end
+    string Row;
+
+    While (FileEOF(FileHandle) == 0)
+        Row = FileReadLn(FileHandle);
+        pos =pos +1;
+        if ( Fetch_AllCompteur( Row, ColTOSearch1, ";") == Search1) then
+          if ( StrToInt(Fetch_AllCompteur( Row, COLLEVEL, ";")) < LEVEL) then
+         //MessageBox(Fetch_AllCompteur( Row, ColTOSearch1, ";")+"/"+Search1,LEVEL + ">" + Fetch_AllCompteur( Row, COLLEVEL, ";"));
+            SaveTempFile(Path, Row , DisplayCol, CodeCol);
+          End
+        end
+    end
+    FileClose(FileHandle);
+
+end
+//////////////////////////////////////////////////////////////////////////////
+function String FR_CHECK(String Ligne,string Replace , Int NumFild)
+
+string txt = Ligne;
+String NewLigne ="";
+String CODE = "";
+int i;  int P = 0;
+
+
+
+      for i =1  to NumFild-1 do
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P);
+        NewLigne = NewLigne + CODE ;
+        txt=StrDelete(txt,1,P);
+      end
+
+        P = StrPos(txt,";");
+        CODE=StrSubString(txt,1,P-1);
+        txt=StrDelete(txt,1,P-1);
+
+
+       P = StrPos(CODE,"_");
+
+        Return NewLigne + Replace + txt;
+
+end
+///////////////////////////////////////////////////////////////////////////////
+//                                  F1
+///////////////////////////////////////////////////////////////////////////////
+function String Parse_Formule_Compteur(  String Ligne , Int BUILD_FileHandle )
+  Int LenghtLigne;
+  String Char ="";
+  String P_CHAR="";
+  String CString = "";
+  String Code_Compteur = "";
+  String WFullPathFileName;
+  Int WFileHandle;
+  String Querry;
+  Int OPEN_Count = 0;
+  Int CLOSE_Count = 0;
+  String Parse_Formule = "";
+  String User_Formule = "";
+  String Return_CHAR = "~";
+  String Formule = Fetch_CAL( Ligne, 13, ";");
+  String Compteur = Fetch_CAL( Ligne, 1, ";");
+  Int i;
+  String Add = "+";     String Sub = "-";   String Div = "/";   String Mult = "*";
+  String Open = "(";    String Close = ")";
+  String NUM1 = "1"; String NUM2 = "2"; String NUM3 = "3"; String NUM4 = "4";
+  String NUM5 = "5"; String NUM6 = "6"; String NUM7 = "7"; String NUM8 = "8";
+  String NUM9 = "9"; String NUM0 = "0"; String NUMVirgule = ","; String NUMPoint = ".";
+
+  String F_SQRT = "Sqrt"; String F_SIN = "Sin"; String F_COS = "Cos";   String F_TAN = "Tan";
+  String F_ABS = "Abs"; String F_ARCSIN = "ArcSin"; String F_ARCCOS = "ArcCos";   String F_ARCTAN = "ArcTan";
+  String F_EXP = "Exp"; String F_LOG = "Log"; String F_ROUND = "Round";   String F_POW = "Pow"; String F_MOD = "Mod";
+
+  String F_FILS = "F";
+  int Flag_Virgule = 0;
+
+  Bool Flag_Fils = False;
+  Bool Operateur = False;
+  Int NormalOperateur_Flag = 0;
+
+  Int COMPTEUR_N_EXIST =0;
+  Int Total_ErrorNbr = StrToInt(Fetch_CAL( Ligne, 24, ";"));
+
+  Bool Constant_Flag = True;
+  Int Constant = 1;
+  String ce;
+
+        If( Formule == "Reel" ) Then Return Ligne; End
+        If( Formule == "*" ) Then
+            Parse_Formule = Formule+"~";
+            User_Formule =  Formule+"~";
+            Ligne = FR_CHECK(Ligne,Parse_Formule,20);
+            Ligne = FR_CHECK(Ligne,User_Formule,21);
+            Ligne = FR_CHECK(Ligne,Total_ErrorNbr,24);
+
+         Return Ligne;
+        End
+
+        LenghtLigne = StrLen(Formule);
+
+        For i= 1 to LenghtLigne do
+         P_CHAR = Char;
+         Char = StrSubString(Formule,i,1);
+
+                    ////////////////////////test des Operateurs //////////////////////////////
+
+                IF ( Char == Open || Char == Add || Char == Sub || Char == Div || Char == Mult || Char == Close ) Then
+
+                 Operateur = True;
+
+                  Else
+                      Operateur = False;
+                      NormalOperateur_Flag = 0;
+                      IF (Char != " ") Then
+                       CString = CString + Char;
+                       //////////// start Test constant
+                       If ( Char == NUM1 || Char == NUM2 || Char == NUM3 || Char == NUM4 || Char == NUM5 ||
+                            Char == NUM6 || Char == NUM7 || Char == NUM8 || Char == NUM9 || Char == NUM0 ||
+                            Char == NUMVirgule || Char == NUMPoint ) Then
+
+                           Constant_Flag = True;
+
+                            If ( Char == NUMVirgule) then
+                             Char =".";
+                            End
+
+                            If ( Char == NUMPoint) then
+                             Flag_Virgule = Flag_Virgule +1;
+                            End
+
+                         Else
+                           Constant_Flag = False;
+                           Constant = 0;
+                       End
+                      ///////////////////end constant/////////////////////////
+
+                     End //char != " "
+                 End // char == operateur
+
+
+
+                IF (Operateur == true ) then
+                  IF (Char == Open ) then// (
+                    NormalOperateur_Flag = 0;
+                    OPEN_Count = OPEN_Count+1;
+
+                    IF ( CString == F_SQRT || CString == F_SIN || CString == F_COS || CString == F_TAN || CString == F_ABS || CString == F_ARCSIN ||
+                         CString == F_ARCCOS || CString == F_ARCTAN || CString == F_EXP || CString == F_LOG || CString == F_ROUND || CString == F_POW ||
+                         CString == F_MOD || CString == F_FILS ) Then
+
+                         Parse_Formule = Parse_Formule + CString + Return_CHAR + Open + Return_CHAR;
+                         User_Formule = User_Formule + CString + Return_CHAR + Open + Return_CHAR;
+                    Else
+
+                         IF ( CString == ""  ) then
+                           Parse_Formule = Parse_Formule + Open + Return_CHAR;
+                           User_Formule = User_Formule + Open + Return_CHAR;
+
+                         Else
+
+                            IF ( Constant == 1 ) then
+
+                                FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                Parse_Formule = Parse_Formule + "#" + CString + Return_CHAR + Open + Return_CHAR;
+                                User_Formule = User_Formule + "#" + CString + Return_CHAR + Open + Return_CHAR;
+                            Else
+                               ce = CompteurExist( CString );
+                                   IF ( ce == "*" ) then
+                                       FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                       COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                       Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Open + Return_CHAR;
+                                       User_Formule = User_Formule + "#0"+ Return_CHAR  + Open+ Return_CHAR ;
+                                   Else
+
+                                       FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"missing Operateur Or Operation");
+                                       COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                       Parse_Formule = Parse_Formule + "#" + CString  + Return_CHAR + Open + Return_CHAR;
+                                       User_Formule = User_Formule + "#" + ce  + Return_CHAR  + Open+ Return_CHAR ;
+                                   End // ce == "*"
+                            End //  Constant == 1
+                         End //CString == ""
+                    End //CString == Operateur
+
+                         CString = "";
+                         Flag_Virgule = 0;
+                         Constant = 1;
+
+                  Else
+
+                     IF (Char == Close ) Then// )
+                      CLOSE_Count = CLOSE_Count+1;
+                      NormalOperateur_Flag = 0;
+
+                         IF ( CString == ""  ) then
+
+                            IF ( P_CHAR == Open ) Then
+                                FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"NO Compteur No Number Found");
+                                COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                User_Formule = User_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                            Else
+                                If (CLOSE_Count != OPEN_Count) Then
+                                  FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " +"Number open brackets ="+OPEN_Count+" != Number close brackets = "+CLOSE_Count );
+                                  COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                  Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                  User_Formule = User_Formule + "#0" + Return_CHAR + Close + Return_CHAR ;
+                                Else
+
+
+                                   Parse_Formule = Parse_Formule + Close + Return_CHAR ;
+                                   User_Formule = User_Formule + Close ;
+                                 End //CLOSE_Count != OPEN_Count
+                            End //P_CHAR == Open
+
+
+                         Else
+                            IF ( Constant == 1 ) then
+
+                                IF ( Flag_Virgule <= 1) then
+                                    Parse_Formule = Parse_Formule + "#"+CString + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + Return_CHAR + "#"+ CString + Close+ Return_CHAR ;
+                                    CString = "";
+                                    Constant = 1;
+                                    Flag_Virgule = 0;
+                                 Else
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  too many Virgule" );
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + "#0" + Return_CHAR  + Close+ Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                                 End
+
+                            Else
+
+                               ce = CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR + Close + Return_CHAR;
+                                    User_Formule = User_Formule + "#0"+ Return_CHAR  + Close+ Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 Else
+                                   Parse_Formule = Parse_Formule + CString + Return_CHAR + Close + Return_CHAR;
+                                   User_Formule = User_Formule + ce + Return_CHAR  + Close + Return_CHAR ;
+
+                                   CString = "";
+                                   Flag_Virgule = 0;
+                                   Constant = 1;
+                                 End
+
+                            End////  constante
+
+                        End// CString != ""
+
+
+                      Else
+                      //Normal Operateur
+                      NormalOperateur_Flag = NormalOperateur_Flag+1;
+
+                        If ( NormalOperateur_Flag > 1 ) Then
+                        COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                        FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  too many Operateur" + Char );
+
+
+                        Else
+
+
+                        IF ( CString == "" ) then
+                                    Parse_Formule = Parse_Formule + Char + Return_CHAR;
+                                    User_Formule = User_Formule + Char+ Return_CHAR ;
+
+
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                        Else
+
+                            IF ( Constant == 1 ) then
+
+                               IF ( Flag_Virgule <= 1) then
+
+                                    Parse_Formule = Parse_Formule + "#"+CString + Return_CHAR +Char + Return_CHAR;
+                                    User_Formule = User_Formule + "#"+CString+ Return_CHAR  +Char + Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                              Else
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                    FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  too many Virgule" );
+
+
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR;
+                                    User_Formule = User_Formule + "#0"+ Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+
+                              End
+
+                            Else
+                                  // c'est un Compteur
+
+                                  ce = CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+
+                                    Parse_Formule = Parse_Formule + "#0" + Return_CHAR+ Char + Return_CHAR;
+                                    User_Formule = User_Formule +"#0"+ Char+ Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 Else
+
+
+                                   Parse_Formule = Parse_Formule + CString + Return_CHAR + Char + Return_CHAR;
+                                   User_Formule = User_Formule + ce+ Return_CHAR  + Char+ Return_CHAR ;
+
+                                    CString = "";
+                                    Flag_Virgule = 0;
+                                    Constant = 1;
+                                 End
+
+
+                            End////  constante
+                        End // CString != ""
+
+
+                        End // NormalOperateur_Flag < 1
+
+                     End // )
+                   End //(
+
+                End // Operateur
+
+           /////////////////////////////////////////////////////////////////////////////
+                        If ( i == LenghtLigne ) then
+                          If ( CString != "" ) then
+                            IF ( Constant == 1) then
+                                  // c'est un numero #5214 Constant
+                               IF ( Flag_Virgule <= 1) then
+                                   Parse_Formule = Parse_Formule + "#"+ CString+Return_CHAR;
+                                   User_Formule = User_Formule + "#" +CString+ Return_CHAR  ;
+                                 CString = "";
+                                 Flag_Virgule = 0;
+
+                               Else
+                                 COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+                                 FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  too many Virgule" );
+
+                                    Parse_Formule = Parse_Formule + "#0"+Return_CHAR;
+                                    User_Formule = User_Formule +"#0"+ Return_CHAR ;
+
+                                 Flag_Virgule = 0;
+                               End
+
+                            Else
+                                  // c'est un Compteur
+                                  Constant =1;
+                               ce = CompteurExist( CString );
+
+                                   IF ( ce == "*" ) then
+                                    FileWriteLn(BUILD_FileHandle,"Error All compteur: Parse_Formule_Compteur("+Compteur+")  " + CString + " Doesn't exist in Compteur LookUp Gate");
+                                    COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+
+                                 Else
+
+                                   Parse_Formule = Parse_Formule + CString+Return_CHAR;
+                                   User_Formule = User_Formule + ce+ Return_CHAR  ;
+                                   CString = "";
+                                   ce = "";
+
+                                 End
+
+
+
+
+                            End////  constante
+                          End // CString != ""
+
+                        End
+
+        END// FOR
+
+        IF ( OPEN_Count != CLOSE_Count ) Then
+          FileWriteLn(BUILD_FileHandle,"Error Calculatrice : Parse_Compteur("+Compteur+")  " + "!= Open and Close () OPEN = " + OPEN_Count + " Close = " + CLOSE_Count);
+          COMPTEUR_N_EXIST = COMPTEUR_N_EXIST + 1;
+        End
+
+    Total_ErrorNbr = Total_ErrorNbr + COMPTEUR_N_EXIST;
+
+    If (COMPTEUR_N_EXIST != 0) Then
+      Parse_Formule = "!~"+Parse_Formule;
+      User_Formule = "!~"+User_Formule;
+    End
+
+    Ligne = FR_CHECK(Ligne,Parse_Formule,20);
+    Ligne = FR_CHECK(Ligne,User_Formule,21);
+    Ligne = FR_CHECK(Ligne,Total_ErrorNbr,24);
+    Return Ligne;
+end
+
+function void TESTPARSE()
+String L;
+    L = Parse_Formule_Compteur( "CCI;2;3;4;5;6;7;8;9;10;11;12;*;14;15;16;17;18;19;20;21;22;23;0"  , 0);
+
+end
+///////////*********************/////////////*Select Energy****************//////////////////////////////////////////////
+
+function void Energy_Compteur_SelectRow_1()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView1",0);
+    ParentEnergy = GetStrGateValue("EmailView1",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+function void Energy_Compteur_SelectRow_2()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView2",0);
+    ParentEnergy = GetStrGateValue("EmailView2",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_3()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+
+    Energy = GetStrGateValue("EmailView3",0);
+    ParentEnergy = GetStrGateValue("EmailView3",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_4()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView4",0);
+    ParentEnergy = GetStrGateValue("EmailView4",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_5()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView5",0);
+    ParentEnergy = GetStrGateValue("EmailView5",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_6()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView6",0);
+    ParentEnergy = GetStrGateValue("EmailView6",1);
+    if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             //MessageBox(Energy,ParentEnergy);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_7()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView7",0);
+    ParentEnergy = GetStrGateValue("EmailView7",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_8()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView8",0);
+    ParentEnergy = GetStrGateValue("EmailView8",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_9()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+    Energy = GetStrGateValue("EmailView9",0);
+    ParentEnergy = GetStrGateValue("EmailView9",1);
+        if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+                Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+
+function void Energy_Compteur_SelectRow_10()
+int EnergyNumber;
+String Energy;
+String ParentEnergy;
+ParentEnergy = GetStrGateValue("EmailView10",1);
+    Energy = GetStrGateValue("EmailView10",0);
+    if Energy=="" then return; end
+
+
+           SetStrGateValue("AlarmeEventModifer",1,Energy);
+
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Energy,3);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,ParentEnergy,15);
+             TPageCloseByName("Select_ENERGY_BU_Compteur");
+
+end
+//////////////////////////////////////
+////////////////////////////////////////////
+function void Load_Groups_Set_AP_Compteur()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPsNoClose("SET_Access_Privilege_Compteur");
+end
+function void AP_Set_Groupes_Compteur()
+int Access;
+
+
+    Access=GetNumGateValue("AP_Value",0);
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,Access,27);
+        //MessageBox(Admin_View_CurrentLine,Access);
+
+    SetStrGateValue("AlarmeEventModifer",13,Access);
+    TPageCloseByName("SET_Access_Privilege_Compteur");
+
+
+end
+////////////////////////////////////
+function Void BoutonZoomAdd()
+
+
+//String CC;
+  //CC=Fetch_Formule(Admin_View_CurrentLine,1,";");
+
+   // if CC=="" then MessageBox("selectionez une ligne avant:!!!!","info"); return ; end
+
+//Formule_User_Complet=Fetch_Formule(Admin_View_CurrentLine,21,";");
+//Display_Formule();
+   Type_Display="add";
+    TPageCloseByName("Display_AllCompteur");
+     ShowPage("Display_Zoom");
+     /*
+Formule_User_Complet=Fetch_Formule(Admin_View_CurrentLine,21,";");
+Display_Formule();
+
+
+ShowPoPUPs("POPUP_ZOOM_ADD");*/
+end
+////////////////-----------------------///////////////////
+Function void Ok_Display_Compteur()
+if Type_Display=="add" then
+    Add_New_Compteur();
+end
+if Type_Display=="modif" then
+    Modifier_AllCompteur();
+end
+
+End
+//////////////////////////////////////
+Function Void Add_New_Compteur()
+String CodeNewCompteur ;
+String Energy;
+     Energy=Fetch_AllCompteur(Admin_View_CurrentLine,3,";");
+     CodeNewCompteur=FetchCodeAllCompteur(Energy);
+      Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",0),2);
+            Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,GetStrGateValue("AlarmeEventModifer",12),25);
+    Admin_New_Ligne("AllCompteur",CodeNewCompteur);
+        SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+        Confirme_Save=True;
+
+end
+////////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************/
+Function Void CopyCompteur()
+String  CodeNewCompteur;
+String Energy;
+String Type;
+
+Type="AllCompteur";
+
+    Energy=Fetch_AllCompteur(Admin_View_CurrentLine,3,";");
+    CodeNewCompteur=FetchCodeAllCompteur(Energy);
+   //  MessageBox(CodeNewCompteur,Energy);
+    Admin_Copy(Type,CodeNewCompteur);
+            SetNumGateValue("Template_Control",0,0);
+              SetNumGateValue("E15min",0,1);
+
+        Confirme_Save=True;
+
+End
+///////////////////////////////////////
+
+Function Void DeleteCompteur()
+
+
+String WPath=ENV_PATH+"\Files\AllCompteur\WTEMP_AllCompteur.csv";
+String BackPath=ENV_PATH+"\Files\DATAMODELFiles\Event\Back_TEMP_AllCompteur.csv";
+
+    Admin_Delete("AllCompteur",WPath,BackPath);
+        Confirme_Save=True;
+
+End
+//////////////////////////
+Function Void All_BU_Production()
+
+
+     SetStrGateValue("AlarmeEventModifer",4,"*");
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",7);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",10);
+
+End
+Function Void All_BU_Consomation()
+
+
+     SetStrGateValue("AlarmeEventModifer",6,"*");
+        Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",17);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",9);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",12);
+
+End
+Function Void All_BU_Distrubution()
+
+
+     SetStrGateValue("AlarmeEventModifer",5,"*");
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",8);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",11);
+
+End
+////////////////////////////
+Function Void All_BU_Ratio()
+
+
+     SetStrGateValue("AlarmeEventModifer",11,"*");
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",16);
+     Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",26);
+
+End
+
+///////////////////////////////////////////////////////////////////////////////
+function void AllCompteur_NA_Parent()
+
+    String Ligne;
+    String Code;
+    String Name;
+    String CC;
+    String CEnergy;
+
+
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",4);
+    Admin_View_CurrentLine=FR_AllCompteur(Admin_View_CurrentLine,"*",5);
+    SetStrGateValue("AlarmeEventModifer",2,"*");
+    TPageCloseByName("Allcompteur_Parent_SELECTOR");
+
+End
+
+

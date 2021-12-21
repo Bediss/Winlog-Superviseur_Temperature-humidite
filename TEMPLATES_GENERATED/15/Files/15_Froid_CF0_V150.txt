@@ -1,0 +1,5 @@
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;低F06;VMZ Distrib F;Froid;CF0;VMZ Froid;1;*;V100;*;*;VMZ;*;Reel;Site;*;*;VMZ;!~*;!~*;;;;;2;VMZ Distribution Froid;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;低F01;VMZ Conso F;Froid;CF0;VMZ Froid;1;*;*;V100;*;*;VMZ;CF1;Site;*;CPT0;VMZ;*;*;CF1~;ElMazeraa Froid~;;;0;VMZ Consommation Froid;VMZ Tonnage
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;低F02;VMZ Prod F;Froid;CF0;VMZ Froid;1;V100;*;*;VMZ;*;*;CF111;Site;*;*;VMZ;*;*;CF111~;Froid~;;;0;VMZ Production Froid;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;低F03;Ecart P/C Froid;Froid;CF0;VMZ Froid;1;*;*;*;*;*;*;CF02-CF01;Site;*;*;VMZ;*;*;CF02~-~CF01~;VMZ Prod F~-~VMZ Conso F~;;;0;Ecart Production/Consommation Froid;*
+F:KWf J#0;KWf M#2;KWf A#3;KWf A-1#17;KWf / T M-1#20;低F05;Ecart D/C Froid;Froid;CF0;VMZ Froid;1;*;*;*;*;*;*;CF06-CF01;Site;*;*;VMZ;*;*;CF06~-~CF01~;VMZ Distrib F~-~VMZ Conso F~;;;0;Ecart Distribution/Consommation Froid;*

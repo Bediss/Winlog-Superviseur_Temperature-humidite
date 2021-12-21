@@ -1,0 +1,62 @@
+#Version: 0x030217
+#Access: 0
+#Pos: 270,275
+#Size: 170,125
+#BkColor: clWhite
+#Gates: 2
+  #STR: AlarmeEventModifer,3
+  #NUM: EventEmailEventType,0
+#Style: Fixed
+#StayOnTop: 1
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 150,25
+  #BkColor: clWhite
+  #Cursor: 0
+  #TxtColor: clMenuText
+  #Font: Gotham Book,10,0000
+  #Label: Choix type d'event :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 30,35
+  #Size: 100,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Alarme
+  #NeedApply: 0
+  #OnMask: 1,0003,0001
+  #TabOrder: 3
+  #Access: 0
+#EndObj
+#Object: RadioBtn
+  #ID: 0
+  #Pos: 30,60
+  #Size: 100,25
+  #BkColor: clWhite
+  #Font: Gotham Book,10,0000
+  #Cursor: 0
+  #Label: Regulier
+  #NeedApply: 0
+  #OnMask: 1,0003,0002
+  #TabOrder: 1
+  #Access: 0
+#EndObj
+#Object: Button
+  #ID: 0
+  #Pos: 10,90
+  #Size: 150,25
+  #Cursor: 0
+  #Label: Selectionner
+  #Font: Gotham Book,10,0000
+  #FunctionKey: -1
+  #TabOrder: 2
+  #Access: 0
+  #OnClick: StartF,ChoiceEventType()
+  #OnClick: Close
+#EndObj

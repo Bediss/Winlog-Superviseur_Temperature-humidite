@@ -1,0 +1,220 @@
+#Version: 0x03021d
+#Access: 0
+#Pos: 0,150
+#Size: 1350,530
+#BkColor: clWhite
+#Gates: 9
+  #NUM: Template_Control,0
+  #STR: AlarmeEventModifer,1
+  #STR: AlarmeEventModifer,2
+  #STR: AlarmeEventModifer,3
+  #STR: AlarmeEventModifer,4
+  #STR: AlarmeEventModifer,5
+  #STR: AlarmeEventModifer,6
+  #STR: AlarmeEventModifer,7
+  #STR: AlarmeEventModifer,8
+#PBkBmp: -5,0,1350,530,Background.png
+#PBkBmp: 34,231,722,198,MAILCONFIG.PNG
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Frame
+  #ID: 0
+  #Pos: 776,165
+  #Size: 570,330
+  #BkColor: clNone
+  #Style: 4
+  #TabOrder: 0
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 10,100
+    #Size: 250,35
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Adresse Mail
+    #Align: 36
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,140
+    #Size: 250,35
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Host SMTP Server
+    #Align: 36
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,180
+    #Size: 250,35
+    #BkColor: clWhite
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Mot de Passe SMTP
+    #Align: 36
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 265,100
+    #Size: 300,35
+    #Descr: 250
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,11,0000
+    #Gate: 2
+    #NeedApply: 0
+    #Style: 0
+    #TabOrder: 0
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 265,140
+    #Size: 300,35
+    #Descr: 250
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,11,0000
+    #Gate: 3
+    #NeedApply: 0
+    #Style: 0
+    #TabOrder: 1
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 265,180
+    #Size: 300,35
+    #Descr: 250
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,11,0000
+    #Gate: 4
+    #NeedApply: 0
+    #Style: 32
+    #TabOrder: 2
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,60
+    #Size: 250,35
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Utilisateur
+    #Align: 36
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 265,60
+    #Size: 300,35
+    #Descr: 250
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,11,0000
+    #Gate: 1
+    #NeedApply: 0
+    #Style: 0
+    #TabOrder: 3
+    #Access: 0
+  #EndObj
+  #Object: Button
+    #ID: 0
+    #Pos: 112,280
+    #Size: 240,30
+    #Cursor: 0
+    #Label: Testez et Sauvegardez
+    #Font: Gotham Book,9,0000
+    #FunctionKey: -1
+    #TabOrder: 4
+    #Access: 0
+    #OnClick: StartF,SAVE_MAIL_CONFIG()
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,220
+    #Size: 250,35
+    #BkColor: clBtnFace
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Teste : Adresse Email
+    #Align: 36
+    #Frame: 3
+    #Access: 0
+  #EndObj
+  #Object: Edit
+    #ID: 0
+    #Pos: 265,220
+    #Size: 300,35
+    #Descr: 250
+    #BkColor: clWindow
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Gotham Book,11,0000
+    #Gate: 7
+    #NeedApply: 0
+    #Style: 0
+    #TabOrder: 5
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 10,5
+    #Size: 440,30
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clBackground
+    #Font: Gotham Book,11,0000
+    #Label: Entrez vos données :
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,5
+  #Size: 440,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBackground
+  #Font: Gotham Book,11,0000
+  #Label: Configuration du serveur E-mail :
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 10,35
+  #Size: 1325,115
+  #BkColor: clBtnHighlight
+  #Cursor: 0
+  #TxtColor: clMaroon
+  #Font: Gotham Book,11,0000
+  #Gate: 8
+  #Label: %s
+  #Align: 16
+  #Frame: 4
+  #Access: 0
+#EndObj

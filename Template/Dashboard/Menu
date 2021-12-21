@@ -1,0 +1,160 @@
+#Version: 0x030222
+#Access: 0
+#Pos: 0,70
+#Size: 1350,40
+#BkColor: 204,255,232
+#Gates: 4
+  #STR: SelectCompteur,0
+  #STR: UserName,0
+  #STR: ToDay,0
+  #NUM: Show_Temp_Pointer,0
+#Style: FixedNoBorder
+#StayOnTop: 0
+#Object: Label
+  #ID: 0
+  #Pos: 395,5
+  #Size: 45,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Admin
+  #Align: 37
+  #Frame: 1
+  #Access: 24576
+  #NewOnClick: StartF,View_Admin()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 155,5
+  #Size: 80,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Superviseur
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Supervieur()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 275,5
+  #Size: 80,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Rapporteur
+  #Align: 37
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,Bouton_Rapporteur()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 475,5
+  #Size: 70,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clBtnShadow
+  #Font: Gotham Book,10,0000
+  #Label: Analyseur
+  #Align: 37
+  #Frame: 1
+  #Access: 24576
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 30,5
+  #Size: 90,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0000
+  #Label: Naviguateur
+  #Align: 36
+  #Frame: 1
+  #Access: 0
+  #NewOnClick: StartF,NAVIGUATOR()
+#EndObj
+#Object: Frame
+  #ID: 0
+  #Pos: 0,35
+  #Size: 1350,5
+  #BkColor: 204,255,232
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Label
+    #ID: 0
+    #Pos: 155,0
+    #Size: 80,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,11,2147483648
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 275,0
+    #Size: 80,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,11,1073741824
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 395,0
+    #Size: 45,2
+    #BkColor: clBlack
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Segoe UI,9,0000
+    #Label: Label
+    #Align: 32
+    #Frame: 1
+    #Show: 3,11,536870912
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 555,5
+  #Size: 51,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: DEMO
+  #Align: 37
+  #Frame: 1
+  #Access: 24576
+  #NewOnClick: StartF,DEMO()
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 605,5
+  #Size: 86,30
+  #BkColor: clNone
+  #Cursor: 0
+  #TxtColor: clWindowText
+  #Font: Gotham Book,10,0001
+  #Label: STOP DEMO
+  #Align: 37
+  #Frame: 1
+  #Access: 24576
+  #NewOnClick: StopF,DEMO()
+#EndObj

@@ -1,0 +1,4 @@
+PBI_Code;PBI_Name;Data_PBI_Path;PBI_Master;CompteurList Code;Measure List Code;CompteurList Name;Measure List Name;PBI_Date_Creation;PBI_Date_Modification;Desription;View_PBI
+PBI1;PBI  PRODUCTION T-J;C:\Winlog\Data\1 HISTORY\J_H\;PBI_CLC_J;CL1;ML6;production ;T - J ;22/2/2021_10:23;22/2/2021_10:23;;J;;;;;;;;
+PBI6;pbi test 676;C:\Winlog\Data\1 HISTORY\Live_H\;PBI_CLC_S;CL1;ML7;production ;T - M;24/2/2021_14:49;24/2/2021_14:50;;Live;;;;;;;;
+PBI7;Copie pbi test ;C:\Winlog\Data\1 HISTORY\Live_H\;PBI_CLC_S;CL2;ML3;PRODUCTION TEMPERATURE;H;24/2/2021_14:50;24/2/2021_14:50;;Live;;;;;;;;

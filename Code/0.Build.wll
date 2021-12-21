@@ -1,0 +1,721 @@
+Global String Environnement = "DEV";
+Global String ENV_PATH =  GetProjectPath() +  "\Winlog";
+Global string Current_Version;
+///////////////////////////////////////////////////////////////////////////////  User_Privilege
+function void Bouton_BUILD()
+
+    String FullPathFileName = ENV_PATH+"\V" + GetStrGateValue("Version",0) + "_LastSTEP.txt";
+    String DELTA_FullPathFileName =  ENV_PATH+"\PowerShell\delta_Source_Destination.txt";
+    Int FileHandle;
+
+    String LastStep;
+    String Ver_DATESTAMP;
+    String ErrorMessage = "";
+    Int ErrorFlag = 0;
+    String Destination;
+    String Source;
+    String Message;
+
+    Current_Version = GetStrGateValue("Version",0);
+
+   ShowPage("Build");
+   SetStrGateValue("AlarmeEventModifer",19,"0");
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    If ( FileHandle != 0 ) Then LastStep = FileReadLn(FileHandle);
+     FileClose(FileHandle);
+
+     IF ( Fetch_AllCompteur(LastStep, 1 , ";") == "DGG2.3_Generate_DATAMODEL") Then
+
+      FullPathFileName = ENV_PATH+"\V" + GetStrGateValue("Version",0) + "GateCreation.txt";
+      FileHandle = FileOpen(FullPathFileName,"rt");
+      If ( FileHandle != 0 ) Then
+
+         Ver_DATESTAMP = FileReadLn(FileHandle);
+         ErrorMessage = "You must Import" ;
+         FileClose(FileHandle);
+
+        If ( NumGateExists(Ver_DATESTAMP,0) == False ) Then
+            ErrorFlag = ErrorFlag +1;
+            ErrorMessage = ErrorMessage + " ,NUM_Gates file";
+        End
+
+        If ( NumGateExists(Ver_DATESTAMP,0) == False ) Then
+            ErrorMessage = ErrorMessage + " ,CMP_Gates file";
+            ErrorFlag = ErrorFlag +1;
+        End
+
+        If ( NumGateExists(Ver_DATESTAMP,0) == False ) Then
+            ErrorMessage = ErrorMessage + " ,ALR_Gates file";
+            ErrorFlag = ErrorFlag +1;
+        End
+
+        SetStrGateValue("Errors_AllCompteur",0,ErrorMessage);
+
+        If ( ErrorFlag == 0 ) Then
+
+            Insert_LastSTEP( "DGG2.3_Generate Calculated Items" );
+
+            Generate_Formule();
+
+            Insert_LastSTEP( "CMR3.3_Create Templates" );
+
+               //Destination = GetProjectPath() +"\WebTemplate";
+               //Create_PS_DeleteFiles( Destination );
+               //ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+
+            //Create_Desk_Templates();
+
+            ///Copy DeskTOP & Web Templates
+            //XCopyTemplates( "10" );
+            //XCopyTemplates( "14" );
+            //XCopyTemplates( "15" );
+            //////////////////////////////
+            /// Synoptique
+
+            /////////////////////////////
+            ///Web Navigator
+            //Generate_WebNavigator();
+            //////////////////////////////
+
+            //Insert_LastSTEP( "CMR3.3_Create Incidents" );
+            //Generate_Alarmes_Formule();
+
+        Else
+            SetStrGateValue("Errors_AllCompteur",0,ErrorMessage);
+        End
+
+
+
+      End//FileHandle != 0 GateCreation
+
+     End//LN = 0 DGG2.2
+
+
+    End//FileHandle != 0 _LastSTEP
+
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_NewVersion()
+  ShowPoPUPs("CreatProject");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REVIEW_init_Gates()
+    ShellExec("INITIALGATES.Txt","open",GetProjectPath(),1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REVIEW_Event_Regulier()
+    ShellExec("Reporting_Regulier.csv" , "open" , ENV_PATH+"\Files\DATAMODELFiles\Event\" ,1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REVIEW_AllCompteur()
+    //ShellExec("TEMP_AllCompteur.csv" , "open" , ENV_PATH+"\Files\AllCompteur\" ,1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REVIEW_Alarme()
+    ShellExec("Alarme_F_Reporting.csv" , "open" , ENV_PATH+"\Files\DATAMODELFiles\Event\" ,1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Load_Settings()
+
+    InitialiseGates();
+    SetStrGateValue("AlarmeEventModifer",20,"New Version Settings are loaded. Ready for Gate Generation.");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Generate_DATAMODEL()
+
+    Insert_LastSTEP( "DGG2.3_Generate_DATAMODEL" );
+
+    Check_AllCompteur();
+    SetStrGateValue("Errors_AllCompteur", 0 ,"Creating Gates Files ...");
+    CreateGates();
+    SetStrGateValue("Errors_AllCompteur", 0 ,"You are about to close the BUILD RUNTIME and open the BUILD DEVELOPER. A Help file will open shortly on how to IMPORT GATES.");
+    Sleep(5000);
+
+    ShellExec("HOW_TO_IMPORT_GATES.pdf" , "open" , ENV_PATH+"\PowerShell\" ,1,"","");
+
+    ShellExec("cR_oD_cD_oR.bat" , "open" , ENV_PATH+"\PowerShell\" ,1,"","");
+
+    SetStrGateValue("Errors_AllCompteur", 0 ,"JUST BACK DEVELOPER IMPORT GATES.");
+    ////////////////////////copy files ...
+        /*CopyFiles( GetProjectPath() + "\TEMPLATES_GENERATED\14\T_DESKTOP" , "C:\Users\bizeyes\Desktop\2" , "");
+        MessageBox("End","");*/
+
+end
+///////////////////////////////////////////////////////////////////////////////
+/*function void Generate_Formule()
+
+    String Source;
+    String Destination;
+    String File_Name = "Calculator_Funct_V"+ GetStrGateValue("Version",0) +".wll";
+
+            Insert_LastSTEP( "DGG2.3_Generate Calculated Items" );
+
+            SetStrGateValue("Errors_Formule",0,"Generating Calculated Compteurs . Please wait ...");
+
+            MessageBox("Creation Calculatrice","Start");
+
+            Calculatrice();
+
+            ///////Copy Files
+
+
+            Source = ENV_PATH+"\Files\AllCompteur\Calcule\" + File_Name;
+            Destination = GetProjectPath()+"\Code\" + File_Name ;
+
+            FileCopy(Source,Destination,False);
+
+             File_Name = "Compteur_ReelAlarme_V"+ GetStrGateValue("Version",0) +".wll";
+
+             Source = ENV_PATH+"\Files\AllCompteur\Calcule\" + File_Name;
+             Destination = GetProjectPath()+"\Code\" + File_Name ;
+
+            FileCopy(Source,Destination,False);
+
+            MessageBox("Copying Files","End");
+
+            SetStrGateValue("Errors_Formule",0,"Generatinon of Calculated Compteurs is Complete.");
+
+end*/
+///////////////////////////////////////////////////////////////////////////////
+function void Generate_Alarmes_Formule()
+
+    String Source;
+    String Destination;
+    String File_Name = "Alarme_EXECUTION_V"+ GetStrGateValue("Version",0) +".wll";
+
+            Insert_LastSTEP( "DGG2.3_Generate Calculated Items" );
+            SetStrGateValue("Errors_Formule",0,"Generating Alarms Formulae. Please wait ...");
+            BUILD_ALARME();
+
+            ///////Copy Files
+
+            Source = ENV_PATH+"\Files\DATAMODELFiles\Event\Create_ALARME\" + File_Name;
+           Destination = GetProjectPath()+"\Code\" + File_Name ;
+            FileCopy(Source,Destination,False);
+            SetStrGateValue("Errors_Formule",0,"Generatinon of alarms logic is Complete.");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void CopyFiles( String Path_Src , String Path_Dst, String Extension)
+
+    String FileToSearch = Path_Src + "\*"+Extension;
+    String CurrFile;
+    int Handle = FileFindFirstEx(FileToSearch);
+
+    if (Handle != 0) then
+        CurrFile = FileNameFoundEx(Handle);
+        if (CurrFile != "") then
+            FileDelete(Path_Src + "\" + CurrFile);
+
+            while (FileFindNextEx(Handle) != false)
+                CurrFile = FileNameFoundEx(Handle);
+                //FileDelete(Path + "\" + CurrFile);
+                FileCopy( Path_Src+"\"+CurrFile+Extension , Path_Dst+"\"+CurrFile+Extension , False );
+            end
+        end
+        FileFindCloseEx(Handle);
+   end
+
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Create_Version()
+
+    Int NEXT_V;
+    String Version_Name;
+    Int P;
+
+
+    Version_Name = GetStrGateValue("Nom_Version",0);
+    NEXT_V = Get_Version_MAX() +1 ;
+    P = StrPos(Version_Name,"_V");
+    Version_Name = StrSubString(Version_Name,1,P-1);
+    MessageBox(Version_Name,NEXT_V);
+
+    SetStrGateValue("Version",0,NEXT_V);
+    SetStrGateValue("Nom_Version",0,Version_Name+"_V"+NEXT_V);
+    SetStrGateValue("AlarmeEventModifer",19,"1");
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function Int Get_Version_MAX()
+
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Versions_History.csv";
+   string TextRow;
+   int Max;
+   Int V;
+   //Bool Empty = false;
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+
+   if (FileHandle==0) then
+   //MessageBox("File Versions_History not Found","Error");
+      FileHandle=FileOpen(FullPathFileName,"wt");
+      V = StrToInt( Current_Version ) + 1 ;
+      FileWriteLn(FileHandle,V + ";" + GetStrGateValue("Nom_Version",0) +"_V"+V +";"+ GetDateString("/",True) +"_"+GetTimeString(":") );
+
+   Else
+
+    Max = 0;
+      While ( FileEof(FileHandle) == 0 )
+        TextRow = FileReadLn(FileHandle);// Read file
+        V = StrToInt( Fetch_AllCompteur(TextRow, 1 , ";") );
+        If ( V > Max ) then Max = V;  End
+      End
+
+   end
+
+
+   FileClose(FileHandle);
+   Return Max;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_BACKUP_Version()
+    String Source;
+    String Destination;
+    Int P=0;
+    String Part1;
+    String Part2;
+    String SearchPlace = "#InsertSource_Destination";
+    String Ln;
+
+    String L1 = "$Source = ";
+    String L2 = "$Destination =";
+    String Version_Ligne;
+    String DateStamp;
+    String Message;
+
+    int SHELL_FileHandle;
+    string SHELL_FullPathFileName = ENV_PATH+"\PowerShell\copy_Directory1.ps1";
+    int Master_SHELL_FileHandle;
+    string Master_SHELL_FullPathFileName = ENV_PATH+"\PowerShell\Master_Version_Copy_Dir.ps1";
+    int DELTA_FileHandle;
+    string DELTA_FullPathFileName = ENV_PATH+"\PowerShell\delta_Source_Destination.txt";
+
+
+    Insert_LastSTEP( "I1_Initalisation" );
+
+    IF ( GetStrGateValue("AlarmeEventModifer",19) == "0" ) Then
+        SetStrGateValue("AlarmeEventModifer",20,"No BackUp required. All is Ready .");
+        return;
+    End
+
+    //////////////////////////// create PowerShell File PS1 ///////////////////
+    Source = GetProjectPath();
+    P = Build_Occurence_operateur( Source ,"\") ;
+    P = Build_Fetch_Position(Source, P ,"\" );
+
+    Part1 = StrSubString(Source,1,P);
+    Part2 = GetStrGateValue("Nom_Version",0);
+    Destination = Part1+Part2;
+
+    DirectoryCreate(Destination);
+
+     If (Source == Destination) Then
+        SetStrGateValue("AlarmeEventModifer",20,"No BackUp required. All is Ready .");
+        return;
+     End
+
+    Message = Create_PS_XCopy( Source, Destination);
+
+    if ( Message != "" ) Then
+        SetStrGateValue("AlarmeEventModifer",20,Message);
+        Return;
+    End
+
+    SetStrGateValue("AlarmeEventModifer",20,"Start New Version Creation ...");
+    IF ( FileExist(DELTA_FullPathFileName) == True ) Then FileDelete( DELTA_FullPathFileName ); End
+    ShellExec("copy_Directory1.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+      SetStrGateValue("AlarmeEventModifer",20,"Copying files ...");
+      Message = PS_XCopy_Wait( ENV_PATH + "\PowerShell\delta_Source_Destination.txt" );
+
+       IF ( Message != "" ) Then
+       SetStrGateValue("AlarmeEventModifer",20, Message + " files Not Copied. New Version Creation is complete ." );
+       Sleep(5000);
+       End
+
+
+       Create_PS_Rename( Destination , Current_Version , GetStrGateValue("Version",0) );
+       SetStrGateValue("AlarmeEventModifer",20,"Rename files ...");
+       ShellExec("Rename.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+       MessageBox(Destination + "\PSRename.txt" ,"");
+       Message = PS_XCopy_Wait( Destination + "\PSRename.txt"  );
+
+       SetStrGateValue("AlarmeEventModifer",20, " You about to restart in order to switch to your new version. " );
+       Sleep(5000);
+
+       ////Reset Default Project to Destination Version
+       P = Build_Fetch_Position(Source, 2 ,"\" );
+       Part1 = StrSubString(Source,1,P-1);
+       SHELL_FullPathFileName = Part1 + "\dproject.cfg";
+       SHELL_FileHandle = FileOpen(SHELL_FullPathFileName,"wt");
+       FileWriteLn(SHELL_FileHandle,Part2);
+       FileClose(SHELL_FileHandle);
+       ///////////////////////////////////////////////
+
+       ////Update Version_History
+       DateStamp =  Create_DateStamp();
+       Version_Ligne = GetStrGateValue("Version",0) +";" + GetStrGateValue("Nom_Version",0) + ";" + DateStamp +";;;;"+Environnement+";"+ Destination;
+       UpdateVersion_History( Version_Ligne, Destination );
+       ////////////////////////
+       //Rename Project Title
+       Message = RenameProjectTitle( Destination +"\Config\","Project.cfg");
+       ////////////////////////
+       ////RenameProjectTitle( String path , String FileName)
+       ////////////////////////
+
+
+       ////Restart Winlog
+        ShellExec("RestartWinlog.exe" , "open" , ENV_PATH+"\PowerShell\" ,1,"","");
+       ////////////////////
+
+
+    //SetStrGateValue("AlarmeEventModifer",20," New Version Creation is complete .");
+
+end
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Function int Build_Occurence_operateur(String STR,String op)
+
+    int compteur = 0;
+    int i;
+    int L;
+
+    L=strlen(STR);
+
+    for i =1 to L do
+        if( StrSubString(STR,i,1)== op)then
+        compteur=compteur+1;
+        end
+    end
+
+    return compteur;
+end
+///////////////////////////////////////////////////////////////////////////////
+function int Build_Fetch_Position(string Item, int Col,String op)
+
+ string txt = Item;
+ String CODE = "";
+ int i;  int P;
+ int count =0;
+
+     for i =1  to Col do
+       P = StrPos(txt,op);
+       count=count+P;
+       txt = StrDelete(txt,1,P);
+     end
+
+     return count;
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Insert_LastSTEP( String STEP)
+
+    String FullPathFileName = ENV_PATH+"\V" + GetStrGateValue("Version",0) + "_LastSTEP.txt";
+    Int FileHandle;
+
+    FileHandle = FileOpen(FullPathFileName,"wt");
+        FileWriteLn(FileHandle,STEP +";" + GetDateString("/",True) + "_" + GetTimeString(":"));
+    FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void UpdateVersion_History( String Version_Ligne, String Path)
+
+    String FullPathFileName = ENV_PATH+"\Versions_History.csv";
+    Int FileHandle;
+
+    FileHandle = FileOpen(FullPathFileName,"at");
+        FileWriteLn(FileHandle,Version_Ligne);
+    FileClose(FileHandle);
+
+    FullPathFileName = Path + "\CurrentVersion.txt";
+    FileHandle = FileOpen(FullPathFileName,"wt");
+        FileWriteLn(FileHandle,Version_Ligne);
+    FileClose(FileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Create_PS_XCopy( String Source, String Destination )
+
+    String SearchPlace = "#InsertSource_Destination";
+    String Ln;
+
+    String L1 = "$Source = ";
+    String L2 = "$Destination =";
+    string L21 = "$DeltaSourceDestination =" +  CharToStr(34)+ ENV_PATH+"\PowerShell\delta_Source_Destination.txt"+ CharToStr(34);
+
+    int SHELL_FileHandle;
+    string SHELL_FullPathFileName = ENV_PATH+"\PowerShell\copy_Directory1.ps1";
+
+    int Master_SHELL_FileHandle;
+    string Master_SHELL_FullPathFileName = ENV_PATH+"\PowerShell\Master_Version_Copy_Dir.ps1";
+
+    DirectoryCreate(Destination);
+
+    Master_SHELL_FileHandle = FileOpen(Master_SHELL_FullPathFileName,"rt");
+
+    If ( Master_SHELL_FileHandle == 0 ) Then
+        //SetStrGateValue("AlarmeEventModifer",20,"Source PowerShell Copy File Not Found .");
+        return "Source PowerShell Copy File Not Found .";
+    End
+
+    SHELL_FileHandle = FileOpen(SHELL_FullPathFileName,"wt");
+    L1 = L1 + CharToStr(34) + Source + CharToStr(34);
+    L2 = L2 + CharToStr(34) + Destination + CharToStr(34);
+
+    While ( FileEof(Master_SHELL_FileHandle) == 0)
+
+     Ln = FileReadLn(Master_SHELL_FileHandle);
+        If ( Ln == SearchPlace ) Then
+
+            FileWriteLn(SHELL_FileHandle,L1);
+            FileWriteLn(SHELL_FileHandle,L2);
+            FileWriteLn(SHELL_FileHandle,L21);
+        Else
+            FileWriteLn(SHELL_FileHandle,Ln);
+        End
+    end
+
+    FileClose(SHELL_FileHandle);
+    FileClose(Master_SHELL_FileHandle);
+
+    Return "";
+end
+///////////////////////////////////////////////////////////////////////////////
+function String PS_XCopy_Wait( String Path)
+
+    String DELTA_FullPathFileName = Path;
+    int DELTA_FileHandle;
+    String Message;
+    String Ln;
+
+
+     While (FileExist(DELTA_FullPathFileName) == False)
+        Sleep(5000);
+     End
+
+      DELTA_FileHandle = FileOpen(DELTA_FullPathFileName,"rt");
+      Ln = FileReadLn(DELTA_FileHandle);
+      FileClose(DELTA_FileHandle);
+      Return Ln;
+end
+///////////////////////////////////////////////////////////////////////////////
+function String Create_PS_Rename( String Path, String SearchString, String RenameString )
+
+    String L1 = "$CurrentVersionWild = "+ CharToStr(34) +"*"+ SearchString +"*"+ CharToStr(34);
+    String L2 = "$CurrentVersion = " + CharToStr(34) + SearchString + CharToStr(34);
+    String L3 = "$NewVersion = " + CharToStr(34) + RenameString + CharToStr(34);
+    String L4 = "$Location = " + CharToStr(34)+ Path + CharToStr(34);
+    String L5 = "Set-Location -Path $Location";
+    String L6 = "Get-ChildItem -Filter $CurrentVersionWild -Recurse | Rename-Item -NewName {$_.name -replace $CurrentVersion, $NewVersion }| out-File PSRename.txt";
+    String PS_Rename_FullPathFileName = GetProjectPath() + "PSRename.txt" ;
+    String W_FullPathFileName = ENV_PATH + "\PowerShell\Rename.ps1";
+    int W_FileHandle = FileOpen(W_FullPathFileName,"wt");
+
+    IF ( FileExist(PS_Rename_FullPathFileName) == True ) Then FileDelete( PS_Rename_FullPathFileName ); End
+
+    FileWriteLn(W_FileHandle,L1);
+    FileWriteLn(W_FileHandle,L2);
+    FileWriteLn(W_FileHandle,L3);
+    FileWriteLn(W_FileHandle,L4);
+    FileWriteLn(W_FileHandle,L5);
+    FileWriteLn(W_FileHandle,L6);
+
+    FileClose(W_FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function String RenameProjectTitle( String path , String FileName)
+
+    String Search = "#Caption: ";
+    String Title = GetStrGateValue("Nom_Version",0);
+    String FullPathFileName = path + FileName;
+    String W_FullPathFileName = path + "W_"+FileName;
+    String Ligne;
+
+    ///String PS_Rename_FullPathFileName = GetProjectPath() + "PSRename.txt" ;
+    //String W_FullPathFileName = ENV_PATH + "\PowerShell\Rename.ps1";
+    int FileHandle = FileOpen(FullPathFileName,"rt");
+    If ( FileHandle == 0 ) Then  Return "Error"; End
+
+    int W_FileHandle = FileOpen(W_FullPathFileName,"wt");
+
+    while ( FileEof(FileHandle ) == 0)
+     Ligne = FileReadLn(FileHandle);
+
+        If ( StrPos(Ligne,Search) != 0 ) then
+         FileWriteLn(W_FileHandle,Search + Title);
+        Else
+         FileWriteLn(W_FileHandle,Ligne);
+        End
+
+    end
+
+    FileClose(FileHandle);
+    FileClose(W_FileHandle);
+    FileDelete(FullPathFileName);
+    FileRename(W_FullPathFileName,FullPathFileName);
+    Return "";
+end
+///////////////////////////////////////////////////////////////////////////////
+function void XCopyTemplates( String Template )
+
+    String Source ;
+    String Destination ;
+    String FullPathFileName =  ENV_PATH+"\PowerShell\delta_Source_Destination.txt";
+    String Message;
+
+            ////////////////// DeskTop
+            Source = GetProjectPath() + "\TEMPLATES_GENERATED\" + Template + "\T_DESKTOP" ;
+            Destination = GetProjectPath()+ "\Template\T_DESKTOP";
+
+            Message = Create_PS_XCopy( Source, Destination );
+
+            if ( Message != "" ) Then
+               SetStrGateValue("Errors_GTemplates",0,Message);
+               Return;
+            End
+
+            IF ( FileExist( FullPathFileName ) == True ) Then FileDelete( FullPathFileName ); End
+
+            ShellExec("copy_Directory1.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+            SetStrGateValue("Errors_GTemplates",0,"Copying files ...");
+            Message = PS_XCopy_Wait(FullPathFileName);
+            SetStrGateValue("Errors_GTemplates",0,Message);
+            ////////////////////////////////////////
+            ////////////////// WEB
+            Source = GetProjectPath() + "\TEMPLATES_GENERATED\" + Template + "\T_WEB" ;
+            Destination = GetProjectPath()+ "\WebTemplate";
+
+            Message = Create_PS_XCopy( Source, Destination );
+
+            if ( Message != "" ) Then
+               SetStrGateValue("Errors_GTemplates",0,Message);
+               Return;
+            End
+
+            IF ( FileExist( FullPathFileName ) == True ) Then FileDelete( FullPathFileName ); End
+
+            ShellExec("copy_Directory1.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+            SetStrGateValue("Errors_GTemplates",0,"Copying files ...");
+            Message = PS_XCopy_Wait(FullPathFileName);
+            SetStrGateValue("Errors_GTemplates",0,Message);
+            ////////////////////////////////////////
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Generate_WebNavigator()
+
+String Source;
+String Destination;
+String Message;
+String DELTA_FullPathFileName =  ENV_PATH+"\PowerShell\delta_Source_Destination.txt";
+
+
+             Destination = GetProjectPath() +"\files\WebTemplates\Templates";
+             Create_PS_DeleteFiles( Destination );
+             ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+
+            SetStrGateValue("Errors_GTemplates", 0 , " Create Web Navigator : Please wait ...");
+            Web_Navigator();
+
+            Source = GetProjectPath()+"\files\WebTemplates\Templates";
+            Destination = GetProjectPath()+"\WebTemplate";
+
+            Message = Create_PS_XCopy( Source, Destination);
+
+            if ( Message != "" ) Then
+                SetStrGateValue("AlarmeEventModifer",20,Message);
+                Return;
+            End
+
+            SetStrGateValue("Errors_GTemplates",0,"Creating The Web Navigator ...");
+            IF ( FileExist(DELTA_FullPathFileName) == True ) Then FileDelete( DELTA_FullPathFileName ); End
+            ShellExec("copy_Directory1.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+            SetStrGateValue("Errors_GTemplates",0,"Copying files ...");
+
+            Message = PS_XCopy_Wait( ENV_PATH + "\PowerShell\delta_Source_Destination.txt" );
+
+            IF ( Message != "" ) Then
+             SetStrGateValue("Errors_GTemplates",0, Message + " files Not Copied. New Version Creation is complete ." );
+             Sleep(5000);
+            End
+
+            SetStrGateValue("Errors_GTemplates",0,"Templates Copied .");
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Create_PS_ListOfFiles( String WorkDir, String Filter, String OutputFile)
+
+
+    String L1 = "$WorkDir = "+ CharToStr(34) + WorkDir + CharToStr(34);
+    String L2 = "$Include_Filter =" + CharToStr(34) + Filter + CharToStr(34);
+    String L3 = "$OUTFILE = " + CharToStr(34) + OutputFile + CharToStr(34);
+    String L4 = "Set-Location $WorkDir" ;
+    String L5 = "Get-ChildItem -recurse -include $Include_Filter| ForEach-Object { $_.Name } | set-content $OUTFILE -Encoding Ascii";
+
+
+    String PS_LOF_FullPathFileName = OutputFile;
+
+    String W_FullPathFileName = ENV_PATH + "\PowerShell\ListOfFiles.exe";
+    int W_FileHandle = FileOpen(W_FullPathFileName,"wt");
+
+   // IF ( FileExist(PS_LOF_FullPathFileName) == True ) Then FileDelete( PS_LOF_FullPathFileName ); End
+
+    FileWriteLn(W_FileHandle,L1);
+    FileWriteLn(W_FileHandle,L2);
+    FileWriteLn(W_FileHandle,L3);
+    FileWriteLn(W_FileHandle,L4);
+    FileWriteLn(W_FileHandle,L5);
+
+    FileClose(W_FileHandle);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void NEWCreation_T()
+
+String Destination;
+
+            Insert_LastSTEP( "DGG2.3_Generate Calculated Items" );
+
+            Generate_Formule();
+
+            Insert_LastSTEP( "CMR3.3_Create Templates" );
+
+               Destination = GetProjectPath() +"\WebTemplate";
+               Create_PS_DeleteFiles( Destination );
+               ShellExec("Delete.bat","open",ENV_PATH+"\PowerShell\",1,"","");
+
+
+            Create_Desk_Templates();
+
+            ///Copy DeskTOP & Web Templates
+            XCopyTemplates( "10" );
+            XCopyTemplates( "14" );
+            XCopyTemplates( "15" );
+            //////////////////////////////
+            /// Synoptique
+
+            /////////////////////////////
+            ///Web Navigator
+            Generate_WebNavigator();
+            //////////////////////////////
+
+            Insert_LastSTEP( "CMR3.3_Create Incidents" );
+            Generate_Alarmes_Formule();
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REVIEW_All_COMPTEUR()
+
+    SetNumGateValue( "User_Privilege" , 0 , 1 ) ;
+
+    Bouton_AllCompteur();
+
+end
+///////////////////////////////////////////////////////////////////////////////

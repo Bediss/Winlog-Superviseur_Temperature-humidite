@@ -1,0 +1,2 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CCD1;Cogen Elec;Electrique;CCD;VMZ Prod Elec;2;N200;*;*;Cogeneration;*;*;Reel;Type de Site;*;*;Cogeneration;!~CG WM14-DIN AV5 3 D S:R;!~R1:501:1:1:2;;;;;1;Cogeneration Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CCD2;STEG Elec;Electrique;CCD;VMZ Prod Elec;2;S200;*;*;STEG;*;*;Reel;Type de Site;*;*;STEG;!~CG WM14-DIN AV5 3 D S:R;!~R1:501:1:1:7;;;;;1;STEG Electrique;*

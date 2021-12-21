@@ -1,0 +1,2 @@
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGB1;Chaufferie Gaz;Gaz;CGB3;Detendeur 20-2B;4;S200;MC00;MC00;STEG;Chaufferie;Chaufferie;Reel;Process;*;*;Chaufferie;!~*;!~*;;;;;2;Chaufferie Gaz;*
+F:m3 J#0;m3 M#2;m3 A#3;m3 / T S-1#17;Inc J-1#20;§CGB2;Oxydeur;Gaz;CGB3;Detendeur 20-2B;4;S200;M310;M310;STEG;Oxydeur;Oxydeur;Reel;Process;*;*;Oxydeur;!~*;!~*;;;;;4;Oxydeur;*

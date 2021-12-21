@@ -1,0 +1,1458 @@
+global String ReportEmailAttachement = "";
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_UNIT()
+    POPUP_Start();
+    ShowPoPUPs("UNIT_SELECTOR");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Bouton_Report_Attachement()
+
+    //if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+    //FlagUses=True;
+        SetStrGateValue("AlarmeEventModifer",17,"Loading Repport. Please wait a few moments!");
+        ShowPoPUPsNoClose("InfoPopup");
+         POPUP_Display_Source = "ATTACHEMENT";
+         POPUP_REPORT_Start();
+        ShowPoPUPs("");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+         ShowPoPUPs("Report_SELECTOR_Attachement");
+  //FlagUses=False;
+
+end
+//////////////////////////////////// 1 ////////////////////////////////////////
+function void POPUP_Start()
+
+    String PDV;
+    string Energy;
+    String FileName;
+    Int FileHandle;
+    Bool Exit = false;
+    String ReadLigne;
+    String Ligne;
+    String Parent;
+    String PostCode;
+    String Level;
+    String PCP;
+    String PCD;
+    String PCC;
+    String Type;
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    String Query;
+    String UNIQUE_CODE = "";
+
+    SetStrGateValue("BU_Selected",0,"");
+    If ( FileExist( FullPathFileName ) == True ) Then
+        FileDelete(FullPathFileName);
+    End
+
+    PDV = "R";
+    DrillLevel = 0;
+
+    //PostCode = "M200";
+PostCode = GetStrGateValue("Setting_Bu_init",0);
+     Create_DrillDown_UNIT_First( PDV , PostCode );
+
+    PopupBU_Display(1,PDV);
+
+    SetNumGateValue("BU_Curr_Pos",0,1);
+End
+///////////////////////////////////////////////////////////////////////////////
+function void UNITSelected_1()
+    IF (GetStrGateValue("RowList",1) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(1);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_2()
+    IF (GetStrGateValue("RowList",2) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(2);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_3()
+    IF (GetStrGateValue("RowList",3) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(3);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_4()
+    IF (GetStrGateValue("RowList",4) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(4);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_5()
+    IF (GetStrGateValue("RowList",5) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(5);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_6()
+    IF (GetStrGateValue("RowList",6) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(6);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_7()
+    IF (GetStrGateValue("RowList",7) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(7);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_8()
+    IF (GetStrGateValue("RowList",8) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(8);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_9()
+    IF (GetStrGateValue("RowList",9) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(9);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_10()
+    IF (GetStrGateValue("RowList",10) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(10);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_11()
+    IF (GetStrGateValue("RowList",11) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(11);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_12()
+    IF (GetStrGateValue("RowList",12) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(12);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_13()
+    IF (GetStrGateValue("RowList",13) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(13);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_14()
+    IF (GetStrGateValue("RowList",14) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(14);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void UNITSelected_15()
+    IF (GetStrGateValue("RowList",15) == "" ) Then Return; End
+
+    LIGNESelectedUNIT(15);
+    SetStrGateValue("BU_Selected",0,"");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void LIGNESelectedUNIT( Int Row)
+
+    String PDV;
+    Int MaxRow = 15;
+    Int NumLigne;
+    int CurrentPosition ;
+    int i;
+
+    PDV ="R";
+    CurrentPosition = GetNumGateValue("BU_Curr_Pos",0);
+
+    NumLigne = CurrentPosition +Row-1;
+    START_POSITION = NumLigne;
+
+    Create_DrillDown_UNIT( PDV );
+
+
+   If ( NB_FILS > 0 ) Then
+
+    FOR i=1 to 15 do
+     SetStrGateValue("RowList",i,"");
+    END
+
+     If ( TOTALROW < MaxRow ) Then
+      CurrentPosition = 1;
+
+      Else
+
+        IF ( NB_FILS >  MaxRow ) then
+         CurrentPosition = START_POSITION;
+          Else
+           CurrentPosition = START_POSITION - NB_FILS/2;
+        End
+
+     End
+
+
+    CurrentPosition = PopupBU_Display(CurrentPosition,PDV);
+    SetNumGateValue("BU_Curr_Pos",0,CurrentPosition);
+
+   End
+end
+//////////////////////////////////// 2 ////////////////////////////////////////
+Function Void Create_DrillDown_UNIT( String PF_PDV)
+
+    int i = 1;
+    int K;
+    int Pos;
+    Bool Match = False;
+    Bool BDrill = false;
+    INT DrillFlag;
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    string WriteLigne;
+    string ReadLigne;
+    String POSTCODE_Ligne;
+    String PCode;
+    string Path = ENV_PATH + "\Files\AllCompteur\BU\";
+    String LEVELPathFileName;
+    int LEVELFileHandle;
+    String BUCode;
+    String PostCodePathFileName;
+    int PostCodeFileHandle;
+    String PostCodeLigne;
+    String Energy;
+    String Code;
+    String Name;
+    String PathFileName;
+    int FileHandle;
+    String SplitPath = ENV_PATH + "\Files\AllCompteur\BU\TempList\";
+    String SplitPathFileName;
+    int SplitFileHandle;
+    Int NBRFILS = 0;
+    String Gate_Name;
+    String Gate_Code;
+    string PathCode;
+    String PathName;
+    String C_Postcode;
+    String C_Level  = "*" ;
+    String C_Nomber = "*" ;
+    String Query;
+    BOOL QUERRY;
+    Bool EXIT = False;
+
+
+    i = 1;
+
+    LEVELPathFileName = ENV_PATH + "\Files\AllCompteur\BU\WBU.txt";
+    PathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    PostCodePathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+
+                LEVELFileHandle   = FileOpen(LEVELPathFileName,"wt");
+                FileHandle   = FileOpen(PathFileName,"rt");
+                TOTALROW = 0;
+                NB_FILS = 0;
+
+                While (FileEof(FileHandle)==0)
+                 ReadLigne = FileReadLn(FileHandle);
+
+                  If (ReadLigne != "")then
+                   TOTALROW = TOTALROW+1;
+
+                   if ( TOTALROW == START_POSITION ) then
+
+                        DrillLevel = DrillLevel+1;
+
+                        If ( PF_PDV == "P" )then
+                            DrillFlag = 3;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = "P";
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,14,";");
+                        End
+                        If ( PF_PDV == "D" )then
+                            DrillFlag = 4;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = "D";
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,15,";");
+                        End
+                        If ( PF_PDV == "C" )then
+
+                            DrillFlag = 5;
+                            FlagDrillC = "C";
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,16,";");
+
+                        End
+                        If ( PF_PDV == "R" )then
+                            DrillFlag = 6;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = "R";
+
+                        End
+
+                          Drill = FlagDrillP +";"+ FlagDrillD +";"+ FlagDrillC+";"+ FlagDrillR;
+
+                        IF ( FetchBU(ReadLigne,DrillFlag,";") == "*") then
+
+                        //Energy   = FetchBU(ReadLigne,10,";") ;
+                        BUCode = FetchBU(ReadLigne,8,";");
+
+                            WriteLigne = ModifDrill_SelectedLigne( ReadLigne, FlagDrillP,  FlagDrillD,  FlagDrillC,  FlagDrillR ) ;
+
+                            FileWriteLn(LEVELFileHandle,WriteLigne);
+                            TOTALROW = TOTALROW + 1;
+                         /////Initialisation
+                         //C_Level  = "*" ;
+                         //C_Nomber = "*" ;
+                         ///////////////////
+
+                         WriteLigne =  PF_PDV + ";"+ DrillLevel + ";*;*;*;*" ;
+
+
+                          IF (PF_PDV == "R") Then
+
+
+                                 PostCodeFileHandle = FileOpen(PostCodePathFileName,"rt");
+
+                                     While ( FileEof(PostCodeFileHandle) == 0 )
+                                        POSTCODE_Ligne = FileReadLn(PostCodeFileHandle);
+                                            If ( POSTCODE_Ligne != "" ) Then
+
+                                                PCode = FetchBU(POSTCODE_Ligne,3,";");
+
+                                                //MessageBox(PCode,BUCode);
+
+                                                If ( PCode == BUCode) Then
+                                                 //MessageBox(BUCode,PCode);
+                                                    Code = FetchBU(POSTCODE_Ligne,1,";");
+                                                    Name = FetchBU(POSTCODE_Ligne,2,";");
+                                                        TOTALROW = TOTALROW + 1;
+                                                        NB_FILS = NB_FILS + 1;
+                                                    FileWriteLn(LEVELFileHandle, WriteLigne +";"+ PCode + ";" + Code +";"+ Name );
+                                                    //Found = True ;
+                                                End
+                                            End
+                                     End
+                                    FileClose(PostCodeFileHandle);
+
+                             End // PF_PDV != "R"
+
+                         Else// Drill Flag  != "*"
+
+                         FileWriteLn(LEVELFileHandle,ReadLigne);
+                         End// Drill Flag  == "*"
+
+                     Else//TOTALROW != START_POSITION
+                      If (ReadLigne != "") Then
+                        FileWriteLn(LEVELFileHandle,ReadLigne);
+                        //TOTALROW = TOTALROW + 1;
+                      End
+                     End //TOTALROW == START_POSITION
+
+                  End //ReadLigne != ""
+
+                End // While
+
+              FileClose(LEVELFileHandle);
+              FileClose(FileHandle);
+
+    FileCopy(ENV_PATH + "\Files\AllCompteur\BU\BU.txt",ENV_PATH + "\Files\AllCompteur\BU\BUBack.txt",False);
+    FileCopy(ENV_PATH + "\Files\AllCompteur\BU\WBU.txt",ENV_PATH + "\Files\AllCompteur\BU\BU.txt",False);
+    FileDelete(ENV_PATH + "\Files\AllCompteur\BU\WBU.txt");
+
+End
+//////////////////////////////////// 3 ////////////////////////////////////////
+Function Void Create_DrillDown_UNIT_First( String PF_PDV , String POSTCODE)
+
+    String PathFileName ;
+    Int FileHandle   ;
+    String PostCodePathFileName;
+    Int PostCodeFileHandle;
+
+    String POSTCODE_Ligne;
+    String Name;
+
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    String WriteLigne;
+    String PCode;
+    Int i = 0;
+
+    Drill = FlagDrillP +";"+ FlagDrillD +";"+ FlagDrillC+";"+ FlagDrillR;
+    WriteLigne =  PF_PDV + ";"+ DrillLevel +";"+ Drill ;
+
+    PostCodePathFileName = ENV_PATH + "\Files\AllCompteur\Unite.csv";
+    PostCodeFileHandle = FileOpen(PostCodePathFileName,"rt");
+
+    PathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    FileHandle   = FileOpen(PathFileName,"wt");
+
+    While ( FileEof(PostCodeFileHandle) == 0 )
+
+     POSTCODE_Ligne = FileReadLn(PostCodeFileHandle);
+
+       If ( POSTCODE_Ligne != "" ) Then
+        PCode = FetchBU(POSTCODE_Ligne,1,";");
+         PCode = FetchBU(PCode,3,"&");
+         If ( PCode == POSTCODE) Then
+          Name = FetchBU(POSTCODE_Ligne,2,";");
+            i = i+1;
+          FileWriteLn(FileHandle, WriteLigne +";*;"+ PCode +";"+ Name );
+         End
+       End
+    End
+
+    TOTALROW = i;
+
+    FileClose(PostCodeFileHandle);
+    FileClose(FileHandle);
+End
+//////////////////////////////////// 4 ////////////////////////////////////////
+function void Bouton_Report()
+//MessageBox("report","");
+        SetStrGateValue("AlarmeEventModifer",17,"Loading Repport. Please wait a few moments!");
+        POPUP_Display_Source = "REPORT";
+        ShowPoPUPs("InfoPopup");
+
+    if ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 2 ) Then
+
+        Filtre_Select_Report_Attachement();
+         ShowPoPUPs("Report_Filtre_Imprimer");
+    Else
+        if ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 1 ) Then
+          Select_Report();
+
+  SetStrGateValue("BU_Template",0,GetStrGateValue("TableauNames",GetNumGateValue("SelectTableau",0)));
+    SetStrGateValue("BU_Energy",0,GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0)));
+    SetStrGateValue("EV_Measure",0,GetStrGateValue("ViewNames", GetNumGateValue("SelectView",0)));
+        End
+    end
+
+
+     TPageCloseByName("InfoPopup");
+      SetStrGateValue("AlarmeEventModifer",17,"");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SELECT_T_E_V_REPORT()
+
+    String PDV;
+    string Energy;
+    String FileName;
+    Int FileHandle;
+    Bool Exit = false;
+    String ReadLigne;
+    String Ligne;
+    String Parent;
+    String PostCode;
+    String Level;
+    String PCP;
+    String PCD;
+    String PCC;
+    String Type;
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    String Query;
+    String UNIQUE_CODE = "";
+    String Compteur;
+
+
+    SetStrGateValue("BU_Template",0,GetStrGateValue("TableauNames",GetNumGateValue("SelectTableau",0)));
+    SetStrGateValue("BU_Energy",0,GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0)));
+    SetStrGateValue("EV_Measure",0,GetStrGateValue("ViewNames", GetNumGateValue("SelectView",0)));
+
+    SetStrGateValue("BU_Selected",0,"");
+    If ( FileExist( FullPathFileName ) == True ) Then
+        FileDelete(FullPathFileName);
+    End
+
+      Create_DrillDown_Report_First();
+
+    PopupBU_Display(1,PDV);
+
+    SetNumGateValue("BU_Curr_Pos",0,1);
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SELECT_VIEW_REPORT()
+
+    String PDV;
+    string Energy;
+    String FileName;
+    Int FileHandle;
+    Bool Exit = false;
+    String ReadLigne;
+    String Ligne;
+    String Parent;
+    String PostCode;
+    String Level;
+    String PCP;
+    String PCD;
+    String PCC;
+    String Type;
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    String Query;
+    String UNIQUE_CODE = "";
+    String Compteur;
+
+
+
+    SetStrGateValue("BU_Selected",0,"");
+    If ( FileExist( FullPathFileName ) == True ) Then
+        FileDelete(FullPathFileName);
+    End
+
+    if (GetNumGateValue("Select_PDV",0) == 1)     then PDV = "C";  end
+    if (GetNumGateValue("Select_PDV",0) == 2)     then PDV = "D";  end
+    if (GetNumGateValue("Select_PDV",0) == 3)     then PDV = "P";  end
+    if (GetNumGateValue("Select_PDV",0) == 4)     then PDV = "R";  end
+
+    DrillLevel = 0;
+    PostCode = GetStrGateValue("Setting_Bu_init",0);
+
+    Compteur = GetStrGateValue("Setting_CCode",0);
+      Create_DrillDown_Report_First();
+
+    PopupBU_Display(1,PDV);
+
+    SetNumGateValue("BU_Curr_Pos",0,1);
+
+end
+//////////////////////////////////// 1 ////////////////////////////////////////
+function void POPUP_REPORT_Start()
+
+    String PDV;
+    string Energy;
+    String FileName;
+    Int FileHandle;
+    Bool Exit = false;
+    String ReadLigne;
+    String Ligne;
+    String Parent;
+    String PostCode;
+    String Level;
+    String PCP;
+    String PCD;
+    String PCC;
+    String Type;
+    String FullPathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    String Query;
+    String UNIQUE_CODE = "";
+    String Compteur;
+
+    Bu_Access(); // Initialise Gates in default values
+
+    SetStrGateValue("BU_Selected",0,"");
+    If ( FileExist( FullPathFileName ) == True ) Then
+        FileDelete(FullPathFileName);
+    End
+
+      Create_DrillDown_Report_First();
+
+    PopupBU_Display(1,PDV);
+
+    SetNumGateValue("BU_Curr_Pos",0,1);
+End
+///////////////////////////////////////////////////////////////////////////////
+function void Create_DrillDown_Report_First()
+
+    String PathFileName ;
+    Int FileHandle   ;
+    String PostCodePathFileName;
+    Int PostCodeFileHandle;
+
+    String Ligne;
+    String Name;
+
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    String WriteLigne;
+    String PCode;
+    Int i = 0;
+    String Tableau;
+    String View;
+    String Energy;
+    String PostCode;
+    String Compteur;
+    String PDV;
+    String VEPCT;
+
+    String Query_INPUTFILE;    String Query_OUTFILE;    String Query_PARAMETERS = "";
+    String Query_TABLEAUX;  String Query_VIEW;  String Query_ENERGY;  String Query_POSTCODE;
+    Int Query_PARAMETERS_NUM = 0;
+
+
+    Bool FoundBU = False;
+
+    Read_Tableau();
+
+    if (GetNumGateValue("Select_PDV",0) == 1)     then PDV = "C";  end
+    if (GetNumGateValue("Select_PDV",0) == 2)     then PDV = "D";  end
+    if (GetNumGateValue("Select_PDV",0) == 3)     then PDV = "P";  end
+    if (GetNumGateValue("Select_PDV",0) == 4)     then PDV = "R";  end
+
+    DrillLevel = 0;
+    PostCode = GetStrGateValue("Setting_Bu_init",0);
+
+    Compteur = GetStrGateValue("Setting_CCode",0);
+
+    Drill = FlagDrillP +";"+ FlagDrillD +";"+ FlagDrillC+";"+ FlagDrillR;
+    WriteLigne =  PDV + ";"+ DrillLevel +";"+ Drill ;
+
+    Tableau =  GetNumGateValue("SelectTableau",0);
+    Energy  = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    View    = GetStrGateValue("ReportViewNames", GetNumGateValue("SelectView",0));
+    Query_PARAMETERS = "";
+
+    SetStrGateValue("BU_Template",0,GetStrGateValue("TableauNames",GetNumGateValue("SelectTableau",0)));
+
+    PostCodePathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    PostCodeFileHandle = FileOpen(PostCodePathFileName,"rt");
+
+     Ligne = FileReadLn(PostCodeFileHandle); //Header
+     FileClose(PostCodeFileHandle);
+
+     Query_INPUTFILE = PostCodePathFileName;
+     Query_OUTFILE   = ENV_PATH + "\Files\DATAMODELFiles\Rapport\RESULT-SEARCH.csv";
+
+     Query_TABLEAUX = FetchBU(Ligne,3,";");
+     Query_ENERGY   = FetchBU(Ligne,5,";");
+     Query_VIEW     = FetchBU(Ligne,7,";");
+
+     Query_POSTCODE = FetchBU(Ligne,9,";");
+
+     Query_PARAMETERS = Query_PARAMETERS + Query_TABLEAUX + ":" + Tableau + ";";
+     Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+
+      VEPCT = GetStrGateValue("Tableau_VEPC",GetNumGateValue("SelectTableau",0));
+
+
+      IF ( StrSubString(VEPCT,1,1) == "1") Then
+        Query_PARAMETERS = Query_PARAMETERS + Query_ENERGY + ":" + Energy + ";";
+        Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+      End
+
+      IF ( StrSubString(VEPCT,5,1) == "1") Then
+        Query_PARAMETERS = Query_PARAMETERS + Query_VIEW + ":" + View + ";";
+        Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+      End
+
+          IF ( StrSubString(VEPCT,3,1) == "D" ) Then
+            Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":*&" + PostCode + "&*;";
+            Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+          Else
+
+                IF ( StrSubString(VEPCT,3,1) == "P" ) Then
+                    Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":" + PostCode + "&*&*;";
+                    Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+                Else
+
+                    Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":*&*&" + PostCode + ";";
+                    Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+
+                End
+          End
+
+           /// Pour afficher les points de mesures en tableaux 17 or le tableaux 18 or le synoptique 11
+      IF ( Tableau == "17" || Tableau == "18" || Tableau == "11") Then
+        Query_PARAMETERS =  Query_TABLEAUX + ":" + Tableau + ";";
+        Query_PARAMETERS_NUM = 1;
+      End
+     //////////////////////////////////////////////////////////////////////////
+     // SearchInFileWithPS ()
+     //////////////////////////////////////////////////////////////////////////
+        SearchInFileWithPS( Query_INPUTFILE ,
+                            Query_OUTFILE ,
+                            Query_PARAMETERS_NUM ,
+                            Query_PARAMETERS );
+    ///////////////////////////////////////////////////////////////////////////
+    // Read OUTPUT File Writed by Powershell
+    ///////////////////////////////////////////////////////////////////////////
+    PostCodePathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    PostCodeFileHandle = FileOpen(Query_OUTFILE,"rt");
+TOTALROW = 0;
+    PathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+    FileHandle   = FileOpen(PathFileName,"wt");
+
+    FileReadLn(PostCodeFileHandle); // HEADER
+
+    While ( FileEof(PostCodeFileHandle) == 0 )
+        Ligne = FileReadLn(PostCodeFileHandle);
+        IF ( Ligne != "" ) Then
+            Ligne = WriteLigne + ";*;" + Ligne ;
+            FileWriteLn(FileHandle,Ligne);
+            TOTALROW = TOTALROW+1;
+        End
+    End
+
+    FileClose(FileHandle);
+    FileClose(PostCodeFileHandle);
+end
+///////////////////////////////////////////////////////////////////////////////
+function void SearchInFileWithPS( String INPUT_File , String OUTPUT_File , Int NBR_Parameters , String Parameters )
+
+    String FullPathFileName = "C:\Winlog\PowerShell\Query_CONFIG.txt";
+    Int FileHandle = FileOpen(FullPathFileName,"wt");
+
+    int i;
+    String P;
+
+    If ( FileExist( OUTPUT_File ) == True ) Then FileDelete(OUTPUT_File);  End
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Create Config File For Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+    FileWriteLn(FileHandle,INPUT_File);
+    FileWriteLn(FileHandle,OUTPUT_File);
+    FileWriteLn(FileHandle,NBR_Parameters);
+
+    For i = 1 to NBR_Parameters do
+        P = FetchBU(Parameters,i,";");
+        FileWriteLn(FileHandle,P);
+    End
+
+    FileClose(FileHandle);
+    ///////////////////////////////////////////////////////////////////////////
+    // Execute Powershell Search
+    ///////////////////////////////////////////////////////////////////////////
+
+      ShellExec("Query.exe" , "open" , POWERSHELL_PATH_EXECUTION ,1,"","");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Waite Powershell Search Complete
+    ///////////////////////////////////////////////////////////////////////////
+        Sleep(500);
+        While (FileExist( OUTPUT_File ) == False )
+         Sleep(500);
+        End
+
+
+end
+///////////////////////////////////////////////////////////////////////////////
+Function Void Create_DrillDown_Report( String PF_PDV )
+    int i = 1;
+    int K;
+    int Pos;
+    Bool Match = False;
+    Bool BDrill = false;
+    INT DrillFlag;
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    string WriteLigne;
+    string ReadLigne;
+    string Path = ENV_PATH + "\Files\AllCompteur\BU\";
+    String LEVELPathFileName;
+    int LEVELFileHandle;
+    String Energy;
+    String PostCodePathFileName;
+    int PostCodeFileHandle;
+    String PostCodeLigne;
+
+    String PathFileName;
+    int FileHandle;
+    String SplitPath = ENV_PATH + "\Files\AllCompteur\BU\TempList\";
+    String SplitPathFileName;
+    int SplitFileHandle;
+    Int NBRFILS = 0;
+    String Gate_Name;
+    String Gate_Code;
+    string PathCode;
+    String PathName;
+    String C_Postcode;
+    String C_Level  = "*" ;
+    String C_Nomber = "*" ;
+    String Query;
+    BOOL QUERRY;
+    Bool EXIT = False;
+    Int NBR_FoundBU = 0;
+    INt TotalFils;
+    String PARENT;
+
+        Gate_Name = "Compteur_Name" + PF_PDV;
+        Gate_Code = "Compteur_PC" + PF_PDV;
+
+        LEVELPathFileName = ENV_PATH + "\Files\AllCompteur\BU\WBU.txt";
+        PathFileName = ENV_PATH + "\Files\AllCompteur\BU\BU.txt";
+
+                LEVELFileHandle   = FileOpen(LEVELPathFileName,"wt");
+                FileHandle   = FileOpen(PathFileName,"rt");
+                TOTALROW = 0;
+                NB_FILS = 0;
+                While (FileEof(FileHandle)==0)
+                 ReadLigne = FileReadLn(FileHandle);
+
+                  If (ReadLigne != "")then
+                   TOTALROW = TOTALROW+1;
+
+                   if ( TOTALROW == START_POSITION ) then
+
+                        DrillLevel = DrillLevel+1;
+
+                        If ( PF_PDV == "P" )then
+                            DrillFlag = 3;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = "P";
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,16,";");
+                            C_Postcode = FetchBU(C_Postcode,1,"&");
+                        End
+                        If ( PF_PDV == "D" )then
+                            DrillFlag = 4;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = "D";
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,16,";");
+                            C_Postcode = FetchBU(C_Postcode,2,"&");
+                        End
+                        If ( PF_PDV == "C" )then
+
+                            DrillFlag = 5;
+                            FlagDrillC = "C";
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = FetchBU(ReadLigne,6,";");
+                            C_Postcode = FetchBU(ReadLigne,16,";");
+                            C_Postcode = FetchBU(C_Postcode,3,"&");
+
+                        End
+                        If ( PF_PDV == "R" )then
+                            DrillFlag = 6;
+                            FlagDrillC = FetchBU(ReadLigne,5,";");
+                            FlagDrillD = FetchBU(ReadLigne,4,";");
+                            FlagDrillP = FetchBU(ReadLigne,3,";");
+                            FlagDrillR = "R";
+                            C_Postcode = FetchBU(ReadLigne,16,";");
+                            C_Postcode = FetchBU(C_Postcode,3,"&");
+
+                        End
+
+                          Drill = FlagDrillP +";"+ FlagDrillD +";"+ FlagDrillC+";"+ FlagDrillR+";";
+
+
+
+                        IF ( FetchBU(ReadLigne,DrillFlag,";") == "*") then
+
+
+
+                            WriteLigne = ModifDrill_SelectedLigne( ReadLigne, FlagDrillP,  FlagDrillD,  FlagDrillC,  FlagDrillR ) ;
+
+                            FileWriteLn(LEVELFileHandle,WriteLigne);
+
+                            PARENT =  FetchBU(ReadLigne,18,";");
+                         /////Initialisation
+                         C_Level  = "*" ;
+                         C_Nomber = "*" ;
+                         ///////////////////
+
+                         WriteLigne =  PF_PDV + ";"+ DrillLevel + ";*;*;*;*;" ;
+
+                          //IF (PF_PDV != "R") Then
+
+                            NBRFILS =  Drill_PC_List( C_Postcode );
+
+                                //Parent = "*";
+
+                                 PostCodePathFileName = ENV_PATH + "\Files\AllCompteur\BU\DrillPCList.txt";
+                                 PostCodeFileHandle = FileOpen(PostCodePathFileName,"rt");
+
+                                  for i = 1  to NBRFILS do
+                                   PostCodeLigne = FileReadLn(PostCodeFileHandle);
+
+                                   C_Postcode = FetchBU(PostCodeLigne,1,";");
+
+                                    NBR_FoundBU = Found_Report( LEVELFileHandle , PF_PDV , C_Postcode , PARENT );
+                                    TotalFils  = TotalFils + NBR_FoundBU;
+                                  end // For
+
+                                    TOTALROW = TOTALROW+TotalFils;
+                                    NB_FILS =  TotalFils;
+
+
+                         Else// Drill Flag  != "*"
+                         FileWriteLn(LEVELFileHandle,ReadLigne);
+                         End// Drill Flag  == "*"
+
+
+                     Else//TOTALROW != START_POSITION
+                      FileWriteLn(LEVELFileHandle,ReadLigne);
+                     End //TOTALROW == START_POSITION
+
+                  End //ReadLigne != ""
+
+                End // While
+
+              FileClose(LEVELFileHandle);
+              FileClose(FileHandle);
+
+    FileCopy(ENV_PATH + "\Files\AllCompteur\BU\BU.txt",ENV_PATH + "\Files\AllCompteur\BU\BUBack.txt",False);
+    FileCopy(ENV_PATH + "\Files\AllCompteur\BU\WBU.txt",ENV_PATH + "\Files\AllCompteur\BU\BU.txt",False);
+    FileDelete(ENV_PATH + "\Files\AllCompteur\BU\WBU.txt");
+End
+///////////////////////////////////////////////////////////////////////////////
+Function Int Found_Report( Int LEVELFileHandle , String PDV, String POSTCODE , String PARENT )
+
+    string  FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\Reporting.csv";
+    int     FileHandle;
+
+    String  RESULT_FullPathFileName = ENV_PATH + "\Files\DATAMODELFiles\Rapport\RESULT_SearchFile.txt";
+    int     RESULT_FileHandle;
+
+    String  CONFIG_FullPathFileName = ENV_PATH + "\PowerShell\Search_File_Config.txt";
+    int     CONFIG_FileHandle;
+
+    String Tableau;
+    String Energy;
+    String View;
+    String Line;
+    Bool Found = False;
+    Bool Exit = False;
+    String RETURNED_LINE = "";
+
+    String FlagDrillC = "*";
+    String FlagDrillD = "*";
+    String FlagDrillP = "*";
+    String FlagDrillR = "*";
+    String Drill ="*";
+    String WriteLigne;
+    String UNIQUECODE;
+    String CONFIG_UNIQUECODE;
+    String HEADER;
+    Int i = 0;
+
+    String Query_INPUTFILE;    String Query_OUTFILE;    String Query_PARAMETERS = "";
+    String Query_TABLEAUX;  String Query_VIEW;  String Query_ENERGY;  String Query_POSTCODE;
+    Int Query_PARAMETERS_NUM = 0;   String VEPCT;
+
+    WriteLigne =  PDV + ";"+ DrillLevel + ";*;*;*;*;*;" ;
+
+    Tableau =  GetNumGateValue("SelectTableau",0);
+    Energy  = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+    View    = GetStrGateValue("ReportViewNames", GetNumGateValue("SelectView",0));
+
+    FileDelete(RESULT_FullPathFileName);
+
+    FileHandle = FileOpen(FullPathFileName,"rt");
+    HEADER = FileReadLn(FileHandle);
+    FileClose(FileHandle);
+
+     Query_TABLEAUX = FetchBU(HEADER,3,";");
+     Query_ENERGY   = FetchBU(HEADER,5,";");
+     Query_VIEW     = FetchBU(HEADER,7,";");
+     Query_POSTCODE = FetchBU(HEADER,9,";");
+
+     Query_PARAMETERS = Query_PARAMETERS + Query_TABLEAUX + ":" + Tableau + ";";
+     Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+
+     VEPCT = GetStrGateValue("Tableau_VEPC",GetNumGateValue("SelectTableau",0));
+
+      IF ( StrSubString(VEPCT,1,1) == "1") Then
+        Query_PARAMETERS = Query_PARAMETERS + Query_ENERGY + ":" + Energy + ";";
+        Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+      End
+
+      IF ( StrSubString(VEPCT,5,1) == "1") Then
+        Query_PARAMETERS = Query_PARAMETERS + Query_VIEW + ":" + View + ";";
+        Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+      End
+
+          IF ( StrSubString(VEPCT,3,1) == "D" ) Then
+            Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":*&" + POSTCODE + "&*;";
+            Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+          Else
+
+                IF ( StrSubString(VEPCT,3,1) == "P" ) Then
+                    Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":" + POSTCODE + "&*&*;";
+                    Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+                Else
+
+                    Query_PARAMETERS = Query_PARAMETERS + Query_POSTCODE + ":*&*&" + POSTCODE + ";";
+                    Query_PARAMETERS_NUM = Query_PARAMETERS_NUM +1;
+
+                End
+          End
+
+
+     //////////////////////////////////////////////////////////////////////////
+     // SearchInFileWithPS ()
+     //////////////////////////////////////////////////////////////////////////
+        SearchInFileWithPS( FullPathFileName ,
+                            RESULT_FullPathFileName ,
+                            Query_PARAMETERS_NUM ,
+                            Query_PARAMETERS );
+    ///////////////////////////////////////////////////////////////////////////
+    // Read OUTPUT File Writed by Powershell
+    ///////////////////////////////////////////////////////////////////////////
+    FileHandle = FileOpen(RESULT_FullPathFileName,"rt");
+
+    FileReadLn(FileHandle); // HEADER
+    //NB_FILS = 0;
+    i=0;
+    While ( FileEof(FileHandle) == 0 )
+        HEADER = FileReadLn(FileHandle);
+        IF ( HEADER != "" ) Then
+            HEADER = WriteLigne + HEADER ;
+            FileWriteLn(LEVELFileHandle,HEADER);
+            TOTALROW = TOTALROW+1;
+            i = i +1;
+        End
+    End
+
+    FileClose(FileHandle);
+    Return i;
+End
+///////////////////////////////////////////////////////////////////////////////
+function Bool QueryReport(String PDV , string Tableau, String View, string Energy, string PostCode,String CCODE , string PARENT , String LINE)
+    string VEPCT ;
+    //String VEPCT_Code;
+    string V;
+    string E;
+    string P;
+    string C;
+    string T;
+    int POS;
+    String Name;
+    Int CurrTABLEAU;
+    Bool TABLEAU_Found = True;
+    Bool ENERGY_Found = True;
+    Bool VIEW_Found = True;
+    Bool POSTCODE_C_Found = True;
+    Bool POSTCODE_D_Found = True;
+    Bool POSTCODE_P_Found = True;
+    Bool COMPTEUR_Found = True;
+    Bool Condition = True;
+
+    String READ_TABLEAU;
+    String READ_ENRGY;
+    String READ_VIEW;
+    String READ_POSTCODE;
+    String READ_POSTCODE_C;
+    String READ_POSTCODE_D;
+    String READ_POSTCODE_P;
+    String READ_COMPTEUR;
+    String Query_PCC;
+    String Query_PCD;
+    String Query_PCP;
+    String IN_UNIQUECODE;
+    String TEMP_UNIQUECODE;
+    String REALCOMPTEUR;
+
+    READ_TABLEAU    =  FetchBU(LINE,3,";");
+    READ_ENRGY      =  FetchBU(LINE,5,";");
+    READ_VIEW       =  FetchBU(LINE,7,";");
+    READ_POSTCODE   =  FetchBU(LINE,9,";");
+    READ_POSTCODE_P =  FetchBU(READ_POSTCODE,1,"&");
+    READ_POSTCODE_D =  FetchBU(READ_POSTCODE,2,"&");
+    READ_POSTCODE_C =  FetchBU(READ_POSTCODE,3,"&");
+    READ_COMPTEUR   =  FetchBU(LINE,11,";");
+
+    Query_PCC = FetchBU(PostCode,3,"&");
+    Query_PCD = FetchBU(PostCode,2,"&");
+    Query_PCP = FetchBU(PostCode,1,"&");
+
+    IF ( CCODE != "" || CCODE != "*" ) Then
+      IN_UNIQUECODE   = GET_UNIQUE_CODE(Tableau, View , Energy , "*/*/"+PostCode , CCODE);
+    End
+    IF ( PARENT != "" || PARENT != "*" ) Then
+      COMPTEUR_Found = Found_PARENT( READ_COMPTEUR , PARENT );
+
+      IF ( COMPTEUR_Found == True ) Then
+
+           If ( PDV == "C" )Then
+                IF ( READ_POSTCODE_C == Query_PCC) Then
+                 IN_UNIQUECODE   = GET_UNIQUE_CODE(Tableau, View , Energy , "*/*/"+READ_POSTCODE_C , READ_COMPTEUR);
+                Else
+                 Return False;
+                End
+           End
+
+
+       End
+
+    End
+
+    TEMP_UNIQUECODE = FetchBU(LINE,19,";");
+
+
+    IF (TEMP_UNIQUECODE == IN_UNIQUECODE) Then
+        Return True;
+
+     Else
+        Return False;
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void REPORTSelected_1()
+    IF (GetStrGateValue("RowList",1) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(1);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_2()
+    IF (GetStrGateValue("RowList",2) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(2);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_3()
+    IF (GetStrGateValue("RowList",3) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(3);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_4()
+    IF (GetStrGateValue("RowList",4) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(4);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_5()
+    IF (GetStrGateValue("RowList",5) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(5);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_6()
+    IF (GetStrGateValue("RowList",6) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(6);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_7()
+    IF (GetStrGateValue("RowList",7) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(7);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_8()
+    IF (GetStrGateValue("RowList",8) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(8);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_9()
+    IF (GetStrGateValue("RowList",9) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(9);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_10()
+    IF (GetStrGateValue("RowList",10) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(10);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_11()
+    IF (GetStrGateValue("RowList",11) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(11);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_12()
+    IF (GetStrGateValue("RowList",12) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(12);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_13()
+    IF (GetStrGateValue("RowList",13) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(13);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_14()
+    IF (GetStrGateValue("RowList",14) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(14);
+    SetStrGateValue("BU_Selected",0,"");
+end
+/**************************************/
+function void REPORTSelected_15()
+    IF (GetStrGateValue("RowList",15) == "" ) Then Return; End
+    if FlagUses == True Then MessageBox("S'il vous plaît, attendez. Le système termine les tâches en cours!","Attention"); return; end
+
+    LIGNESelectedReport(15);
+    SetStrGateValue("BU_Selected",0,"");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void LIGNESelectedReport( Int Row )
+
+    String PDV;
+    Int MaxRow = 15;
+    Int NumLigne;
+    int CurrentPosition ;
+    int i;
+
+FlagUses=True;
+    CurrentPosition = GetNumGateValue("BU_Curr_Pos",0);
+
+    NumLigne = CurrentPosition +Row-1;
+    START_POSITION = NumLigne;
+
+    if (GetNumGateValue("Select_PDV",0) == 1)     then PDV = "C";  end
+    if (GetNumGateValue("Select_PDV",0) == 2)     then PDV = "D";  end
+    if (GetNumGateValue("Select_PDV",0) == 3)     then PDV = "P";  end
+    if (GetNumGateValue("Select_PDV",0) == 4)     then PDV = "R";  end
+
+        SetStrGateValue("AlarmeEventModifer",17,"Loading Repport. Please wait a few moments!");
+        ShowPoPUPsNoClose("InfoPopup");
+        Create_DrillDown_Report( PDV );
+        TPageCloseByName("InfoPopup");
+        SetStrGateValue("AlarmeEventModifer",17,"");
+
+
+   If ( NB_FILS > 0 ) Then
+
+    FOR i=1 to 15 do
+     SetStrGateValue("RowList",i,"");
+    END
+
+     If ( TOTALROW < MaxRow ) Then
+      CurrentPosition = 1;
+
+      Else
+
+        IF ( NB_FILS >  MaxRow ) then
+         CurrentPosition = START_POSITION;
+          Else
+           CurrentPosition = START_POSITION - NB_FILS/2;
+        End
+
+     End
+
+
+    CurrentPosition = PopupBU_Display(CurrentPosition,PDV);
+
+    SetNumGateValue("BU_Curr_Pos",0,CurrentPosition);
+
+   End
+   FlagUses=False;
+end
+///////////////////////////////////////////////////////////////////////////////
+function Bool Found_PARENT( String Compteur , String PARENT_TO_SEARCH )
+
+    int i;
+    Int Max = GetNumGateValue("MaxCompteur",0);
+    String Parent = "";
+
+    For i = 1 to Max do
+        If ( GetStrGateValue("Compteur_Code",i) == Compteur ) Then
+
+         Parent = GetStrGateValue("Compteur_Parent",i);
+         i = Max+1;
+        End
+    End
+
+    IF ( Parent == PARENT_TO_SEARCH ) Then
+        Return True;
+    Else
+        Return False;
+    End
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Select_Report()
+
+    String MODE = "";
+    String Ligne;
+    String RETURNED_LINE = "";
+
+    String CurrTableau;
+    String CurrCode;
+    String CurrPC;
+    String TView;
+    String Tenergy;
+    String ReportLine;
+    String UNIQUECODE;
+    Bool USE_UNIQUE = False;
+
+    String Report_Path  ;
+    String Report_Name;
+    String DD;  String MM;  String YYYY;    String HH; String mm;
+    Int P;
+    Int i;
+    Int DrillFilds = 7;
+
+    CurrTableau = GetNumGateValue("SelectTableau",0);
+    Tenergy = GetStrGateValue("Energy_Name",GetNumGateValue("SelectEnergie",0));
+
+    TView = GetStrGateValue("ReportViewNames", GetNumGateValue("SelectView",0) );
+
+    CurrPC =  GetStrGateValue("Setting_PC",0);
+    CurrCode = GetStrGateValue("Setting_CCode",0);
+
+    If ( POPUP_Display_Source == "ATTACHEMENT") Then
+        Fill_Select_Report();
+       if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+        Return;
+    End
+
+    if ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 2 ) Then
+        MODE = "SELECT";
+        USE_UNIQUE = True;
+    Else
+        if ( GetNumGateValue("LOGIN_SUP_ADMIN",0) == 1 ) Then
+          MODE = "PRINT";
+          USE_UNIQUE = False;
+		  
+        End
+    end
+
+
+    IF ( MODE == "SELECT" ) Then
+    Ligne = LigneSelectFiltre;
+       //Ligne = Select_BU();
+            // Num fild + drill flags
+            /*Ligne = LigneSelectFiltre;
+            CurrTableau = FetchBU(Ligne,3,";");
+            Tenergy     = FetchBU(Ligne,5,";");
+            TView       = FetchBU(Ligne,7,";");
+            CurrPC      = FetchBU(Ligne,9,";");
+            CurrCode    = FetchBU(Ligne,11,";");
+            UNIQUECODE  = FetchBU(Ligne,19,";");
+      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+*/
+      //
+
+    Else
+      Ligne = GET_ADHOC( CurrTableau , Tenergy , TView , CurrPC , CurrCode, USE_UNIQUE ,UNIQUECODE) ;
+    End
+
+
+    Ligne = ReplaceCharByChar( Ligne, ";" ,"," );
+   //MessageBox(Ligne,"Ligne");
+    RETURNED_LINE = PRINT_SingleReport_Generator( Ligne , "" , "");
+
+    If ( FileExist(RETURNED_LINE) == True ) Then
+
+        //MessageBox(RETURNED_LINE,"RETURNED_LINE");
+        ShellExec(RETURNED_LINE,"open",REPORT_PATH_OUT,1,"","");
+
+    End
+
+
+              /*RETURNED_LINE = GET_ADHOC( CurrTableau , Tenergy , TView , CurrPC , CurrCode, USE_UNIQUE ,UNIQUECODE) ;
+
+              HH = "00" + GetHour();
+              P = StrLen( HH ) -1;
+              HH = StrSubString( HH , P , 2 );
+
+              mm = "00" + GetMinute();
+              P = StrLen( mm ) -1;
+              mm = StrSubString( mm , P , 2 );
+
+              DD = "00" + GetDayOfMonth();
+              P = StrLen( DD ) -1;
+              DD = StrSubString( DD , P , 2 );
+
+              MM = "00" + GetMonth();
+              P = StrLen( MM ) -1;
+              MM = StrSubString( MM , P , 2 );
+
+              YYYY = "0000" + GetYear();
+              P = StrLen( YYYY ) -3;
+              YYYY = StrSubString( YYYY , P , 4);
+
+              Report_Path = Report_Fetch(RETURNED_LINE,18,";") + "\";
+              Report_Name = Report_Fetch(RETURNED_LINE,2,";") + "_" + DD + "-" + MM + "-" + YYYY + "-" + HH+mm +".Pdf" ;*/
+
+
+
+      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+
+
+end
+//////////////////////////////
+Function Void Fill_Select_Report()
+String LigneSelect;
+String CodeBU;
+String NameBU;
+String StrTemp;
+int P;
+int L;
+    int i;
+
+       LigneSelect=Select_BU();
+
+       CodeBU=Fetch_Email(LigneSelect,8,";");
+       NameBU=Fetch_Email(LigneSelect,9,";");
+     SetStrGateValue("AlarmeEventModifer",5,NameBU);
+     Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,"R:"+CodeBU+":"+NameBU+":1",7);
+     //MessageBox("R:"+CodeBU+":"+NameBU+":1","Fild");
+     //MessageBox(LigneSelect,"LigneSelect");
+
+for i =1 to 7 do
+L=StrLen(LigneSelect);
+P=StrPos(LigneSelect,";");
+LigneSelect=StrSubString(LigneSelect,P+1,L);
+end
+LigneSelect=ReplaceCharByChar(LigneSelect,";",",");
+//MessageBox(LigneSelect,StrLen(LigneSelect));
+  Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,LigneSelect,11);
+
+End
+

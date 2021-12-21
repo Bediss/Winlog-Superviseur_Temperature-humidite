@@ -1,0 +1,1 @@
+Query~;Q~Production;Temperature;Temperature,CTCA,*,*,*/*/*;;;;;;;;;;;;Query Production Temperature

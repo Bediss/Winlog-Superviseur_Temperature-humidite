@@ -1,0 +1,174 @@
+#Version: 0x030212
+#Access: 0
+#Pos: 0,150
+#Size: 1350,720
+#BkColor: 0,28,0
+#Gates: 1
+  #STR: Business_unit,0
+#Object: Frame
+  #ID: 0
+  #Pos: 0,0
+  #Size: 1350,100
+  #BkColor: clWhite
+  #Style: 1
+  #TabOrder: 0
+  #Access: 0
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 45,14
+    #Size: 141,41
+    #Cursor: 0
+    #PBmpFile: 0,logo_typo.jpg
+    #TabOrder: 0
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Bitmap
+    #ID: 0
+    #Pos: 1145,0
+    #Size: 124,68
+    #Cursor: 0
+    #PBmpFile: 0,logo.png
+    #TabOrder: 1
+    #CycleTime: 0,0
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 252,14
+    #Size: 460,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,22,0001
+    #Label: ENERGY MANAGEMENT SYSTEM  :
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+  #Object: Label
+    #ID: 0
+    #Pos: 712,14
+    #Size: 385,41
+    #BkColor: clNone
+    #Cursor: 0
+    #TxtColor: clWindowText
+    #Font: Calibri,24,0101
+    #Gate: 0
+    #Label: %s
+    #Align: 36
+    #Frame: 1
+    #Access: 0
+  #EndObj
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,110
+  #Size: 350,35
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,20,0101
+  #Label: Tableaux :
+  #Align: 32
+  #Frame: 1
+  #Access: 0
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,194
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,16,0001
+  #Label:   Bilan Energitique
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,394
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,16,0001
+  #Label:   Compteur Mosaique
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,354
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,16,0001
+  #Label:   Partage d'une energies
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,314
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clGrayText
+  #Font: Calibri,16,0001
+  #Label:   Partage tous les energies
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,234
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,16,0001
+  #Label:   Synoptique
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,274
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clGrayText
+  #Font: Calibri,16,0001
+  #Label:   Process
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj
+#Object: Label
+  #ID: 0
+  #Pos: 500,434
+  #Size: 350,30
+  #BkColor: 0,28,0
+  #Cursor: 0
+  #TxtColor: clHighlightText
+  #Font: Calibri,16,0001
+  #Label:   Analyse technique du compteur
+  #Align: 32
+  #Frame: 2
+  #Access: 0
+  #NewOnClick: Template,TableauxList
+#EndObj

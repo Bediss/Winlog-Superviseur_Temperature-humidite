@@ -1,0 +1,242 @@
+Function Void Select_Formule_IncidentCompteur()
+       String Ligne;
+       String UserCompteur;
+       String CompteurName;
+       String CompteurCode;
+       String CompteurInc;
+       int EnergyNumber;
+       String ListInc;
+       SetStrGateValue("AlarmeEventModifer",17,"");
+       EnergyNumber=GetNumGateValue("SelectEnergie",0);
+       ListInc=GetStrGateValue("Energy_LIVEInc_List",EnergyNumber);
+
+    IF (ListInc ==  "" )then
+    SetStrGateValue("AlarmeEventModifer",17,"Le gate de Incident Live n'est pas définie pour l'energie selectionner! contactez votre Admin"); return;     End
+
+    IF ( GetStrGateValue("BU_Selected",0) ==  "" )then
+    SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Un Compteur !"); return;     End
+
+
+
+    Ligne = Select_BU();
+    CompteurCode=Fetch_Formule(Ligne,8,";");
+    CompteurName=Fetch_Formule(Ligne,9,";");
+
+
+    UserCompteur=CompteurName+"$Inc LIVE";
+    CompteurInc=CompteurCode+"$"+ListInc;
+
+     SetStrGateValue("AlarmeEventModifer",7,UserCompteur);
+     SetStrGateValue("AlarmeEventModifer",8,CompteurInc);
+
+
+
+End
+
+/*****************************************************************************/
+function void TAGFormuleBouton()
+    SetStrGateValue("AlarmeEventModifer",30,GetStrGateValue("AlarmeEventModifer",19));
+
+    ShowPoPUPsNoClose("TAG_Formule");
+End
+
+
+function void FillTAGFormule()
+
+String V = GetStrGateValue("AlarmeEventModifer",19);
+//MessageBox(V,"Nom");
+
+     if ( V != "") then
+
+
+            if StrLen(V)>=15 then
+                SetStrGateValue("AlarmeEventModifer",17,"Il faut que le taille de tag ne depasse pas 15 caractere");
+            else
+
+                   // MessageBox(V,"Nom");
+                SetStrGateValue("AlarmeEventModifer",30,V);
+                SetStrGateValue("AlarmeEventModifer",17,"");
+                Admin_View_CurrentLine=FR_Formule(Admin_View_CurrentLine,V,14);
+                //MessageBox(Admin_View_CurrentLine,"");
+                      if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+                SetStrGateValue("AlarmeEventModifer",19,"");
+                TPageCloseByName("TAG_Formule");
+            end
+     end
+
+end
+
+function void Bouton_Energy_BU_Formule()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    TPageOpen("Select_ENERGY_BU_Formule");
+
+end
+////////////
+function void Bouton_Energy_BU_Formule_CMP()
+
+    // Display
+    EVM_LIST_FILE = ENV_PATH+"\Files\AllCompteur\Energy.csv";
+    EVM_Max_Items = GetNumGateValue("EnergyMax",0);
+    Energy_Display(1);
+    SetNumGateValue("PageAllCommpteurView",0,1);
+    TPageOpen("Select_ENERGY_BU_Formule_CMP");
+
+end
+
+Function Void Select_Formule_SommeCompteurMeasure()
+
+           String Ligne;
+       String UserCompteur;
+       String CompteurName;
+       String CompteurCode;
+       String CompteurInc;
+       int EnergyNumber;
+       String ListInc;
+          Ligne = Select_BU();
+
+    IF ( GetStrGateValue("BU_Selected",0) ==  "" )then
+    SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Un Compteur !"); return;     End
+
+    CompteurCode=Fetch_Formule(Ligne,8,";");
+    CompteurName=Fetch_Formule(Ligne,9,";");
+
+    UserCompteur=CompteurName+"$Inc LIVE";
+    CompteurInc=CompteurCode+"$"+ListInc;
+
+    Insert_F_Item("I~(~"+UserCompteur+"~)~","I~(~"+CompteurInc+"~)~");
+
+End
+
+
+Function Void Select_Formule_FilsCompteurMeasure()
+
+       String CompteurCodeMeasure;
+       String CompteurNameMeasure;
+    String Ligne;
+    String EVM;
+    Ligne = Select_BU();
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    EVM=GetStrGateValue("EV_Measure",0) ;
+
+
+            IF ( GetStrGateValue("EV_Measure",0) ==  "" )then
+             SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Une Mesure!"); return;     End
+
+           IF ( GetStrGateValue("BU_Selected",0) ==  "" )then
+            SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Un Compteur!"); return;     End
+
+
+
+    CompteurCodeMeasure=FetchBU(Ligne,8,";")+"$"+Fetch_Formule(EVM,1,";");//List Measure
+
+    CompteurNameMeasure=FetchBU(Ligne,9,";")+"$"+Fetch_Formule(EVM,2,";");//Label Measure
+
+    Insert_F_Item("F~(~"+CompteurNameMeasure+"~)~","F~(~"+CompteurCodeMeasure+"~)~");
+
+
+
+
+End
+
+Function Void Select_Formule_CompteurMeasure()
+
+       String CompteurCodeMeasure;
+       String CompteurNameMeasure;
+       String EVM;
+       String Ligne;
+            Ligne = Select_BU();
+            SetStrGateValue("AlarmeEventModifer",17,"");
+            EVM=GetStrGateValue("EV_Measure",0) ;
+
+            IF ( GetStrGateValue("EV_Measure",0) ==  "" )then
+             SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Une Mesure!"); return;     End
+           IF ( GetStrGateValue("BU_Selected",0) ==  "" )then
+            SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Un Compteur!"); return;     End
+
+    CompteurCodeMeasure=FetchBU(Ligne,8,";")+"$"+Fetch_Formule(EVM,1,";");//List Measure
+    CompteurNameMeasure=FetchBU(Ligne,9,";")+"$"+Fetch_Formule(EVM,2,";");//Label Measure
+    Insert_F_Item(CompteurNameMeasure+"~",CompteurCodeMeasure+"~");
+end
+
+
+//////////////////////////////////////////////////
+
+Function Void SaveFormuleAlarme()
+    String TempLigne;
+    int OriginalError;
+    int TempError;
+    int ec;
+    String UserCompteur;
+    String CompteurInc;
+    String Description;
+
+    UserCompteur=GetStrGateValue("AlarmeEventModifer",7);
+    CompteurInc=GetStrGateValue("AlarmeEventModifer",8);
+    SetStrGateValue("AlarmeEventModifer",17,"");
+    String LOGFullPathFileName = ENV_PATH +  "\BuildLOG.txt";
+    Int LOGFileHandle = FileOpen(LOGFullPathFileName,"at");
+    TempLigne=Admin_View_CurrentLine; // Admin_View_CurrentLine
+       IF ( CompteurInc ==  "" )then
+    SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait sélectionner Un Compteur Incident !"); return;     End
+           IF ( Formule_Parse_Complet ==  "" )then
+    SetStrGateValue("AlarmeEventModifer",17,"S'il vous plait Inserer Une Formule !"); return;     End
+    ZapTild_F_Simple();
+    Formule_Parse_Complet=CompteurInc+"="+Formule_Parse_Complet;
+    Formule_User_Complet=UserCompteur+"="+Formule_User_Complet;
+
+    Description=Formule_User_Complet+Fetch_Formule(TempLigne,5,";")+Fetch_Formule(TempLigne,6,";");
+
+    TempLigne=FR_Formule(TempLigne,CompteurInc ,2);//Compteur Incident
+    TempLigne=FR_Formule(TempLigne,Formule_Simple_Complet,3);//Formule
+    TempLigne=FR_Formule(TempLigne,Formule_Parse_Complet,4);//Parsed Formule
+    TempLigne=FR_Formule(TempLigne,Description,10);//Description
+    TempLigne=FR_Formule(TempLigne,UserCompteur,11);//User Compteur
+    TempLigne=FR_Formule(TempLigne,Formule_User_Complet,12);//User Formule
+    TempLigne=Parse_Formule_Alarme(  TempLigne , LOGFileHandle );
+    OriginalError=StrToInt(Fetch_Formule(Admin_View_CurrentLine,13,";"));
+    TempError=StrToInt(Fetch_Formule(TempLigne,13,";"));
+
+    FileClose(LOGFileHandle);
+
+    if (TempError<=OriginalError) then
+        SetStrGateValue("AlarmeEventModifer",17,"Formule Save is successful");
+        Admin_View_CurrentLine=TempLigne;
+        SetStrGateValue("AlarmeEventModifer",1,UserCompteur);
+		Formule_User_Complet=ZapTild_Display_All(Formule_User_Complet);
+        SetStrGateValue("AlarmeEventModifer",2,Formule_User_Complet);
+        SetStrGateValue("AlarmeEventModifer",10,TempError);
+        TPageCloseByName("POPUP_Alarme_Formule");
+        SetStrGateValue("AlarmeEventModifer",7,"");
+        SetStrGateValue("Display_Formule",0,"");
+        SetStrGateValue("Display_Formule",1,"");
+        SetStrGateValue("Display_Formule",2,"");
+        SetStrGateValue("Display_Formule",3,"");
+        SetStrGateValue("Display_Formule",4,"");
+        SetStrGateValue("Display_Formule",5,"");
+        AlarmeFormuleEdit_FLAG= True;
+              if Fetch_Alarm_search(Admin_View_CurrentLine,1,";")=="" then
+
+            SetNumGateValue("Template_Control",0,3);
+      else
+             SetNumGateValue("Template_Control",0,2);
+      end
+
+     else
+        ec =TempError-OriginalError;
+
+        SetStrGateValue("AlarmeEventModifer",17,"You Have "+ec+" Error(s)");
+    end
+
+End
+

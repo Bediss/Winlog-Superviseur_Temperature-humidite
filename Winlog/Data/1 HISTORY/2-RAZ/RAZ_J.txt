@@ -1,0 +1,14 @@
+Electrique;;
+Vapeur;;
+Gaz;;
+Froid;;
+Froid (+)  Eau Glycolee;;
+Froid (-)  Ammoniac;;
+Air Comprime;;
+Eau;;
+Eau Brute;;
+Eau Forage;;
+Eau Sonede;;
+Eau Traite;;
+Eau Rejet;;
+Tonnage;;

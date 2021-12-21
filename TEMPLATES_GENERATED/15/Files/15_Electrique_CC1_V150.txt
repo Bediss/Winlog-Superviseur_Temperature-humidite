@@ -1,0 +1,3 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CCA;Production Elec;Electrique;CC1;ElMazeraa Elec;2;*;*;Z100;*;*;Production;F(CCA);Type de Site;*;*;*;*;*;F~(~CCA~)~;F~(~Production Elec~)~;;;0;Production Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CCB;Utilitaire Elec;Electrique;CC1;ElMazeraa Elec;2;*;*;Z200;*;*;Utilitaire;CCB1+CCB2+CCB4;Type de Site;*;*;*;*;*;CCB1~+~CCB2~+~CCB4~;Froid Elec~+~Eau Electrique~+~Chaufferie Elec~;;;0;Utilitaire Electrique;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CCC;Facility Elec;Electrique;CC1;ElMazeraa Elec;2;S200;M170;Z300;STEG;PosteTR2;Facility;CC1I4;Type de Site;*;*;*;*;*;CC1I4~;facility TR2~;;;0;Facility Electrique;*

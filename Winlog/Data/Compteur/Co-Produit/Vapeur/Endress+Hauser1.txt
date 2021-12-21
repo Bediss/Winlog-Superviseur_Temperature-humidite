@@ -1,0 +1,8 @@
+nom du compteur;E+H1
+Marque;endress+hauser
+Reference;RMS621
+Connecion;RS485
+Protocol;Modbus
+Baude;9600
+Data;8 bit
+Stop;1 bit

@@ -1,0 +1,5 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1T;Charcuterie TR3;Electrique;CC1J;PosteTR3;5;S200;M22A;M22A;STEG;Charcuterie TR3;Charcuterie TR3;F(CC1T);Atelier;*;*;Charcuterie;*;*;F~(~CC1T~)~;F~(~Charcuterie TR3~)~;;;0;Charcuterie TR3;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C161;Autoclave;Electrique;CC1J;PosteTR3;7;S200;M180;M261;STEG;PosteTR3;Autoclave;Reel;Machine;*;*;Conserve;!~*;!~*;;;;;2;Autoclave;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C162;ProcessUCPC;Electrique;CC1J;PosteTR3;5;S200;M180;M261;STEG;PosteTR3;Autoclave;Reel;Atelier;*;*;UCPC;!~*;!~*;;;;;2;Process UCPC;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1N1;StationOsmose1;Electrique;CC1J;PosteTR3;5;S200;M180;MB03;STEG;PosteTR3;StationOsmose1;Reel;Atelier;*;*;Eau;!~*;!~*;;;;;2;Station Osmose1;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1J4;Froid TR3;Electrique;CC1J;PosteTR3;6;S200;M180;MA04;STEG;PosteTR3;Froid TR3;F(CC1V);SubAtelier;*;*;Froid;*;*;F~(~CC1V~)~;F~(~Dick TR5~)~;;;0;Froid TR3;*

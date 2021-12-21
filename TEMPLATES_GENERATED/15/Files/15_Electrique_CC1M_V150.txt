@@ -1,0 +1,3 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1M1;Surgele TR6;Electrique;CC1M;PosteTR6;5;S200;M1B0;M25G;STEG;PosteTR6;Surgele TR6;F(CC1M1);Atelier;*;*;Surgele;*;*;F~(~CC1M1~)~;F~(~Surgele TR6~)~;;;0;Surgele TR6;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1M2;SMF Surgele TR6;Electrique;CC1M;PosteTR6;5;S200;M1B0;MA09E;STEG;PosteTR6;SMF Surgele TR6;F(CC1M2);Atelier;*;*;Froid;*;*;F~(~CC1M2~)~;F~(~SMF Surgele TR6~)~;;;0;SalleMachine Froid Surgele TR6;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;§CC1M3;Chauf-SurgelTR6;Electrique;CC1M;PosteTR6;5;S200;M1B0;M140;STEG;PosteTR6;ChaufferieSurgel;F(CC1M3);Atelier;*;*;Chaufferie;*;*;F~(~CC1M3~)~;F~(~Chauf-SurgelTR6~)~;;;0;ChaufferieSurgele TR6;*

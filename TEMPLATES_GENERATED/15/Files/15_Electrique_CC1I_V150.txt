@@ -1,0 +1,7 @@
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I1;Charcuterie TR2;Electrique;CC1I;PosteTR2;5;S200;M229;M229;STEG;Charcuterie TR2;Charcuterie TR2;F(CC1I1);Atelier;*;*;Charcuterie;*;*;F~(~CC1I1~)~;F~(~Charcuterie TR2~)~;;;0;Charcuterie TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I2;Abattoir TR2;Electrique;CC1I;PosteTR2;5;S200;M170;M21J;STEG;PosteTR2;chaine abattage;F(CC1I2);Atelier;*;*;Abattoir;*;*;F~(~CC1I2~)~;F~(~Abattoir TR2~)~;;;0;Abattoir TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1Z;Coproduit TR2;Electrique;CC1I;PosteTR2;6;S200;M170;M152A;STEG;PosteTR2;CoProduit TR2;CC1F5;SubAtelier;*;*;CoProduit;*;*;CC1F5~;COP-eclairage~;;;0;Coproduit TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I3;Chaufferie TR2;Electrique;CC1I;PosteTR2;5;S200;M170;MC00;STEG;PosteTR2;Chaufferie;F(CC1I3);Atelier;*;*;Chaufferie;*;*;F~(~CC1I3~)~;F~(~Chaufferie TR2~)~;;;0;Chaufferie TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1X;Froid TR2;Electrique;CC1I;PosteTR2;6;S200;M170;MA03;STEG;PosteTR2;Froid TR2;CC1Q6;SubAtelier;*;*;Froid;*;*;CC1Q6~;MPF ancienne  ~;;;0;Froid TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1Y;Eau TR2;Electrique;CC1I;PosteTR2;6;S200;M170;MB08;STEG;PosteTR2;Eau TR2;CC1N7;SubAtelier;*;*;Eau;*;*;CC1N7~;SP TR2x6~;;;0;Eau TR2;*
+F:KWh J#0;KWh M#2;KWh A#3;Inc J#29;Inc A#32;低C1I4;facility TR2;Electrique;CC1I;PosteTR2;5;S200;M170;Z300;STEG;PosteTR2;Facility;F(CC1I4);Atelier;*;*;*;*;*;F~(~CC1I4~)~;F~(~facility TR2~)~;;;0;facility TR2;*

@@ -1,0 +1,7 @@
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC21;Galdi_A&B;Temperature;CTC2F;Galdi;3;D64;*;D261;T°c  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC22;Galdi_C;Temperature;CTC2F;Galdi;3;D64;*;D262;T°c  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+P:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC2F;Galdi;Temperature;CTC2;2;*;*;D26;*;*;Galdi
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC21;Galdi_A&B;Temperature;CTC2F;Galdi;3;D64;*;D261;T°c  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC22;Galdi_C;Temperature;CTC2F;Galdi;3;D64;*;D262;T°c  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC21;Galdi_A&B;Temperature;CTC2F;Galdi;3;D64;*;D261;T°c  positive;*;Galdi_A&B;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1
+F:T°c ~LIVE#16;T°c min~J#4;<T°c >~J#0;T°c Max~J#8;Inc~J#12;Inc~J-1#30;C %~J#34;§CTC22;Galdi_C;Temperature;CTC2F;Galdi;3;D64;*;D262;T°c  positive;*;Galdi_C;Reel;Point de mesure;*;*;*;!~*;!~*;;;;;2;;;;C1

@@ -1,0 +1,94 @@
+function void AP_AND()
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void AP_OR()
+
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Load_Groups_AP_Names()
+    AP_Groupes();
+    ShowPoPUPs("Access_Privilege_Groups_NAMES");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void Load_Groups_Set_AP()
+    AP_Groupes();
+    SetNumGateValue("AP_Value",0,0);
+    ShowPoPUPs("SET_Access_Privilege");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void AP_Groupes()
+
+    String FullPathFileName;
+    int FileHandle;
+    int i;
+    Int MaxGroups = 15;
+    String GateName = "EmailView1";
+    String Group_Name = "";
+
+
+    FullPathFileName = GetProjectPath() + "\Config\Groups.cfg";
+    FileHandle = FileOpen(FullPathFileName,"rt");
+
+
+    For i = 1 to MaxGroups do
+        Group_Name = FileReadLn(FileHandle);
+        SetStrGateValue(GateName,i,Group_Name);
+    end
+
+    FileClose(FileHandle);
+
+    //ShowPoPUPs("Access_Privilege_Groups_NAMES");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void AP_Save_Groupes()
+
+    String FullPathFileName;
+    int FileHandle;
+    int i;
+    Int MaxGroups = 15;
+    String GateName = "EmailView1";
+    String Group_Name = "";
+
+
+    FullPathFileName = GetProjectPath() + "\Config\Groups.cfg";
+    FileHandle = FileOpen(FullPathFileName,"wt");
+
+
+    For i = 1 to MaxGroups do
+        Group_Name = GetStrGateValue(GateName,i);
+        FileWriteLn(FileHandle,Group_Name);
+    end
+
+    FileClose(FileHandle);
+
+    ShellExec("Restart_Runtime.exe","open",POWERSHELL_PATH_EXECUTION,1,"","");
+end
+///////////////////////////////////////////////////////////////////////////////
+function void AP_Set_Groupes()
+/*
+    String FullPathFileName;
+    int FileHandle;
+    int i;
+    Int MaxGroups = 15;
+    String GateName = "EmailView1";
+    String Group_Name = "";
+
+
+    FullPathFileName = GetProjectPath() + "\Config\Groups.cfg";
+    FileHandle = FileOpen(FullPathFileName,"wt");
+
+
+    For i = 1 to MaxGroups do
+        Group_Name = GetStrGateValue(GateName,i);
+        FileWriteLn(FileHandle,Group_Name);
+    end
+
+    FileClose(FileHandle);
+
+    ShellExec("Restart_Runtime.exe","open",POWERSHELL_PATH_EXECUTION,1,"","");*/
+
+
+   // MessageBox(GetNumGateValue("AP_Value",0),"");
+
+end

@@ -1,0 +1,226 @@
+function void Read_Peusage()
+ //#startup
+InitialiseGates_Peusage();
+    string date=GetDayOfMonth()+"-"+GetMonth()+"-"+GetYear();
+   string FullPathFileName = GetStrGateValue("ProductionFilePath",0)+date+".csv";
+   string TextRow;
+   int P;
+   string Article;
+   string Description;
+   string Date;
+   string Heure;
+   string Poids;
+   REAL T7;
+   REAL T8;
+   REAL T9;
+
+   int Max_Article = GetNumGateValue("Max_Article",0);
+        int GateNumber = 0;
+        bool Found = false;
+        string LiveGate;
+///////////////////////////////////////////////////////////////
+
+   int Delta96001;
+   int Delta96002;
+   int Delta96003;
+
+   int T96001;
+   int T96002;
+   int T96003;
+
+
+   int FileHandle;
+PRODUCT_INIT();
+
+
+    while (WindowIsOpen())
+
+    date=GetDayOfMonth()+"-"+GetMonth()+"-"+GetYear();
+    FullPathFileName = GetStrGateValue("ProductionFilePath",0)+date+".csv";
+
+   SetNumGateValue("T7_L-1",0,GetNumGateValue("T7",0));
+   SetNumGateValue("T8_L-1",0,GetNumGateValue("T8",0));
+   SetNumGateValue("T9_L-1",0,GetNumGateValue("T9",0));
+
+   T7 = 0;  T8 = 0; T9 = 0;
+///////////////////////////////////////////////////////////////
+
+   FileHandle=FileOpen(FullPathFileName,"rt");
+        if (FileHandle==0) then  MessageBox("File not Found","Error");  return;  end
+
+//////////////////////////////////////////////////////////////
+    FileReadLn(FileHandle); //Header
+    while(FileEof(FileHandle)==0)
+        GateNumber = 0;
+        TextRow = FileReadLn(FileHandle);
+
+
+        P = StrPos(TextRow,";");
+        Article = StrSubString(TextRow,1,P-1);
+        TextRow = StrDelete(TextRow,1,P);
+
+        P = StrPos(TextRow,";");
+        Description = StrSubString(TextRow,1,P-1);
+        TextRow = StrDelete(TextRow,1,P);
+
+        P = StrPos(TextRow,";");
+        Date = StrSubString(TextRow,1,P-1);
+        TextRow = StrDelete(TextRow,1,P);
+
+        P = StrPos(TextRow,";");
+        Heure = StrSubString(TextRow,1,P-1);
+        TextRow = StrDelete(TextRow,1,P);
+
+        Poids = TextRow;
+
+          Found = false;
+          while (Found == false && GateNumber < Max_Article)
+
+             if ( Article == GetStrGateValue("ArticleCode",GateNumber) ) then
+
+                  LiveGate = GetStrGateValue("LiveGate",GateNumber);
+                    if ( LiveGate == "T7" ) then T7 = T7+StrToReal(Poids); end
+                    if ( LiveGate == "T8" ) then T8 = T8+StrToReal(Poids); end
+                    if ( LiveGate == "T9" ) then T9 = T9+StrToReal(Poids); end
+                  Found = true;
+             end
+            GateNumber = GateNumber +1;
+
+          end
+    end // end file
+    FileClose(FileHandle);
+        SetNumGateValue("T7",0,T7);
+        SetNumGateValue("T8",0,T8);
+        SetNumGateValue("T9",0,T9);
+     Delta96001 = GetNumGateValue("T7",0) - GetNumGateValue("T7_L-1",0);
+     Delta96002 = GetNumGateValue("T8",0) - GetNumGateValue("T8_L-1",0);
+     Delta96003 = GetNumGateValue("T9",0) - GetNumGateValue("T9_L-1",0);
+
+    T96001 = GetNumGateValue("W_T7",0)+Delta96001;
+    T96002 = GetNumGateValue("W_T8",0)+Delta96002;
+    T96003 = GetNumGateValue("W_T9",0)+Delta96003;
+
+    SetNumGateValue("W_T7",0,T96001);
+    SetNumGateValue("W_T8",0,T96002);
+    SetNumGateValue("W_T9",0,T96003);
+
+    T96001 = GetNumGateValue("M_T7",0)+Delta96001;
+    T96002 = GetNumGateValue("M_T8",0)+Delta96002;
+    T96003 = GetNumGateValue("M_T9",0)+Delta96003;
+
+    SetNumGateValue("M_T7",0,T96001);
+    SetNumGateValue("M_T8",0,T96002);
+    SetNumGateValue("M_T9",0,T96003);
+
+    T96001 = GetNumGateValue("Y_T7",0)+Delta96001;
+    T96002 = GetNumGateValue("Y_T8",0)+Delta96002;
+    T96003 = GetNumGateValue("Y_T9",0)+Delta96003;
+
+    SetNumGateValue("Y_T7",0,T96001);
+    SetNumGateValue("Y_T8",0,T96002);
+    SetNumGateValue("Y_T9",0,T96003);
+
+
+
+    sleep(GetNumGateValue("ProductionSleepTime",0));
+end//While
+end
+
+
+
+function void PRODUCT_INIT()
+
+   SetNumGateValue("T7_L-1",0,0);
+   SetNumGateValue("T8_L-1",0,0);
+   SetNumGateValue("T9_L-1",0,0);
+
+   SetNumGateValue("T7",0,0);
+   SetNumGateValue("T8",0,0);
+   SetNumGateValue("T9",0,0);
+
+   SetNumGateValue("W_T7",0,0);
+   SetNumGateValue("W_T8",0,0);
+   SetNumGateValue("W_T9",0,0);
+   SetNumGateValue("M_T7",0,0);
+   SetNumGateValue("M_T8",0,0);
+   SetNumGateValue("M_T9",0,0);
+   SetNumGateValue("Y_T7",0,0);
+   SetNumGateValue("Y_T8",0,0);
+   SetNumGateValue("Y_T9",0,0);
+end
+
+function void InitialiseGates_Peusage()
+
+//*****************************************************************************
+// Reading Recover File
+//*****************************************************************************
+   int FileHandle;
+   string FullPathFileName = ENV_PATH+"\Settings\INITIALGATES.txt";
+   string TextRow;
+   Bool Empty = false;
+///////////////////////////////////////////////////////////////
+   FileHandle=FileOpen(FullPathFileName,"rt");
+   if (FileHandle==0) then  MessageBox("File not Found","Error");  return;  end
+//////////////////////////////////////////////////////////////
+
+    FileReadLn(FileHandle);// Read file Header
+
+   while(FileEof(FileHandle)==0 && Empty == false)
+
+    TextRow = FileReadLn(FileHandle);
+      if ( TextRow == "") then Empty = true;
+      else
+         if (StrSubString(TextRow,1,2) != "/*") then
+         Analyse_InitialiseGates_Peusage(TextRow);
+         end
+      end
+
+   end
+     FileClose(FileHandle);
+end
+
+
+               /////   AnalyseData() "CSV File"    /////
+ function void Analyse_InitialiseGates_Peusage(string TextRow)
+//*****************************************************************************
+// Analyse CSV file
+//*****************************************************************************
+string txt = TextRow;
+int P;
+String GATETYPE;
+String GATENAME;
+String GATEID;
+String GATEVALUE;
+
+            P = StrPos(txt,";");
+            GATETYPE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATENAME=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEID=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            P = StrPos(txt,";");
+            GATEVALUE=StrSubString(txt,1,P-1);
+            txt=StrDelete(txt,1,P);
+
+            if ( GATETYPE == "Num" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+            else
+                if ( GATETYPE == "Real" ) then
+                SetNumGateValue(GATENAME,StrToInt(GATEID),StrToReal(GATEVALUE));
+                else
+                    if ( GATETYPE == "Dig" ) then
+                    SetDigGateValue(GATENAME,StrToInt(GATEID),StrToInt(GATEVALUE));
+                    else
+                        if ( GATETYPE == "Str" ) then
+                        SetStrGateValue(GATENAME,StrToInt(GATEID),GATEVALUE);
+                        end
+                    end
+                end
+            end
+end

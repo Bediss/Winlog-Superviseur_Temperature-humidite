@@ -1,0 +1,3 @@
+C;1;CC0;CC1;ElMazeraa;Electrique;*;*;ElMazeraa;*;*;M200;*;*;*;Site
+C;2;CC1;CCC;Facility;Electrique;STEG;PosteTR2;Facility;S200;M170;Z003;*;*;*;Type de Site
+C;2;CC1;CCA;Production;Electrique;*;*;Production;*;*;Z001;*;*;*;Type de Site

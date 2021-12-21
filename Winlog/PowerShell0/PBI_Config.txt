@@ -1,0 +1,6 @@
+C:\Winlog\DeskTopBI\Package\PBI1
+C:\Winlog\DeskTopBI\Masters\PBI_CLC.pbix
+C:\Winlog\DeskTopBI\Package\PBI1\PBI
+C:\Winlog\DeskTopBI\Package\PBI1\Data
+C:\Winlog\Files\AllCompteur\Unite.CSV
+C:\Winlog\DeskTopBI\Package\PBI1.Zip
